@@ -12,4 +12,6 @@ endif ()
 
 project ("Vault21")
 
+add_subdirectory("ImGui")
+add_subdirectory("Detours")
 add_subdirectory("Internal")

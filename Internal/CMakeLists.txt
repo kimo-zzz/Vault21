@@ -14,3 +14,5 @@ foreach(FileName IN ITEMS ${INTERNAL_SOURCE})
 	target_include_directories(Internal PRIVATE "${Group_Name}")
     source_group("${Group_Name}" FILES "${FileName}")
 endforeach()
+
+target_link_libraries(Internal ${D3D9_LIBRARY} ${D3DX9_LIBRARY} Detours ImGui)

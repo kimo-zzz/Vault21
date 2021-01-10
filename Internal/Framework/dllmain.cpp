@@ -1,5 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <mutex>
 #include <imgui.h>
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_win32.h>
@@ -16,11 +17,14 @@ namespace Globals {
 	bool Unload;
 
 	bool ShowMenu = true;
+
+	std::mutex PresentMutex;
 }
 
 IMGUI_IMPL_API LRESULT  ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CONST RECT* pDestRect, HWND hDestWindow, CONST RGNDATA* pDirtyRegion) {
+	Globals::PresentMutex.lock();
 	DirectX9::Offsets::pDevice = Device;
 	static bool ImGuiInit = false;
 	if (!ImGuiInit) {
@@ -36,6 +40,7 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	Globals::PresentMutex.unlock();
 	return DirectX9::Functions::Original_Present(Device, pSrcRect, pDestRect, hDestWindow, pDirtyRegion);
 }
 
@@ -69,6 +74,14 @@ LRESULT WINAPI WndProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
 	return CallWindowProcA(Globals::Original_WndProc, hwnd, u_msg, w_param, l_param);
 }
 
+bool is_locked() {
+	if (Globals::PresentMutex.try_lock()) {
+		Globals::PresentMutex.unlock();
+		return false;
+	}
+	return true;
+}
+
 void __stdcall Start() {
 
 	Globals::hWnd = FindWindowA(NULL, Globals::Window_Name);
@@ -91,8 +104,9 @@ void __stdcall Start() {
 		kiero::unbind(16);
 		kiero::unbind(17);
 	}
-	
-	Sleep(3);
+
+	while (is_locked())
+		Sleep(1);
 
 	ImGui_ImplWin32_Shutdown();
 	ImGui_ImplDX9_Shutdown();

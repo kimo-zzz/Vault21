@@ -15,4 +15,4 @@ foreach(FileName IN ITEMS ${INTERNAL_SOURCE})
     source_group("${Group_Name}" FILES "${FileName}")
 endforeach()
 
-target_link_libraries(Internal ${D3D9_LIBRARY} ${D3DX9_LIBRARY} Detours ImGui)
+target_link_libraries(Internal ${D3D9_LIBRARY} ${D3DX9_LIBRARY} minhook ImGui)

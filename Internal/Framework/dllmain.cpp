@@ -1,10 +1,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <detours.h>
 #include <imgui.h>
 #include <imgui_impl_dx9.h>
 #include <imgui_impl_win32.h>
 #include "DirectX9.h"
+#include "Kiero.h"
 #include "Utils.h"
 
 namespace Globals {
@@ -74,25 +74,23 @@ void __stdcall Start() {
 	Globals::hWnd = FindWindowA(NULL, Globals::Window_Name);
 	Globals::Original_WndProc = WNDPROC(SetWindowLongA(Globals::hWnd, GWL_WNDPROC, LONG_PTR(WndProc)));
 
-	DirectX9::Functions::Original_Reset = (DirectX9::TypeDefs::Prototype_Reset)Utils::GetDeviceAddress(16);
-	DirectX9::Functions::Original_Present = (DirectX9::TypeDefs::Prototype_Present)Utils::GetDeviceAddress(17);
+	if (kiero::init(kiero::RenderType::D3D9) == kiero::Status::Success) {
+		DirectX9::Functions::Original_Reset = (DirectX9::TypeDefs::Prototype_Reset)Utils::GetDeviceAddress(16);
+		DirectX9::Functions::Original_Present = (DirectX9::TypeDefs::Prototype_Present)Utils::GetDeviceAddress(17);
 
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&(PVOID&)DirectX9::Functions::Original_Reset, Hooked_Reset);
-	DetourAttach(&(PVOID&)DirectX9::Functions::Original_Present, Hooked_Present);
-	DetourTransactionCommit();
+		kiero::bind(16, (void**)&DirectX9::Functions::Original_Reset, Hooked_Reset);
+		kiero::bind(17, (void**)&DirectX9::Functions::Original_Present, Hooked_Present);
+	}
 
 	while (!Globals::Unload)
 		Sleep(1);
 
 	Globals::Original_WndProc = WNDPROC(SetWindowLongA(Globals::hWnd, GWL_WNDPROC, LONG_PTR(Globals::Original_WndProc)));
 
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(&(PVOID&)DirectX9::Functions::Original_Reset, Hooked_Reset);
-	DetourDetach(&(PVOID&)DirectX9::Functions::Original_Present, Hooked_Present);
-	DetourTransactionCommit();
+	if (kiero::getRenderType() == kiero::RenderType::D3D9) {
+		kiero::unbind(16);
+		kiero::unbind(17);
+	}
 	
 	Sleep(3);
 

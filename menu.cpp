@@ -670,8 +670,8 @@ namespace DX11
 
 					if (me_IsAlive) {
 						auto color = createRGB(0, 255, 0); // green
-						//Engine::DrawCircle(&me_pos, me_attackRange + me_boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-						render.draw_circle(me_pos, me_attackRange + me_boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+						Engine::DrawCircle(&me_pos, me_attackRange + me_boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+						//render.draw_circle(me_pos, me_attackRange + me_boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 					}
 				}
 			}
@@ -851,13 +851,13 @@ namespace DX11
 						//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
 						auto color = createRGB(204, 106, 255); // violet
 						if (Name_str.find("perks_ghostporo_idle") != std::string::npos) { // ghost poro
-							//Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
-							render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
+							Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
+							//render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
 						}
 
 						if (Name_str.find("perks_corruptedward_idle") != std::string::npos) { // zombieward
-							//Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-							render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+							Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+							//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 						}
 						//}
 					}
@@ -953,8 +953,8 @@ namespace DX11
 
 										auto spellEffectRange = obj->GetSpellCastInfo()->GetSpellData()->GetSpellEffectRange();
 										auto color = createRGB(220, 20, 60); // crimson
-										//Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-										render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+										Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
 									}
 								}
 							}
@@ -971,8 +971,8 @@ namespace DX11
 									if (IsEnemyToLocalPlayer) {
 										auto boundingRadius = obj->GetBoundingRadius();
 										auto color = createRGB(220, 20, 60); // crimson
-										//Engine::DrawCircle(&Pos, 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-										render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+										Engine::DrawCircle(&Pos, 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 									}
 								}
 							}
@@ -1004,17 +1004,17 @@ namespace DX11
 									auto color = createRGB(220, 20, 60); // crimson
 
 									if ((Name_str.find("jammerdevice") != std::string::npos) || (Name_str.find("visionward") != std::string::npos)) {
-										//Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-										render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+										Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 									}
 									else if (Name_str.find("sightward") != std::string::npos) {
 										if (MaxHealth == 3) {
-											//Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-											render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+											Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 										}
 										else if (MaxHealth == 1) {
-											//Engine::DrawCircle(&Pos, 500.0f, &color, 0, 0.0f, 0, 0.5f);
-											render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+											Engine::DrawCircle(&Pos, 500.0f, &color, 0, 0.0f, 0, 0.5f);
+											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 										}
 									}
 									else {
@@ -1025,8 +1025,8 @@ namespace DX11
 											transform(Name_Champ_str.begin(), Name_Champ_str.end(), Name_Champ_str.begin(), ::tolower);
 
 											if (Name_Champ_str.find("fiddlestickseffigy") != std::string::npos) { // effigy
-												//Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-												render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+												Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+												//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 											}
 										}
 									}

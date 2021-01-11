@@ -7,6 +7,8 @@
 #include "ExampleAppLog.h"
 #include "LeagueHooks.h"
 #include "HeavensGateHook.h"
+#include "Orbwalker.h"
+#include "TargetSelector.h"
 
 CObjectManager* ObjManager;
 CFunctions Functions;
@@ -146,7 +148,7 @@ namespace DX11
 	{
 
 		static int lastObjCount = 0;
-		static Vector me_lastPos = Vector(0,0,0);
+		static Vector me_lastPos = Vector(0, 0, 0);
 
 		static int CastSpellCtr = 0;
 
@@ -209,7 +211,7 @@ namespace DX11
 
 		static std::string base_debug = "0x0";
 		static std::string hiddenBase_debug = "0x0";
-		
+
 		static DWORD Base = 0x0;
 		static DWORD HiddenBase = 0x0;
 
@@ -222,7 +224,7 @@ namespace DX11
 			skin_database::load();
 			zoomValue = *Engine::GetMaximumZoomAmount();
 			HiddenBase = FindHiddenModule();
-			hiddenBase_debug =  hexify < DWORD >(HiddenBase);
+			hiddenBase_debug = hexify < DWORD >(HiddenBase);
 
 			Base = baseAddr;
 			base_debug = hexify < DWORD >(Base);
@@ -251,7 +253,7 @@ namespace DX11
 					ImGui::Checkbox("Champ Name", &g_champ_name); ImGui::SameLine(); HelpMarker("Display champion name of all hero.");
 					ImGui::Checkbox("Self Range", &g_range); ImGui::SameLine(); HelpMarker("Display circle of your hero range.");
 					ImGui::Checkbox("Ally Range", &g_2range_objmanager1); ImGui::SameLine(); HelpMarker("Display circle of all ally heroes range.");
-					ImGui::Checkbox("Enemy Range", &g_2range_objmanager2); ImGui::SameLine(); HelpMarker("Display circle of all enemy heroes range."); 
+					ImGui::Checkbox("Enemy Range", &g_2range_objmanager2); ImGui::SameLine(); HelpMarker("Display circle of all enemy heroes range.");
 					ImGui::Checkbox("Enemy Turret Range", &g_enemy_turret); ImGui::SameLine(); HelpMarker("Display circle of all enemy turret range.");
 					ImGui::NextColumn();
 					ImGui::Checkbox("Enemy Wards", &g_wards); ImGui::SameLine(); HelpMarker("Display circle of all enemy wards range.");
@@ -330,7 +332,7 @@ namespace DX11
 						else {
 							ImGui::Text("Hooks not yet ready. Check logs.");
 						}
-						
+
 						ImGui::EndTabItem();
 					}
 
@@ -433,7 +435,7 @@ namespace DX11
 							if (ImGui::Combo(str_buffer, &config_entry.first->second, vector_getter_skin, static_cast<void*>(&values), values.size() + 1))
 								if (config_entry.first->second > 0) {
 									hero->change_skin(values[config_entry.first->second - 1].model_name.c_str(), values[config_entry.first->second - 1].skin_id);
-								}	
+								}
 						}
 
 						ImGui::EndTabItem();
@@ -510,7 +512,7 @@ namespace DX11
 					ImGui::Text("D Dmg. %s", &f_spellDmg_debug);
 					ImGui::Text("F CDAbs %s", &f_spellCDAbs_debug);
 					ImGui::Text("F IsDoneAbs %s", &f_spellIsDoneAbs_debug);
-					
+
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("Console Log"))
@@ -533,11 +535,12 @@ namespace DX11
 		//}
 		////////////////////////////////////////////////////
 
-		if(isMainThreadAllow){
+		if (isMainThreadAllow) {
 			if (Engine::IsChatBoxOpen()) {
 				IsChatBoxOpen = true;
 				IsChatOpen_debug = "true";
-			}else {
+			}
+			else {
 				IsChatBoxOpen = false;
 				IsChatOpen_debug = "false";
 			}
@@ -574,7 +577,7 @@ namespace DX11
 			}
 
 			auto me_IsAlive = me->IsAlive();
-			
+
 			auto gameTime = Engine::GetGameTime();
 
 			auto me_d_spellSlot = me->GetSpellSlotByID(4);
@@ -761,7 +764,7 @@ namespace DX11
 				std::list<CObject*> _minionList = { };
 
 				int objCount = 0;
-
+				
 				while (obj)
 				{
 					objCount++;
@@ -777,7 +780,7 @@ namespace DX11
 					auto IsOnScreen = obj->IsOnScreen();
 					auto IsTeammate = obj->IsTeammateTo(me);
 					auto IsMissle = obj->IsMissile();
-					
+
 					auto Parent = obj->GetParent(heroList);
 
 					std::string Name_str(Name);
@@ -788,10 +791,10 @@ namespace DX11
 
 					ImColor _normal = ImColor(255, 102, 102, 174);
 					ImColor _onCD = ImColor(102, 255, 102, 174);
-					
+
 					if (g_debug_address) {
-						if(obj->IsHero())
-						render.draw_text(objpos_w2s.X, objpos_w2s.Y, ("Addr: " + (hexify < DWORD >(obj->GetThis()))).c_str(), true, _onCD);
+						if (obj->IsHero())
+							render.draw_text(objpos_w2s.X, objpos_w2s.Y, ("Addr: " + (hexify < DWORD >(obj->GetThis()))).c_str(), true, _onCD);
 					}
 					if (g_debug_name) {
 						render.draw_text(objpos_w2s.X, objpos_w2s.Y + 15, ("Name: " + Name_str).c_str(), true, _onCD);
@@ -1112,24 +1115,24 @@ namespace DX11
 								auto q_RemainingCD = q_spellSlot->GetRemainingCD(gameTime);
 								auto q_doneCD = q_spellSlot->IsDoneCD(gameTime);
 								auto q_level = q_spellSlot->GetLevel();
-								
+
 								auto w_spellSlot = obj->GetSpellSlotByID(1);
 								auto w_RemainingCD = w_spellSlot->GetRemainingCD(gameTime);
 								auto w_doneCD = w_spellSlot->IsDoneCD(gameTime);
 								auto w_level = w_spellSlot->GetLevel();
-								
+
 								auto e_spellSlot = obj->GetSpellSlotByID(2);
 								auto e_RemainingCD = e_spellSlot->GetRemainingCD(gameTime);
 								auto e_doneCD = e_spellSlot->IsDoneCD(gameTime);
 								auto e_level = e_spellSlot->GetLevel();
-								
+
 								auto r_doneCD = r_spellSlot->IsDoneCD(gameTime);
 								auto r_level = r_spellSlot->GetLevel();
-								
+
 								if (q_doneCD) {
 									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, "Q", true, _normal);
 								}
-								else if(q_level >= 1) {
+								else if (q_level >= 1) {
 									char skill_q[10];
 									snprintf(skill_q, sizeof(skill_q), "%d", static_cast<int>(q_RemainingCD));
 									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, skill_q, true, _onCD);
@@ -1138,7 +1141,7 @@ namespace DX11
 								if (w_doneCD) {
 									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, "W", true, _normal);
 								}
-								else if(w_level >=1) {
+								else if (w_level >= 1) {
 									char skill_w[10];
 									snprintf(skill_w, sizeof(skill_w), "%d", static_cast<int>(w_RemainingCD));
 									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, skill_w, true, _onCD);
@@ -1148,7 +1151,7 @@ namespace DX11
 								if (e_doneCD) {
 									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, "E", true, _normal);
 								}
-								else if(e_level >= 1) {
+								else if (e_level >= 1) {
 									char skill_e[10];
 									snprintf(skill_e, sizeof(skill_e), "%d", static_cast<int>(e_RemainingCD));
 									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, skill_e, true, _onCD);
@@ -1157,7 +1160,7 @@ namespace DX11
 								if (r_doneCD) {
 									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, "R", true, _normal);
 								}
-								else if(r_level >=1) {
+								else if (r_level >= 1) {
 									char skill_r[10];
 									snprintf(skill_r, sizeof(skill_r), "%d", static_cast<int>(r_RemainingCD));
 									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, skill_r, true, _onCD);
@@ -1405,7 +1408,7 @@ namespace DX11
 			}
 			skin_changer::update(heroList, minionList);
 		}
-		
+
 	}
 
 	void Menu::Render11()
@@ -1421,7 +1424,7 @@ namespace DX11
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 FuncHook GetThreadContextHook;
-LeagueHooksVEH _LeagueHooksVEH; 
+LeagueHooksVEH _LeagueHooksVEH;
 LeagueHooksHWBP _LeagueHooksHWBP; //supports only 4 hwbp (0,1,2,3)
 
 DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPath_addr;
@@ -1475,7 +1478,7 @@ int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail,
 		auto isDash = dash != 1;
 		auto speed = *dashSpeed != 0.0f ? *dashSpeed : obj->GetObjMoveSpeed();
 		auto isDash_str = (isDash ? "true" : "false");
-		
+
 		AppLog.AddLog(("OnNewPath: " + std::string(obj->GetName()) + ", Speed " + std::to_string(speed) + " \n").c_str());
 		AppLog.AddLog(("\t\t\tisDash: " + std::string(isDash_str) + " \n").c_str());
 		AppLog.AddLog(("\t\t\tVectorstart X: " + std::to_string(start->X) + " Y: " + std::to_string(start->Y) + " Z: " + std::to_string(start->Z) + " \n").c_str());
@@ -1535,17 +1538,17 @@ void SetupGameHooks() {
 	///////////////////////////////////////////////////////////
 
 	/*
-	//BUGGY //Use this to fully remove hooks from ntdll. 
-	if (UnHookNTDLL()) { 
+	//BUGGY //Use this to fully remove hooks from ntdll.
+	if (UnHookNTDLL()) {
 		AppLog.AddLog("UnHookNTDLL Success\n");
 	}
 	else {
 		AppLog.AddLog("UnHookNTDLL failed\n");
 	}*/
-	
+
 	/*
 	// Not usefull, league dont call this at all
-	GetThreadContextHook = FuncHook(GetThreadContext, hk_GetThreadContext); 
+	GetThreadContextHook = FuncHook(GetThreadContext, hk_GetThreadContext);
 	GetThreadContextHook.hook();
 	*/
 
@@ -1553,13 +1556,13 @@ void SetupGameHooks() {
 	// Since we remove all other handlers, it will push our handler to the very first of list. (more chances of calling our handler first than other handlers)
 	// Then Re-add all Handlers
 	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
-	Process::RemoveAllHandlers(); 
-	DWORD leoAddr = LeagueHooks::init(); 
+	Process::RemoveAllHandlers();
+	DWORD leoAddr = LeagueHooks::init();
 	Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
 
 	/*
 	// STILL WORKING ON THIS. HWBP SHOULD NOT BE A PROBLEM WHEN I IMPLEMENTED THIS CORRECTLY
-	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr, PVECTORED_EXCEPTION_HANDLER_list); 
+	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr, PVECTORED_EXCEPTION_HANDLER_list);
 	AppLog.AddLog(("totalFailedDecrypted: " + hexify<int>((int)ldd.totalFailedDecrypted) + "\n").c_str());
 	AppLog.AddLog(("totalSuccessDecrypted: " + hexify<int>((int)ldd.totalSuccessDecrypted) + "\n").c_str());
 	AppLog.AddLog(("totalSuccess_EXCEPTION_CONTINUE_EXECUTION: " + hexify<int>((int)ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION) + "\n").c_str());
@@ -1573,7 +1576,7 @@ void SetupGameHooks() {
 
 	/*
 	// Only need this if onprocessspell is hwbp
-	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n"); 
+	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n");
 	Engine::CastSpellSelf(13); // recall to trigger onprocessspell 1 time before hooking
 
 	AppLog.AddLog("Processing the recall\n");

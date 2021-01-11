@@ -116,6 +116,9 @@ public:
 		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
 		void* LocalPlayer = Engine::GetLocalObject();
 
+		if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
+			return; //This isn't the instruction we're looking for
+		
 		__asm
 		{
 			push retnHere
@@ -134,26 +137,33 @@ public:
 
 
 	static void AttackTarget(CObject* obj) {
-		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
-		void* LocalPlayer = Engine::GetLocalObject();
-		CObject* AttackTo = obj;
-		Vector* pos = &obj->GetPos();
-
-		__asm
+		if (me->IsAlive())
 		{
-			push retnHere
-			mov ecx, LocalPlayer
-			push 0
-			push 0
-			push 0
-			push AttackTo
-			push pos
-			push 3
-			push SpoofAddress
-			jmp IssueOrderAddr
-			retnHere :
+			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
+			DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
+			void* LocalPlayer = Engine::GetLocalObject();
+			CObject* AttackTo = obj;
+			Vector* pos = &obj->GetPos();
+
+			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
+				return; //This isn't the instruction we're looking for
+
+			__asm
+			{
+				push retnHere
+				mov ecx, LocalPlayer
+				push 0
+				push 0
+				push 0
+				push AttackTo
+				push pos
+				push 3
+				push SpoofAddress
+				jmp IssueOrderAddr
+				retnHere :
+			}
 		}
+
 	}
 
 	static void Engine::CastSpellSelf(int SlotID) {

@@ -29,6 +29,12 @@ bool CObject::IsTargetable() {
 	return Functions.IsTargetable(this);
 }
 
+bool CObject::IsDeletedObject()
+{
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::DeadObject);
+}
+
+
 bool CObject::IsNexus() {
 	return Functions.IsNexus(this);
 }

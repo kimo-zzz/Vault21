@@ -26,9 +26,17 @@ bool _missileLaunched;
 int _lastTarget;
 
 
-bool Orbwalker::Orbwalk(CObject* target, float extraWindup)
+bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 {
-	
+	if(CanAttack() && target != nullptr)
+	{
+		Engine::AttackTarget(target);
+	}
+	else if(CanMove(extraWindup))
+	{
+		Engine::MoveTo(&Engine::GetMouseWorldPosition());
+	}
+	return true;
 }
 
 /// <summary>

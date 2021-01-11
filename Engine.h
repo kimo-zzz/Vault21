@@ -98,19 +98,62 @@ public:
 
 	static CObject* Engine::GetObjectByID(int ID)
 	{
+		CObject holzer;
+		auto obj = holzer.GetFirstObject();
+		while (obj) {
+			if (obj->GetIndex() == ID)
+				return obj;
+			obj = holzer.GetNextObject(obj);
+		}
+		return nullptr;
 		if (ObjManager != NULL && ID >= 0 && ID <= 10000) {
 			//return ObjManager->objectArray[ID];
 		}
 	}
 
 	static void MoveTo(Vector* pos) {
-		Functions.IssueOrder(GetLocalObject(), 2, pos, NULL, false, false, false);
+		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
+		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
+		void* LocalPlayer = Engine::GetLocalObject();
 
+		__asm
+		{
+			push retnHere
+			mov ecx, LocalPlayer
+			push 0
+			push 0
+			push 0
+			push 0
+			push pos
+			push 2
+			push SpoofAddress
+			jmp IssueOrderAddr
+			retnHere :
+		}
 	}
 
 
 	static void AttackTarget(CObject* obj) {
-		Functions.IssueOrder(GetLocalObject(), 3, &obj->GetPos(), obj, true, false, false);
+		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
+		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
+		void* LocalPlayer = Engine::GetLocalObject();
+		CObject* AttackTo = obj;
+		Vector* pos = &obj->GetPos();
+
+		__asm
+		{
+			push retnHere
+			mov ecx, LocalPlayer
+			push 0
+			push 0
+			push 0
+			push AttackTo
+			push pos
+			push 3
+			push SpoofAddress
+			jmp IssueOrderAddr
+			retnHere :
+		}
 	}
 
 	static void Engine::CastSpellSelf(int SlotID) {

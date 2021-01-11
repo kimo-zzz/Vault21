@@ -14,17 +14,12 @@ public:
 	}
 
 	int GetAbsoluteCoolDown(float gameTime) {
-		if (GetRemainingCharge()==0) {
-			return GetRemainingRechargeCD(gameTime);
-		}
-		return GetRemainingCD(gameTime);
+		return GetRemainingCharge() == 0 ? GetRemainingRechargeCD(gameTime) : GetRemainingCD(gameTime);
+	
 	}
 
 	bool IsDoneAbsoluteCD(float gameTime) {
-		if (GetAbsoluteCoolDown(gameTime) <= 0)
-			return true;
-
-		return false;
+		return GetAbsoluteCoolDown(gameTime) <= 0;
 	}
 
 	float GetTime() {
@@ -53,10 +48,7 @@ public:
 	}
 
 	bool IsDoneCD(float gameTime) {
-		if (GetRemainingCD(gameTime) <= 0)
-			return true;
-
-		return false;
+		return GetRemainingCD(gameTime) <= 0 && GetLevel() >= 1;
 	}
 
 };

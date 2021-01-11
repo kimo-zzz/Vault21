@@ -777,7 +777,7 @@ namespace DX11
 					auto IsOnScreen = obj->IsOnScreen();
 					auto IsTeammate = obj->IsTeammateTo(me);
 					auto IsMissle = obj->IsMissile();
-
+					
 					auto Parent = obj->GetParent(heroList);
 
 					std::string Name_str(Name);
@@ -1111,21 +1111,25 @@ namespace DX11
 								auto q_spellSlot = obj->GetSpellSlotByID(0);
 								auto q_RemainingCD = q_spellSlot->GetRemainingCD(gameTime);
 								auto q_doneCD = q_spellSlot->IsDoneCD(gameTime);
-
+								auto q_level = q_spellSlot->GetLevel();
+								
 								auto w_spellSlot = obj->GetSpellSlotByID(1);
 								auto w_RemainingCD = w_spellSlot->GetRemainingCD(gameTime);
 								auto w_doneCD = w_spellSlot->IsDoneCD(gameTime);
-
+								auto w_level = w_spellSlot->GetLevel();
+								
 								auto e_spellSlot = obj->GetSpellSlotByID(2);
 								auto e_RemainingCD = e_spellSlot->GetRemainingCD(gameTime);
 								auto e_doneCD = e_spellSlot->IsDoneCD(gameTime);
-
+								auto e_level = e_spellSlot->GetLevel();
+								
 								auto r_doneCD = r_spellSlot->IsDoneCD(gameTime);
-
+								auto r_level = r_spellSlot->GetLevel();
+								
 								if (q_doneCD) {
 									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, "Q", true, _normal);
 								}
-								else {
+								else if(q_level >= 1) {
 									char skill_q[10];
 									snprintf(skill_q, sizeof(skill_q), "%d", static_cast<int>(q_RemainingCD));
 									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, skill_q, true, _onCD);
@@ -1134,7 +1138,7 @@ namespace DX11
 								if (w_doneCD) {
 									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, "W", true, _normal);
 								}
-								else {
+								else if(w_level >=1) {
 									char skill_w[10];
 									snprintf(skill_w, sizeof(skill_w), "%d", static_cast<int>(w_RemainingCD));
 									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, skill_w, true, _onCD);
@@ -1144,7 +1148,7 @@ namespace DX11
 								if (e_doneCD) {
 									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, "E", true, _normal);
 								}
-								else {
+								else if(e_level >= 1) {
 									char skill_e[10];
 									snprintf(skill_e, sizeof(skill_e), "%d", static_cast<int>(e_RemainingCD));
 									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, skill_e, true, _onCD);
@@ -1153,7 +1157,7 @@ namespace DX11
 								if (r_doneCD) {
 									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, "R", true, _normal);
 								}
-								else {
+								else if(r_level >=1) {
 									char skill_r[10];
 									snprintf(skill_r, sizeof(skill_r), "%d", static_cast<int>(r_RemainingCD));
 									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, skill_r, true, _onCD);
@@ -1229,8 +1233,8 @@ namespace DX11
 								if (g_2range_objmanager1) {
 									if (IsOnScreen) {
 										auto color = createRGB(124, 252, 0); // lawngreen
-										//Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
-										render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+										Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
 									}
 								}
 

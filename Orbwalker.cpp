@@ -46,5 +46,5 @@ bool Orbwalker::CanAttack()
 /// <returns></returns>
 bool Orbwalker::CanMove(float extraWindup)
 {
-	return Engine::GetGameTimeTickCount() + Engine::GetPing() / 2 >= LastAttackCommandT Engine::GetLocalObject()->GetAttackCastDelay() * 1000 + extraWindup;
+	return Engine::GetGameTimeTickCount() + Engine::GetPing() / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackCastDelay() * 1000 + extraWindup;
 }

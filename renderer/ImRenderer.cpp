@@ -374,7 +374,30 @@ void c_renderer::draw_circle(float_t x, float_t y, float_t radius, ImColor color
 		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(x, y), radius, color, points);
 		break;
 	case circle_3d:
-		break;
+		{
+			/*
+				credits to masterben2432 @ unknowncheats for this gem
+			*/
+			static const float PI = 3.14159265358979323846f;
+			static const float DELTA_THETA = 2 * PI / points;
+
+			Vector first_point = Vector(x, y, 0) + Vector(radius, 0, 0);
+
+			for (float i = 1; i <= points; ++i)
+			{
+				Vector orientation = Vector(std::cos(DELTA_THETA * i), 0, std::sin(DELTA_THETA * i));
+				Vector next_point = Vector(x, y, 0) + (orientation * radius);
+				Vector first_point_w2s, next_point_w2s;
+
+				Functions.WorldToScreen(&first_point, &first_point_w2s);
+				Functions.WorldToScreen(&next_point, &next_point_w2s);
+
+				this->draw_line(first_point_w2s.X, first_point_w2s.Y, next_point_w2s.X, next_point_w2s.Y, color, thickness);
+
+				first_point = next_point;
+			}
+			break;
+		}
 	default:
 		break;
 	}

@@ -38,14 +38,14 @@ public:
 
 				if (obj)
 					return obj;
-
 			}
 		}
-		__except (1) {}
+		__except (1)
+		{
+		}
 
 		return nullptr;
 	}
 };
 
 extern CObjectManager* ObjManager;
-

@@ -4,5 +4,5 @@
 class TargetSelector
 {
 public:
-	static	CObject* GetLowestHpTarget();
+	static CObject* GetLowestHpTarget();
 };

@@ -5,48 +5,53 @@ struct VectorLong
 {
 	long X, Y, Z;
 
-	inline VectorLong(void) {}
-	inline VectorLong(const long x, const long y, const long z)
+	VectorLong(void)
 	{
-		X = x; Y = y; Z = z;
 	}
 
-	inline VectorLong operator + (const VectorLong& A) const
+	VectorLong(const long x, const long y, const long z)
+	{
+		X = x;
+		Y = y;
+		Z = z;
+	}
+
+	VectorLong operator +(const VectorLong& A) const
 	{
 		return VectorLong(X + A.X, Y + A.Y, Z + A.Z);
 	}
 
-	inline VectorLong operator + (const long A) const
+	VectorLong operator +(const long A) const
 	{
 		return VectorLong(X + A, Y + A, Z + A);
 	}
 
-	inline VectorLong operator * (const long A) const
+	VectorLong operator *(const long A) const
 	{
 		return VectorLong(A * X, A * Y, A * Z);
 	}
 
-	inline VectorLong operator * (const VectorLong& A) const
+	VectorLong operator *(const VectorLong& A) const
 	{
 		return VectorLong(A.X * X, A.Y * Y, A.Z * Z);
 	}
 
-	inline VectorLong operator - (const long A) const
+	VectorLong operator -(const long A) const
 	{
 		return VectorLong(A * X, A * Y, A * Z);
 	}
 
-	inline VectorLong operator - (const VectorLong& A) const
+	VectorLong operator -(const VectorLong& A) const
 	{
 		return VectorLong(A.X - X, A.Y - Y, A.Z - Z);
 	}
 
-	inline VectorLong operator / (const long A) const
+	VectorLong operator /(const long A) const
 	{
 		return VectorLong(A / X, A / Y, A / Z);
 	}
 
-	inline VectorLong operator / (const VectorLong& A) const
+	VectorLong operator /(const VectorLong& A) const
 	{
 		return VectorLong(A.X / X, A.Y / Y, A.Z / Z);
 	}
@@ -56,22 +61,22 @@ struct VectorLong
 		return X * vec.X + Y * vec.Y + Z * vec.Z;
 	}
 
-	inline long lengthSquared()
+	long lengthSquared()
 	{
 		return X * X + Y * Y + Z * Z;
 	}
 
-	inline long length()
+	long length()
 	{
-		return (long)sqrt(lengthSquared());
+		return static_cast<long>(sqrt(lengthSquared()));
 	}
 
-	inline VectorLong perpendicularTo()
+	VectorLong perpendicularTo()
 	{
 		return VectorLong(Z, Y, -X);
 	}
 
-	inline VectorLong Normalize()
+	VectorLong Normalize()
 	{
 		long length = this->length();
 		if (length != 0)
@@ -84,7 +89,8 @@ struct VectorLong
 		return VectorLong(X, Y, Z);
 	}
 
-	inline long DistTo(const VectorLong& A) {
+	long DistTo(const VectorLong& A)
+	{
 		long out = sqrtf(powf(X - A.X, 2) + powf(Y - A.Y, 2) + powf(Z - A.Z, 2));
 		return out < 0 ? out * -1 : out;
 	}

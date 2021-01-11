@@ -1,88 +1,126 @@
 ﻿#pragma once
 #include "stdafx.h"
+
 class SpellData
 {
 public:
-	char* GetMissileName() {
+	char* GetMissileName()
+	{
 		return GetStr((DWORD)this + oSpellDataMissileName);
 	}
-	char* GetSpellName() {
+
+	char* GetSpellName()
+	{
 		return GetStr((DWORD)this + oSpellDataSpellName);
 	}
-	char* GetSpellName2() {
+
+	char* GetSpellName2()
+	{
 		return GetStr2((DWORD)this + oSpellDataSpellName);
 	}
-	char* GetDescription() {
+
+	char* GetDescription()
+	{
 		return GetStr((DWORD)this + oSpellDataDescription);
 	}
-	float GetEffectAmount() {
+
+	float GetEffectAmount()
+	{
 		return *(float*)((DWORD)this + oSpellDataEffectAmount);
 	}
-	float GetIncreaseDamage() {
+
+	float GetIncreaseDamage()
+	{
 		return *(float*)((DWORD)this + oSpellDataIncreaseDamage);
 	}
-	float GetSpellDuration() {
+
+	float GetSpellDuration()
+	{
 		return *(float*)((DWORD)this + oSpellDataSpellDuration);
 	}
 
-	float GetRootDuration() {
+	float GetRootDuration()
+	{
 		return *(float*)((DWORD)this + oSpellDataRootDuration);
 	}
-	float GetIncreaseDamageBonus() {
+
+	float GetIncreaseDamageBonus()
+	{
 		return *(float*)((DWORD)this + oSpellDataIncreaseDamageBonus);
 	}
-	float GetCoefficient() {
+
+	float GetCoefficient()
+	{
 		return *(float*)((DWORD)this + oSpellDataCoefficient);
 	}
-	float GetCoefficient2() {
+
+	float GetCoefficient2()
+	{
 		return *(float*)((DWORD)this + oSpellDataCoefficient2);
 	}
-	int GetMaxHighlightTargets() {
+
+	int GetMaxHighlightTargets()
+	{
 		return *(int*)((DWORD)this + oSpellDataMaxHighlightTargets);
 	}
-	float GetCooldownTime() {
+
+	float GetCooldownTime()
+	{
 		return *(float*)((DWORD)this + oSpellDataCooldownTime);
 	}
 
-	float GetDelayCastOffsetPercent() {
+	float GetDelayCastOffsetPercent()
+	{
 		return *(float*)((DWORD)this + oSpellDataDelayCastOffsetPercent);
 	}
 
-	float GetDelayTotalTimePercent() {
+	float GetDelayTotalTimePercent()
+	{
 		return *(float*)((DWORD)this + oSpellDataDelayTotalTimePercent);
 	}
 
-	int GetMaxAmmo() {
+	int GetMaxAmmo()
+	{
 		return *(int*)((DWORD)this + oSpellDataMaxAmmo);
 	}
-	int GetAmmoUsed() {
+
+	int GetAmmoUsed()
+	{
 		return *(int*)((DWORD)this + oSpellDataAmmoUsed);
 	}
-	float GetAmmoRechargeTime() {
+
+	float GetAmmoRechargeTime()
+	{
 		return *(float*)((DWORD)this + oSpellDataAmmoRechargetime);
 	}
 
-	float GetMissileSpeed() {
+	float GetMissileSpeed()
+	{
 		return *(float*)((DWORD)this + oSpellDataMissileSpeed);
 	}
 
-	float GetSpellWidth() {
+	float GetSpellWidth()
+	{
 		return *(float*)(DWORD)(this + oSpellDataSpellWidth);
 	}
 
-	float GetSpellRange(DWORD lvl) {
+	float GetSpellRange(DWORD lvl)
+	{
 		return *(float*)(DWORD)(this + (oSpellDataSpellRange + (0x4 * lvl)));
 	}
 
-	float GetSpellEffectRange() {
+	float GetSpellEffectRange()
+	{
 		return *(float*)(DWORD)(this + oSpellDataEffectSpellRange);
 	}
 
-	float GetSpellEffectRangeAfterEffect() {
+	float GetSpellEffectRangeAfterEffect()
+	{
 		return *(float*)(DWORD)(this + oSpellDataEffectSpellRangeAfterEffect);
 	}
 
-	float GetSpellEffectRangeAbs() {
+	float GetSpellEffectRangeAbs()
+	{
 		if (GetSpellEffectRange() > GetSpellEffectRangeAfterEffect())
 			return GetSpellEffectRange();
 

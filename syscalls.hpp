@@ -940,21 +940,24 @@ const char* syscallNames[] = {
 	"NtDirectGraphicsCall"
 };
 
-const char* findName(DWORD pSyscallIndex) {
+const char* findName(DWORD pSyscallIndex)
+{
 	int n = sizeof(sysindex) / sizeof(*sysindex);
 
 	int i = 0;
 	bool isFound = false;
 	while (i < n)
 	{
-		if (sysindex[i] == pSyscallIndex) {
+		if (sysindex[i] == pSyscallIndex)
+		{
 			isFound = true;
 			break;
 		}
 		i++;
 	}
 
-	if (isFound) {
+	if (isFound)
+	{
 		return syscallNames[i];
 	}
 

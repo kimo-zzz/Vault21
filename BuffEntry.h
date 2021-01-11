@@ -2,7 +2,8 @@
 #include "stdafx.h"
 #include "Offsets.h"
 
-enum BuffType{
+enum BuffType
+{
 	Internal = 0,
 	Aura = 1,
 	CombatEnchancer = 2,
@@ -36,47 +37,59 @@ enum BuffType{
 	Knockback = 30,
 	Disarm = 31
 };
+
 class BuffEntry
 {
 public:
 	DWORD strptr;
 
-	BYTE getBuffType() {
+	BYTE getBuffType()
+	{
 		return *(BYTE*)((DWORD)this + oBuffType);
 	}
-	bool isBuffEmpty() {
+
+	bool isBuffEmpty()
+	{
 		return strptr == 0;
 	}
+
 	bool IsAlive();
 
-	bool IsValid() {
-		if (this == NULL || (DWORD)this <= 0x1000)
+	bool IsValid()
+	{
+		if (this == nullptr || (DWORD)this <= 0x1000)
 			return false;
 
 		return strcmp(GetBuffName(), "NULL") && GetBuffCountAlt() > 0;
 	}
 
-	float GetBuffStartTime() {
+	float GetBuffStartTime()
+	{
 		return *(float*)((DWORD)this + O_BUFFMGR_STARTTIME);
 	}
 
-	float GetBuffEndTime() {
+	float GetBuffEndTime()
+	{
 		return *(float*)((DWORD)this + O_BUFFMGR_ENDTIME);
 	}
 
-	int GetBuffCountAlt() {
+	int GetBuffCountAlt()
+	{
 		return (*(int*)((DWORD)this + oBuffCountAlt) - *(int*)((DWORD)this + oBuffCountAlt2)) >> 3;
 	}
 
-	float GetBuffCountFloat() {
+	float GetBuffCountFloat()
+	{
 		return *(float*)((DWORD)this + O_BUFFMGR_flBUFFCOUNT);
 	}
 
-	int GetBuffCountInt() {
+	int GetBuffCountInt()
+	{
 		return *(int*)((DWORD)this + O_BUFFMGR_iBUFFCOUNT);
 	}
 
-	char* GetBuffName() {
+	char* GetBuffName()
+	{
 		DWORD aux = *(DWORD*)((DWORD)this + O_BUFFMGR_BUFFNAME);
 		if (aux == NULL)
 			return "NULL";
@@ -86,6 +99,4 @@ public:
 
 		return (char*)(aux + O_BUFFMGR_BUFFNAME);
 	}
-	
 };
-

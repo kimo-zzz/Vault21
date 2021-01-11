@@ -3,7 +3,9 @@
 class Capture
 {
 public:
-	virtual ~Capture() {}
+	virtual ~Capture()
+	{
+	}
 
 	virtual HMODULE GetCaptureModule() = 0;
 	virtual HRESULT TryCapture() = 0;

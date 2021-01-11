@@ -13,8 +13,8 @@
 #include "d3d11.h"
 #include "imgui_impl_dx11.h"
 
-class image {
-	
+class image
+{
 public:
 	std::string filename;
 	Vector loc;
@@ -67,19 +67,23 @@ public:
 
 public:
 	void draw_text(float_t x, float_t y, const char* text, bool outlined,
-		ImColor color = ImColor(255, 255, 255, 255), e_flags flags = text_normal, ImFont* font = nullptr, ...);
+	               ImColor color = ImColor(255, 255, 255, 255), e_flags flags = text_normal, ImFont* font = nullptr,
+	               ...);
 
 	void draw_line(float_t x1, float_t y1, float_t x2, float_t y2,
-		ImColor color = ImColor(255, 255, 255, 255), float_t thickness = 1.0f);
+	               ImColor color = ImColor(255, 255, 255, 255), float_t thickness = 1.0f);
 
 	void draw_rect(float_t x, float_t y, float_t w, float_t h,
-		ImColor color = ImColor(255, 255, 255, 255), e_flags flags = rect_normal, float_t rounding = 0.0f, uintptr_t points = 12, float_t thickness = 1.0f);
+	               ImColor color = ImColor(255, 255, 255, 255), e_flags flags = rect_normal, float_t rounding = 0.0f,
+	               uintptr_t points = 12, float_t thickness = 1.0f);
 
 	void draw_triangle(float_t x1, float_t y1, float_t x2, float_t y2,
-		float_t x3, float_t y3, ImColor color = ImColor(255, 255, 255, 255), e_flags flags = triangle_normal, float_t thickness = 1.0f);
+	                   float_t x3, float_t y3, ImColor color = ImColor(255, 255, 255, 255),
+	                   e_flags flags = triangle_normal, float_t thickness = 1.0f);
 
 	void draw_circle(Vector Position, float_t radius,
-		ImColor color = ImColor(255, 255, 255, 255), e_flags flags = circle_normal, uintptr_t points = 12, float_t thickness = 1.0f);
+	                 ImColor color = ImColor(255, 255, 255, 255), e_flags flags = circle_normal, uintptr_t points = 12,
+	                 float_t thickness = 1.0f);
 
 	bool draw_image(std::string _filename, int in_width, int in_height, Vector loc);
 

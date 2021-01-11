@@ -21,10 +21,10 @@
   #define MAKELL(num) num ## LL
   #define FMT_64 "ll"
 #elif defined(_MSC_VER)
-  typedef          __int64 ll;
-  typedef unsigned __int64 ull;
-  #define MAKELL(num) num ## i64
-  #define FMT_64 "I64"
+typedef __int64 ll;
+typedef unsigned __int64 ull;
+#define MAKELL(num) num ## i64
+#define FMT_64 "I64"
 #elif defined (__BORLANDC__)
   typedef          __int64 ll;
   typedef unsigned __int64 ull;
@@ -38,18 +38,18 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;
 
-typedef          char   int8;
-typedef   signed char   sint8;
-typedef unsigned char   uint8;
-typedef          short  int16;
-typedef   signed short  sint16;
-typedef unsigned short  uint16;
-typedef          int    int32;
-typedef   signed int    sint32;
-typedef unsigned int    uint32;
-typedef ll              int64;
-typedef ll              sint64;
-typedef ull             uint64;
+typedef char int8;
+typedef signed char sint8;
+typedef unsigned char uint8;
+typedef short int16;
+typedef signed short sint16;
+typedef unsigned short uint16;
+typedef int int32;
+typedef signed int sint32;
+typedef unsigned int uint32;
+typedef ll int64;
+typedef ll sint64;
+typedef ull uint64;
 
 // Partially defined types. They are used when the decompiler does not know
 // anything about the type except its size.
@@ -73,7 +73,7 @@ typedef int8 BYTE;
 typedef int16 WORD;
 typedef int32 DWORD;
 typedef int32 LONG;
-typedef int BOOL;       // uppercase BOOL is usually 4 bytes
+typedef int BOOL; // uppercase BOOL is usually 4 bytes
 #endif
 typedef int64 QWORD;
 #ifndef __cplusplus
@@ -81,7 +81,7 @@ typedef int bool;       // we want to use bool in our C programs
 #endif
 
 #define __pure          // pure function: always returns the same value, has no
-                        // side effects
+// side effects
 
 // Non-returning function
 #if defined(__GNUC__)
@@ -183,19 +183,21 @@ typedef int bool;       // we want to use bool in our C programs
 #define CASSERT(cnd) typedef char __CASSERT_N1__(__LINE__) [(cnd) ? 1 : -1]
 
 // check that unsigned multiplication does not overflow
-template<class T> bool is_mul_ok(T count, T elsize)
+template <class T>
+bool is_mul_ok(T count, T elsize)
 {
-  CASSERT((T)(-1) > 0); // make sure T is unsigned
-  if ( elsize  == 0 || count == 0 )
-    return true;
-  return count <= ((T)(-1)) / elsize;
+	CASSERT(static_cast<T>(-1) > 0); // make sure T is unsigned
+	if (elsize == 0 || count == 0)
+		return true;
+	return count <= static_cast<T>(-1) / elsize;
 }
 
 // multiplication that saturates (yields the biggest value) instead of overflowing
 // such a construct is useful in "operator new[]"
-template<class T> bool saturated_mul(T count, T elsize)
+template <class T>
+bool saturated_mul(T count, T elsize)
 {
-  return is_mul_ok(count, elsize) ? count * elsize : T(-1);
+	return is_mul_ok(count, elsize) ? count * elsize : T(-1);
 }
 
 #include <stddef.h> // for size_t
@@ -203,144 +205,163 @@ template<class T> bool saturated_mul(T count, T elsize)
 // memcpy() with determined behavoir: it always copies
 // from the start to the end of the buffer
 // note: it copies byte by byte, so it is not equivalent to, for example, rep movsd
-inline void *qmemcpy(void *dst, const void *src, size_t cnt)
+inline void* qmemcpy(void* dst, const void* src, size_t cnt)
 {
-  char *out = (char *)dst;
-  const char *in = (const char *)src;
-  while ( cnt > 0 )
-  {
-    *out++ = *in++;
-    --cnt;
-  }
-  return dst;
+	char* out = static_cast<char*>(dst);
+	const char* in = static_cast<const char*>(src);
+	while (cnt > 0)
+	{
+		*out++ = *in++;
+		--cnt;
+	}
+	return dst;
 }
 
 // Generate a reference to pair of operands
-template<class T>  int16 __PAIR__( int8  high, T low) { return ((( int16)high) << sizeof(high)*8) | uint8(low); }
-template<class T>  int32 __PAIR__( int16 high, T low) { return ((( int32)high) << sizeof(high)*8) | uint16(low); }
-template<class T>  int64 __PAIR__( int32 high, T low) { return ((( int64)high) << sizeof(high)*8) | uint32(low); }
-template<class T> uint16 __PAIR__(uint8  high, T low) { return (((uint16)high) << sizeof(high)*8) | uint8(low); }
-template<class T> uint32 __PAIR__(uint16 high, T low) { return (((uint32)high) << sizeof(high)*8) | uint16(low); }
-template<class T> uint64 __PAIR__(uint32 high, T low) { return (((uint64)high) << sizeof(high)*8) | uint32(low); }
+template <class T>
+int16 __PAIR__(int8 high, T low) { return (static_cast<int16>(high) << sizeof(high) * 8) | static_cast<uint8>(low); }
 
-// rotate left
-template<class T> T __ROL__(T value, int count)
+template <class T>
+int32 __PAIR__(int16 high, T low) { return (static_cast<int32>(high) << sizeof(high) * 8) | static_cast<uint16>(low); }
+
+template <class T>
+int64 __PAIR__(int32 high, T low) { return (static_cast<int64>(high) << sizeof(high) * 8) | static_cast<uint32>(low); }
+
+template <class T>
+uint16 __PAIR__(uint8 high, T low) { return (static_cast<uint16>(high) << sizeof(high) * 8) | static_cast<uint8>(low); }
+
+template <class T>
+uint32 __PAIR__(uint16 high, T low)
 {
-  const uint nbits = sizeof(T) * 8;
-
-  if ( count > 0 )
-  {
-    count %= nbits;
-    T high = value >> (nbits - count);
-    if ( T(-1) < 0 ) // signed value
-      high &= ~((T(-1) << count));
-    value <<= count;
-    value |= high;
-  }
-  else
-  {
-    count = -count % nbits;
-    T low = value << (nbits - count);
-    value >>= count;
-    value |= low;
-  }
-  return value;
+	return (static_cast<uint32>(high) << sizeof(high) * 8) | static_cast<uint16>(low);
 }
 
-inline uint8  __ROL1__(uint8  value, int count) { return __ROL__((uint8)value, count); }
-inline uint16 __ROL2__(uint16 value, int count) { return __ROL__((uint16)value, count); }
-inline uint32 __ROL4__(uint32 value, int count) { return __ROL__((uint32)value, count); }
-inline uint64 __ROL8__(uint64 value, int count) { return __ROL__((uint64)value, count); }
-inline uint8  __ROR1__(uint8  value, int count) { return __ROL__((uint8)value, -count); }
-inline uint16 __ROR2__(uint16 value, int count) { return __ROL__((uint16)value, -count); }
-inline uint32 __ROR4__(uint32 value, int count) { return __ROL__((uint32)value, -count); }
-inline uint64 __ROR8__(uint64 value, int count) { return __ROL__((uint64)value, -count); }
+template <class T>
+uint64 __PAIR__(uint32 high, T low)
+{
+	return (static_cast<uint64>(high) << sizeof(high) * 8) | static_cast<uint32>(low);
+}
+
+// rotate left
+template <class T>
+T __ROL__(T value, int count)
+{
+	const uint nbits = sizeof(T) * 8;
+
+	if (count > 0)
+	{
+		count %= nbits;
+		T high = value >> (nbits - count);
+		if (T(-1) < 0) // signed value
+			high &= ~((T(-1) << count));
+		value <<= count;
+		value |= high;
+	}
+	else
+	{
+		count = -count % nbits;
+		T low = value << (nbits - count);
+		value >>= count;
+		value |= low;
+	}
+	return value;
+}
+
+inline uint8 __ROL1__(uint8 value, int count) { return __ROL__(static_cast<uint8>(value), count); }
+inline uint16 __ROL2__(uint16 value, int count) { return __ROL__(static_cast<uint16>(value), count); }
+inline uint32 __ROL4__(uint32 value, int count) { return __ROL__(static_cast<uint32>(value), count); }
+inline uint64 __ROL8__(uint64 value, int count) { return __ROL__(static_cast<uint64>(value), count); }
+inline uint8 __ROR1__(uint8 value, int count) { return __ROL__(static_cast<uint8>(value), -count); }
+inline uint16 __ROR2__(uint16 value, int count) { return __ROL__(static_cast<uint16>(value), -count); }
+inline uint32 __ROR4__(uint32 value, int count) { return __ROL__(static_cast<uint32>(value), -count); }
+inline uint64 __ROR8__(uint64 value, int count) { return __ROL__(static_cast<uint64>(value), -count); }
 
 // carry flag of left shift
-template<class T> int8 __MKCSHL__(T value, uint count)
+template <class T>
+int8 __MKCSHL__(T value, uint count)
 {
-  const uint nbits = sizeof(T) * 8;
-  count %= nbits;
+	const uint nbits = sizeof(T) * 8;
+	count %= nbits;
 
-  return (value >> (nbits-count)) & 1;
+	return (value >> (nbits - count)) & 1;
 }
 
 // carry flag of right shift
-template<class T> int8 __MKCSHR__(T value, uint count)
+template <class T>
+int8 __MKCSHR__(T value, uint count)
 {
-  return (value >> (count-1)) & 1;
+	return (value >> (count - 1)) & 1;
 }
 
 // sign flag
-template<class T> int8 __SETS__(T x)
+template <class T>
+int8 __SETS__(T x)
 {
-  if ( sizeof(T) == 1 )
-    return int8(x) < 0;
-  if ( sizeof(T) == 2 )
-    return int16(x) < 0;
-  if ( sizeof(T) == 4 )
-    return int32(x) < 0;
-  return int64(x) < 0;
+	if (sizeof(T) == 1)
+		return static_cast<int8>(x) < 0;
+	if (sizeof(T) == 2)
+		return static_cast<int16>(x) < 0;
+	if (sizeof(T) == 4)
+		return static_cast<int32>(x) < 0;
+	return static_cast<int64>(x) < 0;
 }
 
 // overflow flag of subtraction (x-y)
-template<class T, class U> int8 __OFSUB__(T x, U y)
+template <class T, class U>
+int8 __OFSUB__(T x, U y)
 {
-  if ( sizeof(T) < sizeof(U) )
-  {
-    U x2 = x;
-    int8 sx = __SETS__(x2);
-    return (sx ^ __SETS__(y)) & (sx ^ __SETS__(x2-y));
-  }
-  else
-  {
-    T y2 = y;
-    int8 sx = __SETS__(x);
-    return (sx ^ __SETS__(y2)) & (sx ^ __SETS__(x-y2));
-  }
+	if (sizeof(T) < sizeof(U))
+	{
+		U x2 = x;
+		int8 sx = __SETS__(x2);
+		return (sx ^ __SETS__(y)) & (sx ^ __SETS__(x2 - y));
+	}
+	T y2 = y;
+	int8 sx = __SETS__(x);
+	return (sx ^ __SETS__(y2)) & (sx ^ __SETS__(x - y2));
 }
 
 // overflow flag of addition (x+y)
-template<class T, class U> int8 __OFADD__(T x, U y)
+template <class T, class U>
+int8 __OFADD__(T x, U y)
 {
-  if ( sizeof(T) < sizeof(U) )
-  {
-    U x2 = x;
-    int8 sx = __SETS__(x2);
-    return ((1 ^ sx) ^ __SETS__(y)) & (sx ^ __SETS__(x2+y));
-  }
-  else
-  {
-    T y2 = y;
-    int8 sx = __SETS__(x);
-    return ((1 ^ sx) ^ __SETS__(y2)) & (sx ^ __SETS__(x+y2));
-  }
+	if (sizeof(T) < sizeof(U))
+	{
+		U x2 = x;
+		int8 sx = __SETS__(x2);
+		return ((1 ^ sx) ^ __SETS__(y)) & (sx ^ __SETS__(x2 + y));
+	}
+	T y2 = y;
+	int8 sx = __SETS__(x);
+	return ((1 ^ sx) ^ __SETS__(y2)) & (sx ^ __SETS__(x + y2));
 }
 
 // carry flag of subtraction (x-y)
-template<class T, class U> int8 __CFSUB__(T x, U y)
+template <class T, class U>
+int8 __CFSUB__(T x, U y)
 {
-  int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
-  if ( size == 1 )
-    return uint8(x) < uint8(y);
-  if ( size == 2 )
-    return uint16(x) < uint16(y);
-  if ( size == 4 )
-    return uint32(x) < uint32(y);
-  return uint64(x) < uint64(y);
+	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
+	if (size == 1)
+		return static_cast<uint8>(x) < static_cast<uint8>(y);
+	if (size == 2)
+		return static_cast<uint16>(x) < static_cast<uint16>(y);
+	if (size == 4)
+		return static_cast<uint32>(x) < static_cast<uint32>(y);
+	return static_cast<uint64>(x) < static_cast<uint64>(y);
 }
 
 // carry flag of addition (x+y)
-template<class T, class U> int8 __CFADD__(T x, U y)
+template <class T, class U>
+int8 __CFADD__(T x, U y)
 {
-  int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
-  if ( size == 1 )
-    return uint8(x) > uint8(x+y);
-  if ( size == 2 )
-    return uint16(x) > uint16(x+y);
-  if ( size == 4 )
-    return uint32(x) > uint32(x+y);
-  return uint64(x) > uint64(x+y);
+	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
+	if (size == 1)
+		return static_cast<uint8>(x) > static_cast<uint8>(x + y);
+	if (size == 2)
+		return static_cast<uint16>(x) > static_cast<uint16>(x + y);
+	if (size == 4)
+		return static_cast<uint32>(x) > static_cast<uint32>(x + y);
+	return static_cast<uint64>(x) > static_cast<uint64>(x + y);
 }
 
 #else

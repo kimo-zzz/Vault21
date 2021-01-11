@@ -1,16 +1,19 @@
-struct HookStruct {
+struct HookStruct
+{
 	DWORD og_fun;
 	DWORD hk_fun;
 	DWORD oldProtection;
 };
 
-struct HookStructHWBP {
+struct HookStructHWBP
+{
 	DWORD og_fun;
 	DWORD hk_fun;
 	uint8_t RegIndex;
 };
 
-class LeagueHooks {
+class LeagueHooks
+{
 public:
 	static bool IsDoneInit;
 	static PVOID VEH_Handle;
@@ -22,7 +25,8 @@ public:
 	static bool deinit();
 };
 
-class LeagueHooksVEH : LeagueHooks {
+class LeagueHooksVEH : LeagueHooks
+{
 private:
 	static bool Hook(DWORD original_fun, DWORD hooked_fun);
 public:
@@ -31,7 +35,8 @@ public:
 	static bool UnHook(DWORD original_fun);
 };
 
-class LeagueHooksHWBP : LeagueHooks {
+class LeagueHooksHWBP : LeagueHooks
+{
 private:
 	static bool Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegIndex);
 public:
@@ -40,20 +45,23 @@ public:
 	static bool UnHook(uint8_t RegIndex);
 };
 
-struct LeagueDecryptData {
+struct LeagueDecryptData
+{
 	int totalSuccessDecrypted;
 	int totalSuccess_PAGE_NOACCESS;
 	int totalSuccess_EXCEPTION_CONTINUE_EXECUTION;
 	int totalFailedDecrypted;
 };
 
-class LeagueDecrypt {
+class LeagueDecrypt
+{
 public:
 	static int IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers, size_t& i);
 	static LeagueDecryptData decrypt(const wchar_t* szModule, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers);
 };
 
-struct VECTORED_HANDLER_ENTRY {
+struct VECTORED_HANDLER_ENTRY
+{
 	VECTORED_HANDLER_ENTRY* next;
 	VECTORED_HANDLER_ENTRY* previous;
 	void* refs;
@@ -61,7 +69,8 @@ struct VECTORED_HANDLER_ENTRY {
 	PVECTORED_EXCEPTION_HANDLER handler;
 };
 
-struct _VECTORED_HANDLER_LIST {
+struct _VECTORED_HANDLER_LIST
+{
 	void* mutex_exception;
 	VECTORED_HANDLER_ENTRY* first_exception_handler;
 	VECTORED_HANDLER_ENTRY* last_exception_handler;
@@ -70,7 +79,8 @@ struct _VECTORED_HANDLER_LIST {
 	VECTORED_HANDLER_ENTRY* last_continue_handler;
 };
 
-class Process {
+class Process
+{
 public:
 	static DWORD process_cookie_;
 	static const DWORD GetProcessCookie();

@@ -17,11 +17,10 @@ protected:
 	Direct3D9Capture();
 public:
 	virtual ~Direct3D9Capture();
-	virtual HMODULE GetCaptureModule();
-	virtual HRESULT TryCapture();
-	virtual HRESULT FreeCapture();
+	HMODULE GetCaptureModule() override;
+	HRESULT TryCapture() override;
+	HRESULT FreeCapture() override;
 
 	static Direct3D9Capture* singleton();
 	static void destroy_singleton();
 };
-

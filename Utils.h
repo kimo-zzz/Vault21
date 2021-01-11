@@ -42,7 +42,7 @@ inline char* GetStr(DWORD offset) {
 
 inline char* GetStr2(DWORD offset) {
 	//if (*(int*)(offset + 0x10) > 15)
-		return (char*)(*(DWORD*)offset);
+	return (char*)(*(DWORD*)offset);
 	//else
 		//return (char*)offset;
 }
@@ -260,7 +260,7 @@ inline bool UnHookNTDLL() {
 			memcpy((LPVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress), (LPVOID)((DWORD_PTR)ntdllMappingAddress + (DWORD_PTR)hookedSectionHeader->VirtualAddress), hookedSectionHeader->Misc.VirtualSize);
 			//isProtected = VirtualProtect((LPVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress), hookedSectionHeader->Misc.VirtualSize, oldProtection, &oldProtection);
 
-			res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, oldProtection &oldProtection);
+			res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, oldProtection & oldProtection);
 			if (!NT_SUCCESS(res)) {
 				CloseHandle(process);
 				CloseHandle(ntdllFile);

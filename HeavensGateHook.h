@@ -2,7 +2,7 @@
 #include "syscalls.hpp"
 
 const char* call = nullptr;
-DWORD		syscall;
+DWORD syscall;
 
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 LPVOID HGateCopy = nullptr;
@@ -14,32 +14,37 @@ extern ExampleAppLog AppLog;
 const DWORD_PTR __declspec(naked) GetGateAddress()
 {
 	__asm
-	{
+		{
 		mov eax, dword ptr fs : [0xC0]
 		ret
-	}
+		}
 }
 
-void saveToLog(std::string msg) {
+void saveToLog(std::string msg)
+{
 	FILE* logfile;
-	if ((logfile = fopen("log.txt", "a+")) != NULL)
+	if ((logfile = fopen("log.txt", "a+")) != nullptr)
 	{
 		fprintf(logfile, (msg).c_str());
 		fclose(logfile);
 	}
 }
 
-void LogNtProtectVirtualMemory(DWORD Handle, DWORD *Address_1, DWORD *DwSizee, DWORD New, DWORD _ret1, DWORD _ret2) {
+void LogNtProtectVirtualMemory(DWORD Handle, DWORD* Address_1, DWORD* DwSizee, DWORD New, DWORD _ret1, DWORD _ret2)
+{
 	std::string elem;
-	elem = "NtProtectVirtualMemory RETURN : [" + hexify<DWORD>(DWORD(_ret2)) + 
-		"]\n\t\tAddress : [" + hexify<DWORD>(DWORD(*Address_1)) + //create a filter on desired module range to avoid crash
-		"]\tSize : [" + hexify<DWORD>(DWORD(*DwSizee)) +  //create a filter on desired module range to avoid crash
-		"]\tNewProtect : [" + hexify<DWORD>(DWORD(New)) + "]\n";
+	elem = "NtProtectVirtualMemory RETURN : [" + hexify<DWORD>(static_cast<DWORD>(_ret2)) +
+		"]\n\t\tAddress : [" + hexify<DWORD>(static_cast<DWORD>(*Address_1)) +
+		//create a filter on desired module range to avoid crash
+		"]\tSize : [" + hexify<DWORD>(static_cast<DWORD>(*DwSizee)) +
+		//create a filter on desired module range to avoid crash
+		"]\tNewProtect : [" + hexify<DWORD>(static_cast<DWORD>(New)) + "]\n";
 	AppLog.AddLog(elem.c_str());
 }
 
 DWORD Handle, *Address_1, New, Old, *DwSizee;
 DWORD _ret1, _ret2;
+
 void __declspec(naked) hk_NtProtectVirtualMemory()
 {
 	__asm {
@@ -60,7 +65,7 @@ void __declspec(naked) hk_NtProtectVirtualMemory()
 		mov Old, eax
 		mov eax, Backup_Eax
 		pushad
-	}
+		}
 
 	LogNtProtectVirtualMemory(Handle, Address_1, DwSizee, New, _ret1, _ret2);
 
@@ -68,16 +73,19 @@ void __declspec(naked) hk_NtProtectVirtualMemory()
 	__asm jmp HGateCopy
 }
 
-void LogNtQueryVirtualMemory(DWORD ProcessHandle, DWORD BaseAddress, DWORD _ret1, DWORD _ret2) {
+void LogNtQueryVirtualMemory(DWORD ProcessHandle, DWORD BaseAddress, DWORD _ret1, DWORD _ret2)
+{
 	std::string elem;
-	elem = "NtQueryVirtualMemory RETURN : [" + hexify<DWORD>(DWORD(_ret2)) + "]\n\t\tAddress : [" + hexify<DWORD>(DWORD(BaseAddress)) + "]\n";
+	elem = "NtQueryVirtualMemory RETURN : [" + hexify<DWORD>(static_cast<DWORD>(_ret2)) + "]\n\t\tAddress : [" + hexify<
+		DWORD>(static_cast<DWORD>(BaseAddress)) + "]\n";
 	AppLog.AddLog(elem.c_str());
 }
 
 DWORD ProcessHandle, BaseAddress, BaseAddress2, AllocationBase, AllocationProtect, PartitionId,
-RegionSize, State, Protect, typex, MemoryInformation, MemoryInformationLength, ReturnLength;
+      RegionSize, State, Protect, typex, MemoryInformation, MemoryInformationLength, ReturnLength;
 
 DWORD ret1, ret2;
+
 void __declspec(naked) hk_NtQueryVirtualMemory()
 {
 	__asm {
@@ -116,7 +124,7 @@ void __declspec(naked) hk_NtQueryVirtualMemory()
 		*/
 		mov eax, Backup_Eax
 		pushad
-	}
+		}
 
 	LogNtQueryVirtualMemory(ProcessHandle, BaseAddress, ret1, ret2);
 
@@ -131,25 +139,30 @@ void __declspec(naked) hk_NtReadVirtualMemory()
 	__asm jmp HGateCopy
 }
 
-void LogUniversal(const char* pCall) {
+void LogUniversal(const char* pCall)
+{
 	std::string elem;
 	elem = std::string(pCall) + "\n";
 	AppLog.AddLog(elem.c_str());
 }
 
-void _LogUniversal(const char* pCall, DWORD addr1, DWORD addr2) {
+void _LogUniversal(const char* pCall, DWORD addr1, DWORD addr2)
+{
 	std::string elem;
 	elem = std::string(pCall) + " : RETURN [" + hexify<DWORD>(addr2) + "]" + "\n";
 	AppLog.AddLog(elem.c_str());
 }
 
 DWORD RETURN1, RETURN2;
-_CRT_STDIO_INLINE void __CRTDECL LogGateData() {
+_CRT_STDIO_INLINE void __CRTDECL LogGateData()
+{
 	call = findName(syscall);
 
-	if (call == nullptr) {
+	if (call == nullptr)
+	{
 	}
-	else {
+	else
+	{
 		//LogUniversal(call);
 
 		//create a filter on desired module range to avoid crash
@@ -157,37 +170,42 @@ _CRT_STDIO_INLINE void __CRTDECL LogGateData() {
 	}
 }
 
-NTSTATUS hk_NtGetContextThread(HANDLE ThreadHandle,PCONTEXT pContext) {
+NTSTATUS hk_NtGetContextThread(HANDLE ThreadHandle, PCONTEXT pContext)
+{
 	AppLog.AddLog("NtGetContextThread : Hooked! Doing nothing! XD\n");
-	return (NTSTATUS)0;
+	return static_cast<NTSTATUS>(0);
 }
 
-NTSTATUS hk_NtSetContextThread(HANDLE ThreadHandle, PCONTEXT pContext) {
+NTSTATUS hk_NtSetContextThread(HANDLE ThreadHandle, PCONTEXT pContext)
+{
 	AppLog.AddLog("NtSetContextThread : Hooked! Doing nothing! XD\n");
-	return (NTSTATUS)0;
+	return static_cast<NTSTATUS>(0);
 }
 
-NTSTATUS hk_NtSuspendThread(HANDLE ThreadHandle, PULONG PreviousSuspendCount) {
+NTSTATUS hk_NtSuspendThread(HANDLE ThreadHandle, PULONG PreviousSuspendCount)
+{
 	AppLog.AddLog("NtSuspendThread : Plz dont suspend threads :(\n");
-	return (NTSTATUS)0;
+	return static_cast<NTSTATUS>(0);
 }
 
-NTSTATUS hk_NtTerminateProcess(HANDLE ProcessHandle, NTSTATUS ExitStatus) {
+NTSTATUS hk_NtTerminateProcess(HANDLE ProcessHandle, NTSTATUS ExitStatus)
+{
 	AppLog.AddLog("NtTerminateProcess : Plz dont terminate process :(\n");
-	return (NTSTATUS)0;
+	return static_cast<NTSTATUS>(0);
 }
 
 void __declspec(naked) hk_NtRaiseException()
 {
 	__asm {
 		pushad
-	}
+		}
 	AppLog.AddLog("NtRaiseException : Called.\n");
 	__asm popad
 	__asm jmp HGateCopy
 }
 
-void __declspec(naked) hk_Wow64Trampoline() {
+void __declspec(naked) hk_Wow64Trampoline()
+{
 	//////////////////////////
 	//  create a filter on desired module range to avoid crash
 	//////////////////////////
@@ -213,7 +231,7 @@ void __declspec(naked) hk_Wow64Trampoline() {
 
 		cmp eax, 0x166 //64bit Syscall id of NtRaiseException
 		je hk_NtRaiseException
-	}
+		}
 	/*
 	__asm pushad
 	__asm mov syscall, eax
@@ -237,7 +255,7 @@ const LPVOID CreateNewJump()
 {
 	DWORD_PTR Gate = GetGateAddress();
 	HGateCopy = VirtualAlloc(nullptr, 0x1000, MEM_RESERVE | MEM_COMMIT,
-		PAGE_EXECUTE_READWRITE);
+	                         PAGE_EXECUTE_READWRITE);
 	memcpy(HGateCopy, (void*)Gate, 9);
 
 	return HGateCopy;
@@ -248,24 +266,32 @@ const void WriteJump(const DWORD_PTR dwWow64Address, const void* pBuffer, size_t
 	DWORD dwOldProtect = 0;
 
 	auto addr = (PVOID)dwWow64Address;
-	auto size = (SIZE_T)(0x1000);
+	auto size = static_cast<SIZE_T>(0x1000);
 
-	if (NT_SUCCESS(makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READWRITE, &dwOldProtect))) {
+	if (NT_SUCCESS(
+		makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+			GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READWRITE, &dwOldProtect)))
+	{
 	}
-	else {
+	else
+	{
 	}
 
 	(void)memcpy((void*)dwWow64Address, pBuffer, ulSize);
 
-	if (NT_SUCCESS(makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, dwOldProtect, &dwOldProtect))) {
+	if (NT_SUCCESS(
+		makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+			GetCurrentProcess(), &addr, &size, dwOldProtect, &dwOldProtect)))
+	{
 	}
-	else {
+	else
+	{
 	}
 }
 
 const void EnableHeavensGateHook()
 {
-	AppLog.AddLog(("Gate: " + hexify<DWORD>(DWORD(GetGateAddress())) + "\n").c_str());
+	AppLog.AddLog(("Gate: " + hexify<DWORD>(static_cast<DWORD>(GetGateAddress())) + "\n").c_str());
 	AppLog.AddLog(("Trampoline Gate: " + hexify<DWORD>(DWORD(CreateNewJump())) + "\n").c_str());
 	AppLog.AddLog(("Hook Gate: " + hexify<DWORD>(DWORD(hk_Wow64Trampoline)) + "\n").c_str());
 
@@ -273,9 +299,9 @@ const void EnableHeavensGateHook()
 
 	char trampolineBytes[] =
 	{
-		0x68, 0xDD, 0xCC, 0xBB, 0xAA,       /*push 0xAABBCCDD*/
-		0xC3,                               /*ret*/
-		0xCC, 0xCC, 0xCC                    /*padding*/
+		0x68, 0xDD, 0xCC, 0xBB, 0xAA, /*push 0xAABBCCDD*/
+		0xC3, /*ret*/
+		0xCC, 0xCC, 0xCC /*padding*/
 	};
 	memcpy(&trampolineBytes[1], &Hook_Gate, 4);
 	WriteJump(GetGateAddress(), trampolineBytes, sizeof(trampolineBytes));

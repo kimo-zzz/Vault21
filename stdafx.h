@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <stdexcept>
 #include <map>
-#include <list> 
+#include <list>
 #include <math.h>
 #include <Shlobj.h>
 #include <Windows.h>
@@ -31,7 +31,7 @@
 
 #pragma comment (lib, "gdiplus.lib")
 #include <ntverp.h>
-#if (WINVER >= 0x0A00 )          
+#if (WINVER >= 0x0A00 )
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include "d3dx12.h"
@@ -53,7 +53,7 @@ using namespace Microsoft::WRL;
 //#include "Direct3D9Renderer.h"
 //#include "Direct3D10Renderer.h"
 //#include "Direct3D11Renderer.h"
-#if (WINVER >= 0x0A00 )      
+#if (WINVER >= 0x0A00 )
 //#include "Direct3D12Renderer.h"
 #endif
 

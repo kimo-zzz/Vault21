@@ -156,6 +156,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 
 void OnExit() noexcept
 {
+	config::save();
 	if (running)
 	{
 		running = false;

@@ -17,11 +17,12 @@ namespace DX11
 	public:
 		static bool bIsOpen;
 		static void Render11();
-		static void Content(); 
+		static void Content();
 		static void Render9();
 	};
 
-	namespace config {
+	namespace config
+	{
 		extern int32_t current_combo_skin_index;
 		extern int32_t current_combo_ward_index;
 		extern int32_t current_combo_minion_index;
@@ -37,7 +38,6 @@ namespace DX11
 		void load();
 		void reset();
 	};
-
 }
 
 extern CFunctions Functions;

@@ -15,14 +15,17 @@
 #define XIP Eip
 #endif
 
-typedef struct _UNICODE_STRING {
+typedef struct _UNICODE_STRING
+{
 	USHORT Length;
 	USHORT MaximumLength;
-	PWSTR  Buffer;
+	PWSTR Buffer;
 } UNICODE_STRING;
+
 typedef UNICODE_STRING* PUNICODE_STRING;
 
-typedef struct _OBJECT_ATTRIBUTES {
+typedef struct _OBJECT_ATTRIBUTES
+{
 	ULONG Length;
 	HANDLE RootDirectory;
 	PUNICODE_STRING ObjectName;
@@ -30,9 +33,11 @@ typedef struct _OBJECT_ATTRIBUTES {
 	PVOID SecurityDescriptor;
 	PVOID SecurityQualityOfService;
 } OBJECT_ATTRIBUTES;
+
 typedef OBJECT_ATTRIBUTES* POBJECT_ATTRIBUTES;
 
-typedef struct _CLIENT_ID {
+typedef struct _CLIENT_ID
+{
 	HANDLE UniqueProcess;
 	HANDLE UniqueThread;
 } CLIENT_ID;
@@ -255,21 +260,20 @@ bool LeagueHooks::IsDoneInit = false;
 DWORD LeagueHooks::init()
 {
 	//Register the Custom Exception Handler
-	if (!IsDoneInit) {
+	if (!IsDoneInit)
+	{
 		//VEH_Handle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)LeoHandler);
-		VEH_Handle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)LeoHandler);
+		VEH_Handle = AddVectoredExceptionHandler(1, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
 		IsDoneInit = true;
 	}
 	//AppLog.AddLog(("LeoHandler: " + hexify<DWORD>((DWORD)LeoHandler) + "\n").c_str());
 	//AppLog.AddLog(("VEH_Handle: " + hexify<DWORD>((DWORD)VEH_Handle) + "\n").c_str());
 
 	//Toggle PAGE_GUARD flag on the page
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		return (DWORD)LeoHandler;
-	}
-	else {
-		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
-	}
+	} //MessageBoxA(0, "no VEH_Hanlde", "", 0);
 	return 0;
 }
 
@@ -290,7 +294,8 @@ bool LeagueHooks::AreInSamePage(const DWORD* Addr1, const DWORD* Addr2)
 }
 
 
-void DataLog(EXCEPTION_POINTERS* pExceptionInfo) {
+void DataLog(EXCEPTION_POINTERS* pExceptionInfo)
+{
 	static int j = 0;
 	AppLog.AddLog(("Entry: " + to_string(j) + "\n").c_str());
 	string ExceptionCode = "";
@@ -374,9 +379,9 @@ void DataLog(EXCEPTION_POINTERS* pExceptionInfo) {
 	{
 		ExceptionCode = "EXCEPTION_STACK_OVERFLOW";
 	}
-	
+
 	writeDataToFile("--------------------------------------------------------------------", 0x0);
-	writeDataToFile("ENTRY", (DWORD)j);
+	writeDataToFile("ENTRY", static_cast<DWORD>(j));
 	writeDataToFile(ExceptionCode, 0x0);
 	writeDataToFile("ContextRecord->ContextFlags", pExceptionInfo->ContextRecord->ContextFlags);
 	writeDataToFile("ContextRecord->EFlags", pExceptionInfo->ContextRecord->EFlags);
@@ -402,8 +407,9 @@ void DataLog(EXCEPTION_POINTERS* pExceptionInfo) {
 	writeDataToFile("ContextRecord->SegGs", pExceptionInfo->ContextRecord->SegGs);
 	writeDataToFile("ContextRecord->SegSs", pExceptionInfo->ContextRecord->SegSs);
 	int i = 0;
-	for (BYTE b : pExceptionInfo->ContextRecord->ExtendedRegisters) {
-		writeDataToFile("ContextRecord->ExtendedRegisters[" + to_string(i) + "]", (DWORD)b);
+	for (BYTE b : pExceptionInfo->ContextRecord->ExtendedRegisters)
+	{
+		writeDataToFile("ContextRecord->ExtendedRegisters[" + to_string(i) + "]", static_cast<DWORD>(b));
 		i++;
 	}
 	writeDataToFile("ContextRecord->FloatSave.ControlWord", pExceptionInfo->ContextRecord->FloatSave.ControlWord);
@@ -415,8 +421,9 @@ void DataLog(EXCEPTION_POINTERS* pExceptionInfo) {
 	writeDataToFile("ContextRecord->FloatSave.StatusWord", pExceptionInfo->ContextRecord->FloatSave.StatusWord);
 	writeDataToFile("ContextRecord->FloatSave.TagWord", pExceptionInfo->ContextRecord->FloatSave.TagWord);
 	i = 0;
-	for (BYTE b : pExceptionInfo->ContextRecord->FloatSave.RegisterArea) {
-		writeDataToFile("ContextRecord->FloatSave.RegisterArea["+to_string(i)+"]", (DWORD)b);
+	for (BYTE b : pExceptionInfo->ContextRecord->FloatSave.RegisterArea)
+	{
+		writeDataToFile("ContextRecord->FloatSave.RegisterArea[" + to_string(i) + "]", static_cast<DWORD>(b));
 		i++;
 	}
 	writeDataToFile("ExceptionRecord->ExceptionAddress", (DWORD)pExceptionInfo->ExceptionRecord->ExceptionAddress);
@@ -424,12 +431,14 @@ void DataLog(EXCEPTION_POINTERS* pExceptionInfo) {
 	writeDataToFile("ExceptionRecord->ExceptionFlags", pExceptionInfo->ExceptionRecord->ExceptionFlags);
 	writeDataToFile("ExceptionRecord->NumberParameters", pExceptionInfo->ExceptionRecord->NumberParameters);
 	i = 0;
-	for (ULONG_PTR u : pExceptionInfo->ExceptionRecord->ExceptionInformation) {
-		writeDataToFile("ExceptionRecord->ExceptionInformation[" + to_string(i) + "]", (DWORD)u);
+	for (ULONG_PTR u : pExceptionInfo->ExceptionRecord->ExceptionInformation)
+	{
+		writeDataToFile("ExceptionRecord->ExceptionInformation[" + to_string(i) + "]", static_cast<DWORD>(u));
 		i++;
 	}
 	j++;
 }
+
 LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 {
 	/*if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
@@ -514,59 +523,77 @@ LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 	}*/
 
 	//DataLog(pExceptionInfo);
-	
+
 	//PAGE_GUARD
-	if (pExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_GUARD_PAGE_VIOLATION) //We will catch PAGE_GUARD Violation
+	if (pExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_GUARD_PAGE_VIOLATION)
+		//We will catch PAGE_GUARD Violation
 	{
-		for (HookStruct hs : hookListPG) {
-			if (pExceptionInfo->ContextRecord->XIP == (DWORD)hs.og_fun) //Make sure we are at the address we want within the page
+		for (HookStruct hs : hookListPG)
+		{
+			if (pExceptionInfo->ContextRecord->XIP == static_cast<DWORD>(hs.og_fun))
+				//Make sure we are at the address we want within the page
 			{
 				//print_parameters(pExceptionInfo->ContextRecord);
 				//hk_OnProcessSpell2(pExceptionInfo->ContextRecord);
-				pExceptionInfo->ContextRecord->XIP = (DWORD)hs.hk_fun; //Modify EIP/RIP to where we want to jump to instead of the original function
+				pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.hk_fun);
+				//Modify EIP/RIP to where we want to jump to instead of the original function
 			}
 		}
 
-		pExceptionInfo->ContextRecord->EFlags |= 0x100; //Will trigger an STATUS_SINGLE_STEP exception right after the next instruction get executed. In short, we come right back into this exception handler 1 instruction later
+		pExceptionInfo->ContextRecord->EFlags |= 0x100;
+		//Will trigger an STATUS_SINGLE_STEP exception right after the next instruction get executed. In short, we come right back into this exception handler 1 instruction later
 		return EXCEPTION_CONTINUE_EXECUTION; //Continue to next instruction
 	}
 
-	if (pExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_SINGLE_STEP) //We will also catch STATUS_SINGLE_STEP, meaning we just had a PAGE_GUARD violation
+	if (pExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_SINGLE_STEP)
+		//We will also catch STATUS_SINGLE_STEP, meaning we just had a PAGE_GUARD violation
 	{
 		DWORD dwOld;
-		for (HookStruct hs : hookListPG) {
+		for (HookStruct hs : hookListPG)
+		{
 			auto addr = (PVOID)hs.og_fun;
-			auto size = (SIZE_T)((int)1);
-			NTSTATUS res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READ | PAGE_GUARD, &dwOld);
+			auto size = static_cast<SIZE_T>(static_cast<int>(1));
+			NTSTATUS res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2,
+			                                     0x14, 0x00)(GetCurrentProcess(), &addr, &size,
+			                                                 PAGE_EXECUTE_READ | PAGE_GUARD, &dwOld);
 		}
 
-		for (HookStructHWBP hs : hookListHWBP) {
-			if (pExceptionInfo->ContextRecord->XIP == (DWORD)hs.og_fun) //Make sure we are at the address we want within the page
+		for (HookStructHWBP hs : hookListHWBP)
+		{
+			if (pExceptionInfo->ContextRecord->XIP == static_cast<DWORD>(hs.og_fun))
+				//Make sure we are at the address we want within the page
 			{
 				pExceptionInfo->ContextRecord->Dr6 = 0;
-				pExceptionInfo->ContextRecord->XIP = (DWORD)hs.hk_fun; //Modify EIP/RIP to where we want to jump to instead of the original function
+				pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.hk_fun);
+				//Modify EIP/RIP to where we want to jump to instead of the original function
 			}
 		}
 		return EXCEPTION_CONTINUE_EXECUTION; //Continue the next instruction
 	}
 
-	return EXCEPTION_CONTINUE_SEARCH; //Keep going down the exception handling list to find the right handler IF it is not PAGE_GUARD nor SINGLE_STEP
+	return EXCEPTION_CONTINUE_SEARCH;
+	//Keep going down the exception handling list to find the right handler IF it is not PAGE_GUARD nor SINGLE_STEP
 	//return EXCEPTION_CONTINUE_EXECUTION; //Continue the next instruction
 }
 
-bool LeagueHooks::deinit() {
+bool LeagueHooks::deinit()
+{
 	DWORD old;
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		std::vector<HookStructHWBP> _hookList = hookListHWBP;
-		for (HookStructHWBP hs : _hookList) {
+		for (HookStructHWBP hs : _hookList)
+		{
 			LeagueHooksHWBP::UnHook(hs.RegIndex);
 		}
 
-		if (RemoveVectoredExceptionHandler(VEH_Handle)) {
+		if (RemoveVectoredExceptionHandler(VEH_Handle))
+		{
 			//MessageBoxA(0, "Hook Remove success", "", 0);
 			hookListHWBP.clear();
 
-			for (HookStruct hs : hookListPG) {
+			for (HookStruct hs : hookListPG)
+			{
 				/*
 				old = Controller->VirtualProtect((DWORD)og_fun, 1, oldProtection);
 				if (old) {
@@ -583,32 +610,35 @@ bool LeagueHooks::deinit() {
 				*/
 
 				auto addr = (PVOID)hs.og_fun;
-				auto size = (SIZE_T)((int)1);
+				auto size = static_cast<SIZE_T>(static_cast<int>(1));
 
-				if (NT_SUCCESS(makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, hs.oldProtection, &old))) {
+				if (NT_SUCCESS(
+					makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14,
+						0x00)(GetCurrentProcess(), &addr, &size, hs.oldProtection, &old)))
+				{
 					//MessageBoxA(0, "VirtualProtect success", "", 0);
 					//MessageBoxA(0, ("addr:" + hexify<DWORD>((DWORD)addr)).c_str(), "", 0);
 					//MessageBoxA(0, ("size:" + hexify<int>((int)size)).c_str(), "", 0);
 					//MessageBoxA(0, ("oldProtection:" + hexify<DWORD>((DWORD)old)).c_str(), "", 0);
 				}
-				else {
+				else
+				{
 					//MessageBoxA(0, "VirtualProtect failed", "", 0);
 				}
 			}
 			hookListPG.clear();
 			//MessageBoxA(0, "Hook Remove success", "", 0);
 			return true;
-		}
-		else {
-			//MessageBoxA(0, "RemoveVectoredExceptionHandler failed", "", 0);
-		}
+		} //MessageBoxA(0, "RemoveVectoredExceptionHandler failed", "", 0);
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
 	}
 
 	return false;
 }
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -617,19 +647,21 @@ bool LeagueHooksVEH::Hook(DWORD original_fun, DWORD hooked_fun)
 	HookStruct hs;
 	hs.og_fun = original_fun;
 	hs.hk_fun = hooked_fun;
-	
+
 	//We cannot hook two functions in the same page, because we will cause an infinite callback
 	if (AreInSamePage((const DWORD*)original_fun, (const DWORD*)hooked_fun))
 		return false;
 
 	//Register the Custom Exception Handler
-	if (!IsDoneInit) {
-		VEH_Handle = AddVectoredExceptionHandler(true, (PVECTORED_EXCEPTION_HANDLER)LeoHandler);
+	if (!IsDoneInit)
+	{
+		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
 		IsDoneInit = true;
 	}
 
 	//Toggle PAGE_GUARD flag on the page
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		/*
 		oldProtection = Controller->VirtualProtect((DWORD)og_fun, 1, PAGE_EXECUTE_READ | PAGE_GUARD);
 		if (oldProtection) {
@@ -641,27 +673,30 @@ bool LeagueHooksVEH::Hook(DWORD original_fun, DWORD hooked_fun)
 		*/
 
 		auto addr = (PVOID)original_fun;
-		auto size = (SIZE_T)((int)1);
+		auto size = static_cast<SIZE_T>(static_cast<int>(1));
 		hookListPG.push_back(hs);
-		if (NT_SUCCESS(makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READ | PAGE_GUARD, &hs.oldProtection))) {
+		if (NT_SUCCESS(
+			makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+				GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READ | PAGE_GUARD, &hs.oldProtection)))
+		{
 			//MessageBoxA(0, ("addr:" + hexify<DWORD>((DWORD)addr)).c_str(), "", 0);
 			//MessageBoxA(0, ("size:" + hexify<int>((int)size)).c_str(), "", 0);
 			//MessageBoxA(0, ("oldProtection:" + hexify<DWORD>((DWORD)oldProtection)).c_str(), "", 0);
 			//MessageBoxA(0, "VirtualProtect success", "", 0);
 			std::vector<HookStruct> hookListCopy = hookListPG;
-			for (HookStruct _hs : hookListCopy) {
-				if (_hs.og_fun == original_fun) {
+			for (HookStruct _hs : hookListCopy)
+			{
+				if (_hs.og_fun == original_fun)
+				{
 					_hs.oldProtection = hs.oldProtection;
 				}
 			}
 			hookListPG = hookListCopy;
 			return true;
-		}
-		else {
-			//MessageBoxA(0, "VirtualProtect failed", "", 0);
-		}
-
-	}else {
+		} //MessageBoxA(0, "VirtualProtect failed", "", 0);
+	}
+	else
+	{
 		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
 	}
 
@@ -673,8 +708,10 @@ bool LeagueHooksVEH::UnHook(DWORD original_fun)
 	bool isOrigFun_found = false;
 	HookStruct _hs;
 	std::vector<HookStruct> hookListCopy = hookListPG;
-	for (HookStruct hs : hookListCopy) {
-		if (hs.og_fun == original_fun) {
+	for (HookStruct hs : hookListCopy)
+	{
+		if (hs.og_fun == original_fun)
+		{
 			isOrigFun_found = true;
 			_hs = hs;
 		}
@@ -682,12 +719,14 @@ bool LeagueHooksVEH::UnHook(DWORD original_fun)
 	if (!isOrigFun_found)
 		return false;
 
-	if (!IsDoneInit || !VEH_Handle) {
+	if (!IsDoneInit || !VEH_Handle)
+	{
 		return false;
 	}
 
 	//Toggle PAGE_GUARD flag on the page
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		/*
 		oldProtection = Controller->VirtualProtect((DWORD)og_fun, 1, PAGE_EXECUTE_READ | PAGE_GUARD);
 		if (oldProtection) {
@@ -699,28 +738,29 @@ bool LeagueHooksVEH::UnHook(DWORD original_fun)
 		*/
 
 		auto addr = (PVOID)original_fun;
-		auto size = (SIZE_T)((int)1);
+		auto size = static_cast<SIZE_T>(static_cast<int>(1));
 
-		if (NT_SUCCESS(makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, _hs.oldProtection, &_hs.oldProtection))) {
+		if (NT_SUCCESS(
+			makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+				GetCurrentProcess(), &addr, &size, _hs.oldProtection, &_hs.oldProtection)))
+		{
 			//MessageBoxA(0, ("addr:" + hexify<DWORD>((DWORD)addr)).c_str(), "", 0);
 			//MessageBoxA(0, ("size:" + hexify<int>((int)size)).c_str(), "", 0);
 			//MessageBoxA(0, ("oldProtection:" + hexify<DWORD>((DWORD)oldProtection)).c_str(), "", 0);
 			//MessageBoxA(0, "VirtualProtect success", "", 0);
 		}
-		else {
+		else
+		{
 			//MessageBoxA(0, "VirtualProtect failed", "", 0);
 		}
 		return true;
-	}
-	else {
-		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
-	}
+	} //MessageBoxA(0, "no VEH_Hanlde", "", 0);
 
 	return false;
 }
 
-bool LeagueHooksVEH::addHook(DWORD address, DWORD hkAddress) {
-
+bool LeagueHooksVEH::addHook(DWORD address, DWORD hkAddress)
+{
 	/////////////////////////////////////
 	////      DRIVER USE ONLY
 	/////////////////////////////////////
@@ -754,28 +794,30 @@ bool LeagueHooksVEH::addHook(DWORD address, DWORD hkAddress) {
 	}
 	*/
 
-	if (Hook(address, hkAddress)) {
+	if (Hook(address, hkAddress))
+	{
 		return true;
-	}
-	else {
-		//MessageBoxA(0, "Hook Success!!!", "", 0);
-	}
+	} //MessageBoxA(0, "Hook Success!!!", "", 0);
 	return false;
 	//MessageBoxA(0, "Hooked", "", 0);
 }
 
-bool LeagueHooksVEH::removeHook(DWORD address) {
-	if (UnHook(address)) {
+bool LeagueHooksVEH::removeHook(DWORD address)
+{
+	if (UnHook(address))
+	{
 		std::vector<HookStruct> hookListCopy = hookListPG;
 		std::vector<HookStruct> _hookList = {};
-		for (HookStruct hs : hookListCopy) {
+		for (HookStruct hs : hookListCopy)
+		{
 			if (hs.og_fun != address)
 				_hookList.push_back(hs);
 		}
 		hookListPG = _hookList;
 		return true;
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "Hook Success!!!", "", 0);
 	}
 	return false;
@@ -793,12 +835,14 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 	//	return false;
 
 	//Register the Custom Exception Handler
-	if (!IsDoneInit || !VEH_Handle) {
+	if (!IsDoneInit || !VEH_Handle)
+	{
 		return false;
 	}
 
 	//Toggle PAGE_GUARD flag on the page
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 		THREADENTRY32 te32;
 		hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
@@ -814,15 +858,16 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 
 			do
 			{
-				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId()) //Ignore threads from other processes AND the own thread of course
+				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId())
+					//Ignore threads from other processes AND the own thread of course
 				{
-					std::string threadId = hexify<DWORD>(DWORD(te32.th32ThreadID));
+					std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
 
 					//bool isDone = false;
 					//while (!isDone) {
-						//MessageBoxA(0, (threadId + " Opening thread").c_str(), "", 0);
+					//MessageBoxA(0, (threadId + " Opening thread").c_str(), "", 0);
 
-					HANDLE ThreadHandle = 0;
+					HANDLE ThreadHandle = nullptr;
 					OBJECT_ATTRIBUTES ObjectAttributes;
 					CLIENT_ID ClientId;
 					InitializeObjectAttributes(&ObjectAttributes, NULL, NULL, NULL, NULL);
@@ -830,25 +875,35 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 					ClientId.UniqueProcess = (PVOID)te32.th32OwnerProcessID;
 					ClientId.UniqueThread = (PVOID)te32.th32ThreadID;
 
-					NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x10, 0x00)(&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME, &ObjectAttributes, &ClientId);
+					NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64",
+					                                     0x170, 0xC2, 0x10, 0x00)(
+						&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
+						&ObjectAttributes, &ClientId);
 					if (NT_SUCCESS(res))
 					{
-						if (ThreadHandle) {
+						if (ThreadHandle)
+						{
 							//AppLog.AddLog((threadId + ": OpenThread Success\n").c_str());
 							CONTEXT Ctx;
 							Ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
 
 							//MessageBoxA(0, (threadId + " GetThreadContext").c_str(), "", 0);
 							//if (GetThreadContext(hThread, &Ctx))
-							if (NT_SUCCESS(makesyscall<NTSTATUS>(0xF2, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
+							if (NT_SUCCESS(
+								makesyscall<NTSTATUS>(0xF2, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170,
+									0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
 							{
 								//AppLog.AddLog((threadId + ": GetThreadContext Success\n").c_str());
 
-								if (te32.th32ThreadID != GetCurrentThreadId()) {
+								if (te32.th32ThreadID != GetCurrentThreadId())
+								{
 									//SuspendThread(hThread);
-									NTSTATUS res = makesyscall<NTSTATUS>(0xBC, 0x01, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, NULL);
+									NTSTATUS res = makesyscall<NTSTATUS>(
+										0xBC, 0x01, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08,
+										0x00)(ThreadHandle, NULL);
 								}
-								else {
+								else
+								{
 									//AppLog.AddLog((threadId + ": CurrentThread detected. Maybe logs cannot be printed.\n").c_str());
 								}
 
@@ -873,82 +928,100 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 									switch (RegIndex)
 									{
 									case 0:
-										Ctx.Dr0 = (DWORD_PTR)0;
+										Ctx.Dr0 = static_cast<DWORD_PTR>(0);
 										break;
 									case 1:
-										Ctx.Dr1 = (DWORD_PTR)0;
+										Ctx.Dr1 = static_cast<DWORD_PTR>(0);
 										break;
 									case 2:
-										Ctx.Dr2 = (DWORD_PTR)0;
+										Ctx.Dr2 = static_cast<DWORD_PTR>(0);
 										break;
 									case 3:
-										Ctx.Dr3 = (DWORD_PTR)0;
+										Ctx.Dr3 = static_cast<DWORD_PTR>(0);
 										break;
 									default:
 										isInvalidReg = true;
 										break;
 									}
 
-									if (!isInvalidReg) {
+									if (!isInvalidReg)
+									{
 										//AppLog.AddLog((threadId + ": Valid Reg\n").c_str());
 
 										//Turn a local register on
-										Ctx.Dr7 &= ~(3ULL << (16 + 4 * RegIndex)); //00b at 16-17, 20-21, 24-25, 28-29 is execute bp
-										Ctx.Dr7 &= ~(3ULL << (18 + 4 * RegIndex)); // size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
+										Ctx.Dr7 &= ~(3ULL << (16 + 4 * RegIndex));
+										//00b at 16-17, 20-21, 24-25, 28-29 is execute bp
+										Ctx.Dr7 &= ~(3ULL << (18 + 4 * RegIndex));
+										// size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
 										Ctx.Dr7 |= 1ULL << (2 * RegIndex);
-										DWORD bitsToRemove = ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
+										DWORD bitsToRemove = ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16
+										)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
 										Ctx.Dr7 -= bitsToRemove;
 
 										//Still need to call suspend thread *TODO*
 										//MessageBoxA(0, (threadId + " SetThreadContext").c_str(), "", 0);
 										//if (SetThreadContext(hThread, &Ctx))
-										if (NT_SUCCESS(makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
+										if (NT_SUCCESS(
+											makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00,
+												"RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle
+												, &Ctx)))
 										{
 											//AppLog.AddLog((threadId + ": SetThreadContext success\n").c_str());
 											//isDone = true;
 										}
-										else {
+										else
+										{
 											//AppLog.AddLog((threadId + ": Failed to set thread context\n").c_str());
 										}
-
 									}
-									else {
+									else
+									{
 										//AppLog.AddLog((threadId + ": Invalid Reg\n").c_str());
 									}
 								}
-								else {
+								else
+								{
 									//AppLog.AddLog((threadId + ": Failed to find free Reg\n").c_str());
 								}
 								//MessageBoxA(0, (threadId + " ResumeThread").c_str() , "", 0);
-								if (te32.th32ThreadID != GetCurrentThreadId()) {
+								if (te32.th32ThreadID != GetCurrentThreadId())
+								{
 									//ResumeThread(hThread);
-									NTSTATUS res = makesyscall<NTSTATUS>(0x6E, 0x00, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, NULL);
+									NTSTATUS res = makesyscall<NTSTATUS>(
+										0x6E, 0x00, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08,
+										0x00)(ThreadHandle, NULL);
 								}
-								else {
+								else
+								{
 									//AppLog.AddLog((threadId + ": Done manipulating current thread.\n").c_str());
 								}
 							}
-							else {
+							else
+							{
 								//AppLog.AddLog((threadId + ": Failed to get context\n").c_str());
 							}
 							//MessageBoxA(0, (threadId + " CloseHandle").c_str(), "", 0);
 							CloseHandle(ThreadHandle);
 						}
-						else {
+						else
+						{
 							//AppLog.AddLog((threadId + ": hThread failed\n").c_str());
 						}
 					}
-					else {
+					else
+					{
 						//AppLog.AddLog((threadId + ": Failed to Open Thread\n").c_str());
 					}
 					//}
 				}
-			} while (Thread32Next(hThreadSnap, &te32));
+			}
+			while (Thread32Next(hThreadSnap, &te32));
 			CloseHandle(hThreadSnap);
 			return true;
 		}
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
 	}
 
@@ -958,8 +1031,10 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegIndex)
 {
 	std::vector<HookStructHWBP> hookListCopy = hookListHWBP;
-	for (HookStructHWBP hs : hookListCopy) {
-		if (hs.RegIndex == RegIndex) {
+	for (HookStructHWBP hs : hookListCopy)
+	{
+		if (hs.RegIndex == RegIndex)
+		{
 			return false;
 		}
 	}
@@ -972,13 +1047,15 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 	//	return false;
 
 	//Register the Custom Exception Handler
-	if (!IsDoneInit) {
-		VEH_Handle = AddVectoredExceptionHandler(true, (PVECTORED_EXCEPTION_HANDLER)LeoHandler);
+	if (!IsDoneInit)
+	{
+		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
 		IsDoneInit = true;
 	}
 
 	//Toggle PAGE_GUARD flag on the page
-	if (VEH_Handle) {
+	if (VEH_Handle)
+	{
 		hookListHWBP.push_back(hs);
 		HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 		THREADENTRY32 te32;
@@ -995,172 +1072,207 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 
 			do
 			{
-				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId()) //Ignore threads from other processes AND the own thread of course
+				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId())
+					//Ignore threads from other processes AND the own thread of course
 				{
-					std::string threadId = hexify<DWORD>(DWORD(te32.th32ThreadID));
+					std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
 
 					//bool isDone = false;
 					//while (!isDone) {
-						//MessageBoxA(0, (threadId + " Opening thread").c_str(), "", 0);
+					//MessageBoxA(0, (threadId + " Opening thread").c_str(), "", 0);
 
-						HANDLE ThreadHandle = 0;
-						OBJECT_ATTRIBUTES ObjectAttributes;
-						CLIENT_ID ClientId;
-						InitializeObjectAttributes(&ObjectAttributes, NULL, NULL, NULL, NULL);
+					HANDLE ThreadHandle = nullptr;
+					OBJECT_ATTRIBUTES ObjectAttributes;
+					CLIENT_ID ClientId;
+					InitializeObjectAttributes(&ObjectAttributes, NULL, NULL, NULL, NULL);
 
-						ClientId.UniqueProcess = (PVOID)te32.th32OwnerProcessID;
-						ClientId.UniqueThread = (PVOID)te32.th32ThreadID;
+					ClientId.UniqueProcess = (PVOID)te32.th32OwnerProcessID;
+					ClientId.UniqueThread = (PVOID)te32.th32ThreadID;
 
-						NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x10, 0x00)(&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME, &ObjectAttributes, &ClientId);
-						if (NT_SUCCESS(res))
+					NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64",
+					                                     0x170, 0xC2, 0x10, 0x00)(
+						&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
+						&ObjectAttributes, &ClientId);
+					if (NT_SUCCESS(res))
+					{
+						if (ThreadHandle)
 						{
-							if (ThreadHandle) {
-								//AppLog.AddLog((threadId + ": OpenThread Success\n").c_str());
-								CONTEXT Ctx;
-								Ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+							//AppLog.AddLog((threadId + ": OpenThread Success\n").c_str());
+							CONTEXT Ctx;
+							Ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
 
-								//MessageBoxA(0, (threadId + " GetThreadContext").c_str(), "", 0);
-								//if (GetThreadContext(hThread, &Ctx))
-								if (NT_SUCCESS(makesyscall<NTSTATUS>(0xF2, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
+							//MessageBoxA(0, (threadId + " GetThreadContext").c_str(), "", 0);
+							//if (GetThreadContext(hThread, &Ctx))
+							if (NT_SUCCESS(
+								makesyscall<NTSTATUS>(0xF2, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170,
+									0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
+							{
+								//AppLog.AddLog((threadId + ": GetThreadContext Success\n").c_str());
+
+								if (te32.th32ThreadID != GetCurrentThreadId())
 								{
-									//AppLog.AddLog((threadId + ": GetThreadContext Success\n").c_str());
-									
-									if (te32.th32ThreadID != GetCurrentThreadId()) {
-										//SuspendThread(hThread);
-										NTSTATUS res = makesyscall<NTSTATUS>(0xBC, 0x01, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, NULL);
-									}
-									else {
-										//AppLog.AddLog((threadId + ": CurrentThread detected. Maybe logs cannot be printed.\n").c_str());
-									}
+									//SuspendThread(hThread);
+									NTSTATUS res = makesyscall<NTSTATUS>(
+										0xBC, 0x01, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08,
+										0x00)(ThreadHandle, NULL);
+								}
+								else
+								{
+									//AppLog.AddLog((threadId + ": CurrentThread detected. Maybe logs cannot be printed.\n").c_str());
+								}
 
-									//MessageBoxA(0, (threadId + " SuspendThread").c_str(), "", 0);
-									/*uint8_t RegIndex = 0;
-									bool FoundReg = false;
-									for (; RegIndex < 4; RegIndex++)
+								//MessageBoxA(0, (threadId + " SuspendThread").c_str(), "", 0);
+								/*uint8_t RegIndex = 0;
+								bool FoundReg = false;
+								for (; RegIndex < 4; RegIndex++)
+								{
+									if ((Ctx.Dr7 & (1 << (RegIndex * 2))) == 0)
 									{
-										if ((Ctx.Dr7 & (1 << (RegIndex * 2))) == 0)
-										{
-											FoundReg = true;
-											break;
-										}
-									}*/
-									bool FoundReg = true;
-									if (FoundReg)
+										FoundReg = true;
+										break;
+									}
+								}*/
+								bool FoundReg = true;
+								if (FoundReg)
+								{
+									//AppLog.AddLog((threadId + ": Found free Reg\n").c_str());
+
+									bool isInvalidReg = false;
+
+									switch (RegIndex)
 									{
-										//AppLog.AddLog((threadId + ": Found free Reg\n").c_str());
-										
-										bool isInvalidReg = false;
+									case 0:
+										Ctx.Dr0 = static_cast<DWORD_PTR>(original_fun);
+										break;
+									case 1:
+										Ctx.Dr1 = static_cast<DWORD_PTR>(original_fun);
+										break;
+									case 2:
+										Ctx.Dr2 = static_cast<DWORD_PTR>(original_fun);
+										break;
+									case 3:
+										Ctx.Dr3 = static_cast<DWORD_PTR>(original_fun);
+										break;
+									default:
+										isInvalidReg = true;
+										break;
+									}
 
-										switch (RegIndex)
+									if (!isInvalidReg)
+									{
+										//AppLog.AddLog((threadId + ": Valid Reg\n").c_str());
+
+										//Turn a local register on
+										//Ctx.Dr7 |= ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
+										Ctx.Dr7 &= ~(3ULL << (16 + 4 * RegIndex));
+										//00b at 16-17, 20-21, 24-25, 28-29 is execute bp
+										Ctx.Dr7 &= ~(3ULL << (18 + 4 * RegIndex));
+										// size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
+										Ctx.Dr7 |= 1ULL << (2 * RegIndex);
+
+										//Still need to call suspend thread *TODO*
+										//MessageBoxA(0, (threadId + " SetThreadContext").c_str(), "", 0);
+										//if (SetThreadContext(hThread, &Ctx))
+										if (NT_SUCCESS(
+											makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00,
+												"RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle
+												, &Ctx)))
 										{
-										case 0:
-											Ctx.Dr0 = (DWORD_PTR)original_fun;
-											break;
-										case 1:
-											Ctx.Dr1 = (DWORD_PTR)original_fun;
-											break;
-										case 2:
-											Ctx.Dr2 = (DWORD_PTR)original_fun;
-											break;
-										case 3:
-											Ctx.Dr3 = (DWORD_PTR)original_fun;
-											break;
-										default:
-											isInvalidReg = true;
-											break;
+											//AppLog.AddLog((threadId + ": SetThreadContext success\n").c_str());
+											//isDone = true;
 										}
-										
-										if (!isInvalidReg) {
-											//AppLog.AddLog((threadId + ": Valid Reg\n").c_str());
-
-											//Turn a local register on
-											//Ctx.Dr7 |= ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
-											Ctx.Dr7 &= ~(3ULL << (16 + 4 * RegIndex)); //00b at 16-17, 20-21, 24-25, 28-29 is execute bp
-											Ctx.Dr7 &= ~(3ULL << (18 + 4 * RegIndex)); // size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
-											Ctx.Dr7 |= 1ULL << (2 * RegIndex);
-
-											//Still need to call suspend thread *TODO*
-											//MessageBoxA(0, (threadId + " SetThreadContext").c_str(), "", 0);
-											//if (SetThreadContext(hThread, &Ctx))
-											if (NT_SUCCESS(makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, &Ctx)))
-											{
-												//AppLog.AddLog((threadId + ": SetThreadContext success\n").c_str());
-												//isDone = true;
-											}
-											else {
-												//AppLog.AddLog((threadId + ": Failed to set thread context\n").c_str());
-											}
-
-										}
-										else {
-											//AppLog.AddLog((threadId + ": Invalid Reg\n").c_str());
+										else
+										{
+											//AppLog.AddLog((threadId + ": Failed to set thread context\n").c_str());
 										}
 									}
-									else {
-										//AppLog.AddLog((threadId + ": Failed to find free Reg\n").c_str());
-									}
-									//MessageBoxA(0, (threadId + " ResumeThread").c_str() , "", 0);
-									if (te32.th32ThreadID != GetCurrentThreadId()) {
-										//ResumeThread(hThread);
-										NTSTATUS res = makesyscall<NTSTATUS>(0x6E, 0x00, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle, NULL);
-									}
-									else {
-										//AppLog.AddLog((threadId + ": Done manipulating current thread.\n").c_str());
+									else
+									{
+										//AppLog.AddLog((threadId + ": Invalid Reg\n").c_str());
 									}
 								}
-								else {
-									//AppLog.AddLog((threadId + ": Failed to get context\n").c_str());
+								else
+								{
+									//AppLog.AddLog((threadId + ": Failed to find free Reg\n").c_str());
 								}
-								//MessageBoxA(0, (threadId + " CloseHandle").c_str(), "", 0);
-								CloseHandle(ThreadHandle);
+								//MessageBoxA(0, (threadId + " ResumeThread").c_str() , "", 0);
+								if (te32.th32ThreadID != GetCurrentThreadId())
+								{
+									//ResumeThread(hThread);
+									NTSTATUS res = makesyscall<NTSTATUS>(
+										0x6E, 0x00, 0x07, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08,
+										0x00)(ThreadHandle, NULL);
+								}
+								else
+								{
+									//AppLog.AddLog((threadId + ": Done manipulating current thread.\n").c_str());
+								}
 							}
-							else {
-								//AppLog.AddLog((threadId + ": hThread failed\n").c_str());
+							else
+							{
+								//AppLog.AddLog((threadId + ": Failed to get context\n").c_str());
 							}
+							//MessageBoxA(0, (threadId + " CloseHandle").c_str(), "", 0);
+							CloseHandle(ThreadHandle);
 						}
-						else {
-							//AppLog.AddLog((threadId + ": Failed to Open Thread\n").c_str());
+						else
+						{
+							//AppLog.AddLog((threadId + ": hThread failed\n").c_str());
 						}
+					}
+					else
+					{
+						//AppLog.AddLog((threadId + ": Failed to Open Thread\n").c_str());
+					}
 					//}
 				}
-			} while (Thread32Next(hThreadSnap, &te32));
+			}
+			while (Thread32Next(hThreadSnap, &te32));
 			CloseHandle(hThreadSnap);
-			
+
 			return true;
 		}
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "no VEH_Hanlde", "", 0);
 	}
 
 	return false;
 }
 
-bool LeagueHooksHWBP::addHook(DWORD address, DWORD hkAddress, uint8_t RegIndex) {
+bool LeagueHooksHWBP::addHook(DWORD address, DWORD hkAddress, uint8_t RegIndex)
+{
 	//waitForMap(address);
-	if (Hook(address, hkAddress, RegIndex)) {
+	if (Hook(address, hkAddress, RegIndex))
+	{
 		return true;
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "Hook Success!!!", "", 0);
 	}
 	return false;
 	//MessageBoxA(0, "Hooked", "", 0);
 }
 
-bool LeagueHooksHWBP::removeHook(uint8_t RegIndex) {
+bool LeagueHooksHWBP::removeHook(uint8_t RegIndex)
+{
 	//waitForMap(address);
-	if (UnHook(RegIndex)) {
+	if (UnHook(RegIndex))
+	{
 		std::vector<HookStructHWBP> hookListCopy = hookListHWBP;
 		std::vector<HookStructHWBP> _hookList = {};
-		for (HookStructHWBP hs : hookListCopy) {
+		for (HookStructHWBP hs : hookListCopy)
+		{
 			if (hs.RegIndex != RegIndex)
 				_hookList.push_back(hs);
 		}
 		hookListHWBP = _hookList;
 		return true;
 	}
-	else {
+	else
+	{
 		//MessageBoxA(0, "Hook Success!!!", "", 0);
 	}
 	return false;
@@ -1170,7 +1282,8 @@ bool LeagueHooksHWBP::removeHook(uint8_t RegIndex) {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
-LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers) {
+LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers)
+{
 	LeagueDecryptData ldd;
 	ldd.totalFailedDecrypted = 0;
 	ldd.totalSuccessDecrypted = 0;
@@ -1188,38 +1301,45 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PV
 	auto scanBytes = reinterpret_cast<uint8_t*>(module) + textSection->VirtualAddress;
 
 
-	auto mbi = MEMORY_BASIC_INFORMATION{ 0 };
-	uint8_t* next_check_address = 0;
+	auto mbi = MEMORY_BASIC_INFORMATION{nullptr};
+	uint8_t* next_check_address = nullptr;
 
-	for (auto i = 0x3000; i < sizeOfImage; ++i) {
-
+	for (auto i = 0x3000; i < sizeOfImage; ++i)
+	{
 		auto current_address = scanBytes + i;
-		if (current_address >= next_check_address) {
+		if (current_address >= next_check_address)
+		{
 			if (!VirtualQuery(reinterpret_cast<void*>(current_address), &mbi, sizeof(mbi)))
 				continue;
 
-			if (mbi.Protect != PAGE_NOACCESS) {
+			if (mbi.Protect != PAGE_NOACCESS)
+			{
 				i += ((std::uintptr_t(mbi.BaseAddress) + mbi.RegionSize) - (std::uintptr_t(scanBytes) + i));
 				i--;
 				continue;
 			}
-			else {
+			else
+			{
 				next_check_address = reinterpret_cast<uint8_t*>(mbi.BaseAddress) + mbi.RegionSize;
 			}
 		}
-		size_t size_i =0;
+		size_t size_i = 0;
 		int ret = IsMemoryDecrypted((PVOID)((DWORD)current_address), handlers, size_i);
-		if (ret != 0) {
-			if (ret == 1) {
+		if (ret != 0)
+		{
+			if (ret == 1)
+			{
 				ldd.totalSuccess_PAGE_NOACCESS++;
 			}
-			else if (ret == 2) {
+			else if (ret == 2)
+			{
 				ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION++;
 			}
 			//AppLog.AddLog(("Decryption Success for address " + hexify<uint8_t*>(current_address)).c_str());
 			ldd.totalSuccessDecrypted++;
 		}
-		else {
+		else
+		{
 			//AppLog.AddLog(("Decryption Failed for address " + hexify<uint8_t*>(current_address)).c_str());
 			ldd.totalFailedDecrypted++;
 		}
@@ -1227,7 +1347,7 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PV
 	return ldd;
 }
 
-int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers, size_t &i)
+int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers, size_t& i)
 {
 	CONTEXT ctx;
 	EXCEPTION_RECORD exr;
@@ -1247,9 +1367,9 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPT
 #ifdef _WIN64
 	ctx.Rip = reinterpret_cast<DWORD64>(Address);// (DWORD)FinishThread;
 #else
-	ctx.Eip = reinterpret_cast<DWORD>(AddressBase);// (DWORD)FinishThread;
+	ctx.Eip = reinterpret_cast<DWORD>(AddressBase); // (DWORD)FinishThread;
 #endif // 
-	
+
 	//me 57101030
 	//base 6c0000
 	//stub 79fc0000
@@ -1284,7 +1404,7 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPT
 	ei.ContextRecord = &ctx;
 	ei.ExceptionRecord = &exr;
 
-	DWORD SpoofAddress = baseAddr + oRetAddr;// retn // c3
+	DWORD SpoofAddress = baseAddr + oRetAddr; // retn // c3
 
 	for (; i < handlers.size(); i++)
 	{
@@ -1295,29 +1415,30 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPT
 		DWORD Backup_Eax;
 		__asm {
 			push retnHere
-				push _ei
-				push SpoofAddress
-				jmp handlerAddr
+			push _ei
+			push SpoofAddress
+			jmp handlerAddr
 			retnHere :
 			pushad
-				mov Backup_Eax, eax
-				mov res, eax
-				mov eax, Backup_Eax
+			mov Backup_Eax, eax
+			mov res, eax
+			mov eax, Backup_Eax
 			popad
-		}
+			}
 
 		if (res == EXCEPTION_CONTINUE_EXECUTION)
 		{
 			memset(&mbi, 0, sizeof(mbi));
 			VirtualQuery(AddressBase, &mbi, sizeof(mbi));
-			if (mbi.Protect == PAGE_EXECUTE_READ) {
+			if (mbi.Protect == PAGE_EXECUTE_READ)
+			{
 				return 2;
 			}
-			else {
+			else
+			{
 				return 0;
 			}
 		}
-
 	}
 
 	return 0;
@@ -1336,35 +1457,44 @@ enum _PROCESSINFOCLASS
 } PROCESSINFOCLASS;
 
 #pragma comment(lib, "ntdll.lib")
-extern "C" NTSYSCALLAPI NTSTATUS NTAPI NtQueryInformationProcess(IN HANDLE ProcessHandle, IN PROCESSINFOCLASS ProcessInformationClass, OUT PVOID ProcessInformation, IN ULONG ProcessInformationLength, OUT PULONG ReturnLength OPTIONAL);
+extern "C" NTSYSCALLAPI NTSTATUS NTAPI NtQueryInformationProcess(IN HANDLE ProcessHandle,
+                                                                 IN PROCESSINFOCLASS ProcessInformationClass,
+                                                                 OUT PVOID ProcessInformation,
+                                                                 IN ULONG ProcessInformationLength,
+                                                                 OUT PULONG ReturnLength OPTIONAL);
 
 DWORD Process::process_cookie_ = 0;
-_VECTORED_HANDLER_LIST *Process::GetVECTORED_HANDLER_LIST(DWORD& veh_addr) {
+
+_VECTORED_HANDLER_LIST* Process::GetVECTORED_HANDLER_LIST(DWORD& veh_addr)
+{
 	DWORD ntdll = (DWORD)GetModuleHandleA("ntdll.dll");
 	_VECTORED_HANDLER_LIST* handler_list;
 	DWORD VEHOffset = GetVEHOffset();
 	//AppLog.AddLog(("VEHOffset: " + hexify<DWORD>(VEHOffset) + "\n").c_str());
 	veh_addr = ntdll + VEHOffset;
 	//AppLog.AddLog(("veh_addr: " + hexify<DWORD>(veh_addr) + "\n").c_str());
-	handler_list = &*(_VECTORED_HANDLER_LIST*)((DWORD)veh_addr);
+	handler_list = &*(_VECTORED_HANDLER_LIST*)static_cast<DWORD>(veh_addr);
 	//printf("First entry: 0x%p\n", handler_list.first_exception_handler);
 	//printf("Last entry: 0x%p\n", handler_list.last_exception_handler);
 	if (reinterpret_cast<DWORD>(handler_list->first_exception_handler) ==
-		veh_addr + sizeof(DWORD)) {
+		veh_addr + sizeof(DWORD))
+	{
 		//AppLog.AddLog("VEH list is empty\n");
 	}
 	return handler_list;
 }
 
-const DWORD Process::GetProcessCookie() {
-
+const DWORD Process::GetProcessCookie()
+{
 	DWORD dwProcessCookie = NULL;
-	NTSTATUS NtStatus = NtQueryInformationProcess(GetCurrentProcess(), ProcessCookie, &dwProcessCookie, 4, NULL);
+	NTSTATUS NtStatus = NtQueryInformationProcess(GetCurrentProcess(), ProcessCookie, &dwProcessCookie, 4, nullptr);
 
-	if (NT_SUCCESS(NtStatus)) {
+	if (NT_SUCCESS(NtStatus))
+	{
 		//AppLog.AddLog("NtQueryInformationProcess success\n");
 	}
-	else {
+	else
+	{
 		//AppLog.AddLog("NtQueryInformationProcess failed\n");
 		return NULL;
 	}
@@ -1372,10 +1502,13 @@ const DWORD Process::GetProcessCookie() {
 	return dwProcessCookie;
 }
 
-DWORD Process::DecodePointerHandle(DWORD pointer) {
-	if (!process_cookie_) {
+DWORD Process::DecodePointerHandle(DWORD pointer)
+{
+	if (!process_cookie_)
+	{
 		process_cookie_ = GetProcessCookie();
-		if (!process_cookie_) {
+		if (!process_cookie_)
+		{
 			return 0;
 		}
 	}
@@ -1384,7 +1517,8 @@ DWORD Process::DecodePointerHandle(DWORD pointer) {
 	return ROR(pointer, shift_size) ^ process_cookie_;
 }
 
-DWORD Process::GetVEHOffset() {
+DWORD Process::GetVEHOffset()
+{
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
 
@@ -1406,13 +1540,14 @@ DWORD Process::GetVEHOffset() {
 	return veh_list_offset;
 }
 
-std::vector<PVECTORED_EXCEPTION_HANDLER> Process::GetAllHandlers() {
+std::vector<PVECTORED_EXCEPTION_HANDLER> Process::GetAllHandlers()
+{
 	std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list;
 
 	DWORD veh_addr;
 	//AppLog.AddLog(("Process cookie: " + hexify<DWORD>(Process::GetProcessCookie()) + "\n").c_str());
 	//AppLog.AddLog(("GetVEHOffset: " + hexify<DWORD>(Process::GetVEHOffset()) + "\n").c_str());
-	_VECTORED_HANDLER_LIST* handler_list = Process::GetVECTORED_HANDLER_LIST(veh_addr);
+	_VECTORED_HANDLER_LIST* handler_list = GetVECTORED_HANDLER_LIST(veh_addr);
 
 	//AppLog.AddLog(("First entry: " + hexify<DWORD>((DWORD)handler_list->first_exception_handler) + "\n").c_str());
 	//AppLog.AddLog(("Last entry: " + hexify<DWORD>((DWORD)handler_list->last_exception_handler) + "\n").c_str());
@@ -1421,12 +1556,14 @@ std::vector<PVECTORED_EXCEPTION_HANDLER> Process::GetAllHandlers() {
 	VECTORED_HANDLER_ENTRY* entry;
 	entry = &*(VECTORED_HANDLER_ENTRY*)((DWORD)handler_list->first_exception_handler);
 
-	while (true) {
+	while (true)
+	{
 		DWORD handler = reinterpret_cast<DWORD>(entry->handler);
 		//AppLog.AddLog(("  handler = " + hexify<DWORD>((DWORD)handler) + " => " + hexify<DWORD>(Process::DecodePointerHandle(handler)) + "\n").c_str());
-		_PVECTORED_EXCEPTION_HANDLER_list.push_back((PVECTORED_EXCEPTION_HANDLER)(Process::DecodePointerHandle(handler)));
+		_PVECTORED_EXCEPTION_HANDLER_list.push_back((PVECTORED_EXCEPTION_HANDLER)(DecodePointerHandle(handler)));
 
-		if (reinterpret_cast<DWORD>(entry->next) == veh_addr + sizeof(DWORD)) {
+		if (reinterpret_cast<DWORD>(entry->next) == veh_addr + sizeof(DWORD))
+		{
 			break;
 		}
 		entry = &*(VECTORED_HANDLER_ENTRY*)((DWORD)entry->next);
@@ -1435,51 +1572,65 @@ std::vector<PVECTORED_EXCEPTION_HANDLER> Process::GetAllHandlers() {
 	return _PVECTORED_EXCEPTION_HANDLER_list;
 }
 
-typedef PVOID(__stdcall* t_AddVectoredExceptionHandler) (ULONG FirstHandler, PVECTORED_EXCEPTION_HANDLER VectorHandler/*, ULONG Type*/);
+typedef PVOID (__stdcall* t_AddVectoredExceptionHandler)(ULONG FirstHandler,
+                                                         PVECTORED_EXCEPTION_HANDLER VectorHandler/*, ULONG Type*/);
 t_AddVectoredExceptionHandler fn_AddVectoredExceptionHandler;
 
-typedef BOOL(__stdcall* t_RemoveVectoredExceptionHandler) (PVOID Handle/*, ULONG Type*/);
+typedef BOOL (__stdcall* t_RemoveVectoredExceptionHandler)(PVOID Handle/*, ULONG Type*/);
 t_RemoveVectoredExceptionHandler fn_RemoveVectoredExceptionHandler;
 
-void Process::RemoveAllHandlers() {
+void Process::RemoveAllHandlers()
+{
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-	DWORD remove_exception_handler = reinterpret_cast<DWORD>(GetProcAddress(ntdll, "RtlRemoveVectoredExceptionHandler"));
+	DWORD remove_exception_handler = reinterpret_cast<DWORD>(GetProcAddress(ntdll, "RtlRemoveVectoredExceptionHandler")
+	);
 	fn_RemoveVectoredExceptionHandler = (t_RemoveVectoredExceptionHandler)remove_exception_handler;
 	//AppLog.AddLog(("t_RemoveVectoredExceptionHandler: " + hexify<DWORD>((DWORD)remove_exception_handler) + "\n").c_str());
 
-	for (int i = 0; i < GetAllHandlers().size(); i++) {
+	for (int i = 0; i < GetAllHandlers().size(); i++)
+	{
 		DWORD veh_addr;
-		_VECTORED_HANDLER_LIST* handler_list = Process::GetVECTORED_HANDLER_LIST(veh_addr);
+		_VECTORED_HANDLER_LIST* handler_list = GetVECTORED_HANDLER_LIST(veh_addr);
 		//AppLog.AddLog(("first_exception_handler: " + hexify<DWORD>((DWORD)handler_list->first_exception_handler) + "\n").c_str());
-		if (fn_RemoveVectoredExceptionHandler((PVOID)handler_list->first_exception_handler)) {
+		if (fn_RemoveVectoredExceptionHandler(static_cast<PVOID>(handler_list->first_exception_handler)))
+		{
 			//AppLog.AddLog("\tfn_RemoveVectoredExceptionHandler: Success\n");
 		}
-		else {
+		else
+		{
 			//AppLog.AddLog("\tfn_RemoveVectoredExceptionHandler: Failed\n");
 		}
 	}
 }
 
-void Process::ReAddAllHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list) {
-	for (PVECTORED_EXCEPTION_HANDLER pvh : _PVECTORED_EXCEPTION_HANDLER_list) {
+void Process::ReAddAllHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list)
+{
+	for (PVECTORED_EXCEPTION_HANDLER pvh : _PVECTORED_EXCEPTION_HANDLER_list)
+	{
 		//AppLog.AddLog(("pvh: " + hexify<DWORD>((DWORD)pvh) + "\n").c_str());
-		if (AddVectoredExceptionHandler(0, pvh)) {
+		if (AddVectoredExceptionHandler(0, pvh))
+		{
 			//AppLog.AddLog("\tAddVectoredExceptionHandler: Success\n");
 		}
-		else {
+		else
+		{
 			//AppLog.AddLog("\tAddVectoredExceptionHandler: Failed\n");
 		}
 	}
 }
 
-void Process::ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list) {
-	for (PVECTORED_EXCEPTION_HANDLER pvh : _PVECTORED_EXCEPTION_HANDLER_list) {
+void Process::ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list)
+{
+	for (PVECTORED_EXCEPTION_HANDLER pvh : _PVECTORED_EXCEPTION_HANDLER_list)
+	{
 		//AppLog.AddLog(("AddVectoredExceptionHandler: " + hexify<DWORD>((DWORD)pvh) + "\n").c_str());
-		if (AddVectoredContinueHandler(0, pvh)) {
+		if (AddVectoredContinueHandler(0, pvh))
+		{
 			//AppLog.AddLog("\tAddVectoredExceptionHandler: Success\n");
 		}
-		else {
+		else
+		{
 			//AppLog.AddLog("\tAddVectoredExceptionHandler: Failed\n");
 		}
 	}

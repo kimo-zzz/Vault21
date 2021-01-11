@@ -16,17 +16,14 @@ void c_renderer::init9(LPDIRECT3DDEVICE9 device)
 	if (!m_device9)
 		m_device9 = device;
 
-	ImGui::CreateContext();
+	CreateContext();
 
 	ImGui_ImplWin32_Init(m_hwnd);
 	ImGui_ImplDX9_Init(device);
 
 	if (!m_default)
-		m_default = ImGui::GetIO().Fonts->AddFontDefault();
+		m_default = GetIO().Fonts->AddFontDefault();
 	/* ImGui::GetIO().Fonts->AddFontFromFileTTF("path_to_font", 14.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic()); */
-
-
-
 }
 
 void c_renderer::free9(void)
@@ -34,7 +31,7 @@ void c_renderer::free9(void)
 	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 
-	ImGui::DestroyContext();
+	DestroyContext();
 }
 
 void c_renderer::begin_draw9(void)
@@ -42,33 +39,36 @@ void c_renderer::begin_draw9(void)
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
-	ImGui::NewFrame();
+	NewFrame();
 
-	auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing;
+	auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground
+		| ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags_NoFocusOnAppearing;
 
-	ImGui::GetStyle().AntiAliasedFill = true;
-	ImGui::GetStyle().AntiAliasedLines = true;
+	GetStyle().AntiAliasedFill = true;
+	GetStyle().AntiAliasedLines = true;
 
-	ImGui::Begin("##overlay", nullptr, flags);
+	Begin("##overlay", nullptr, flags);
 
 	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y), ImGuiCond_Always);
+	SetWindowSize(ImVec2(GetIO().DisplaySize.x, GetIO().DisplaySize.y), ImGuiCond_Always);
 
-	m_width = ImGui::GetIO().DisplaySize.x;
-	m_height = ImGui::GetIO().DisplaySize.y;
+	m_width = GetIO().DisplaySize.x;
+	m_height = GetIO().DisplaySize.y;
 }
 
 void c_renderer::end_draw9(void)
 {
-	ImGui::GetOverlayDrawList()->PushClipRectFullScreen();
+	GetOverlayDrawList()->PushClipRectFullScreen();
 
-	ImGui::End();
+	End();
 
-	ImGui::EndFrame();
+	EndFrame();
 
-	ImGui::Render();
+	Render();
 
-	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplDX9_RenderDrawData(GetDrawData());
 
 	//for (image i : image_list)
 	//	((LPDIRECT3DTEXTURE9)i.texture)->Release();
@@ -76,36 +76,40 @@ void c_renderer::end_draw9(void)
 	//image_list.clear();
 }
 
-LPDIRECT3DTEXTURE9 LoadTextureFromFile9(const char* filename, LPDIRECT3DTEXTURE9* out_texture, int* out_width, int* out_height, LPDIRECT3DDEVICE9 xD)
+LPDIRECT3DTEXTURE9 LoadTextureFromFile9(const char* filename, LPDIRECT3DTEXTURE9* out_texture, int* out_width,
+                                        int* out_height, LPDIRECT3DDEVICE9 xD)
 {
 	// Load texture from disk
 	LPDIRECT3DTEXTURE9 pTexture;
 	HRESULT hr = D3DXCreateTextureFromFileA(xD, filename, &pTexture);
 	if (hr != S_OK)
-		return false;
+		return nullptr;
 
 	// Retrieve description of the texture surface so we can access its size
 	D3DSURFACE_DESC my_image_desc;
 	pTexture->GetLevelDesc(0, &my_image_desc);
 	*out_texture = pTexture;
-	*out_width = (int)my_image_desc.Width;
-	*out_height = (int)my_image_desc.Height;
+	*out_width = static_cast<int>(my_image_desc.Width);
+	*out_height = static_cast<int>(my_image_desc.Height);
 	return pTexture;
 }
 
-bool c_renderer::draw_image9(std::string _filename, int in_width, int in_height, Vector loc) {
-
+bool c_renderer::draw_image9(std::string _filename, int in_width, int in_height, Vector loc)
+{
 	bool has_saved_img_Ptr = false;
 	image img_textre;
-	for (image a : image_list) {
-		if ((a.filename.compare(_filename) == 0) && (a.height == in_height) && (a.width == in_width)) {
+	for (image a : image_list)
+	{
+		if ((a.filename.compare(_filename) == 0) && (a.height == in_height) && (a.width == in_width))
+		{
 			has_saved_img_Ptr = true;
 			img_textre = a;
 			break;
 		}
 	}
 
-	if (!has_saved_img_Ptr) {
+	if (!has_saved_img_Ptr)
+	{
 		img_textre.filename = _filename;
 		img_textre.height = in_height;
 		img_textre.width = in_width;
@@ -120,25 +124,27 @@ bool c_renderer::draw_image9(std::string _filename, int in_width, int in_height,
 	//ImGui::Begin(wndName.c_str(), nullptr);
 	//ImGui::SetWindowSize(ImVec2(in_width, in_height), ImGuiCond_Always);
 	//ImGui::SetWindowPos(ImVec2(loc.X, loc.Y), ImGuiCond_Always);
-	
+
 	//ImGui::Text("image_list size = %d", image_list.size());
 	//ImGui::Text("pointer = %p", img_textre.texture);
 	//ImGui::Text("file name = %s", img_textre.filename);
-	ImGui::SetCursorScreenPos(ImVec2(loc.X, loc.Y));
-	return ImGui::ImageButton((void*)img_textre.texture9, ImVec2(in_width, in_height));
+	SetCursorScreenPos(ImVec2(loc.X, loc.Y));
+	return ImageButton(static_cast<void*>(img_textre.texture9), ImVec2(in_width, in_height));
 	//ImGui::Text("size = %d x %d", in_width, in_height);
 	//ImGui::End();
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Simple helper function to load an image into a DX11 texture with common settings
-bool LoadTextureFromFile11(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height, ID3D11Device* pDevice)
+bool LoadTextureFromFile11(const char* filename, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height,
+                           ID3D11Device* pDevice)
 {
 	// Load from disk into a raw RGBA buffer
 	int image_width = 0;
 	int image_height = 0;
-	unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
-	if (image_data == NULL)
+	unsigned char* image_data = stbi_load(filename, &image_width, &image_height, nullptr, 4);
+	if (image_data == nullptr)
 		return false;
 
 	// Create texture
@@ -154,7 +160,7 @@ bool LoadTextureFromFile11(const char* filename, ID3D11ShaderResourceView** out_
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
 
-	ID3D11Texture2D* pTexture = NULL;
+	ID3D11Texture2D* pTexture = nullptr;
 	D3D11_SUBRESOURCE_DATA subResource;
 	subResource.pSysMem = image_data;
 	subResource.SysMemPitch = desc.Width * 4;
@@ -178,20 +184,23 @@ bool LoadTextureFromFile11(const char* filename, ID3D11ShaderResourceView** out_
 	return true;
 }
 
-bool c_renderer::draw_image11(std::string _filename, int in_width, int in_height, Vector loc) {
-
+bool c_renderer::draw_image11(std::string _filename, int in_width, int in_height, Vector loc)
+{
 	bool has_saved_img_Ptr = false;
 	image img_textre;
 
-	for (image a : image_list) {
-		if ((a.filename.compare(_filename) == 0) && (a.height == in_height) && (a.width == in_width)) {
+	for (image a : image_list)
+	{
+		if ((a.filename.compare(_filename) == 0) && (a.height == in_height) && (a.width == in_width))
+		{
 			has_saved_img_Ptr = true;
 			img_textre = a;
 			break;
 		}
 	}
 
-	if (!has_saved_img_Ptr) {
+	if (!has_saved_img_Ptr)
+	{
 		img_textre.filename = _filename;
 		img_textre.height = in_height;
 		img_textre.width = in_width;
@@ -211,10 +220,10 @@ bool c_renderer::draw_image11(std::string _filename, int in_width, int in_height
 	//ImGui::Text("image_list size = %d", image_list.size());
 	//ImGui::Text("pointer = %p", img_textre.texture);
 	//ImGui::Text("file name = %s", img_textre.filename);
-	ImGui::SetCursorScreenPos(ImVec2(loc.X, loc.Y));
+	SetCursorScreenPos(ImVec2(loc.X, loc.Y));
 	//ImGui::Image((void*)img_textre.texture11, ImVec2(in_width, in_height));
 
-	return ImGui::ImageButton((void*)img_textre.texture11, ImVec2(in_width, in_height));
+	return ImageButton(static_cast<void*>(img_textre.texture11), ImVec2(in_width, in_height));
 	//ImGui::Text("size = %d x %d", in_width, in_height);
 	//ImGui::End();
 }
@@ -227,17 +236,14 @@ void c_renderer::init11(ID3D11Device* device, ID3D11DeviceContext* context)
 	if (!m_device11)
 		m_device11 = device;
 
-	ImGui::CreateContext();
+	CreateContext();
 
 	ImGui_ImplWin32_Init(m_hwnd);
 	ImGui_ImplDX11_Init(device, context);
 
 	if (!m_default)
-		m_default = ImGui::GetIO().Fonts->AddFontDefault();
+		m_default = GetIO().Fonts->AddFontDefault();
 	/* ImGui::GetIO().Fonts->AddFontFromFileTTF("path_to_font", 14.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic()); */
-
-
-
 }
 
 void c_renderer::free11(void)
@@ -245,7 +251,7 @@ void c_renderer::free11(void)
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 
-	ImGui::DestroyContext();
+	DestroyContext();
 }
 
 void c_renderer::begin_draw11(void)
@@ -253,34 +259,37 @@ void c_renderer::begin_draw11(void)
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
-	ImGui::NewFrame();
+	NewFrame();
 
 	//const auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs;
-	auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing;
+	auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground
+		| ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags_NoFocusOnAppearing;
 
-	ImGui::GetStyle().AntiAliasedFill = true;
-	ImGui::GetStyle().AntiAliasedLines = true;
+	GetStyle().AntiAliasedFill = true;
+	GetStyle().AntiAliasedLines = true;
 
-	ImGui::Begin("##overlay", nullptr, flags);
+	Begin("##overlay", nullptr, flags);
 
 	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-	ImGui::SetWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y), ImGuiCond_Always);
+	SetWindowSize(ImVec2(GetIO().DisplaySize.x, GetIO().DisplaySize.y), ImGuiCond_Always);
 
-	m_width = ImGui::GetIO().DisplaySize.x;
-	m_height = ImGui::GetIO().DisplaySize.y;
+	m_width = GetIO().DisplaySize.x;
+	m_height = GetIO().DisplaySize.y;
 }
 
 void c_renderer::end_draw11(void)
 {
-	ImGui::GetOverlayDrawList()->PushClipRectFullScreen();
+	GetOverlayDrawList()->PushClipRectFullScreen();
 
-	ImGui::End();
+	End();
 
-	ImGui::EndFrame();
+	EndFrame();
 
-	ImGui::Render();
+	Render();
 
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplDX11_RenderDrawData(GetDrawData());
 
 	//for (image i : image_list)
 	//	((LPDIRECT3DTEXTURE9)i.texture)->Release();
@@ -291,7 +300,8 @@ void c_renderer::end_draw11(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-bool c_renderer::draw_image(std::string _filename, int in_width, int in_height, Vector loc) {
+bool c_renderer::draw_image(std::string _filename, int in_width, int in_height, Vector loc)
+{
 	if (m_device11)
 		return draw_image11(_filename, in_width, in_height, loc);
 	if (m_device9)
@@ -299,29 +309,30 @@ bool c_renderer::draw_image(std::string _filename, int in_width, int in_height, 
 	return false;
 }
 
-void c_renderer::draw_text(float_t x, float_t y, const char* text, bool outlined, ImColor color, e_flags flags, ImFont* font, ...)
+void c_renderer::draw_text(float_t x, float_t y, const char* text, bool outlined, ImColor color, e_flags flags,
+                           ImFont* font, ...)
 {
 	switch (flags)
 	{
-	case c_renderer::text_normal:
+	case text_normal:
 
 		if (outlined)
 		{
-			ImGui::GetWindowDrawList()->AddText(ImVec2(x, y + 1.0f), ImColor(0, 0, 0, 255), text);
-			ImGui::GetWindowDrawList()->AddText(ImVec2(x + 1.0f, y), ImColor(0, 0, 0, 255), text);
+			GetWindowDrawList()->AddText(ImVec2(x, y + 1.0f), ImColor(0, 0, 0, 255), text);
+			GetWindowDrawList()->AddText(ImVec2(x + 1.0f, y), ImColor(0, 0, 0, 255), text);
 		}
 
-		ImGui::GetWindowDrawList()->AddText(ImVec2(x, y), color, text);
+		GetWindowDrawList()->AddText(ImVec2(x, y), color, text);
 		break;
-	case c_renderer::text_with_font:
+	case text_with_font:
 
 		if (outlined)
 		{
-			ImGui::GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x, y + 1.0f), ImColor(0, 0, 0, 255), text);
-			ImGui::GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x + 1.0f, y), ImColor(0, 0, 0, 255), text);
+			GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x, y + 1.0f), ImColor(0, 0, 0, 255), text);
+			GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x + 1.0f, y), ImColor(0, 0, 0, 255), text);
 		}
 
-		ImGui::GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x, y), color, text);
+		GetWindowDrawList()->AddText(font, font->FontSize, ImVec2(x, y), color, text);
 		break;
 	default:
 		break;
@@ -330,48 +341,51 @@ void c_renderer::draw_text(float_t x, float_t y, const char* text, bool outlined
 
 void c_renderer::draw_line(float_t x1, float_t y1, float_t x2, float_t y2, ImColor color, float_t thickness)
 {
-	ImGui::GetWindowDrawList()->AddLine(ImVec2(x1, y1), ImVec2(x2, y2), color, thickness);
+	GetWindowDrawList()->AddLine(ImVec2(x1, y1), ImVec2(x2, y2), color, thickness);
 }
 
-void c_renderer::draw_rect(float_t x, float_t y, float_t w, float_t h, ImColor color, e_flags flags, float_t rounding, uintptr_t points, float_t thickness)
+void c_renderer::draw_rect(float_t x, float_t y, float_t w, float_t h, ImColor color, e_flags flags, float_t rounding,
+                           uintptr_t points, float_t thickness)
 {
 	switch (flags)
 	{
-	case c_renderer::rect_normal:
-		ImGui::GetWindowDrawList()->AddRect(ImVec2(x, y), ImVec2(x + w, y + h), color, rounding, points, thickness);
+	case rect_normal:
+		GetWindowDrawList()->AddRect(ImVec2(x, y), ImVec2(x + w, y + h), color, rounding, points, thickness);
 		break;
-	case c_renderer::rect_filled:
-		ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + h), color, rounding, points);
+	case rect_filled:
+		GetWindowDrawList()->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + h), color, rounding, points);
 		break;
 	default:
 		break;
 	}
 }
 
-void c_renderer::draw_triangle(float_t x1, float_t y1, float_t x2, float_t y2, float_t x3, float_t y3, ImColor color, e_flags flags, float_t thickness)
+void c_renderer::draw_triangle(float_t x1, float_t y1, float_t x2, float_t y2, float_t x3, float_t y3, ImColor color,
+                               e_flags flags, float_t thickness)
 {
 	switch (flags)
 	{
-	case c_renderer::rect_normal:
-		ImGui::GetWindowDrawList()->AddTriangle(ImVec2(x1, y1), ImVec2(x2, y2), ImVec2(x3, y3), color, thickness);
+	case rect_normal:
+		GetWindowDrawList()->AddTriangle(ImVec2(x1, y1), ImVec2(x2, y2), ImVec2(x3, y3), color, thickness);
 		break;
-	case c_renderer::rect_filled:
-		ImGui::GetWindowDrawList()->AddTriangleFilled(ImVec2(x1, y1), ImVec2(x2, y2), ImVec2(x3, y3), color);
+	case rect_filled:
+		GetWindowDrawList()->AddTriangleFilled(ImVec2(x1, y1), ImVec2(x2, y2), ImVec2(x3, y3), color);
 		break;
 	default:
 		break;
 	}
 }
 
-void c_renderer::draw_circle(Vector Position, float_t radius, ImColor color, e_flags flags, uintptr_t points, float_t thickness)
+void c_renderer::draw_circle(Vector Position, float_t radius, ImColor color, e_flags flags, uintptr_t points,
+                             float_t thickness)
 {
 	switch (flags)
 	{
 	case circle_normal:
-		ImGui::GetWindowDrawList()->AddCircle(ImVec2(Position.X, Position.Y), radius, color, points, thickness);
+		GetWindowDrawList()->AddCircle(ImVec2(Position.X, Position.Y), radius, color, points, thickness);
 		break;
 	case circle_filled:
-		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(Position.X, Position.Y), radius, color, points);
+		GetWindowDrawList()->AddCircleFilled(ImVec2(Position.X, Position.Y), radius, color, points);
 		break;
 	case circle_3d:
 		{
@@ -392,7 +406,8 @@ void c_renderer::draw_circle(Vector Position, float_t radius, ImColor color, e_f
 				Functions.WorldToScreen(&first_point, &first_point_w2s);
 				Functions.WorldToScreen(&next_point, &next_point_w2s);
 
-				this->draw_line(first_point_w2s.X, first_point_w2s.Y, next_point_w2s.X, next_point_w2s.Y, color, thickness);
+				this->draw_line(first_point_w2s.X, first_point_w2s.Y, next_point_w2s.X, next_point_w2s.Y, color,
+				                thickness);
 
 				first_point = next_point;
 			}

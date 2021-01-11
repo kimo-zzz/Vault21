@@ -6,7 +6,8 @@
 class SpellInfo
 {
 public:
-	SpellData* GetSpellData() {
+	SpellData* GetSpellData()
+	{
 		return *(SpellData**)((DWORD)this + oSpellInfoSpellData);
 	}
 };

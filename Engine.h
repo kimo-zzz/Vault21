@@ -10,9 +10,11 @@
 #include "CObject.h"
 #define me Engine::GetLocalObject()
 
-class Engine {
+class Engine
+{
 public:
-	static Vector GetMouseWorldPosition() {
+	static Vector GetMouseWorldPosition()
+	{
 		DWORD MousePtr = baseAddr + oHudInstance;
 		auto aux1 = *(DWORD*)MousePtr;
 		aux1 += 0x14;
@@ -23,36 +25,40 @@ public:
 		float Y = *(float*)(aux2 + 0x4);
 		float Z = *(float*)(aux2 + 0x8);
 
-		return Vector{ X, Y, Z };
+		return Vector{X, Y, Z};
 	}
 
 	static int GetPing()
 	{
-		return Functions.GetPing(*(void**)((DWORD)GetModuleHandle(NULL) + oNetClient));
+		return Functions.GetPing(*(void**)((DWORD)GetModuleHandle(nullptr) + oNetClient));
 	}
 
-	static float GetGameTime() {
+	static float GetGameTime()
+	{
 		return *(float*)(baseAddr + oGameTime);
 	}
 
 	static int GetGameTimeTickCount()
 	{
-		return (int)(GetGameTime() * 1000);
+		return static_cast<int>(GetGameTime() * 1000);
 	}
 
-	static CObject* FindObjectByIndex(std::list<CObject*> heroList, short casterIndex) {
-		for (CObject* a : heroList) {
+	static CObject* FindObjectByIndex(std::list<CObject*> heroList, short casterIndex)
+	{
+		for (CObject* a : heroList)
+		{
 			if (casterIndex == a->GetIndex())
 				return a;
 		}
-		return NULL;
+		return nullptr;
 	}
 
-	static bool IsChatBoxOpen() {
+	static bool IsChatBoxOpen()
+	{
 		DWORD ChatClient = *(DWORD*)(baseAddr + oChatClientPtr);
 		DWORD ChatClientStruct = *(DWORD*)(ChatClient + oChatClientStruct);
 
-		return *(bool*)((DWORD)ChatClientStruct + oIsChatOpen);
+		return *(bool*)(static_cast<DWORD>(ChatClientStruct) + oIsChatOpen);
 	}
 
 	static std::string SecondsToClock(int value)
@@ -76,22 +82,25 @@ public:
 		return (minutes < 10 ? "0" : "") + str_minutes_String + ":" + (seconds < 10 ? "0" : "") + str_seconds_String;
 	}
 
-	static CObject* GetLocalObject() {
+	static CObject* GetLocalObject()
+	{
 		auto retaddr = *(DWORD*)(baseAddr + oLocalPlayer);
 		if (retaddr == NULL)
-			return NULL;
+			return nullptr;
 
 		return (CObject*)retaddr;
 	}
 
-	static void PrintChat(const char* Message) {
-		typedef void(__thiscall* tPrintChat)(DWORD ChatClient, const char* Message, int Color);
+	static void PrintChat(const char* Message)
+	{
+		typedef void (__thiscall* tPrintChat)(DWORD ChatClient, const char* Message, int Color);
 		tPrintChat fnPrintChat = (tPrintChat)(baseAddr + oPrintChat);
 		fnPrintChat(*(DWORD*)(baseAddr + oChatClientPtr), Message, 1);
 	}
 
-	static void SendChat(const char* Message) {
-		typedef void(__thiscall* tSendChat)(DWORD MenuGUI, const char* Message, int Color);
+	static void SendChat(const char* Message)
+	{
+		typedef void (__thiscall* tSendChat)(DWORD MenuGUI, const char* Message, int Color);
 		tSendChat fnSendChat = (tSendChat)(baseAddr + oSendChat);
 		fnSendChat(*(DWORD*)(baseAddr + oMenuGUI), Message, 1);
 	}
@@ -100,27 +109,30 @@ public:
 	{
 		CObject holzer;
 		auto obj = holzer.GetFirstObject();
-		while (obj) {
+		while (obj)
+		{
 			if (obj->GetIndex() == ID)
 				return obj;
 			obj = holzer.GetNextObject(obj);
 		}
 		return nullptr;
-		if (ObjManager != NULL && ID >= 0 && ID <= 10000) {
+		if (ObjManager != nullptr && ID >= 0 && ID <= 10000)
+		{
 			//return ObjManager->objectArray[ID];
 		}
 	}
 
-	static void MoveTo(Vector* pos) {
-		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
-		void* LocalPlayer = Engine::GetLocalObject();
+	static void MoveTo(Vector* pos)
+	{
+		DWORD SpoofAddress = (DWORD)GetModuleHandle(nullptr) + oRetAddr; //retn instruction
+		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(nullptr) + oIssueOrder; //IssueOrder
+		void* LocalPlayer = GetLocalObject();
 
 		if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 			return; //This isn't the instruction we're looking for
-		
+
 		__asm
-		{
+			{
 			push retnHere
 			mov ecx, LocalPlayer
 			push 0
@@ -132,16 +144,17 @@ public:
 			push SpoofAddress
 			jmp IssueOrderAddr
 			retnHere :
-		}
+			}
 	}
 
 
-	static void AttackTarget(CObject* obj) {
+	static void AttackTarget(CObject* obj)
+	{
 		if (me->IsAlive())
 		{
-			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + oRetAddr; //retn instruction
-			DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + oIssueOrder;//IssueOrder
-			void* LocalPlayer = Engine::GetLocalObject();
+			DWORD SpoofAddress = (DWORD)GetModuleHandle(nullptr) + oRetAddr; //retn instruction
+			DWORD IssueOrderAddr = (DWORD)GetModuleHandle(nullptr) + oIssueOrder; //IssueOrder
+			void* LocalPlayer = GetLocalObject();
 			CObject* AttackTo = obj;
 			Vector* pos = &obj->GetPos();
 
@@ -149,7 +162,7 @@ public:
 				return; //This isn't the instruction we're looking for
 
 			__asm
-			{
+				{
 				push retnHere
 				mov ecx, LocalPlayer
 				push 0
@@ -161,26 +174,27 @@ public:
 				push SpoofAddress
 				jmp IssueOrderAddr
 				retnHere :
-			}
+				}
 		}
-
 	}
 
-	static void Engine::CastSpellSelf(int SlotID) {
-		if (me->IsAlive()) {
-			DWORD spellbook = (DWORD)me + (DWORD)oObjSpellBook;
+	static void Engine::CastSpellSelf(int SlotID)
+	{
+		if (me->IsAlive())
+		{
+			DWORD spellbook = (DWORD)me + static_cast<DWORD>(oObjSpellBook);
 			auto spellslot = me->GetSpellSlotByID(SlotID);
 			Vector* objPos = &me->GetPos();
 			Vector* mePos = &me->GetPos();
 			DWORD objNetworkID = 0;
-			DWORD SpoofAddress = baseAddr + (DWORD)oRetAddr;
-			DWORD CastSpellAddr = baseAddr + (DWORD)oCastSpell;
+			DWORD SpoofAddress = baseAddr + static_cast<DWORD>(oRetAddr);
+			DWORD CastSpellAddr = baseAddr + static_cast<DWORD>(oCastSpell);
 
 			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 				return; //This isn't the instruction we're looking for
 
 			__asm
-			{
+				{
 				push retnHere
 				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
 				push objNetworkID
@@ -191,13 +205,15 @@ public:
 				push SpoofAddress
 				jmp CastSpellAddr
 				retnHere :
-			}
+				}
 		}
 	}
 
 
-	static void Engine::CastSpellTargetted(int SlotID, CObject* obj) {
-		if (me->IsAlive()) {
+	static void Engine::CastSpellTargetted(int SlotID, CObject* obj)
+	{
+		if (me->IsAlive())
+		{
 			auto spellbook = (DWORD)me + oObjSpellBook;
 			auto spellslot = me->GetSpellSlotByID(SlotID);
 
@@ -211,7 +227,7 @@ public:
 				return; //This isn't the instruction we're looking for
 
 			__asm
-			{
+				{
 				push retnHere
 				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
 				push objNetworkID
@@ -222,17 +238,17 @@ public:
 				push SpoofAddress
 				jmp CastSpellAddr
 				retnHere :
-			}
+				}
 		}
 	}
 
-	static void Engine::DrawCircle(Vector* position, float range, int* color, int a4, float a5, int a6, float alpha) {
-
+	static void Engine::DrawCircle(Vector* position, float range, int* color, int a4, float a5, int a6, float alpha)
+	{
 		DWORD SpoofAddress = baseAddr + oDrawCircleRetAddr;
 		DWORD DrawCircleAddr = baseAddr + oDrawCircle;
 
 		__asm
-		{
+			{
 			push retnHere
 			push alpha
 			push a6
@@ -244,18 +260,21 @@ public:
 			push SpoofAddress
 			jmp DrawCircleAddr
 			retnHere :
-		}
+			}
 	}
 
-	static float Engine::GetTimerExpiry(CObject* obj) {
+	static float Engine::GetTimerExpiry(CObject* obj)
+	{
 		return Functions.GetTimerExpiry(obj);
 	}
 
-	static char* GetGameVersion() {
+	static char* GetGameVersion()
+	{
 		return Functions.GetGameVer();
 	}
 
-	static void ChangeMaximumZoom(float amount) {
+	static void ChangeMaximumZoom(float amount)
+	{
 		DWORD* zoomInstance = reinterpret_cast<DWORD*>(baseAddr + oZoomClass);
 		float* zoomAmount = reinterpret_cast<float*>(*zoomInstance + oMaxZoom);
 		float newAmount = *zoomAmount + amount;
@@ -263,7 +282,8 @@ public:
 		*zoomAmount = amount;
 	}
 
-	static float* GetMaximumZoomAmount() {
+	static float* GetMaximumZoomAmount()
+	{
 		DWORD* zoomInstance = reinterpret_cast<DWORD*>(baseAddr + oZoomClass);
 		float* zoomAmount = reinterpret_cast<float*>(*zoomInstance + oMaxZoom);
 		return zoomAmount;

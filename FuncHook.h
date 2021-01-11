@@ -1,6 +1,7 @@
 #pragma once
 
-enum HookType {
+enum HookType
+{
 	HOOKTYPE_FORWARD_OVERWRITE,
 	HOOKTYPE_FORWARD_CHAIN,
 	HOOKTYPE_REVERSE_CHAIN
@@ -23,17 +24,18 @@ private:
 	void rehook64(intptr_t offset);
 #endif // _WIN64
 public:
-	inline FuncHook(HookType type = HOOKTYPE_FORWARD_OVERWRITE)
-		: hooked(false), started(false), func_addr(NULL), hook_addr(NULL), is_64bit_jump(false), type(type)
+	FuncHook(HookType type = HOOKTYPE_FORWARD_OVERWRITE)
+		: func_addr(NULL), hook_addr(NULL), hooked(false), started(false), is_64bit_jump(false), type(type)
 	{
 	}
 
-	inline FuncHook(uintptr_t func_address, uintptr_t hook_address, HookType type = HOOKTYPE_FORWARD_OVERWRITE)
-		: hooked(false), started(false), func_addr(func_address), hook_addr(hook_address), is_64bit_jump(false), type(type)
+	FuncHook(uintptr_t func_address, uintptr_t hook_address, HookType type = HOOKTYPE_FORWARD_OVERWRITE)
+		: func_addr(func_address), hook_addr(hook_address), hooked(false), started(false), is_64bit_jump(false),
+		  type(type)
 	{
 	}
 
-	inline FuncHook(void* func_address, void* hook_address, HookType type = HOOKTYPE_FORWARD_OVERWRITE)
+	FuncHook(void* func_address, void* hook_address, HookType type = HOOKTYPE_FORWARD_OVERWRITE)
 		: FuncHook((uintptr_t)func_address, (uintptr_t)hook_address, type)
 	{
 	}
@@ -52,7 +54,7 @@ public:
 		return *this;
 	}
 
-	inline ~FuncHook()
+	~FuncHook()
 	{
 		if (hooked)
 			unhook();
@@ -61,8 +63,8 @@ public:
 	void hook();
 	void unhook();
 
-	template<typename Result, typename... Args>
-	inline Result WINAPI Call(Args... args);
+	template <typename Result, typename... Args>
+	Result WINAPI Call(Args ... args);
 };
 
 class hook_guard
@@ -70,32 +72,33 @@ class hook_guard
 private:
 	FuncHook& hook;
 public:
-	inline hook_guard(FuncHook& func_hook)
+	hook_guard(FuncHook& func_hook)
 		: hook(func_hook)
 	{
 		hook.unhook();
 	}
-	inline ~hook_guard()
+
+	~hook_guard()
 	{
 		hook.hook();
 	}
 };
 
-template<typename Result, typename... Args>
-inline Result WINAPI FuncHook::Call(Args... args)
+template <typename Result, typename... Args>
+Result WINAPI FuncHook::Call(Args ... args)
 {
 	hook_guard hg(*this);
 
-	typedef Result (WINAPI *FunctionType)(Args... args);
+	typedef Result (WINAPI *FunctionType)(Args ... args);
 
-	return (Result) ((FunctionType)call_addr)(args...);
+	return (Result)((FunctionType)call_addr)(args...);
 }
 
 
-template<typename Result, typename... Args>
-inline Result WINAPI ModuleCall(HMODULE module, LPCSTR procName, Args... args)
+template <typename Result, typename... Args>
+Result WINAPI ModuleCall(HMODULE module, LPCSTR procName, Args ... args)
 {
-	typedef Result(WINAPI *FunctionType)(Args... args);
+	typedef Result (WINAPI *FunctionType)(Args ... args);
 
 	FARPROC proc = GetProcAddress(module, procName);
 	if (proc == nullptr)

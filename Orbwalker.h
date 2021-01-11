@@ -4,9 +4,9 @@
 class Orbwalker
 {
 public:
-	bool Orbwalk(CObject* target, float extraWindup);
-	
+	static bool Orbwalk(CObject* target, float extraWindup);
+
 private:
-	bool CanAttack();
-	bool CanMove(float extraWindup);
+	static bool CanAttack();
+	static bool CanMove(float extraWindup);
 };

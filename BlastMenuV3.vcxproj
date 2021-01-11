@@ -191,6 +191,7 @@
     <ClCompile Include="renderer\ImRenderer.cpp" />
     <ClCompile Include="skin_changer.cpp" />
     <ClCompile Include="skin_database.cpp" />
+    <ClCompile Include="TargetSelector.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +240,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="syscalls.hpp" />
+    <ClInclude Include="TargetSelector.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorLong.h" />

@@ -79,6 +79,12 @@
     <Filter Include="Header Files\Orbwalker">
       <UniqueIdentifier>{538d23e3-1e97-4436-aae2-e1296c8320c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Orbwalker\TargetSelector">
+      <UniqueIdentifier>{7e9a3192-198a-438d-b0a7-5547b6644f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Orbwalker\TargetSelector">
+      <UniqueIdentifier>{c69a5918-3ac4-4fde-ab55-71dced1cc9e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FuncHook.cpp">
@@ -161,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Orbwalker.cpp">
       <Filter>Source Files\Orbwalker</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetSelector.cpp">
+      <Filter>Source Files\Orbwalker\TargetSelector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="Orbwalker.h">
       <Filter>Header Files\Orbwalker</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetSelector.h">
+      <Filter>Header Files\Orbwalker\TargetSelector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

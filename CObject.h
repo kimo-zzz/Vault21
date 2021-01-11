@@ -129,6 +129,7 @@ public:
 	bool IsTroyEnt();
 
 	bool IsTargetable();
+	bool IsDeletedObject();
 
 	Vector GetHpBarPosition();
 	CObject* GetOwner();
@@ -354,7 +355,10 @@ public:
 	float GetAttackDelay();
 
 	float GetAttackCastDelay();
-	float GetDistance(CObject* target, CObject* target2);
+	float GetDistance(CObject* target)
+	{
+		return sqrtf(powf(this->GetPos().X - target->GetPos().X, 2) + powf(this->GetPos().Y - target->GetPos().Y, 2) + powf(this->GetPos().Z - target->GetPos().Z, 2));
+	}
 
 	SpellSlot* GetSpellSlotByID(int ID) {
 		return *(SpellSlot**)((DWORD)this + (oObjSpellBook + 0x478) + (0x4 * ID));

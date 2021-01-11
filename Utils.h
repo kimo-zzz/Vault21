@@ -129,34 +129,36 @@ inline std::string getHumanSpellByName(std::string name) {
 }
 
 inline std::string getSpellImgByName(std::string name, bool IsDoneCD) {
+	char* appdata = getenv("APPDATA");
+	std::string appdataPath(appdata);
 	std::string ret = "";
 	std::string _isCD = ((!IsDoneCD) ? "_cd" : "");
 	if (name.find("boost") != std::string::npos)
-		ret = "images\\cleanse" + _isCD + ".png";
+		ret = appdataPath + "\\images\\cleanse" + _isCD + ".png";
 
 	if (name.find("exhaust") != std::string::npos)
-		ret = "images\\exhaust" + _isCD + ".png";
+		ret = appdataPath + "\\images\\exhaust" + _isCD + ".png";
 
 	if (name.find("flash") != std::string::npos)
-		ret = "images\\flash" + _isCD + ".png";
+		ret = appdataPath + "\\images\\flash" + _isCD + ".png";
 
 	if (name.find("haste") != std::string::npos)
-		ret = "images\\ghost" + _isCD + ".png";
+		ret = appdataPath + "\\images\\ghost" + _isCD + ".png";
 
 	if (name.find("heal") != std::string::npos)
-		ret = "images\\heal" + _isCD + ".png";
+		ret = appdataPath + "\\images\\heal" + _isCD + ".png";
 
 	if (name.find("smite") != std::string::npos)
-		ret = "images\\smite" + _isCD + ".png";
+		ret = appdataPath + "\\images\\smite" + _isCD + ".png";
 
 	if (name.find("teleport") != std::string::npos)
-		ret = "images\\teleport" + _isCD + ".png";
+		ret = appdataPath + "\\images\\teleport" + _isCD + ".png";
 
 	if (name.find("dot") != std::string::npos)
-		ret = "images\\ignite" + _isCD + ".png";
+		ret = appdataPath + "\\images\\ignite" + _isCD + ".png";
 
 	if (name.find("barrier") != std::string::npos)
-		ret = "images\\barrier" + _isCD + ".png";
+		ret = appdataPath + "\\images\\barrier" + _isCD + ".png";
 
 	return ret;
 	//return "C:\\Users\\dev\\Downloads\\cute.png";

@@ -143,6 +143,7 @@ namespace DX11
 
 		if (isMainThreadAllow && !onInit)
 		{
+			config::load();
 			skin_database::load();
 			zoomValue = *Engine::GetMaximumZoomAmount();
 			HiddenBase = FindHiddenModule();

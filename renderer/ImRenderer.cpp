@@ -363,15 +363,15 @@ void c_renderer::draw_triangle(float_t x1, float_t y1, float_t x2, float_t y2, f
 	}
 }
 
-void c_renderer::draw_circle(float_t x, float_t y, float_t radius, ImColor color, e_flags flags, uintptr_t points, float_t thickness)
+void c_renderer::draw_circle(Vector Position, float_t radius, ImColor color, e_flags flags, uintptr_t points, float_t thickness)
 {
 	switch (flags)
 	{
 	case circle_normal:
-		ImGui::GetWindowDrawList()->AddCircle(ImVec2(x, y), radius, color, points, thickness);
+		ImGui::GetWindowDrawList()->AddCircle(ImVec2(Position.X, Position.Y), radius, color, points, thickness);
 		break;
 	case circle_filled:
-		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(x, y), radius, color, points);
+		ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(Position.X, Position.Y), radius, color, points);
 		break;
 	case circle_3d:
 		{
@@ -381,12 +381,12 @@ void c_renderer::draw_circle(float_t x, float_t y, float_t radius, ImColor color
 			static const float PI = 3.14159265358979323846f;
 			static const float DELTA_THETA = 2 * PI / points;
 
-			Vector first_point = Vector(x, y, 0) + Vector(radius, 0, 0);
+			Vector first_point = Position + Vector(radius, 0, 0);
 
 			for (float i = 1; i <= points; ++i)
 			{
 				Vector orientation = Vector(std::cos(DELTA_THETA * i), 0, std::sin(DELTA_THETA * i));
-				Vector next_point = Vector(x, y, 0) + (orientation * radius);
+				Vector next_point = Position + (orientation * radius);
 				Vector first_point_w2s, next_point_w2s;
 
 				Functions.WorldToScreen(&first_point, &first_point_w2s);

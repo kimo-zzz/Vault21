@@ -139,8 +139,6 @@ namespace DX11
 
 	void Menu::Content()
 	{
-		//extern int AddVectoredExceptionHandlerHkCount;
-
 		if (isMainThreadAllow && !onInit)
 		{
 			config::load();
@@ -166,7 +164,7 @@ namespace DX11
 			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 			if (BeginTabBar("Tabs", tab_bar_flags))
 			{
-				if (BeginTabItem("H4X"))
+				if (BeginTabItem("Awareness"))
 				{
 					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Visuals");
 					Separator();
@@ -242,6 +240,14 @@ namespace DX11
 
 					EndTabItem();
 				}
+
+				if (BeginTabItem("Orbwalker"))
+				{
+					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Orbwalker");
+					SliderFloat("extra Windup", &g_orbwalker_windup, 0.f, 120.f, "%.1f");
+					EndTabItem();
+				}
+
 				if (isMainThreadAllow)
 				{
 					if (BeginTabItem("Hooks"))
@@ -481,13 +487,7 @@ namespace DX11
 					Separator();
 					Text("Hidden Module %s", &hiddenBase_debug);
 					Text("Module %s", &base_debug);
-					/*if (me->IsOnScreen()) {
-						ImGui::Text("me->IsOnScreen(): true");
-					}
-					else {
-						ImGui::Text("me->IsOnScreen(): false");
-					}*/
-					//ImGui::Text(("AddVectoredExceptionHandlerHkCount: " + to_string(AddVectoredExceptionHandlerHkCount)).c_str());
+
 					Separator();
 
 					Checkbox("Show Obj Address", &g_debug_address);
@@ -552,11 +552,6 @@ namespace DX11
 				zoomValueLast = zoomValue;
 				Engine::ChangeMaximumZoom(zoomValue);
 			}
-			////////////////////////////////////////////////////////////
-			// TODO: CHANGE ALL OBJECT LOOP INTO MORE SPECIFIC ARRAY LOOP 
-			// FOR EACH MINION AND CHAMPIONS
-			// TODO2: FIND GHOSTPORO AND ZOMBIEWARD TEAM
-			////////////////////////////////////////////////////////////
 
 			auto me_index = me->GetIndex();
 
@@ -738,875 +733,823 @@ namespace DX11
 				}
 			}
 
-			if (true || g_2range_objmanager1 || g_2range_objmanager2 || g_w2s_line || g_champ_info || g_champ_name ||
-				g_wards || g_autoSmite || g_campTimer || g_drawEnemyMissles || (opt_flashTimer_c != 0) ||
-				g_display_spell_texture || g_debug_name || g_debug_address || g_debug_location || g_inhi_respawn ||
-				g_enemy_turret)
+
+			CObject holzer;
+			auto obj = holzer.GetFirstObject();
+
+			std::string msgString = "";
+
+			if (opt_flashTimer_c != 0)
 			{
-				CObject holzer;
-				auto obj = holzer.GetFirstObject();
-
-				std::string msgString = "";
-
-				if (opt_flashTimer_c != 0)
+				if ((GetAsyncKeyState(0x4A) & 0x8000) && (j_key_flag == 0))
 				{
-					if ((GetAsyncKeyState(0x4A) & 0x8000) && (j_key_flag == 0))
-					{
-						j_key_flag = 1;
-						is_j_key_ready = true;
-						//isOneTime = true;
-					}
-					else if (GetAsyncKeyState(0x4A) == 0)
-					{
-						j_key_flag = 0; //reset the flag
-					}
-
-					if ((GetAsyncKeyState(0x58) & 0x8000) && (x_key_flag == 0))
-					{
-						x_key_flag = 1;
-						is_x_key_ready = true;
-					}
-					else if (GetAsyncKeyState(0x58) == 0)
-					{
-						x_key_flag = 0; //reset the flag
-					}
+					j_key_flag = 1;
+					is_j_key_ready = true;
+					//isOneTime = true;
 				}
-				if (g_campTimer)
+				else if (GetAsyncKeyState(0x4A) == 0)
 				{
-					if ((GetAsyncKeyState(0x55) & 0x8000) && (u_key_flag == 0))
-					{
-						u_key_flag = 1;
-						is_u_key_ready = true;
-					}
-					else if (GetAsyncKeyState(0x55) == 0)
-					{
-						u_key_flag = 0; //reset the flag
-					}
+					j_key_flag = 0; //reset the flag
 				}
 
-				if (IsChatBoxOpen)
+				if ((GetAsyncKeyState(0x58) & 0x8000) && (x_key_flag == 0))
 				{
-					is_j_key_ready = false;
-					is_x_key_ready = false;
-					is_u_key_ready = false;
+					x_key_flag = 1;
+					is_x_key_ready = true;
 				}
-
-				std::list<CObject*> _heroList = {};
-				std::list<CObject*> _minionList = {};
-
-				int objCount = 0;
-
-				while (obj)
+				else if (GetAsyncKeyState(0x58) == 0)
 				{
-					objCount++;
-
-					auto IsHero = obj->IsHero();
-					auto IsMinion = obj->IsMinion();
-					auto IsInhibitor = obj->IsInhibitor();
-					auto IsTurret = obj->IsTurret();
-					auto Index = obj->GetIndex();
-					auto IsEnemyToLocalPlayer = obj->IsEnemyTo(me);
-					auto Pos = obj->GetPos();
-					auto Name = obj->GetName();
-					auto IsOnScreen = obj->IsOnScreen();
-					auto IsTeammate = obj->IsTeammateTo(me);
-					auto IsMissle = obj->IsMissile();
-
-					auto Parent = obj->GetParent(heroList);
-
-					std::string Name_str(Name);
-					transform(Name_str.begin(), Name_str.end(), Name_str.begin(), ::tolower);
-
-					Vector objpos_w2s;
-					Functions.WorldToScreen(&Pos, &objpos_w2s);
-
-					ImColor _normal = ImColor(255, 102, 102, 174);
-					ImColor _onCD = ImColor(102, 255, 102, 174);
-
-					if (g_debug_address)
-					{
-						if (obj->IsHero())
-							render.draw_text(objpos_w2s.X, objpos_w2s.Y,
-								("Addr: " + (hexify<DWORD>(obj->GetThis()))).c_str(), true, _onCD);
-					}
-					if (g_debug_name)
-					{
-						render.draw_text(objpos_w2s.X, objpos_w2s.Y + 15, ("Name: " + Name_str).c_str(), true, _onCD);
-					}
-					if (g_debug_location)
-					{
-						render.draw_text(objpos_w2s.X, objpos_w2s.Y + 30,
-							("X: " + std::to_string(Pos.X) + ", Y: " + std::to_string(Pos.Y) + ", Z: " +
-								std::to_string(Pos.Z)).c_str(), true, _onCD);
-					}
-
-					/*dfgdfgdfgdfgdfgdfgdffffffffffffffffffffffffffffffffffffffffffffffffffffffffg
-					if (isOneTime) {
-						string Name_str(Name);
-						//string Name_Champ_str(Name_Champ);
-						FILE* logfile;
-						// _CRT_SECURE_NO_DEPRECATE;
-						if ((logfile = fopen("log.txt", "a+")) != NULL)
-						{
-							auto objAdrr = obj->GetThis();
-							fprintf(logfile, ("" + to_string(objAdrr) + " : " + Name_str + " : " + "\n").c_str());
-							fclose(logfile);
-						}
-					}
-					dfgdfgdfgdfgdfgdfgdffffffffffffffffffffffffffffffffffffffffffffffffffffffffg*/
-					/*dfgdfgdfgdfgdfgdfgdffffffffffffffffffffffffffffffffffffffffffffffffffffffffg
-					//if (IsHero) {
-						if (IsEnemyToLocalPlayer) {
-							if (isOneTime) {
-								string Name_str(Name);
-								//string Name_Champ_str(Name_Champ);
-								FILE* logfile;
-								// _CRT_SECURE_NO_DEPRECATE;
-								if ((logfile = fopen("log.txt", "a+")) != NULL)
-								{
-									auto objAdrr = obj->GetThis();
-									fprintf(logfile, ("Enemy: " + to_string(objAdrr) + " : " + Name_str + " : " + "\n").c_str());
-									fclose(logfile);
-								}
-							}
-						}
-						else {
-							if (isOneTime) {
-								string Name_str(Name);
-								//string Name_Champ_str(Name_Champ);
-								FILE* logfile;
-								// _CRT_SECURE_NO_DEPRECATE;
-								if ((logfile = fopen("log.txt", "a+")) != NULL)
-								{
-									auto objAdrr = obj->GetThis();
-									fprintf(logfile, ("Ally: " + to_string(objAdrr) + " : " + Name_str + " : " + "\n").c_str());
-									fclose(logfile);
-								}
-							}
-						}
-					//}
-					dfgdfgdfgdfgdfgdfgdffffffffffffffffffffffffffffffffffffffffffffffffffffffffg*/
-
-					if (g_wards)
-					{
-						//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
-						auto color = createRGB(204, 106, 255); // violet
-						if (Name_str.find("perks_ghostporo_idle") != std::string::npos)
-						{
-							// ghost poro
-							Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
-							//render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
-						}
-
-						if (Name_str.find("perks_corruptedward_idle") != std::string::npos)
-						{
-							// zombieward
-							Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-							//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-						}
-						//}
-					}
-
-					if (g_campTimer)
-					{
-						if ((Name_str.compare("monstercamp_1") == 0) ||
-							(Name_str.compare("monstercamp_7") == 0) ||
-							(Name_str.compare("monstercamp_4") == 0) ||
-							(Name_str.compare("monstercamp_10") == 0) ||
-							(Name_str.compare("monstercamp_6") == 0) ||
-							(Name_str.compare("monstercamp_17") == 0) ||
-							(Name_str.compare("monstercamp_12") == 0)
-							)
-						{
-							float jungleSpawnOn = Engine::GetTimerExpiry(obj);
-							float jungleSpawn = jungleSpawnOn - gameTime;
-
-							std::string spawnTimer_str = "--:--";
-
-							auto _color = _onCD;
-
-							std::string monsterName = Name_str;
-							if ((Name_str.compare("monstercamp_1") == 0) ||
-								(Name_str.compare("monstercamp_7") == 0)
-								)
-							{
-								monsterName = "Blue Sentinel";
-							}
-							else if ((Name_str.compare("monstercamp_4") == 0) ||
-								(Name_str.compare("monstercamp_10") == 0)
-								)
-							{
-								monsterName = "Red Brambleback";
-							}
-							else if ((Name_str.compare("monstercamp_6") == 0))
-							{
-								monsterName = "Drake";
-							}
-							else if ((Name_str.compare("monstercamp_17") == 0))
-							{
-								monsterName = "Rift Herald";
-							}
-							else if ((Name_str.compare("monstercamp_12") == 0))
-							{
-								monsterName = "Baron";
-							}
-
-							if (jungleSpawn > 0.0f && jungleSpawn < 86400.0f)
-							{
-								//86400 is one day
-								{
-									spawnTimer_str = Engine::SecondsToClock(static_cast<int>(jungleSpawn));
-									_color = _normal;
-								}
-							}
-
-							if (u_key_flag == 1 && is_u_key_ready)
-							{
-								if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_7") == 0))
-								{
-									std::string msgString_camp = "Enemy Blue Sentinel >> " + (
-										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-										: spawnTimer_str);
-									Engine::SendChat(msgString_camp.c_str());
-								}
-								if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_10") == 0))
-								{
-									std::string msgString_camp = "Enemy Red Brambleback >> " + (
-										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-										: spawnTimer_str);
-									Engine::SendChat(msgString_camp.c_str());
-								}
-								if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_1") == 0))
-								{
-									std::string msgString_camp = "Enemy Blue Sentinel >> " + (
-										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-										: spawnTimer_str);
-									Engine::SendChat(msgString_camp.c_str());
-								}
-								if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_4") == 0))
-								{
-									std::string msgString_camp = "Enemy Red Brambleback >> " + (
-										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-										: spawnTimer_str);
-									Engine::SendChat(msgString_camp.c_str());
-								}
-							}
-
-							render.draw_text(objpos_w2s.X, objpos_w2s.Y, spawnTimer_str.c_str(), true, _color);
-							render.draw_text(objpos_w2s.X, objpos_w2s.Y - 15, monsterName.c_str(), true, _color);
-						}
-					}
-
-					//===================Missles Start===============================
-					if (IsMissle)
-					{
-						if (g_drawEnemyMissles)
-						{
-							if ((me_pos.DistTo(Pos) >= 0.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
-							{
-								if (Parent != nullptr)
-								{
-									if (Parent->IsHero() && Parent->IsEnemyTo(me))
-									{
-										auto spellStartPos = obj->GetSpellStartPos();
-										auto spellEndPos = obj->GetSpellEndPos();
-
-										Vector objspellstartpos_w2s;
-										Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
-
-										Vector objspellendpos_w2s;
-										Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
-
-										auto spellWidth = obj->GetSpellCastInfo()->GetSpellData()->GetSpellWidth();
-
-										ImColor _skillsShots = ImColor(255, 102, 102, 79);
-										render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
-											objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
-											spellWidth);
-
-										auto spellEffectRange = obj->GetSpellCastInfo()->GetSpellData()->
-											GetSpellEffectRange();
-										auto color = createRGB(220, 20, 60); // crimson
-										Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-								}
-							}
-						}
-					}
-					//===================Missles End===============================
-
-					//===================Turret Start===============================
-					if (IsTurret)
-					{
-						if (g_enemy_turret)
-						{
-							if (IsOnScreen)
-							{
-								auto IsAlive = obj->IsAlive();
-								if (IsAlive)
-								{
-									if (IsEnemyToLocalPlayer)
-									{
-										auto boundingRadius = obj->GetBoundingRadius();
-										auto color = createRGB(220, 20, 60); // crimson
-										Engine::DrawCircle(&Pos, 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-								}
-							}
-						}
-					}
-					//===================Turret End===============================
-
-					//===================Inhib Start===============================
-					if (IsInhibitor)
-					{
-						if (g_inhi_respawn)
-						{
-							if (IsOnScreen)
-							{
-								auto inhiRespawnTime = obj->GetInhiRemainingRespawnTime();
-								if (inhiRespawnTime > 0)
-								{
-									std::string str_respawnTime = Engine::SecondsToClock(
-										static_cast<int>(inhiRespawnTime));
-									render.draw_text(objpos_w2s.X, objpos_w2s.Y, str_respawnTime.c_str(), true, _onCD);
-								}
-							}
-						}
-					}
-					//===================Inhib End===============================
-
-					//===================Minion Start===============================
-					if (IsMinion)
-					{
-						_minionList.push_back(obj);
-						if (IsEnemyToLocalPlayer)
-						{
-							if (g_wards)
-							{
-								// wards are considered minion. lol
-								if (IsOnScreen)
-								{
-									auto MaxHealth = obj->GetMaxHealth();
-									auto color = createRGB(220, 20, 60); // crimson
-
-									if ((Name_str.find("jammerdevice") != std::string::npos) || (Name_str.find(
-										"visionward") != std::string::npos))
-									{
-										Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-									else if (Name_str.find("sightward") != std::string::npos)
-									{
-										if (MaxHealth == 3)
-										{
-											Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-										}
-										else if (MaxHealth == 1)
-										{
-											Engine::DrawCircle(&Pos, 500.0f, &color, 0, 0.0f, 0, 0.5f);
-											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-										}
-									}
-									else
-									{
-										if (MaxHealth == 1)
-										{
-											auto Name_Champ = obj->GetChampionName();
-											std::string Name_Champ_str(Name_Champ);
-											transform(Name_Champ_str.begin(), Name_Champ_str.end(),
-												Name_Champ_str.begin(), ::tolower);
-
-											if (Name_Champ_str.find("fiddlestickseffigy") != std::string::npos)
-											{
-												// effigy
-												Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-												//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-											}
-										}
-									}
-								}
-							}
-						}
-
-						if (g_autoSmite)
-						{
-							auto Health = obj->GetHealth();
-							if (
-								(Name_str.find("sru_dragon_fire") != std::string::npos) ||
-								(Name_str.find("sru_dragon_earth") != std::string::npos) ||
-								(Name_str.find("sru_dragon_water") != std::string::npos) ||
-								(Name_str.find("sru_dragon_air") != std::string::npos) ||
-								(Name_str.find("sru_dragon_elder") != std::string::npos) ||
-								(Name_str.find("sru_baron") != std::string::npos) ||
-								(Name_str.find("sru_riftherald") != std::string::npos)
-								)
-							{
-								if (Health > 0)
-								{
-									if (me_IsAlive && (me_pos.DistTo(Pos) >= 0) && (me_pos.DistTo(Pos) <= 500))
-									{
-										if (me_SmiteFound && me_isDoneCDSmite)
-										{
-											if (obj->GetHealth() <= me_smiteDamage)
-											{
-												Engine::CastSpellTargetted(me_smiteSpellSlot, obj);
-												CastSpellCtr++;
-												castSpellCtr_debug = std::to_string(CastSpellCtr);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					//===================Minion End===============================
-
-					//===================Hero Start===============================
-					if (IsHero)
-					{
-						_heroList.push_back(obj);
-
-						auto r_spellSlot = obj->GetSpellSlotByID(3);
-						auto r_RemainingCD = r_spellSlot->GetRemainingCD(gameTime);
-
-						auto d_spellSlot = obj->GetSpellSlotByID(4);
-						auto d_doneCD = d_spellSlot->IsDoneCD(gameTime);
-						auto d_RemainingCD = d_spellSlot->GetRemainingCD(gameTime);
-
-						auto f_spellSlot = obj->GetSpellSlotByID(5);
-						auto f_doneCD = f_spellSlot->IsDoneCD(gameTime);
-						auto f_RemainingCD = f_spellSlot->GetRemainingCD(gameTime);
-
-						ImColor colorBlue = ImColor(102, 102, 255, 174);
-
-						auto champName = obj->GetChampionName();
-
-						std::string champName_str(champName);
-
-						auto d_spellName = d_spellSlot->GetSpellInfo()->GetSpellData()->GetSpellName2();
-						auto f_spellName = f_spellSlot->GetSpellInfo()->GetSpellData()->GetSpellName2();
-
-						std::string d_spellName_str(d_spellName);
-						transform(d_spellName_str.begin(), d_spellName_str.end(), d_spellName_str.begin(), ::tolower);
-
-						std::string f_spellName_str(f_spellName);
-						transform(f_spellName_str.begin(), f_spellName_str.end(), f_spellName_str.begin(), ::tolower);
-
-						if (d_spellName_str.find("smite") != std::string::npos)
-						{
-							d_doneCD = d_spellSlot->IsDoneAbsoluteCD(gameTime);
-							d_RemainingCD = d_spellSlot->GetAbsoluteCoolDown(gameTime);
-						}
-						else if (f_spellName_str.find("smite") != std::string::npos)
-						{
-							f_doneCD = f_spellSlot->IsDoneAbsoluteCD(gameTime);
-							f_RemainingCD = f_spellSlot->GetAbsoluteCoolDown(gameTime);
-						}
-
-						if (g_champ_name)
-						{
-							if (IsOnScreen)
-							{
-								render.draw_text(objpos_w2s.X, objpos_w2s.Y, champName, true, colorBlue);
-							}
-						}
-
-						if (g_champ_info)
-						{
-							if (IsOnScreen)
-							{
-								auto q_spellSlot = obj->GetSpellSlotByID(0);
-								auto q_RemainingCD = q_spellSlot->GetRemainingCD(gameTime);
-								auto q_doneCD = q_spellSlot->IsDoneCD(gameTime);
-								auto q_level = q_spellSlot->GetLevel();
-
-								auto w_spellSlot = obj->GetSpellSlotByID(1);
-								auto w_RemainingCD = w_spellSlot->GetRemainingCD(gameTime);
-								auto w_doneCD = w_spellSlot->IsDoneCD(gameTime);
-								auto w_level = w_spellSlot->GetLevel();
-
-								auto e_spellSlot = obj->GetSpellSlotByID(2);
-								auto e_RemainingCD = e_spellSlot->GetRemainingCD(gameTime);
-								auto e_doneCD = e_spellSlot->IsDoneCD(gameTime);
-								auto e_level = e_spellSlot->GetLevel();
-
-								auto r_doneCD = r_spellSlot->IsDoneCD(gameTime);
-								auto r_level = r_spellSlot->GetLevel();
-
-								if (q_doneCD)
-								{
-									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, "Q", true, _normal);
-								}
-								else if (q_level >= 1)
-								{
-									char skill_q[10];
-									snprintf(skill_q, sizeof(skill_q), "%d", static_cast<int>(q_RemainingCD));
-									render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, skill_q, true, _onCD);
-								}
-
-								if (w_doneCD)
-								{
-									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, "W", true, _normal);
-								}
-								else if (w_level >= 1)
-								{
-									char skill_w[10];
-									snprintf(skill_w, sizeof(skill_w), "%d", static_cast<int>(w_RemainingCD));
-									render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, skill_w, true, _onCD);
-								}
-
-								if (e_doneCD)
-								{
-									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, "E", true, _normal);
-								}
-								else if (e_level >= 1)
-								{
-									char skill_e[10];
-									snprintf(skill_e, sizeof(skill_e), "%d", static_cast<int>(e_RemainingCD));
-									render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, skill_e, true, _onCD);
-								}
-
-								if (r_doneCD)
-								{
-									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, "R", true, _normal);
-								}
-								else if (r_level >= 1)
-								{
-									char skill_r[10];
-									snprintf(skill_r, sizeof(skill_r), "%d", static_cast<int>(r_RemainingCD));
-									render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, skill_r, true, _onCD);
-								}
-
-								if (d_doneCD)
-								{
-									render.draw_text(objpos_w2s.X - 15, objpos_w2s.Y + 30, "D", true, _normal);
-								}
-								else
-								{
-									char skill_d[10];
-									snprintf(skill_d, sizeof(skill_d), "%d", static_cast<int>(d_RemainingCD));
-									render.draw_text(objpos_w2s.X - 15, objpos_w2s.Y + 30, skill_d, true, _onCD);
-								}
-
-								if (f_doneCD)
-								{
-									render.draw_text(objpos_w2s.X + 15, objpos_w2s.Y + 30, "F", true, _normal);
-								}
-								else
-								{
-									char skill_f[10];
-									snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
-									render.draw_text(objpos_w2s.X + 15, objpos_w2s.Y + 30, skill_f, true, _onCD);
-								}
-							}
-						}
-
-						if (g_display_spell_texture)
-						{
-							if (IsOnScreen)
-							{
-								auto healthBarPos = obj->GetHpBarPosition();
-
-								std::string d_SpellFileName = getSpellImgByName(d_spellName_str, d_doneCD);
-								std::string f_SpellFileName = getSpellImgByName(f_spellName_str, f_doneCD);
-
-								if (render.draw_image(d_SpellFileName, 25, 25,
-									Vector(healthBarPos.X, healthBarPos.Y, 0)))
-								{
-									if (d_doneCD)
-									{
-										std::string d_humanSpellName = champName_str + "'s " + getHumanSpellByName(
-											d_spellName_str) + " : " + "READY";
-										Engine::SendChat(d_humanSpellName.c_str());
-									}
-									else
-									{
-										std::string d_humanSpellName = champName_str + "'s " +
-											getHumanSpellByName(d_spellName_str) + " : " + std::to_string(
-												static_cast<int>(d_RemainingCD)) + "s";
-										Engine::SendChat(d_humanSpellName.c_str());
-									}
-								}
-
-								if (render.draw_image(f_SpellFileName, 25, 25,
-									Vector(healthBarPos.X + 30, healthBarPos.Y, 0)))
-								{
-									if (f_doneCD)
-									{
-										std::string f_SpellFileName = champName_str + "'s " + getHumanSpellByName(
-											f_spellName_str) + " : " + "READY";
-										Engine::SendChat(f_SpellFileName.c_str());
-									}
-									else
-									{
-										std::string f_SpellFileName = champName_str + "'s " +
-											getHumanSpellByName(f_spellName_str) + " : " + std::to_string(
-												static_cast<int>(f_RemainingCD)) + "s";
-										Engine::SendChat(f_SpellFileName.c_str());
-									}
-								}
-
-								if (!d_doneCD)
-								{
-									char skill_d[10]; ///
-									snprintf(skill_d, sizeof(skill_d), "%d", static_cast<int>(d_RemainingCD));
-									render.draw_text(healthBarPos.X, healthBarPos.Y, skill_d, true, _onCD);
-								}
-
-								if (!f_doneCD)
-								{
-									char skill_f[10]; ///
-									snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
-									render.draw_text(healthBarPos.X + 30, healthBarPos.Y, skill_f, true, _onCD);
-								}
-							}
-						}
-
-						if (Index != me_index)
-						{
-							//not the localPlayer
-							auto AttackRange = obj->GetAttackRange();
-
-							if (!IsEnemyToLocalPlayer)
-							{
-								// ally
-								if (g_2range_objmanager1)
-								{
-									if (IsOnScreen)
-									{
-										auto color = createRGB(124, 252, 0); // lawngreen
-										Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-								}
-							}
-							else
-							{
-								// enemy
-
-								if (g_2range_objmanager2)
-								{
-									if (IsOnScreen)
-									{
-										auto color = createRGB(220, 20, 60); // crimson
-										//Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
-										render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-								}
-
-								if (g_w2s_line)
-								{
-									if (obj->IsVisible() && obj->IsAlive())
-									{
-										Vector mepos_w2s;
-										Functions.WorldToScreen(&me_pos, &mepos_w2s);
-
-										if ((mepos_w2s.X) > 3000.0f || (mepos_w2s.Y) > 3000.0f || (mepos_w2s.X) < -3000.0f
-											|| (mepos_w2s.Y) < -3000.0f)
-										{
-											//character out of screen
-										}
-										else
-										{
-											ImColor _gold = ImColor(255, 215, 0, 127);
-											ImColor _orange = ImColor(255, 165, 0, 127);
-											ImColor _orangered = ImColor(255, 69, 0, 127);
-											ImColor _red = ImColor(255, 0, 0, 127);
-
-											if ((me_pos.DistTo(Pos) >= 3000.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
-											{
-												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-													_gold, 1); // gold
-											}
-											else if ((me_pos.DistTo(Pos) >= 2000.0f) && (me_pos.DistTo(Pos) <= 2999.0f))
-											{
-												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-													_orange, 1); // orange
-											}
-											else if ((me_pos.DistTo(Pos) >= 1000.0f) && (me_pos.DistTo(Pos) <= 1999.0f))
-											{
-												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-													_orangered, 1); // orangered
-											}
-											else if ((me_pos.DistTo(Pos) >= 300.0f) && (me_pos.DistTo(Pos) <= 999.0f))
-											{
-												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y, _red,
-													1); // red
-											}
-										}
-									}
-								}
-
-								if (opt_flashTimer_c != 0)
-								{
-									if ((j_key_flag == 1 && is_j_key_ready) || (x_key_flag == 1 && is_x_key_ready))
-									{
-										auto d_CDTime = d_spellSlot->GetTime();
-
-										auto f_CDTime = f_spellSlot->GetTime();
-
-										float flashCoolDownTime = 0;
-										float flashCoolDown = 0;
-										float smiteCoolDown = 0;
-										bool summonerFlashFound = false;
-										bool summonerSmiteFound = false;
-
-										if (strcmp(d_spellName, "SummonerFlash") == 0)
-										{
-											if (!d_doneCD)
-											{
-												summonerFlashFound = true;
-												flashCoolDownTime = d_CDTime;
-												flashCoolDown = d_RemainingCD;
-											}
-										}
-										else if (strcmp(f_spellName, "SummonerFlash") == 0)
-										{
-											if (!f_doneCD)
-											{
-												summonerFlashFound = true;
-												flashCoolDownTime = f_CDTime;
-												flashCoolDown = f_RemainingCD;
-											}
-										}
-
-										if (d_spellName_str.find("smite") != std::string::npos)
-										{
-											summonerSmiteFound = true;
-											smiteCoolDown = d_RemainingCD;
-										}
-										else if (f_spellName_str.find("smite") != std::string::npos)
-										{
-											summonerSmiteFound = true;
-											smiteCoolDown = f_RemainingCD;
-										}
-
-										char str_RemainingCDSmite[MAXIMUM_TEXT_SIZE];
-										snprintf(str_RemainingCDSmite, MAXIMUM_TEXT_SIZE, "%d",
-											static_cast<int>(smiteCoolDown));
-										std::string str_RemainingCDSmite_String(str_RemainingCDSmite);
-
-										char str_RemainingCD[MAXIMUM_TEXT_SIZE];
-										snprintf(str_RemainingCD, MAXIMUM_TEXT_SIZE, "%d",
-											static_cast<int>(flashCoolDown));
-										std::string str_RemainingCD_String(str_RemainingCD);
-
-										char str_RemainingCDUlt[MAXIMUM_TEXT_SIZE];
-										snprintf(str_RemainingCDUlt, MAXIMUM_TEXT_SIZE, "%d",
-											static_cast<int>(r_RemainingCD));
-										std::string str_RemainingCDUlt_string(str_RemainingCDUlt);
-
-										std::string champNameString(champName);
-
-										std::string msgSmite = "  >>  smite  " + (smiteCoolDown > 0
-											? str_RemainingCDSmite_String + "s"
-											: "READY");
-
-										if (opt_flashTimer_c == 3 || opt_flashTimer_c == 4)
-										{
-											// full
-											msgString = (opt_flashTimer_c == 4 ? "/all " : "") + champNameString +
-												"  >>  f  " + (
-													flashCoolDown > 0 ? str_RemainingCD_String + "s" : "READY") +
-												"  >>  ult  " + (r_RemainingCD > 0
-													? str_RemainingCDUlt_string + "s"
-													: "READY") + (summonerSmiteFound ? msgSmite : "");
-
-											if (j_key_flag == 1 && is_j_key_ready)
-											{
-												Engine::SendChat(msgString.c_str());
-											}
-											if (x_key_flag == 1 && is_x_key_ready)
-											{
-												Engine::PrintChat(msgString.c_str());
-											}
-										}
-										else
-										{
-											if (summonerFlashFound)
-											{
-												std::string _time = Engine::SecondsToClock(
-													static_cast<int>(flashCoolDownTime));
-
-												if (opt_flashTimer_c == 1)
-												{
-													//1 Liner
-													msgString += champNameString + " " + _time + " ";
-													//buffer the string to print out later after the whole fucking while loop
-												}
-												else if (opt_flashTimer_c == 2)
-												{
-													//Multi-Line
-													msgString = champNameString + "  >>  " + _time + "  >>  " +
-														str_RemainingCD_String + "s";
-													if (j_key_flag == 1 && is_j_key_ready)
-													{
-														Engine::SendChat(msgString.c_str());
-													}
-													if (x_key_flag == 1 && is_x_key_ready)
-													{
-														Engine::PrintChat(msgString.c_str());
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					//===================Hero End===============================
-
-					obj = holzer.GetNextObject(obj);
+					x_key_flag = 0; //reset the flag
 				}
-				if (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit)
+			}
+			if (g_campTimer)
+			{
+				if ((GetAsyncKeyState(0x55) & 0x8000) && (u_key_flag == 0))
 				{
-					if (lastObjCount != 0)
-					{
-						if (objCount > lastObjCount)
-						{
-							finishedOnCreateObjectInit = true;
-						}
-						if (objCount < lastObjCount)
-						{
-							finishedOnDeleteObjectInit = true;
-						}
-					}
-					lastObjCount = objCount;
+					u_key_flag = 1;
+					is_u_key_ready = true;
 				}
-
-				heroList = _heroList;
-				minionList = _minionList;
-
-				isOneTime = false;
-
-				if (opt_flashTimer_c == 1)
+				else if (GetAsyncKeyState(0x55) == 0)
 				{
-					if (msgString != "")
-					{
-						if (j_key_flag == 1 && is_j_key_ready)
-						{
-							Engine::SendChat(msgString.c_str());
-						}
-						if (x_key_flag == 1 && is_x_key_ready)
-						{
-							Engine::PrintChat(msgString.c_str());
-						}
-					}
+					u_key_flag = 0; //reset the flag
 				}
+			}
 
+			if (IsChatBoxOpen)
+			{
 				is_j_key_ready = false;
 				is_x_key_ready = false;
 				is_u_key_ready = false;
 			}
+
+			std::list<CObject*> _heroList = {};
+			std::list<CObject*> _minionList = {};
+
+			int objCount = 0;
+
+			while (obj)
+			{
+				objCount++;
+
+				auto IsHero = obj->IsHero();
+				auto IsMinion = obj->IsMinion();
+				auto IsInhibitor = obj->IsInhibitor();
+				auto IsTurret = obj->IsTurret();
+				auto Index = obj->GetIndex();
+				auto IsEnemyToLocalPlayer = obj->IsEnemyTo(me);
+				auto Pos = obj->GetPos();
+				auto Name = obj->GetName();
+				auto IsOnScreen = obj->IsOnScreen();
+				auto IsTeammate = obj->IsTeammateTo(me);
+				auto IsMissle = obj->IsMissile();
+
+				auto Parent = obj->GetParent(heroList);
+
+				std::string Name_str(Name);
+				transform(Name_str.begin(), Name_str.end(), Name_str.begin(), ::tolower);
+
+				Vector objpos_w2s;
+				Functions.WorldToScreen(&Pos, &objpos_w2s);
+
+				ImColor _normal = ImColor(255, 102, 102, 174);
+				ImColor _onCD = ImColor(102, 255, 102, 174);
+
+				if (g_debug_address)
+				{
+					if (obj->IsHero())
+						render.draw_text(objpos_w2s.X, objpos_w2s.Y,
+							("Addr: " + (hexify<DWORD>(obj->GetThis()))).c_str(), true, _onCD);
+				}
+				if (g_debug_name)
+				{
+					render.draw_text(objpos_w2s.X, objpos_w2s.Y + 15, ("Name: " + Name_str).c_str(), true, _onCD);
+				}
+				if (g_debug_location)
+				{
+					render.draw_text(objpos_w2s.X, objpos_w2s.Y + 30,
+						("X: " + std::to_string(Pos.X) + ", Y: " + std::to_string(Pos.Y) + ", Z: " +
+							std::to_string(Pos.Z)).c_str(), true, _onCD);
+				}
+
+				
+				if (g_wards)
+				{
+					//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
+					auto color = createRGB(204, 106, 255); // violet
+					if (Name_str.find("perks_ghostporo_idle") != std::string::npos)
+					{
+						// ghost poro
+						Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
+						//render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
+					}
+
+					if (Name_str.find("perks_corruptedward_idle") != std::string::npos)
+					{
+						// zombieward
+						Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+						//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+					}
+					//}
+				}
+
+				if (g_campTimer)
+				{
+					if ((Name_str.compare("monstercamp_1") == 0) ||
+						(Name_str.compare("monstercamp_7") == 0) ||
+						(Name_str.compare("monstercamp_4") == 0) ||
+						(Name_str.compare("monstercamp_10") == 0) ||
+						(Name_str.compare("monstercamp_6") == 0) ||
+						(Name_str.compare("monstercamp_17") == 0) ||
+						(Name_str.compare("monstercamp_12") == 0)
+						)
+					{
+						float jungleSpawnOn = Engine::GetTimerExpiry(obj);
+						float jungleSpawn = jungleSpawnOn - gameTime;
+
+						std::string spawnTimer_str = "--:--";
+
+						auto _color = _onCD;
+
+						std::string monsterName = Name_str;
+						if ((Name_str.compare("monstercamp_1") == 0) ||
+							(Name_str.compare("monstercamp_7") == 0)
+							)
+						{
+							monsterName = "Blue Sentinel";
+						}
+						else if ((Name_str.compare("monstercamp_4") == 0) ||
+							(Name_str.compare("monstercamp_10") == 0)
+							)
+						{
+							monsterName = "Red Brambleback";
+						}
+						else if ((Name_str.compare("monstercamp_6") == 0))
+						{
+							monsterName = "Drake";
+						}
+						else if ((Name_str.compare("monstercamp_17") == 0))
+						{
+							monsterName = "Rift Herald";
+						}
+						else if ((Name_str.compare("monstercamp_12") == 0))
+						{
+							monsterName = "Baron";
+						}
+
+						if (jungleSpawn > 0.0f && jungleSpawn < 86400.0f)
+						{
+							//86400 is one day
+							{
+								spawnTimer_str = Engine::SecondsToClock(static_cast<int>(jungleSpawn));
+								_color = _normal;
+							}
+						}
+
+						if (u_key_flag == 1 && is_u_key_ready)
+						{
+							if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_7") == 0))
+							{
+								std::string msgString_camp = "Enemy Blue Sentinel >> " + (
+									jungleSpawn > 0.0f && jungleSpawn < 86400.0f
+									? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+									: spawnTimer_str);
+								Engine::SendChat(msgString_camp.c_str());
+							}
+							if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_10") == 0))
+							{
+								std::string msgString_camp = "Enemy Red Brambleback >> " + (
+									jungleSpawn > 0.0f && jungleSpawn < 86400.0f
+									? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+									: spawnTimer_str);
+								Engine::SendChat(msgString_camp.c_str());
+							}
+							if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_1") == 0))
+							{
+								std::string msgString_camp = "Enemy Blue Sentinel >> " + (
+									jungleSpawn > 0.0f && jungleSpawn < 86400.0f
+									? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+									: spawnTimer_str);
+								Engine::SendChat(msgString_camp.c_str());
+							}
+							if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_4") == 0))
+							{
+								std::string msgString_camp = "Enemy Red Brambleback >> " + (
+									jungleSpawn > 0.0f && jungleSpawn < 86400.0f
+									? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+									: spawnTimer_str);
+								Engine::SendChat(msgString_camp.c_str());
+							}
+						}
+
+						render.draw_text(objpos_w2s.X, objpos_w2s.Y, spawnTimer_str.c_str(), true, _color);
+						render.draw_text(objpos_w2s.X, objpos_w2s.Y - 15, monsterName.c_str(), true, _color);
+					}
+				}
+
+				//===================Missles Start===============================
+				if (IsMissle)
+				{
+					if (g_drawEnemyMissles)
+					{
+						if ((me_pos.DistTo(Pos) >= 0.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
+						{
+							if (Parent != nullptr)
+							{
+								if (Parent->IsHero() && Parent->IsEnemyTo(me))
+								{
+									auto spellStartPos = obj->GetSpellStartPos();
+									auto spellEndPos = obj->GetSpellEndPos();
+
+									Vector objspellstartpos_w2s;
+									Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
+
+									Vector objspellendpos_w2s;
+									Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
+
+									auto spellWidth = obj->GetSpellCastInfo()->GetSpellData()->GetSpellWidth();
+
+									ImColor _skillsShots = ImColor(255, 102, 102, 79);
+									render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
+										objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
+										spellWidth);
+
+									auto spellEffectRange = obj->GetSpellCastInfo()->GetSpellData()->
+										GetSpellEffectRange();
+									auto color = createRGB(220, 20, 60); // crimson
+									Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+						}
+					}
+				}
+				//===================Missles End===============================
+
+				//===================Turret Start===============================
+				if (IsTurret)
+				{
+					if (g_enemy_turret)
+					{
+						if (IsOnScreen)
+						{
+							auto IsAlive = obj->IsAlive();
+							if (IsAlive)
+							{
+								if (IsEnemyToLocalPlayer)
+								{
+									auto boundingRadius = obj->GetBoundingRadius();
+									auto color = createRGB(220, 20, 60); // crimson
+									Engine::DrawCircle(&Pos, 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+						}
+					}
+				}
+				//===================Turret End===============================
+
+				//===================Inhib Start===============================
+				if (IsInhibitor)
+				{
+					if (g_inhi_respawn)
+					{
+						if (IsOnScreen)
+						{
+							auto inhiRespawnTime = obj->GetInhiRemainingRespawnTime();
+							if (inhiRespawnTime > 0)
+							{
+								std::string str_respawnTime = Engine::SecondsToClock(
+									static_cast<int>(inhiRespawnTime));
+								render.draw_text(objpos_w2s.X, objpos_w2s.Y, str_respawnTime.c_str(), true, _onCD);
+							}
+						}
+					}
+				}
+				//===================Inhib End===============================
+
+				//===================Minion Start===============================
+				if (IsMinion)
+				{
+					_minionList.push_back(obj);
+					if (IsEnemyToLocalPlayer)
+					{
+						if (g_wards)
+						{
+							// wards are considered minion. lol
+							if (IsOnScreen)
+							{
+								auto MaxHealth = obj->GetMaxHealth();
+								auto color = createRGB(220, 20, 60); // crimson
+
+								if ((Name_str.find("jammerdevice") != std::string::npos) || (Name_str.find(
+									"visionward") != std::string::npos))
+								{
+									Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+								else if (Name_str.find("sightward") != std::string::npos)
+								{
+									if (MaxHealth == 3)
+									{
+										Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+									}
+									else if (MaxHealth == 1)
+									{
+										Engine::DrawCircle(&Pos, 500.0f, &color, 0, 0.0f, 0, 0.5f);
+										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+									}
+								}
+								else
+								{
+									if (MaxHealth == 1)
+									{
+										auto Name_Champ = obj->GetChampionName();
+										std::string Name_Champ_str(Name_Champ);
+										transform(Name_Champ_str.begin(), Name_Champ_str.end(),
+											Name_Champ_str.begin(), ::tolower);
+
+										if (Name_Champ_str.find("fiddlestickseffigy") != std::string::npos)
+										{
+											// effigy
+											Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+										}
+									}
+								}
+							}
+						}
+					}
+
+					if (g_autoSmite)
+					{
+						auto Health = obj->GetHealth();
+						if (
+							(Name_str.find("sru_dragon_fire") != std::string::npos) ||
+							(Name_str.find("sru_dragon_earth") != std::string::npos) ||
+							(Name_str.find("sru_dragon_water") != std::string::npos) ||
+							(Name_str.find("sru_dragon_air") != std::string::npos) ||
+							(Name_str.find("sru_dragon_elder") != std::string::npos) ||
+							(Name_str.find("sru_baron") != std::string::npos) ||
+							(Name_str.find("sru_riftherald") != std::string::npos)
+							)
+						{
+							if (Health > 0)
+							{
+								if (me_IsAlive && (me_pos.DistTo(Pos) >= 0) && (me_pos.DistTo(Pos) <= 500))
+								{
+									if (me_SmiteFound && me_isDoneCDSmite)
+									{
+										if (obj->GetHealth() <= me_smiteDamage)
+										{
+											Engine::CastSpellTargetted(me_smiteSpellSlot, obj);
+											CastSpellCtr++;
+											castSpellCtr_debug = std::to_string(CastSpellCtr);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				//===================Minion End===============================
+
+				//===================Hero Start===============================
+				if (IsHero)
+				{
+					_heroList.push_back(obj);
+
+					auto r_spellSlot = obj->GetSpellSlotByID(3);
+					auto r_RemainingCD = r_spellSlot->GetRemainingCD(gameTime);
+
+					auto d_spellSlot = obj->GetSpellSlotByID(4);
+					auto d_doneCD = d_spellSlot->IsDoneCD(gameTime);
+					auto d_RemainingCD = d_spellSlot->GetRemainingCD(gameTime);
+
+					auto f_spellSlot = obj->GetSpellSlotByID(5);
+					auto f_doneCD = f_spellSlot->IsDoneCD(gameTime);
+					auto f_RemainingCD = f_spellSlot->GetRemainingCD(gameTime);
+
+					ImColor colorBlue = ImColor(102, 102, 255, 174);
+
+					auto champName = obj->GetChampionName();
+
+					std::string champName_str(champName);
+
+					auto d_spellName = d_spellSlot->GetSpellInfo()->GetSpellData()->GetSpellName2();
+					auto f_spellName = f_spellSlot->GetSpellInfo()->GetSpellData()->GetSpellName2();
+
+					std::string d_spellName_str(d_spellName);
+					transform(d_spellName_str.begin(), d_spellName_str.end(), d_spellName_str.begin(), ::tolower);
+
+					std::string f_spellName_str(f_spellName);
+					transform(f_spellName_str.begin(), f_spellName_str.end(), f_spellName_str.begin(), ::tolower);
+
+					if (d_spellName_str.find("smite") != std::string::npos)
+					{
+						d_doneCD = d_spellSlot->IsDoneAbsoluteCD(gameTime);
+						d_RemainingCD = d_spellSlot->GetAbsoluteCoolDown(gameTime);
+					}
+					else if (f_spellName_str.find("smite") != std::string::npos)
+					{
+						f_doneCD = f_spellSlot->IsDoneAbsoluteCD(gameTime);
+						f_RemainingCD = f_spellSlot->GetAbsoluteCoolDown(gameTime);
+					}
+
+					if (g_champ_name)
+					{
+						if (IsOnScreen)
+						{
+							render.draw_text(objpos_w2s.X, objpos_w2s.Y, champName, true, colorBlue);
+						}
+					}
+
+					if (g_champ_info)
+					{
+						if (IsOnScreen)
+						{
+							auto q_spellSlot = obj->GetSpellSlotByID(0);
+							auto q_RemainingCD = q_spellSlot->GetRemainingCD(gameTime);
+							auto q_doneCD = q_spellSlot->IsDoneCD(gameTime);
+							auto q_level = q_spellSlot->GetLevel();
+
+							auto w_spellSlot = obj->GetSpellSlotByID(1);
+							auto w_RemainingCD = w_spellSlot->GetRemainingCD(gameTime);
+							auto w_doneCD = w_spellSlot->IsDoneCD(gameTime);
+							auto w_level = w_spellSlot->GetLevel();
+
+							auto e_spellSlot = obj->GetSpellSlotByID(2);
+							auto e_RemainingCD = e_spellSlot->GetRemainingCD(gameTime);
+							auto e_doneCD = e_spellSlot->IsDoneCD(gameTime);
+							auto e_level = e_spellSlot->GetLevel();
+
+							auto r_doneCD = r_spellSlot->IsDoneCD(gameTime);
+							auto r_level = r_spellSlot->GetLevel();
+
+							if (q_doneCD)
+							{
+								render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, "Q", true, _normal);
+							}
+							else if (q_level >= 1)
+							{
+								char skill_q[10];
+								snprintf(skill_q, sizeof(skill_q), "%d", static_cast<int>(q_RemainingCD));
+								render.draw_text(objpos_w2s.X - 30, objpos_w2s.Y + 15, skill_q, true, _onCD);
+							}
+
+							if (w_doneCD)
+							{
+								render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, "W", true, _normal);
+							}
+							else if (w_level >= 1)
+							{
+								char skill_w[10];
+								snprintf(skill_w, sizeof(skill_w), "%d", static_cast<int>(w_RemainingCD));
+								render.draw_text(objpos_w2s.X - 10, objpos_w2s.Y + 15, skill_w, true, _onCD);
+							}
+
+							if (e_doneCD)
+							{
+								render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, "E", true, _normal);
+							}
+							else if (e_level >= 1)
+							{
+								char skill_e[10];
+								snprintf(skill_e, sizeof(skill_e), "%d", static_cast<int>(e_RemainingCD));
+								render.draw_text(objpos_w2s.X + 10, objpos_w2s.Y + 15, skill_e, true, _onCD);
+							}
+
+							if (r_doneCD)
+							{
+								render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, "R", true, _normal);
+							}
+							else if (r_level >= 1)
+							{
+								char skill_r[10];
+								snprintf(skill_r, sizeof(skill_r), "%d", static_cast<int>(r_RemainingCD));
+								render.draw_text(objpos_w2s.X + 30, objpos_w2s.Y + 15, skill_r, true, _onCD);
+							}
+
+							if (d_doneCD)
+							{
+								render.draw_text(objpos_w2s.X - 15, objpos_w2s.Y + 30, "D", true, _normal);
+							}
+							else
+							{
+								char skill_d[10];
+								snprintf(skill_d, sizeof(skill_d), "%d", static_cast<int>(d_RemainingCD));
+								render.draw_text(objpos_w2s.X - 15, objpos_w2s.Y + 30, skill_d, true, _onCD);
+							}
+
+							if (f_doneCD)
+							{
+								render.draw_text(objpos_w2s.X + 15, objpos_w2s.Y + 30, "F", true, _normal);
+							}
+							else
+							{
+								char skill_f[10];
+								snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
+								render.draw_text(objpos_w2s.X + 15, objpos_w2s.Y + 30, skill_f, true, _onCD);
+							}
+						}
+					}
+
+					if (g_display_spell_texture)
+					{
+						if (IsOnScreen)
+						{
+							auto healthBarPos = obj->GetHpBarPosition();
+
+							std::string d_SpellFileName = getSpellImgByName(d_spellName_str, d_doneCD);
+							std::string f_SpellFileName = getSpellImgByName(f_spellName_str, f_doneCD);
+
+							if (render.draw_image(d_SpellFileName, 25, 25,
+								Vector(healthBarPos.X, healthBarPos.Y, 0)))
+							{
+								if (d_doneCD)
+								{
+									std::string d_humanSpellName = champName_str + "'s " + getHumanSpellByName(
+										d_spellName_str) + " : " + "READY";
+									Engine::SendChat(d_humanSpellName.c_str());
+								}
+								else
+								{
+									std::string d_humanSpellName = champName_str + "'s " +
+										getHumanSpellByName(d_spellName_str) + " : " + std::to_string(
+											static_cast<int>(d_RemainingCD)) + "s";
+									Engine::SendChat(d_humanSpellName.c_str());
+								}
+							}
+
+							if (render.draw_image(f_SpellFileName, 25, 25,
+								Vector(healthBarPos.X + 30, healthBarPos.Y, 0)))
+							{
+								if (f_doneCD)
+								{
+									std::string f_SpellFileName = champName_str + "'s " + getHumanSpellByName(
+										f_spellName_str) + " : " + "READY";
+									Engine::SendChat(f_SpellFileName.c_str());
+								}
+								else
+								{
+									std::string f_SpellFileName = champName_str + "'s " +
+										getHumanSpellByName(f_spellName_str) + " : " + std::to_string(
+											static_cast<int>(f_RemainingCD)) + "s";
+									Engine::SendChat(f_SpellFileName.c_str());
+								}
+							}
+
+							if (!d_doneCD)
+							{
+								char skill_d[10]; ///
+								snprintf(skill_d, sizeof(skill_d), "%d", static_cast<int>(d_RemainingCD));
+								render.draw_text(healthBarPos.X, healthBarPos.Y, skill_d, true, _onCD);
+							}
+
+							if (!f_doneCD)
+							{
+								char skill_f[10]; ///
+								snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
+								render.draw_text(healthBarPos.X + 30, healthBarPos.Y, skill_f, true, _onCD);
+							}
+						}
+					}
+
+					if (Index != me_index)
+					{
+						//not the localPlayer
+						auto AttackRange = obj->GetAttackRange();
+
+						if (!IsEnemyToLocalPlayer)
+						{
+							// ally
+							if (g_2range_objmanager1)
+							{
+								if (IsOnScreen)
+								{
+									auto color = createRGB(124, 252, 0); // lawngreen
+									Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+						}
+						else
+						{
+							// enemy
+
+							if (g_2range_objmanager2)
+							{
+								if (IsOnScreen)
+								{
+									auto color = createRGB(220, 20, 60); // crimson
+									//Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+
+							if (g_w2s_line)
+							{
+								if (obj->IsVisible() && obj->IsAlive())
+								{
+									Vector mepos_w2s;
+									Functions.WorldToScreen(&me_pos, &mepos_w2s);
+
+									if ((mepos_w2s.X) > 3000.0f || (mepos_w2s.Y) > 3000.0f || (mepos_w2s.X) < -3000.0f
+										|| (mepos_w2s.Y) < -3000.0f)
+									{
+										//character out of screen
+									}
+									else
+									{
+										ImColor _gold = ImColor(255, 215, 0, 127);
+										ImColor _orange = ImColor(255, 165, 0, 127);
+										ImColor _orangered = ImColor(255, 69, 0, 127);
+										ImColor _red = ImColor(255, 0, 0, 127);
+
+										if ((me_pos.DistTo(Pos) >= 3000.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
+										{
+											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+												_gold, 1); // gold
+										}
+										else if ((me_pos.DistTo(Pos) >= 2000.0f) && (me_pos.DistTo(Pos) <= 2999.0f))
+										{
+											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+												_orange, 1); // orange
+										}
+										else if ((me_pos.DistTo(Pos) >= 1000.0f) && (me_pos.DistTo(Pos) <= 1999.0f))
+										{
+											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+												_orangered, 1); // orangered
+										}
+										else if ((me_pos.DistTo(Pos) >= 300.0f) && (me_pos.DistTo(Pos) <= 999.0f))
+										{
+											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y, _red,
+												1); // red
+										}
+									}
+								}
+							}
+
+							if (opt_flashTimer_c != 0)
+							{
+								if ((j_key_flag == 1 && is_j_key_ready) || (x_key_flag == 1 && is_x_key_ready))
+								{
+									auto d_CDTime = d_spellSlot->GetTime();
+
+									auto f_CDTime = f_spellSlot->GetTime();
+
+									float flashCoolDownTime = 0;
+									float flashCoolDown = 0;
+									float smiteCoolDown = 0;
+									bool summonerFlashFound = false;
+									bool summonerSmiteFound = false;
+
+									if (strcmp(d_spellName, "SummonerFlash") == 0)
+									{
+										if (!d_doneCD)
+										{
+											summonerFlashFound = true;
+											flashCoolDownTime = d_CDTime;
+											flashCoolDown = d_RemainingCD;
+										}
+									}
+									else if (strcmp(f_spellName, "SummonerFlash") == 0)
+									{
+										if (!f_doneCD)
+										{
+											summonerFlashFound = true;
+											flashCoolDownTime = f_CDTime;
+											flashCoolDown = f_RemainingCD;
+										}
+									}
+
+									if (d_spellName_str.find("smite") != std::string::npos)
+									{
+										summonerSmiteFound = true;
+										smiteCoolDown = d_RemainingCD;
+									}
+									else if (f_spellName_str.find("smite") != std::string::npos)
+									{
+										summonerSmiteFound = true;
+										smiteCoolDown = f_RemainingCD;
+									}
+
+									char str_RemainingCDSmite[MAXIMUM_TEXT_SIZE];
+									snprintf(str_RemainingCDSmite, MAXIMUM_TEXT_SIZE, "%d",
+										static_cast<int>(smiteCoolDown));
+									std::string str_RemainingCDSmite_String(str_RemainingCDSmite);
+
+									char str_RemainingCD[MAXIMUM_TEXT_SIZE];
+									snprintf(str_RemainingCD, MAXIMUM_TEXT_SIZE, "%d",
+										static_cast<int>(flashCoolDown));
+									std::string str_RemainingCD_String(str_RemainingCD);
+
+									char str_RemainingCDUlt[MAXIMUM_TEXT_SIZE];
+									snprintf(str_RemainingCDUlt, MAXIMUM_TEXT_SIZE, "%d",
+										static_cast<int>(r_RemainingCD));
+									std::string str_RemainingCDUlt_string(str_RemainingCDUlt);
+
+									std::string champNameString(champName);
+
+									std::string msgSmite = "  >>  smite  " + (smiteCoolDown > 0
+										? str_RemainingCDSmite_String + "s"
+										: "READY");
+
+									if (opt_flashTimer_c == 3 || opt_flashTimer_c == 4)
+									{
+										// full
+										msgString = (opt_flashTimer_c == 4 ? "/all " : "") + champNameString +
+											"  >>  f  " + (
+												flashCoolDown > 0 ? str_RemainingCD_String + "s" : "READY") +
+											"  >>  ult  " + (r_RemainingCD > 0
+												? str_RemainingCDUlt_string + "s"
+												: "READY") + (summonerSmiteFound ? msgSmite : "");
+
+										if (j_key_flag == 1 && is_j_key_ready)
+										{
+											Engine::SendChat(msgString.c_str());
+										}
+										if (x_key_flag == 1 && is_x_key_ready)
+										{
+											Engine::PrintChat(msgString.c_str());
+										}
+									}
+									else
+									{
+										if (summonerFlashFound)
+										{
+											std::string _time = Engine::SecondsToClock(
+												static_cast<int>(flashCoolDownTime));
+
+											if (opt_flashTimer_c == 1)
+											{
+												msgString += champNameString + " " + _time + " ";
+												
+											}
+											else if (opt_flashTimer_c == 2)
+											{
+												msgString = champNameString + "  >>  " + _time + "  >>  " +
+													str_RemainingCD_String + "s";
+												if (j_key_flag == 1 && is_j_key_ready)
+												{
+													Engine::SendChat(msgString.c_str());
+												}
+												if (x_key_flag == 1 && is_x_key_ready)
+												{
+													Engine::PrintChat(msgString.c_str());
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				//===================Hero End===============================
+
+				obj = holzer.GetNextObject(obj);
+			}
+			if (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit)
+			{
+				if (lastObjCount != 0)
+				{
+					if (objCount > lastObjCount)
+					{
+						finishedOnCreateObjectInit = true;
+					}
+					if (objCount < lastObjCount)
+					{
+						finishedOnDeleteObjectInit = true;
+					}
+				}
+				lastObjCount = objCount;
+			}
+
+			heroList = _heroList;
+			minionList = _minionList;
+
+			isOneTime = false;
+
+			if (opt_flashTimer_c == 1)
+			{
+				if (msgString != "")
+				{
+					if (j_key_flag == 1 && is_j_key_ready)
+					{
+						Engine::SendChat(msgString.c_str());
+					}
+					if (x_key_flag == 1 && is_x_key_ready)
+					{
+						Engine::PrintChat(msgString.c_str());
+					}
+				}
+			}
+
+			is_j_key_ready = false;
+			is_x_key_ready = false;
+			is_u_key_ready = false;
+
 			skin_changer::update(heroList, minionList);
 		}
 	}
@@ -1686,7 +1629,6 @@ int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail,
 
 	if (obj->IsHero())
 	{
-		//auto vector = reinterpret_cast<std::vector< Vector >*>(&start);
 		auto isDash = dash != 1;
 		auto speed = *dashSpeed != 0.0f ? *dashSpeed : obj->GetObjMoveSpeed();
 		auto isDash_str = (isDash ? "true" : "false");
@@ -1697,19 +1639,12 @@ int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail,
 		AppLog.AddLog(
 			("\t\t\tVectorstart X: " + std::to_string(start->X) + " Y: " + std::to_string(start->Y) + " Z: " +
 				std::to_string(start->Z) + " \n").c_str());
-		//AppLog.AddLog(("\t\t\tVectorend X: " + std::to_string(end->X) + " Y: " + std::to_string(end->Y) + " Z: " + std::to_string(end->Z) + " \n").c_str());
-		//AppLog.AddLog(("\t\t\tVectortail X: " + std::to_string(tail->X) + " Y: " + std::to_string(tail->Y) + " Z: " + std::to_string(tail->Z) + " \n").c_str());
-		//PathCaller(obj, vector, speed, isDash);
+		
 	}
 	return Functions.OnNewPath_h(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 }
 
 ////////////////////////////////////Etc. Hooks//////////////////////////////////////
-/*BOOL hk_GetThreadContext(HANDLE hThread, LPCONTEXT lpContext) {
-	AppLog.AddLog("GetThreadContext called!\n");
-	return GetThreadContextHook.Call<BOOL>(hThread, lpContext);
-}*/
-
 
 void SetupGameHooks()
 {
@@ -1718,58 +1653,6 @@ void SetupGameHooks()
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
 	oOnNewPath_addr = baseAddr + oOnNewPath;
 
-
-	///////////////////////////////////////////////////////////
-	// IGNORE THIS PART
-	///////////////////////////////////////////////////////////
-	/*DWORD CastSpell = baseAddr + oCastSpell;
-	DWORD CastSpellHidden = HiddenModule + oCastSpell;
-	DWORD DrawCircle = baseAddr + oDrawCircle;
-	DWORD DrawCircleHidden = HiddenModule + oDrawCircle;
-
-	writeDataToFile("CastSpell", CastSpell);
-	writeDataToFile("CastSpell Hidden", CastSpellHidden);
-
-	writeDataToFile("DrawCircle", DrawCircle);
-	writeDataToFile("DrawCircle Hidden", DrawCircleHidden);
-
-	writeDataToFile("Mbi CastSpell", getMbiBase(CastSpell));
-	writeDataToFile("Mbi CastSpell Hidden", getMbiBase(CastSpellHidden));
-
-	writeDataToFile("Mbi DrawCircle", getMbiBase(DrawCircle));
-	writeDataToFile("Mbi DrawCircle Hidden", getMbiBase(DrawCircleHidden));
-
-	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
-	int i = 0;
-	for (PVECTORED_EXCEPTION_HANDLER handler : PVECTORED_EXCEPTION_HANDLER_list) {
-		writeDataToFile("handler["+to_string(i)+"]", (DWORD)handler);
-		i++;
-	}
-
-	writeDataToFile("--------------------------------------------------------------------", 0x0);
-	*/
-	///////////////////////////////////////////////////////////
-	// END IGNORE THIS PART
-	///////////////////////////////////////////////////////////
-
-	/*
-	//BUGGY //Use this to fully remove hooks from ntdll.
-	if (UnHookNTDLL()) {
-		AppLog.AddLog("UnHookNTDLL Success\n");
-	}
-	else {
-		AppLog.AddLog("UnHookNTDLL failed\n");
-	}*/
-
-	/*
-	// Not usefull, league dont call this at all
-	GetThreadContextHook = FuncHook(GetThreadContext, hk_GetThreadContext);
-	GetThreadContextHook.hook();
-	*/
-
-	// We remove all existing handlers
-	// Since we remove all other handlers, it will push our handler to the very first of list. (more chances of calling our handler first than other handlers)
-	// Then Re-add all Handlers
 	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
 	Process::RemoveAllHandlers();
 	DWORD leoAddr = LeagueHooks::init();
@@ -1786,19 +1669,9 @@ void SetupGameHooks()
 
 	for (int i = 180; i > 0; i--)
 	{
-		// give some time to finish loading client. Still finding other solution for hwbp random crash. (Possible solution above)
 		Sleep(1000);
 		AppLog.AddLog(("Hooks ready in: " + std::to_string(i) + "\n").c_str());
 	}
-
-	/*
-	// Only need this if onprocessspell is hwbp
-	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n");
-	Engine::CastSpellSelf(13); // recall to trigger onprocessspell 1 time before hooking
-
-	AppLog.AddLog("Processing the recall\n");
-	Sleep(2000); // process the recall
-	*/
 
 	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
 	{
@@ -1820,7 +1693,6 @@ void MainLoop()
 {
 	if (g_onprocessspell != g_onprocessspell_last)
 	{
-		// onprocessspell page_guard
 		if (g_onprocessspell)
 		{
 			if (_LeagueHooksVEH.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell))
@@ -1846,27 +1718,6 @@ void MainLoop()
 			}
 		}
 	}
-
-	/*if (g_onprocessspell != g_onprocessspell_last) { // onprocessspell hwbp
-		if (g_onprocessspell) {
-			if (_LeagueHooksHWBP.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell, 3)) {
-				AppLog.AddLog("OnProcessSpellHook Success\n");
-				g_onprocessspell_last = g_onprocessspell;
-			}
-			else {
-				AppLog.AddLog("OnProcessSpellHook Failed\n");
-			}
-		}
-		else {
-			if (_LeagueHooksHWBP.removeHook(3)) {
-				AppLog.AddLog("OnProcessSpellHook remove Success\n");
-				g_onprocessspell_last = g_onprocessspell;
-			}
-			else {
-				AppLog.AddLog("OnProcessSpellHook remove Failed\n");
-			}
-		}
-	}*/
 
 	if (g_oncreateobject != g_oncreateobject_last)
 	{
@@ -1956,5 +1807,4 @@ void MainLoop()
 void RemoveGameHooks()
 {
 	LeagueHooks::deinit();
-	//GetThreadContextHook.unhook();
 }

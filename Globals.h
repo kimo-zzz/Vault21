@@ -84,3 +84,6 @@ static bool g_onprocessspell_last = false;
 static bool g_oncreateobject_last = false;
 static bool g_ondeleteobject_last = false;
 static bool g_onnewpath_last = false;
+
+//Orb settings
+static float g_orbwalker_windup = 90.f;

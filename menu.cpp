@@ -10,6 +10,7 @@
 #include "HeavensGateHook.h"
 #include "Orbwalker.h"
 #include "Globals.h"
+#include <StaticLists.h>
 
 CObjectManager* ObjManager;
 CFunctions Functions;
@@ -172,23 +173,23 @@ namespace DX11
 					Checkbox("Champ Name", &g_champ_name);
 					SameLine();
 					HelpMarker("Display champion name of all hero.");
-					Checkbox("Self Range", &g_range);
+					Checkbox("Self Range", &g_draw_lp_range);
 					SameLine();
 					HelpMarker("Display circle of your hero range.");
-					Checkbox("Ally Range", &g_2range_objmanager1);
+					Checkbox("Ally Range", &g_draw_ally_range);
 					SameLine();
 					HelpMarker("Display circle of all ally heroes range.");
-					Checkbox("Enemy Range", &g_2range_objmanager2);
+					Checkbox("Enemy Range", &g_draw_enemy_range);
 					SameLine();
 					HelpMarker("Display circle of all enemy heroes range.");
 					Checkbox("Enemy Turret Range", &g_enemy_turret);
 					SameLine();
 					HelpMarker("Display circle of all enemy turret range.");
 					NextColumn();
-					Checkbox("Enemy Wards", &g_wards);
+					Checkbox("Enemy Wards", &g_draw_wards);
 					SameLine();
 					HelpMarker("Display circle of all enemy wards range.");
-					Checkbox("Enemy Line", &g_w2s_line);
+					Checkbox("Enemy Line", &g_draw_line);
 					SameLine();
 					HelpMarker("Display line of all enemy heroes position to your position.");
 					Checkbox("Enemy Missles", &g_drawEnemyMissles);
@@ -204,7 +205,7 @@ namespace DX11
 					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Timers");
 					Separator();
 					Columns(2, "timerscolumns", false); // 2-ways, with border
-					Checkbox("Spells Timer", &g_champ_info);
+					Checkbox("Spells Timer", &g_draw_cd_tracker);
 					SameLine();
 					HelpMarker("Display spells timer of all heroes.");
 					Checkbox("Inhi Respawn Timer", &g_inhi_respawn);
@@ -479,6 +480,7 @@ namespace DX11
 					BulletText("pakeke80");
 					BulletText("B3akers - for LeagueSkinChanger");
 					BulletText("and EVERYONE in UC forum");
+					BulletText("Project of pakeke80, Dencelle, HACKUZAN, MyNameIsEarl, Jiingz");
 					EndTabItem();
 				}
 				if (BeginTabItem("Debug"))
@@ -672,9 +674,9 @@ namespace DX11
 				f_spellIsDoneAbs_debug = (me_f_spellSlot->IsDoneAbsoluteCD(gameTime) ? "True" : "False");
 			}
 
-			if (g_range)
+			if (g_draw_lp_range)
 			{
-				if (me)
+				if (me && me->IsAlive())
 				{
 					auto me_attackRange = me->GetAttackRange();
 					auto me_boundingRadius = me->GetBoundingRadius();
@@ -831,8 +833,8 @@ namespace DX11
 							std::to_string(Pos.Z)).c_str(), true, _onCD);
 				}
 
-				
-				if (g_wards)
+
+				if (g_draw_wards)
 				{
 					//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
 					auto color = createRGB(204, 106, 255); // violet
@@ -1031,52 +1033,24 @@ namespace DX11
 				if (IsMinion)
 				{
 					_minionList.push_back(obj);
-					if (IsEnemyToLocalPlayer)
+					if (!IsEnemyToLocalPlayer)
 					{
-						if (g_wards)
+						if (g_draw_wards)
 						{
-							// wards are considered minion. lol
 							if (IsOnScreen)
 							{
-								auto MaxHealth = obj->GetMaxHealth();
+								Vector w2s;
+								Functions.WorldToScreen(&obj->GetPos(), &w2s);
+
 								auto color = createRGB(220, 20, 60); // crimson
 
-								if ((Name_str.find("jammerdevice") != std::string::npos) || (Name_str.find(
-									"visionward") != std::string::npos))
+								if (WardList->find(Name_str) != std::string::npos)
 								{
-									Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+									Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
 									//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+									render.draw_text(w2s.X, w2s.Y, obj->GetName(), false, ImColor(255, 255, 255, 255));
 								}
-								else if (Name_str.find("sightward") != std::string::npos)
-								{
-									if (MaxHealth == 3)
-									{
-										Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-									else if (MaxHealth == 1)
-									{
-										Engine::DrawCircle(&Pos, 500.0f, &color, 0, 0.0f, 0, 0.5f);
-										//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-									}
-								}
-								else
-								{
-									if (MaxHealth == 1)
-									{
-										auto Name_Champ = obj->GetChampionName();
-										std::string Name_Champ_str(Name_Champ);
-										transform(Name_Champ_str.begin(), Name_Champ_str.end(),
-											Name_Champ_str.begin(), ::tolower);
 
-										if (Name_Champ_str.find("fiddlestickseffigy") != std::string::npos)
-										{
-											// effigy
-											Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-											//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
-										}
-									}
-								}
 							}
 						}
 					}
@@ -1164,9 +1138,9 @@ namespace DX11
 						}
 					}
 
-					if (g_champ_info)
+					if (g_draw_cd_tracker)
 					{
-						if (IsOnScreen)
+						if (IsOnScreen && obj->IsAlive() && obj->IsVisible() && obj->IsEnemyTo(me))
 						{
 							auto q_spellSlot = obj->GetSpellSlotByID(0);
 							auto q_RemainingCD = q_spellSlot->GetRemainingCD(gameTime);
@@ -1317,49 +1291,42 @@ namespace DX11
 
 					if (Index != me_index)
 					{
-						//not the localPlayer
 						auto AttackRange = obj->GetAttackRange();
-
+						auto boundingRadius = obj->GetBoundingRadius();
 						if (!IsEnemyToLocalPlayer)
 						{
-							// ally
-							if (g_2range_objmanager1)
+
+							if (g_draw_ally_range)
 							{
-								if (IsOnScreen)
+								if (IsOnScreen && obj->IsAlive())
 								{
 									auto color = createRGB(124, 252, 0); // lawngreen
-									Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
+									Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
 									//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
 								}
 							}
 						}
 						else
 						{
-							// enemy
-
-							if (g_2range_objmanager2)
+							if (g_draw_enemy_range)
 							{
 								if (IsOnScreen)
 								{
 									auto color = createRGB(220, 20, 60); // crimson
-									//Engine::DrawCircle(&Pos, AttackRange, &color, 0, 0.0f, 0, 0.5f);
-									render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+									Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
 								}
 							}
 
-							if (g_w2s_line)
+							if (g_draw_line)
 							{
 								if (obj->IsVisible() && obj->IsAlive())
 								{
 									Vector mepos_w2s;
 									Functions.WorldToScreen(&me_pos, &mepos_w2s);
 
-									if ((mepos_w2s.X) > 3000.0f || (mepos_w2s.Y) > 3000.0f || (mepos_w2s.X) < -3000.0f
-										|| (mepos_w2s.Y) < -3000.0f)
-									{
-										//character out of screen
-									}
-									else
+									if ((mepos_w2s.X) < 3000.0f || (mepos_w2s.Y) < 3000.0f || (mepos_w2s.X) > -3000.0f
+										|| (mepos_w2s.Y) > -3000.0f)
 									{
 										ImColor _gold = ImColor(255, 215, 0, 127);
 										ImColor _orange = ImColor(255, 165, 0, 127);
@@ -1387,6 +1354,7 @@ namespace DX11
 												1); // red
 										}
 									}
+
 								}
 							}
 
@@ -1484,7 +1452,7 @@ namespace DX11
 											if (opt_flashTimer_c == 1)
 											{
 												msgString += champNameString + " " + _time + " ";
-												
+
 											}
 											else if (opt_flashTimer_c == 2)
 											{
@@ -1515,13 +1483,9 @@ namespace DX11
 				if (lastObjCount != 0)
 				{
 					if (objCount > lastObjCount)
-					{
 						finishedOnCreateObjectInit = true;
-					}
-					if (objCount < lastObjCount)
-					{
+					else
 						finishedOnDeleteObjectInit = true;
-					}
 				}
 				lastObjCount = objCount;
 			}
@@ -1639,7 +1603,7 @@ int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail,
 		AppLog.AddLog(
 			("\t\t\tVectorstart X: " + std::to_string(start->X) + " Y: " + std::to_string(start->Y) + " Z: " +
 				std::to_string(start->Z) + " \n").c_str());
-		
+
 	}
 	return Functions.OnNewPath_h(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 }

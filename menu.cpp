@@ -41,7 +41,7 @@ namespace DX11
 		auto player = me;
 		if (player)
 			config_json[std::string(player->get_character_data_stack()->base_skin.model.str) +
-				".current_combo_skin_index"] = current_combo_skin_index;
+			".current_combo_skin_index"] = current_combo_skin_index;
 
 		config_json["current_combo_ward_index"] = current_combo_ward_index;
 		config_json["current_combo_minion_index"] = current_combo_minion_index;
@@ -217,7 +217,7 @@ namespace DX11
 					SameLine();
 					HelpMarker("Display respawn time of all major jungle objectives.");
 					Columns(1);
-					const char* opt_flashTimer[] = {"Off", "1 Liner", "Multi-Liner", "Full", "Full /all"};
+					const char* opt_flashTimer[] = { "Off", "1 Liner", "Multi-Liner", "Full", "Full /all" };
 					Combo("Spells Message", &opt_flashTimer_c, opt_flashTimer, IM_ARRAYSIZE(opt_flashTimer));
 					SameLine();
 					HelpMarker(
@@ -339,20 +339,20 @@ namespace DX11
 							TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Localplayer skins settings:");
 							Separator();
 							if (Combo("Current skin", &config::current_combo_skin_index, vector_getter_skin,
-							          static_cast<void*>(&values), values.size() + 1))
+								static_cast<void*>(&values), values.size() + 1))
 								if (config::current_combo_skin_index > 0)
 								{
 									me->change_skin(values[config::current_combo_skin_index - 1].model_name.c_str(),
-									                values[config::current_combo_skin_index - 1].skin_id);
+										values[config::current_combo_skin_index - 1].skin_id);
 								}
 
 							if (Combo("Current ward skin", &config::current_combo_ward_index, vector_getter_ward_skin,
-							          static_cast<void*>(&skin_database::wards_skins),
-							          skin_database::wards_skins.size() + 1))
+								static_cast<void*>(&skin_database::wards_skins),
+								skin_database::wards_skins.size() + 1))
 								config::current_ward_skin_index = config::current_combo_ward_index == 0
-									                                  ? -1
-									                                  : skin_database::wards_skins.at(
-										                                  config::current_combo_ward_index - 1).first;
+								? -1
+								: skin_database::wards_skins.at(
+									config::current_combo_ward_index - 1).first;
 
 							Separator();
 							Spacing();
@@ -361,8 +361,8 @@ namespace DX11
 						TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Global skins settings:");
 						Separator();
 						if (Combo("Current minion skin", &config::current_combo_minion_index, vector_getter_default,
-						          static_cast<void*>(&skin_database::minions_skins),
-						          skin_database::minions_skins.size() + 1))
+							static_cast<void*>(&skin_database::minions_skins),
+							skin_database::minions_skins.size() + 1))
 							config::current_minion_skin_index = config::current_combo_minion_index - 1;
 						Separator();
 						Spacing();
@@ -374,10 +374,10 @@ namespace DX11
 							snprintf(str_buffer, 256, "Current %s skin", it.name.c_str());
 							auto config_entry = config::current_combo_jungle_mob_skin_index.insert({
 								it.name_hashes.front(), 0
-							});
+								});
 
 							if (Combo(str_buffer, &config_entry.first->second, vector_getter_default,
-							          static_cast<void*>(&it.skins), it.skins.size() + 1))
+								static_cast<void*>(&it.skins), it.skins.size() + 1))
 							{
 								for (auto& hash : it.name_hashes)
 									config::current_combo_jungle_mob_skin_index[hash] = config_entry.first->second;
@@ -414,24 +414,24 @@ namespace DX11
 							}
 
 							auto& config_array = is_enemy
-								                     ? config::current_combo_enemy_skin_index
-								                     : config::current_combo_ally_skin_index;
+								? config::current_combo_enemy_skin_index
+								: config::current_combo_ally_skin_index;
 
 							auto champion_name_hash = fnv::hash_runtime(
 								hero->get_character_data_stack()->base_skin.model.str);
-							auto config_entry = config_array.insert({champion_name_hash, 0});
+							auto config_entry = config_array.insert({ champion_name_hash, 0 });
 
 							std::string charName = std::string(hero->GetName());
 							snprintf(str_buffer, 256, "Current skin (%s)##%X", charName.c_str(),
-							         reinterpret_cast<uintptr_t>(hero));
+								reinterpret_cast<uintptr_t>(hero));
 
 							auto& values = skin_database::champions_skins[champion_name_hash];
 							if (Combo(str_buffer, &config_entry.first->second, vector_getter_skin,
-							          static_cast<void*>(&values), values.size() + 1))
+								static_cast<void*>(&values), values.size() + 1))
 								if (config_entry.first->second > 0)
 								{
 									hero->change_skin(values[config_entry.first->second - 1].model_name.c_str(),
-									                  values[config_entry.first->second - 1].skin_id);
+										values[config_entry.first->second - 1].skin_id);
 								}
 						}
 
@@ -465,7 +465,7 @@ namespace DX11
 					}
 
 					Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / GetIO().Framerate,
-					     GetIO().Framerate);
+						GetIO().Framerate);
 					Separator();
 					Spacing();
 
@@ -717,18 +717,18 @@ namespace DX11
 						auto me_IsImmobile = me->GetBuffMgr()->IsImmobile2();
 
 						if (me_IsImmobile && (
-								(me_healthPercentage <= 100.0f && opt_autoCleanse_c == 1) ||
-								(me_healthPercentage <= 90.0f && opt_autoCleanse_c == 2) ||
-								(me_healthPercentage <= 80.0f && opt_autoCleanse_c == 3) ||
-								(me_healthPercentage <= 70.0f && opt_autoCleanse_c == 4) ||
-								(me_healthPercentage <= 60.0f && opt_autoCleanse_c == 5) ||
-								(me_healthPercentage <= 50.0f && opt_autoCleanse_c == 6) ||
-								(me_healthPercentage <= 40.0f && opt_autoCleanse_c == 7) ||
-								(me_healthPercentage <= 30.0f && opt_autoCleanse_c == 8) ||
-								(me_healthPercentage <= 20.0f && opt_autoCleanse_c == 9) ||
-								(me_healthPercentage <= 10.0f && opt_autoCleanse_c == 10)
+							(me_healthPercentage <= 100.0f && opt_autoCleanse_c == 1) ||
+							(me_healthPercentage <= 90.0f && opt_autoCleanse_c == 2) ||
+							(me_healthPercentage <= 80.0f && opt_autoCleanse_c == 3) ||
+							(me_healthPercentage <= 70.0f && opt_autoCleanse_c == 4) ||
+							(me_healthPercentage <= 60.0f && opt_autoCleanse_c == 5) ||
+							(me_healthPercentage <= 50.0f && opt_autoCleanse_c == 6) ||
+							(me_healthPercentage <= 40.0f && opt_autoCleanse_c == 7) ||
+							(me_healthPercentage <= 30.0f && opt_autoCleanse_c == 8) ||
+							(me_healthPercentage <= 20.0f && opt_autoCleanse_c == 9) ||
+							(me_healthPercentage <= 10.0f && opt_autoCleanse_c == 10)
 							)
-						)
+							)
 						{
 							Engine::CastSpellSelf(me_cleanseSpellSlot);
 							CastSpellCtr++;
@@ -827,7 +827,7 @@ namespace DX11
 					{
 						if (obj->IsHero())
 							render.draw_text(objpos_w2s.X, objpos_w2s.Y,
-							                 ("Addr: " + (hexify<DWORD>(obj->GetThis()))).c_str(), true, _onCD);
+								("Addr: " + (hexify<DWORD>(obj->GetThis()))).c_str(), true, _onCD);
 					}
 					if (g_debug_name)
 					{
@@ -836,8 +836,8 @@ namespace DX11
 					if (g_debug_location)
 					{
 						render.draw_text(objpos_w2s.X, objpos_w2s.Y + 30,
-						                 ("X: " + std::to_string(Pos.X) + ", Y: " + std::to_string(Pos.Y) + ", Z: " +
-							                 std::to_string(Pos.Z)).c_str(), true, _onCD);
+							("X: " + std::to_string(Pos.X) + ", Y: " + std::to_string(Pos.Y) + ", Z: " +
+								std::to_string(Pos.Z)).c_str(), true, _onCD);
 					}
 
 					/*dfgdfgdfgdfgdfgdfgdffffffffffffffffffffffffffffffffffffffffffffffffffffffffg
@@ -916,7 +916,7 @@ namespace DX11
 							(Name_str.compare("monstercamp_6") == 0) ||
 							(Name_str.compare("monstercamp_17") == 0) ||
 							(Name_str.compare("monstercamp_12") == 0)
-						)
+							)
 						{
 							float jungleSpawnOn = Engine::GetTimerExpiry(obj);
 							float jungleSpawn = jungleSpawnOn - gameTime;
@@ -928,13 +928,13 @@ namespace DX11
 							std::string monsterName = Name_str;
 							if ((Name_str.compare("monstercamp_1") == 0) ||
 								(Name_str.compare("monstercamp_7") == 0)
-							)
+								)
 							{
 								monsterName = "Blue Sentinel";
 							}
 							else if ((Name_str.compare("monstercamp_4") == 0) ||
 								(Name_str.compare("monstercamp_10") == 0)
-							)
+								)
 							{
 								monsterName = "Red Brambleback";
 							}
@@ -966,32 +966,32 @@ namespace DX11
 								{
 									std::string msgString_camp = "Enemy Blue Sentinel >> " + (
 										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-											? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-											: spawnTimer_str);
+										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+										: spawnTimer_str);
 									Engine::SendChat(msgString_camp.c_str());
 								}
 								if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_10") == 0))
 								{
 									std::string msgString_camp = "Enemy Red Brambleback >> " + (
 										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-											? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-											: spawnTimer_str);
+										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+										: spawnTimer_str);
 									Engine::SendChat(msgString_camp.c_str());
 								}
 								if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_1") == 0))
 								{
 									std::string msgString_camp = "Enemy Blue Sentinel >> " + (
 										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-											? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-											: spawnTimer_str);
+										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+										: spawnTimer_str);
 									Engine::SendChat(msgString_camp.c_str());
 								}
 								if (me->GetTeam() == 200 && (Name_str.compare("monstercamp_4") == 0))
 								{
 									std::string msgString_camp = "Enemy Red Brambleback >> " + (
 										jungleSpawn > 0.0f && jungleSpawn < 86400.0f
-											? std::to_string(static_cast<int>(jungleSpawn)) + "s"
-											: spawnTimer_str);
+										? std::to_string(static_cast<int>(jungleSpawn)) + "s"
+										: spawnTimer_str);
 									Engine::SendChat(msgString_camp.c_str());
 								}
 							}
@@ -1025,11 +1025,11 @@ namespace DX11
 
 										ImColor _skillsShots = ImColor(255, 102, 102, 79);
 										render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
-										                 objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
-										                 spellWidth);
+											objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
+											spellWidth);
 
 										auto spellEffectRange = obj->GetSpellCastInfo()->GetSpellData()->
-										                             GetSpellEffectRange();
+											GetSpellEffectRange();
 										auto color = createRGB(220, 20, 60); // crimson
 										Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
 										//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
@@ -1122,7 +1122,7 @@ namespace DX11
 											auto Name_Champ = obj->GetChampionName();
 											std::string Name_Champ_str(Name_Champ);
 											transform(Name_Champ_str.begin(), Name_Champ_str.end(),
-											          Name_Champ_str.begin(), ::tolower);
+												Name_Champ_str.begin(), ::tolower);
 
 											if (Name_Champ_str.find("fiddlestickseffigy") != std::string::npos)
 											{
@@ -1147,7 +1147,7 @@ namespace DX11
 								(Name_str.find("sru_dragon_elder") != std::string::npos) ||
 								(Name_str.find("sru_baron") != std::string::npos) ||
 								(Name_str.find("sru_riftherald") != std::string::npos)
-							)
+								)
 							{
 								if (Health > 0)
 								{
@@ -1319,7 +1319,7 @@ namespace DX11
 								std::string f_SpellFileName = getSpellImgByName(f_spellName_str, f_doneCD);
 
 								if (render.draw_image(d_SpellFileName, 25, 25,
-								                      Vector(healthBarPos.X, healthBarPos.Y, 0)))
+									Vector(healthBarPos.X, healthBarPos.Y, 0)))
 								{
 									if (d_doneCD)
 									{
@@ -1337,7 +1337,7 @@ namespace DX11
 								}
 
 								if (render.draw_image(f_SpellFileName, 25, 25,
-								                      Vector(healthBarPos.X + 30, healthBarPos.Y, 0)))
+									Vector(healthBarPos.X + 30, healthBarPos.Y, 0)))
 								{
 									if (f_doneCD)
 									{
@@ -1404,40 +1404,43 @@ namespace DX11
 
 								if (g_w2s_line)
 								{
-									Vector mepos_w2s;
-									Functions.WorldToScreen(&me_pos, &mepos_w2s);
-
-									if ((mepos_w2s.X) > 3000.0f || (mepos_w2s.Y) > 3000.0f || (mepos_w2s.X) < -3000.0f
-										|| (mepos_w2s.Y) < -3000.0f)
+									if (obj->IsVisible() && obj->IsAlive())
 									{
-										//character out of screen
-									}
-									else
-									{
-										ImColor _gold = ImColor(255, 215, 0, 127);
-										ImColor _orange = ImColor(255, 165, 0, 127);
-										ImColor _orangered = ImColor(255, 69, 0, 127);
-										ImColor _red = ImColor(255, 0, 0, 127);
+										Vector mepos_w2s;
+										Functions.WorldToScreen(&me_pos, &mepos_w2s);
 
-										if ((me_pos.DistTo(Pos) >= 3000.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
+										if ((mepos_w2s.X) > 3000.0f || (mepos_w2s.Y) > 3000.0f || (mepos_w2s.X) < -3000.0f
+											|| (mepos_w2s.Y) < -3000.0f)
 										{
-											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-											                 _gold, 1); // gold
+											//character out of screen
 										}
-										else if ((me_pos.DistTo(Pos) >= 2000.0f) && (me_pos.DistTo(Pos) <= 2999.0f))
+										else
 										{
-											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-											                 _orange, 1); // orange
-										}
-										else if ((me_pos.DistTo(Pos) >= 1000.0f) && (me_pos.DistTo(Pos) <= 1999.0f))
-										{
-											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
-											                 _orangered, 1); // orangered
-										}
-										else if ((me_pos.DistTo(Pos) >= 300.0f) && (me_pos.DistTo(Pos) <= 999.0f))
-										{
-											render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y, _red,
-											                 1); // red
+											ImColor _gold = ImColor(255, 215, 0, 127);
+											ImColor _orange = ImColor(255, 165, 0, 127);
+											ImColor _orangered = ImColor(255, 69, 0, 127);
+											ImColor _red = ImColor(255, 0, 0, 127);
+
+											if ((me_pos.DistTo(Pos) >= 3000.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
+											{
+												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+													_gold, 1); // gold
+											}
+											else if ((me_pos.DistTo(Pos) >= 2000.0f) && (me_pos.DistTo(Pos) <= 2999.0f))
+											{
+												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+													_orange, 1); // orange
+											}
+											else if ((me_pos.DistTo(Pos) >= 1000.0f) && (me_pos.DistTo(Pos) <= 1999.0f))
+											{
+												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y,
+													_orangered, 1); // orangered
+											}
+											else if ((me_pos.DistTo(Pos) >= 300.0f) && (me_pos.DistTo(Pos) <= 999.0f))
+											{
+												render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y, _red,
+													1); // red
+											}
 										}
 									}
 								}
@@ -1488,17 +1491,17 @@ namespace DX11
 
 										char str_RemainingCDSmite[MAXIMUM_TEXT_SIZE];
 										snprintf(str_RemainingCDSmite, MAXIMUM_TEXT_SIZE, "%d",
-										         static_cast<int>(smiteCoolDown));
+											static_cast<int>(smiteCoolDown));
 										std::string str_RemainingCDSmite_String(str_RemainingCDSmite);
 
 										char str_RemainingCD[MAXIMUM_TEXT_SIZE];
 										snprintf(str_RemainingCD, MAXIMUM_TEXT_SIZE, "%d",
-										         static_cast<int>(flashCoolDown));
+											static_cast<int>(flashCoolDown));
 										std::string str_RemainingCD_String(str_RemainingCD);
 
 										char str_RemainingCDUlt[MAXIMUM_TEXT_SIZE];
 										snprintf(str_RemainingCDUlt, MAXIMUM_TEXT_SIZE, "%d",
-										         static_cast<int>(r_RemainingCD));
+											static_cast<int>(r_RemainingCD));
 										std::string str_RemainingCDUlt_string(str_RemainingCDUlt);
 
 										std::string champNameString(champName);
@@ -1514,8 +1517,8 @@ namespace DX11
 												"  >>  f  " + (
 													flashCoolDown > 0 ? str_RemainingCD_String + "s" : "READY") +
 												"  >>  ult  " + (r_RemainingCD > 0
-													                 ? str_RemainingCDUlt_string + "s"
-													                 : "READY") + (summonerSmiteFound ? msgSmite : "");
+													? str_RemainingCDUlt_string + "s"
+													: "READY") + (summonerSmiteFound ? msgSmite : "");
 
 											if (j_key_flag == 1 && is_j_key_ready)
 											{
@@ -1676,7 +1679,7 @@ int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, CObject* obj)
 }
 
 int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk1, float* dashSpeed,
-                         unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
+	unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
 {
 	if (obj == nullptr)
 		return 0;

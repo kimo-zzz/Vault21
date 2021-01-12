@@ -1033,7 +1033,7 @@ namespace DX11
 				if (IsMinion)
 				{
 					_minionList.push_back(obj);
-					if (!IsEnemyToLocalPlayer)
+					if (IsEnemyToLocalPlayer)
 					{
 						if (g_draw_wards)
 						{
@@ -1042,11 +1042,11 @@ namespace DX11
 								Vector w2s;
 								Functions.WorldToScreen(&obj->GetPos(), &w2s);
 
-								auto color = createRGB(220, 20, 60); // crimson
-
-								if (WardList->find(Name_str) != std::string::npos)
+								auto color = createRGB(220, 20, 60); // crimson	
+								if ( WardList.find(Name_str) != WardList.end())
 								{
-									Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
+									Engine::DrawCircle(&Pos, 50.f, &color, 0, 0.0f, 0, 1.0f);
+									Engine::DrawCircle(&Pos, WardList.at(Name_str), &color, 0, 0.0f, 0, 0.5f);
 									//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 									render.draw_text(w2s.X, w2s.Y, obj->GetName(), false, ImColor(255, 255, 255, 255));
 								}

@@ -9,12 +9,12 @@ static Vector me_lastPos = Vector(0, 0, 0);
 
 static int CastSpellCtr = 0;
 
-static bool g_range = false;
-static bool g_2range_objmanager1 = false;
-static bool g_2range_objmanager2 = false;
-static bool g_champ_info = false;
-static bool g_w2s_line = false;
-static bool g_wards = false;
+static bool g_draw_lp_range = false;
+static bool g_draw_ally_range = false;
+static bool g_draw_enemy_range = false;
+static bool g_draw_cd_tracker = false;
+static bool g_draw_line = false;
+static bool g_draw_wards = false;
 static bool g_champ_name = false;
 static bool g_campTimer = false;
 static bool g_enemy_turret = false;

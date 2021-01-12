@@ -326,5 +326,8 @@
     <ClInclude Include="CallBackIntStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StaticLists.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

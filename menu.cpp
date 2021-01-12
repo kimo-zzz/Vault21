@@ -1669,16 +1669,10 @@ void SetupGameHooks()
 
 	for (int i = 10; i > 0; i--)
 	{
-<<<<<<< Updated upstream
-=======
 		// give some time to finish loading client, then recall.
->>>>>>> Stashed changes
 		Sleep(1000);
 		AppLog.AddLog(("Hooks ready in: " + std::to_string(i) + "\n").c_str());
 	}
-
-<<<<<<< Updated upstream
-=======
 
 	// Only need this if onprocessspell is hwbp
 	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n");
@@ -1687,8 +1681,6 @@ void SetupGameHooks()
 	AppLog.AddLog("Processing the recall\n");
 	Sleep(1000); // process the recall
 	
-
->>>>>>> Stashed changes
 	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
 	{
 		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
@@ -1735,8 +1727,6 @@ void MainLoop()
 		}
 	}*/
 
-<<<<<<< Updated upstream
-=======
 	if (g_onprocessspell != g_onprocessspell_last) { // onprocessspell hwbp
 		if (g_onprocessspell) {
 			if (_LeagueHooksHWBP.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell, 3)) {
@@ -1758,7 +1748,6 @@ void MainLoop()
 		}
 	}
 
->>>>>>> Stashed changes
 	if (g_oncreateobject != g_oncreateobject_last)
 	{
 		if (g_oncreateobject)

@@ -254,16 +254,23 @@ void print_parameters(PCONTEXT debug_context) {
 std::vector<HookStruct> LeagueHooks::hookListPG = {};
 std::vector<HookStructHWBP> LeagueHooks::hookListHWBP = {};
 PVOID LeagueHooks::VEH_Handle = nullptr;
+PVOID LeagueHooks::VCH_Handle = nullptr;
 bool LeagueHooks::IsDoneInit = false;
 //uint32_t LeagueHooksVEH::oldProtection = 0;
 
+DWORD LeagueHooks::DR0 = 0;
+DWORD LeagueHooks::DR1 = 0;
+DWORD LeagueHooks::DR2 = 0;
+DWORD LeagueHooks::DR3 = 0;
+DWORD LeagueHooks::DR6 = 0;
+DWORD LeagueHooks::DR7 = 0;
 DWORD LeagueHooks::init()
 {
 	//Register the Custom Exception Handler
 	if (!IsDoneInit)
 	{
-		//VEH_Handle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)LeoHandler);
-		VEH_Handle = AddVectoredExceptionHandler(1, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
+		VEH_Handle = AddVectoredExceptionHandler(1, (PTOP_LEVEL_EXCEPTION_FILTER)(LeoHandler));
+		VCH_Handle = AddVectoredContinueHandler(1, (PVECTORED_EXCEPTION_HANDLER)VCHandler);
 		IsDoneInit = true;
 	}
 	//AppLog.AddLog(("LeoHandler: " + hexify<DWORD>((DWORD)LeoHandler) + "\n").c_str());
@@ -439,8 +446,26 @@ void DataLog(EXCEPTION_POINTERS* pExceptionInfo)
 	j++;
 }
 
+LONG WINAPI LeagueHooks::VCHandler(EXCEPTION_POINTERS* pExceptionInfo) {
+	//AppLog.AddLog("VCH called\n");
+	pExceptionInfo->ContextRecord->Dr0 = DR0;
+	pExceptionInfo->ContextRecord->Dr1 = DR1;
+	pExceptionInfo->ContextRecord->Dr2 = DR2;
+	pExceptionInfo->ContextRecord->Dr3 = DR3;
+	pExceptionInfo->ContextRecord->Dr7 = DR7;
+	return EXCEPTION_CONTINUE_EXECUTION;
+}
+
 LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 {
+	//we'll clear this shit so that other handlers thinks pExceptionInfo is clean
+	pExceptionInfo->ContextRecord->Dr0 = 0;
+	pExceptionInfo->ContextRecord->Dr1 = 0;
+	pExceptionInfo->ContextRecord->Dr2 = 0;
+	pExceptionInfo->ContextRecord->Dr3 = 0;
+	pExceptionInfo->ContextRecord->Dr6 = 0;
+	pExceptionInfo->ContextRecord->Dr7 = 0;
+
 	/*if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
 	{
 		AppLog.AddLog("EXCEPTION_ACCESS_VIOLATION\n");
@@ -573,7 +598,6 @@ LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 
 	return EXCEPTION_CONTINUE_SEARCH;
 	//Keep going down the exception handling list to find the right handler IF it is not PAGE_GUARD nor SINGLE_STEP
-	//return EXCEPTION_CONTINUE_EXECUTION; //Continue the next instruction
 }
 
 bool LeagueHooks::deinit()
@@ -628,6 +652,7 @@ bool LeagueHooks::deinit()
 			}
 			hookListPG.clear();
 			//MessageBoxA(0, "Hook Remove success", "", 0);
+			RemoveVectoredContinueHandler(VCH_Handle);
 			return true;
 		} //MessageBoxA(0, "RemoveVectoredExceptionHandler failed", "", 0);
 	}
@@ -655,7 +680,7 @@ bool LeagueHooksVEH::Hook(DWORD original_fun, DWORD hooked_fun)
 	//Register the Custom Exception Handler
 	if (!IsDoneInit)
 	{
-		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
+		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PTOP_LEVEL_EXCEPTION_FILTER>(LeoHandler));
 		IsDoneInit = true;
 	}
 
@@ -929,15 +954,19 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 									{
 									case 0:
 										Ctx.Dr0 = static_cast<DWORD_PTR>(0);
+										DR0 = 0;
 										break;
 									case 1:
 										Ctx.Dr1 = static_cast<DWORD_PTR>(0);
+										DR1 = 0;
 										break;
 									case 2:
 										Ctx.Dr2 = static_cast<DWORD_PTR>(0);
+										DR2 = 0;
 										break;
 									case 3:
 										Ctx.Dr3 = static_cast<DWORD_PTR>(0);
+										DR3 = 0;
 										break;
 									default:
 										isInvalidReg = true;
@@ -957,6 +986,7 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 										DWORD bitsToRemove = ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16
 										)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
 										Ctx.Dr7 -= bitsToRemove;
+										DR7 = Ctx.Dr7;
 
 										//Still need to call suspend thread *TODO*
 										//MessageBoxA(0, (threadId + " SetThreadContext").c_str(), "", 0);
@@ -1049,7 +1079,7 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 	//Register the Custom Exception Handler
 	if (!IsDoneInit)
 	{
-		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PVECTORED_EXCEPTION_HANDLER>(LeoHandler));
+		VEH_Handle = AddVectoredExceptionHandler(true, static_cast<PTOP_LEVEL_EXCEPTION_FILTER>(LeoHandler));
 		IsDoneInit = true;
 	}
 
@@ -1143,15 +1173,19 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 									{
 									case 0:
 										Ctx.Dr0 = static_cast<DWORD_PTR>(original_fun);
+										DR0 = (DWORD_PTR)original_fun;
 										break;
 									case 1:
 										Ctx.Dr1 = static_cast<DWORD_PTR>(original_fun);
+										DR1 = (DWORD_PTR)original_fun;
 										break;
 									case 2:
 										Ctx.Dr2 = static_cast<DWORD_PTR>(original_fun);
+										DR2 = (DWORD_PTR)original_fun;
 										break;
 									case 3:
 										Ctx.Dr3 = static_cast<DWORD_PTR>(original_fun);
+										DR3 = (DWORD_PTR)original_fun;
 										break;
 									default:
 										isInvalidReg = true;
@@ -1169,6 +1203,7 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 										Ctx.Dr7 &= ~(3ULL << (18 + 4 * RegIndex));
 										// size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
 										Ctx.Dr7 |= 1ULL << (2 * RegIndex);
+										DR7 = Ctx.Dr7;
 
 										//Still need to call suspend thread *TODO*
 										//MessageBoxA(0, (threadId + " SetThreadContext").c_str(), "", 0);

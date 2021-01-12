@@ -9,6 +9,8 @@ LPVOID HGateCopy = nullptr;
 
 DWORD Backup_Eax;
 
+static bool IsHeavensGateInitialized = false;
+
 extern ExampleAppLog AppLog;
 
 const DWORD_PTR __declspec(naked) GetGateAddress()
@@ -170,10 +172,40 @@ _CRT_STDIO_INLINE void __CRTDECL LogGateData()
 	}
 }
 
-NTSTATUS hk_NtGetContextThread(HANDLE ThreadHandle, PCONTEXT pContext)
+void LogRegisters(HANDLE ThreadHandle, PCONTEXT pContext) {
+	AppLog.AddLog(("LR HANDLE : " + hexify<DWORD>((DWORD)ThreadHandle) + "\n").c_str());
+	AppLog.AddLog(("LR PCONTEXT : " + hexify<DWORD>((DWORD)pContext) + "\n").c_str());
+	AppLog.AddLog(("LR ContextFlags : " + hexify<DWORD>((DWORD)pContext->ContextFlags) + "\n").c_str());
+}
+
+void __declspec(naked) hk_NtGetContextThread()
 {
-	AppLog.AddLog("NtGetContextThread : Hooked! Doing nothing! XD\n");
-	return static_cast<NTSTATUS>(0);
+	HANDLE ThreadHandle;
+	PCONTEXT pContext;
+	DWORD _backup_eax;
+
+	__asm pushad
+	__asm mov _backup_eax, eax
+
+	__asm mov eax, [esp + 0x28]
+		__asm mov ThreadHandle, eax
+
+	__asm mov eax, [esp + 0x2C]
+		__asm mov pContext, eax
+
+	__asm mov eax, _backup_eax
+
+	//LogRegisters(ThreadHandle, pContext);
+
+	if (((DWORD)ThreadHandle == 0xfffffffe) || (pContext->ContextFlags == 0x1003F) || (pContext->ContextFlags == 0x2F)) {
+		//AppLog.AddLog("hk_NtGetContextThread: spfd\n");
+		pContext->ContextFlags &= ~CONTEXT_DEBUG_REGISTERS;
+	}
+
+	//LogRegisters(ThreadHandle, pContext);
+
+	__asm popad
+	__asm jmp HGateCopy
 }
 
 NTSTATUS hk_NtSetContextThread(HANDLE ThreadHandle, PCONTEXT pContext)
@@ -217,20 +249,20 @@ void __declspec(naked) hk_Wow64Trampoline()
 		//cmp eax, 0x50 //64bit Syscall id of NtPVM
 		//je hk_NtProtectVirtualMemory
 
-		//cmp eax, 0xF2 //64bit Syscall id of NtGCT
-		//je hk_NtGetContextThread
+		cmp eax, 0xF2 //64bit Syscall id of NtGCT
+		je hk_NtGetContextThread
 
 		//cmp eax, 0x18B //64bit Syscall id of NtSCT
 		//je hk_NtSetContextThread
 
-		cmp eax, 0x1BC //64bit Syscall id of NtSuspendThread
-		je hk_NtSuspendThread
+		//cmp eax, 0x1BC //64bit Syscall id of NtSuspendThread
+		//je hk_NtSuspendThread
 
-		cmp eax, 0x2C //64bit Syscall id of NtTerminateProcess
-		je hk_NtTerminateProcess
+		//cmp eax, 0x2C //64bit Syscall id of NtTerminateProcess
+		//je hk_NtTerminateProcess
 
-		cmp eax, 0x166 //64bit Syscall id of NtRaiseException
-		je hk_NtRaiseException
+		//cmp eax, 0x166 //64bit Syscall id of NtRaiseException
+		//je hk_NtRaiseException
 		}
 	/*
 	__asm pushad
@@ -291,18 +323,39 @@ const void WriteJump(const DWORD_PTR dwWow64Address, const void* pBuffer, size_t
 
 const void EnableHeavensGateHook()
 {
-	AppLog.AddLog(("Gate: " + hexify<DWORD>(static_cast<DWORD>(GetGateAddress())) + "\n").c_str());
-	AppLog.AddLog(("Trampoline Gate: " + hexify<DWORD>(DWORD(CreateNewJump())) + "\n").c_str());
-	AppLog.AddLog(("Hook Gate: " + hexify<DWORD>(DWORD(hk_Wow64Trampoline)) + "\n").c_str());
+	DWORD TrampolineGate = (DWORD)CreateNewJump();
+	//AppLog.AddLog(("Gate: " + hexify<DWORD>(static_cast<DWORD>(GetGateAddress())) + "\n").c_str());
+	//AppLog.AddLog(("Trampoline Gate: " + hexify<DWORD>(DWORD(TrampolineGate)) + "\n").c_str());
+	//AppLog.AddLog(("Hook Gate: " + hexify<DWORD>(DWORD(hk_Wow64Trampoline)) + "\n").c_str());
 
-	LPVOID Hook_Gate = &hk_Wow64Trampoline;
-
-	char trampolineBytes[] =
+	static char trampolineBytes[] =
 	{
 		0x68, 0xDD, 0xCC, 0xBB, 0xAA, /*push 0xAABBCCDD*/
 		0xC3, /*ret*/
 		0xCC, 0xCC, 0xCC /*padding*/
 	};
+
+	if (IsHeavensGateInitialized) {
+		WriteJump(GetGateAddress(), trampolineBytes, sizeof(trampolineBytes));
+		return;
+	}
+
+	LPVOID Hook_Gate = &hk_Wow64Trampoline;
+
 	memcpy(&trampolineBytes[1], &Hook_Gate, 4);
 	WriteJump(GetGateAddress(), trampolineBytes, sizeof(trampolineBytes));
+	IsHeavensGateInitialized = true;
+}
+
+const void DisableHeavensGateHook()
+{
+	//AppLog.AddLog("Disabling Heavens Gate\n");
+	//AppLog.AddLog(("Heaven's Gate: " + hexify<DWORD>(DWORD(GetGateAddress())) + "\n").c_str());
+	//AppLog.AddLog(("Trampoline Gate: " + hexify<DWORD>(DWORD(CreateNewJump())) + "\n").c_str());
+	//AppLog.AddLog(("Hook Gate: " + hexify<DWORD>(DWORD(hk_Wow64Trampoline)) + "\n").c_str());
+
+	if (!IsHeavensGateInitialized)
+		return;
+
+	WriteJump(GetGateAddress(), HGateCopy, 9);
 }

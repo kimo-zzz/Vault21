@@ -15,12 +15,20 @@ struct HookStructHWBP
 class LeagueHooks
 {
 public:
+	static DWORD DR0;
+	static DWORD DR1;
+	static DWORD DR2;
+	static DWORD DR3;
+	static DWORD DR6;
+	static DWORD DR7;
 	static bool IsDoneInit;
 	static PVOID VEH_Handle;
+	static PVOID VCH_Handle;
 	static std::vector<HookStruct> hookListPG;
 	static std::vector<HookStructHWBP> hookListHWBP;
 	static bool AreInSamePage(const DWORD* Addr1, const DWORD* Addr2);
 	static LONG WINAPI LeoHandler(EXCEPTION_POINTERS* pExceptionInfo);
+	static LONG WINAPI VCHandler(EXCEPTION_POINTERS* pExceptionInfo);
 	static DWORD init();
 	static bool deinit();
 };

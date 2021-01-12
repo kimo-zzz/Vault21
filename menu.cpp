@@ -1667,12 +1667,28 @@ void SetupGameHooks()
 	AppLog.AddLog(("totalSuccess_PAGE_NOACCESS: " + hexify<int>((int)ldd.totalSuccess_PAGE_NOACCESS) + "\n").c_str());
 	*/
 
-	for (int i = 180; i > 0; i--)
+	for (int i = 10; i > 0; i--)
 	{
+<<<<<<< Updated upstream
+=======
+		// give some time to finish loading client, then recall.
+>>>>>>> Stashed changes
 		Sleep(1000);
 		AppLog.AddLog(("Hooks ready in: " + std::to_string(i) + "\n").c_str());
 	}
 
+<<<<<<< Updated upstream
+=======
+
+	// Only need this if onprocessspell is hwbp
+	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n");
+	Engine::CastSpellSelf(13); // recall to trigger onprocessspell 1 time before hooking
+
+	AppLog.AddLog("Processing the recall\n");
+	Sleep(1000); // process the recall
+	
+
+>>>>>>> Stashed changes
 	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
 	{
 		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
@@ -1686,12 +1702,12 @@ void SetupGameHooks()
 	AppLog.AddLog("Hooks are now ready!\n");
 	doneHookTimerAllowances = true;
 
-	//EnableHeavensGateHook(); // STILL UTILIZING THIS. IT IS THE ULTIMATE WEAPON TO CATCH ALL SNEAKY SNEAKY SYSCALLS OF LEAGUE!!!!!!
+	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
 }
 
 void MainLoop()
 {
-	if (g_onprocessspell != g_onprocessspell_last)
+	/*if (g_onprocessspell != g_onprocessspell_last)
 	{
 		if (g_onprocessspell)
 		{
@@ -1717,8 +1733,32 @@ void MainLoop()
 				AppLog.AddLog("OnProcessSpellHook remove Failed\n");
 			}
 		}
+	}*/
+
+<<<<<<< Updated upstream
+=======
+	if (g_onprocessspell != g_onprocessspell_last) { // onprocessspell hwbp
+		if (g_onprocessspell) {
+			if (_LeagueHooksHWBP.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell, 3)) {
+				AppLog.AddLog("OnProcessSpellHook Success\n");
+				g_onprocessspell_last = g_onprocessspell;
+			}
+			else {
+				AppLog.AddLog("OnProcessSpellHook Failed\n");
+			}
+		}
+		else {
+			if (_LeagueHooksHWBP.removeHook(3)) {
+				AppLog.AddLog("OnProcessSpellHook remove Success\n");
+				g_onprocessspell_last = g_onprocessspell;
+			}
+			else {
+				AppLog.AddLog("OnProcessSpellHook remove Failed\n");
+			}
+		}
 	}
 
+>>>>>>> Stashed changes
 	if (g_oncreateobject != g_oncreateobject_last)
 	{
 		if (g_oncreateobject)

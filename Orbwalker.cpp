@@ -31,6 +31,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 	if(CanAttack() && target != nullptr)
 	{
 		Engine::AttackTarget(target);
+		LastAttackCommandT = Engine::GetGameTimeTickCount() - 30/ 2;
 	}
 	else if(CanMove(extraWindup))
 	{
@@ -45,7 +46,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 /// <returns></returns>
 bool Orbwalker::CanAttack()
 {
-	return Engine::GetGameTimeTickCount() + Engine::GetPing() / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackDelay() * 1000;
+	return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackDelay() * 1000;
 }
 
 /// <summary>
@@ -54,5 +55,5 @@ bool Orbwalker::CanAttack()
 /// <returns></returns>
 bool Orbwalker::CanMove(float extraWindup)
 {
-	return Engine::GetGameTimeTickCount() + Engine::GetPing() / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackCastDelay() * 1000 + extraWindup;
+	return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackCastDelay() * 1000 + extraWindup;
 }

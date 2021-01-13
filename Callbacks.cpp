@@ -3,6 +3,8 @@
 
 #include "ExampleAppLog.h"
 #include "Globals.h"
+#include "Orbwalker.h"
+#include "TargetSelector.h"
 
 ExampleAppLog AppLog;
 
@@ -14,9 +16,12 @@ ExampleAppLog AppLog;
 int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
 {
 
+	if (GetAsyncKeyState(VK_SPACE))
+		Orbwalker::Orbwalk(TargetSelector::GetLowestHpTarget(), g_orbwalker_windup);
+	
 	if (obj == nullptr)
 		return 0;
-
+	
 	if (g_debug_cacheOnCreate)
 	{
 		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
@@ -24,7 +29,7 @@ int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
 			AppLog.AddLog(("OnCreateObject: " + std::string(obj->GetName()) + " \n").c_str());
 		}
 	}
-
+	
 	return Functions.OnCreateObject_h(obj, id);
 }
 

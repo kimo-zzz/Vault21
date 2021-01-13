@@ -44,7 +44,7 @@ static int zoomValueLast = 1001;
 
 static bool isOneTime = false;
 
-static int opt_flashTimer_c = 0;
+static int g_spellTimer_message = 0;
 static int opt_autoCleanse_c = 0;
 
 static std::string castSpellCtr_debug = "0";

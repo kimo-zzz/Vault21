@@ -218,7 +218,7 @@ namespace DX11
 					HelpMarker("Display respawn time of all major jungle objectives.");
 					Columns(1);
 					const char* opt_flashTimer[] = { "Off", "1 Liner", "Multi-Liner", "Full", "Full /all" };
-					Combo("Spells Message", &opt_flashTimer_c, opt_flashTimer, IM_ARRAYSIZE(opt_flashTimer));
+					Combo("Spells Message", &g_spellTimer_message, opt_flashTimer, IM_ARRAYSIZE(opt_flashTimer));
 					SameLine();
 					HelpMarker(
 						"Print (X) or Chat (J) the enemy spells. 1 Liner - Short timestamp. Multi-liner - Semi-complete details. Full - Complete details.");
@@ -587,8 +587,8 @@ namespace DX11
 				}
 			}
 
-			if (GetAsyncKeyState(VK_SPACE))
-				Orbwalker::Orbwalk(TargetSelector::GetLowestHpTarget(), g_orbwalker_windup);
+			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56))
+				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
 			
 			auto me_IsAlive = me->IsAlive();
@@ -753,7 +753,7 @@ namespace DX11
 
 			std::string msgString = "";
 
-			if (opt_flashTimer_c != 0)
+			if (g_spellTimer_message != 0)
 			{
 				if ((GetAsyncKeyState(0x4A) & 0x8000) && (j_key_flag == 0))
 				{
@@ -919,7 +919,7 @@ namespace DX11
 							}
 						}
 
-						if (u_key_flag == 1 && is_u_key_ready)
+						if (u_key_flag == 1 && is_u_key_ready && g_spellTimer_message)
 						{
 							if (me->GetTeam() == 100 && (Name_str.compare("monstercamp_7") == 0))
 							{
@@ -1309,7 +1309,7 @@ namespace DX11
 								}
 							}
 
-							if (opt_flashTimer_c != 0)
+							if (g_spellTimer_message != 0)
 							{
 								if ((j_key_flag == 1 && is_j_key_ready) || (x_key_flag == 1 && is_x_key_ready))
 								{
@@ -1374,10 +1374,10 @@ namespace DX11
 										? str_RemainingCDSmite_String + "s"
 										: "READY");
 
-									if (opt_flashTimer_c == 3 || opt_flashTimer_c == 4)
+									if (g_spellTimer_message == 3 || g_spellTimer_message == 4)
 									{
 										// full
-										msgString = (opt_flashTimer_c == 4 ? "/all " : "") + champNameString +
+										msgString = (g_spellTimer_message == 4 ? "/all " : "") + champNameString +
 											"  >>  f  " + (
 												flashCoolDown > 0 ? str_RemainingCD_String + "s" : "READY") +
 											"  >>  ult  " + (r_RemainingCD > 0
@@ -1400,12 +1400,12 @@ namespace DX11
 											std::string _time = Engine::SecondsToClock(
 												static_cast<int>(flashCoolDownTime));
 
-											if (opt_flashTimer_c == 1)
+											if (g_spellTimer_message == 1)
 											{
 												msgString += champNameString + " " + _time + " ";
 
 											}
-											else if (opt_flashTimer_c == 2)
+											else if (g_spellTimer_message == 2)
 											{
 												msgString = champNameString + "  >>  " + _time + "  >>  " +
 													str_RemainingCD_String + "s";
@@ -1446,7 +1446,7 @@ namespace DX11
 
 			isOneTime = false;
 
-			if (opt_flashTimer_c == 1)
+			if (g_spellTimer_message == 1)
 			{
 				if (msgString != "")
 				{

@@ -16,8 +16,6 @@ ExampleAppLog AppLog;
 int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
 {
 
-	if (GetAsyncKeyState(VK_SPACE))
-		Orbwalker::Orbwalk(TargetSelector::GetLowestHpTarget(), g_orbwalker_windup);
 	
 	if (obj == nullptr)
 		return 0;

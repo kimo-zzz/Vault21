@@ -14,6 +14,7 @@
 
 #include "Callbacks.h"
 #include "Drawings.h"
+#include "TargetSelector.h"
 
 std::list<CObject*> heroList = {};
 std::list<CObject*> minionList = {};
@@ -586,6 +587,10 @@ namespace DX11
 				}
 			}
 
+			if (GetAsyncKeyState(VK_SPACE))
+				Orbwalker::Orbwalk(TargetSelector::GetLowestHpTarget(), g_orbwalker_windup);
+
+			
 			auto me_IsAlive = me->IsAlive();
 
 			auto gameTime = Engine::GetGameTime();

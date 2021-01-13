@@ -8,7 +8,7 @@ int LastAttackCommandT;
 /// <summary>
 /// The tick the most recent move command was sent.
 /// </summary>
-float LastMoveCommandT;
+int LastMoveCommandT;
 
 /// <summary>
 ///     <c>true</c> if the orbwalker will disable the next attack.
@@ -31,11 +31,12 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 	if(CanAttack() && target != nullptr)
 	{
 		Engine::AttackTarget(target);
-		LastAttackCommandT = Engine::GetGameTimeTickCount() - 30/ 2;
+		LastAttackCommandT = Engine::GetGameTimeTickCount() + 30;
 	}
-	else if(CanMove(extraWindup))
+	else if(CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
 		Engine::MoveTo(&Engine::GetMouseWorldPosition());
+		LastMoveCommandT = GetTickCount() + 50;
 	}
 	return true;
 }

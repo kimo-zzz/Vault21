@@ -12,7 +12,7 @@ CObject* TargetSelector::GetLowestHpTarget()
 		{
 			if (obj->IsHero())
 			{
-				if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange())
+				if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange()+Engine::GetLocalObject()->GetBoundingRadius())
 				{
 					if (obj->IsEnemyTo(Engine::GetLocalObject()))
 					{

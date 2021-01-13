@@ -10,6 +10,7 @@
 #include "BuffManager.h"
 #include "fnv_hash.hpp"
 #include "encryption.hpp"
+#include "SpellCastInfo.h"
 
 
 enum class ObjectTypeFlags
@@ -105,8 +106,7 @@ public:
 				_temp.push_back(skin_data);
 			}
 			i += 0x10;
-		}
-		while (!isEnd);
+		} while (!isEnd);
 		return _temp;
 	}
 };
@@ -198,8 +198,7 @@ public:
 				++v5;
 				*(&objectId + v3) ^= ~v6;
 				++v3;
-			}
-			while (v3 < v4);
+			} while (v3 < v4);
 		}
 		v7 = v2[82];
 		if (v7)
@@ -212,8 +211,7 @@ public:
 				{
 					v10 = *v9++;
 					*((BYTE*)&objectId + v8++) ^= ~v10;
-				}
-				while (v8 < 4);
+				} while (v8 < 4);
 			}
 		}
 
@@ -267,7 +265,7 @@ public:
 		return false;
 	}
 
-	CObject* GetSpellOwner(std::string spellName, std::list<CObject*> heroList)
+	static CObject* GetSpellOwner(std::string spellName, std::list<CObject*> heroList)
 	{
 		transform(spellName.begin(), spellName.end(), spellName.begin(), ::tolower);
 		for (CObject* a : heroList)
@@ -369,7 +367,7 @@ public:
 
 	float GetBoundingRadius()
 	{
-		typedef float (__thiscall* OriginalFn)(PVOID);
+		typedef float(__thiscall* OriginalFn)(PVOID);
 		return CallVirtual<OriginalFn>(this, 36)(this);
 	}
 
@@ -435,11 +433,16 @@ public:
 		return *(SpellSlot**)((DWORD)this + (oObjSpellBook + 0x478) + (0x4 * ID));
 	}
 
-	SpellInfo* GetSpellCastInfo()
+	SpellInfo* GetMissileSpellInfo()
 	{
 		return *(SpellInfo**)((DWORD)this + oMissileSpellInfo);
 	}
 
+	SpellCastInfo* GetSpellCastInfo()
+	{
+	return *(SpellCastInfo**)((DWORD)this + oActiveSpellEntry);
+	}
+	
 	Vector GetSpellEndPos()
 	{
 		Vector spellEndPos = *(Vector*)((DWORD)this + oMissileEndPos);

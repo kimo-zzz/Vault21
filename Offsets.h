@@ -163,6 +163,12 @@
 //oSpellInfoSpellData
 #define oSpellInfoSpellData 0x44 //11.1
 
+//ActiveSpellEntry
+#define oActiveSpellEntry 0x2728
+#define oSpellInfoStartPos 0x80
+#define oSpellInfoCastPos 0x98
+#define oSpellInfoEndPos 0x8c
+
 //SpellData
 #define oSpellDataMissileName 0x0058 // not using
 #define oSpellDataSpellName 0x0064 //11.1

@@ -1,8 +1,10 @@
 #pragma once
-#include <activation.h>
 #include <string>
 
 #include "Vector.h"
+
+extern std::list<CObject*> heroList;
+extern std::list<CObject*> minionList;
 
 static int lastObjCount = 0;
 static Vector me_lastPos = Vector(0, 0, 0);
@@ -87,3 +89,9 @@ static bool g_onnewpath_last = false;
 
 //Orb settings
 static float g_orbwalker_windup = 90.f;
+
+//Callback debugging
+static bool g_debug_cacheOnCreate = false;
+static bool g_debug_cacheOnDelete = false;
+static bool g_debug_cacheOnProcessSpell = false;
+static bool g_debug_cacheOnNewPath = false;

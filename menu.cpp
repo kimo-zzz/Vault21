@@ -12,14 +12,14 @@
 #include "Globals.h"
 #include <StaticLists.h>
 
-CObjectManager* ObjManager;
-CFunctions Functions;
-
-ExampleAppLog AppLog;
+#include "Callbacks.h"
+#include "Drawings.h"
 
 std::list<CObject*> heroList = {};
 std::list<CObject*> minionList = {};
 
+CObjectManager* ObjManager;
+CFunctions Functions;
 namespace DX11
 {
 	using json = nlohmann::json;
@@ -502,6 +502,12 @@ namespace DX11
 					SameLine();
 					HelpMarker("Display object's location.");
 					Separator();
+					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Callback Debugging");
+					Checkbox("Cache OnCreate", &g_debug_cacheOnCreate);
+					Checkbox("Cache OnDelete", &g_debug_cacheOnDelete);
+					Checkbox("Cache OnProcessSpell", &g_debug_cacheOnProcessSpell);
+					Checkbox("Cache OnNewPath", &g_debug_cacheOnNewPath);
+
 					Text("IsChatBoxOpen %s", &IsChatOpen_debug);
 					Text("Health %s%", &me_healthPercentage_debug);
 					Text("CastSpell Ctr. %s", &castSpellCtr_debug);
@@ -673,6 +679,7 @@ namespace DX11
 				f_spellCDAbs_debug = std::to_string(me_f_spellSlot->GetAbsoluteCoolDown(gameTime));
 				f_spellIsDoneAbs_debug = (me_f_spellSlot->IsDoneAbsoluteCD(gameTime) ? "True" : "False");
 			}
+
 
 			if (g_draw_lp_range)
 			{
@@ -948,88 +955,27 @@ namespace DX11
 					}
 				}
 
-				//===================Missles Start===============================
-				if (IsMissle)
-				{
-					if (g_drawEnemyMissles)
-					{
-						if ((me_pos.DistTo(Pos) >= 0.0f) && (me_pos.DistTo(Pos) <= 4000.0f))
-						{
-							if (Parent != nullptr)
-							{
-								if (Parent->IsHero() && Parent->IsEnemyTo(me))
-								{
-									auto spellStartPos = obj->GetSpellStartPos();
-									auto spellEndPos = obj->GetSpellEndPos();
+#pragma region Spell Drawings
 
-									Vector objspellstartpos_w2s;
-									Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
+				Drawings::EvadeDrawings(obj, heroList);
 
-									Vector objspellendpos_w2s;
-									Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
+#pragma endregion Spell Drawings
 
-									auto spellWidth = obj->GetSpellCastInfo()->GetSpellData()->GetSpellWidth();
 
-									ImColor _skillsShots = ImColor(255, 102, 102, 79);
-									render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
-										objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
-										spellWidth);
+#pragma region Turrets
+				Drawings::DrawTurrets(obj);
+#pragma endregion Turrets
 
-									auto spellEffectRange = obj->GetSpellCastInfo()->GetSpellData()->
-										GetSpellEffectRange();
-									auto color = createRGB(220, 20, 60); // crimson
-									Engine::DrawCircle(&Pos, spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
-								}
-							}
-						}
-					}
-				}
-				//===================Missles End===============================
 
-				//===================Turret Start===============================
-				if (IsTurret)
-				{
-					if (g_enemy_turret)
-					{
-						if (IsOnScreen)
-						{
-							auto IsAlive = obj->IsAlive();
-							if (IsAlive)
-							{
-								if (IsEnemyToLocalPlayer)
-								{
-									auto boundingRadius = obj->GetBoundingRadius();
-									auto color = createRGB(220, 20, 60); // crimson
-									Engine::DrawCircle(&Pos, 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
-								}
-							}
-						}
-					}
-				}
-				//===================Turret End===============================
 
-				//===================Inhib Start===============================
-				if (IsInhibitor)
-				{
-					if (g_inhi_respawn)
-					{
-						if (IsOnScreen)
-						{
-							auto inhiRespawnTime = obj->GetInhiRemainingRespawnTime();
-							if (inhiRespawnTime > 0)
-							{
-								std::string str_respawnTime = Engine::SecondsToClock(
-									static_cast<int>(inhiRespawnTime));
-								render.draw_text(objpos_w2s.X, objpos_w2s.Y, str_respawnTime.c_str(), true, _onCD);
-							}
-						}
-					}
-				}
-				//===================Inhib End===============================
+#pragma region Inhibs
+				Drawings::DrawInhibitors(obj);
+#pragma endregion Inhibs
 
-				//===================Minion Start===============================
+
+
+#pragma region Minions
+
 				if (IsMinion)
 				{
 					_minionList.push_back(obj);
@@ -1043,9 +989,9 @@ namespace DX11
 								Functions.WorldToScreen(&obj->GetPos(), &w2s);
 
 								auto color = createRGB(220, 20, 60); // crimson	
-								if ( WardList.find(Name_str) != WardList.end())
+								if (WardList.find(Name_str) != WardList.end())
 								{
-									Engine::DrawCircle(&Pos, 50.f, &color, 0, 0.0f, 0, 1.0f);
+									Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
 									Engine::DrawCircle(&Pos, WardList.at(Name_str), &color, 0, 0.0f, 0, 0.5f);
 									//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 									render.draw_text(w2s.X, w2s.Y, obj->GetName(), false, ImColor(255, 255, 255, 255));
@@ -1086,9 +1032,9 @@ namespace DX11
 						}
 					}
 				}
-				//===================Minion End===============================
+#pragma endregion Minions
 
-				//===================Hero Start===============================
+#pragma region Heroes
 				if (IsHero)
 				{
 					_heroList.push_back(obj);
@@ -1474,7 +1420,7 @@ namespace DX11
 						}
 					}
 				}
-				//===================Hero End===============================
+#pragma endregion Heroes
 
 				obj = holzer.GetNextObject(obj);
 			}
@@ -1536,79 +1482,8 @@ LeagueHooksHWBP _LeagueHooksHWBP; //supports only 4 hwbp (0,1,2,3)
 
 DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPath_addr;
 
-///////////////////////////////////////LEAGUE HOOKS//////////////////////////////////////////////////
-int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* spellInfo)
-{
-	SpellInfo* derefSpellInfo = (SpellInfo*)*(DWORD*)(spellInfo);
-	short casterIndex = *(short*)((DWORD)spellBook + oSpellBookOwner);
-	CObject* caster = Engine::FindObjectByIndex(heroList, casterIndex);
 
-	if (caster)
-	{
-		if (caster->IsValidHero(heroList))
-		{
-			if (caster->IsHero())
-			{
-				AppLog.AddLog(
-					(std::string(caster->GetChampionName()) + " : " + std::string(
-						derefSpellInfo->GetSpellData()->GetSpellName2()) + " \n").c_str());
-			}
-		}
-	}
-
-	return Functions.OnProcessSpell_h(spellBook, spellInfo);
-}
-
-int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
-{
-	if (obj == nullptr)
-		return 0;
-
-	if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
-	{
-		AppLog.AddLog(("OnCreateObject: " + std::string(obj->GetName()) + " \n").c_str());
-	}
-
-	return Functions.OnCreateObject_h(obj, id);
-}
-
-int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, CObject* obj)
-{
-	if (obj == nullptr)
-		return 0;
-
-	if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
-	{
-		AppLog.AddLog(("OnDeleteObject: " + std::string(obj->GetName()) + " \n").c_str());
-	}
-
-	return Functions.OnDeleteObject_h(thisPtr, obj);
-}
-
-int __cdecl hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk1, float* dashSpeed,
-	unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
-{
-	if (obj == nullptr)
-		return 0;
-
-	if (obj->IsHero())
-	{
-		auto isDash = dash != 1;
-		auto speed = *dashSpeed != 0.0f ? *dashSpeed : obj->GetObjMoveSpeed();
-		auto isDash_str = (isDash ? "true" : "false");
-
-		AppLog.AddLog(
-			("OnNewPath: " + std::string(obj->GetName()) + ", Speed " + std::to_string(speed) + " \n").c_str());
-		AppLog.AddLog(("\t\t\tisDash: " + std::string(isDash_str) + " \n").c_str());
-		AppLog.AddLog(
-			("\t\t\tVectorstart X: " + std::to_string(start->X) + " Y: " + std::to_string(start->Y) + " Z: " +
-				std::to_string(start->Z) + " \n").c_str());
-
-	}
-	return Functions.OnNewPath_h(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
-}
-
-////////////////////////////////////Etc. Hooks//////////////////////////////////////
+#pragma region Hooking setup
 
 void SetupGameHooks()
 {
@@ -1621,15 +1496,6 @@ void SetupGameHooks()
 	Process::RemoveAllHandlers();
 	DWORD leoAddr = LeagueHooks::init();
 	Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
-
-	/*
-	// STILL WORKING ON THIS. HWBP SHOULD NOT BE A PROBLEM WHEN I IMPLEMENTED THIS CORRECTLY
-	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr, PVECTORED_EXCEPTION_HANDLER_list);
-	AppLog.AddLog(("totalFailedDecrypted: " + hexify<int>((int)ldd.totalFailedDecrypted) + "\n").c_str());
-	AppLog.AddLog(("totalSuccessDecrypted: " + hexify<int>((int)ldd.totalSuccessDecrypted) + "\n").c_str());
-	AppLog.AddLog(("totalSuccess_EXCEPTION_CONTINUE_EXECUTION: " + hexify<int>((int)ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION) + "\n").c_str());
-	AppLog.AddLog(("totalSuccess_PAGE_NOACCESS: " + hexify<int>((int)ldd.totalSuccess_PAGE_NOACCESS) + "\n").c_str());
-	*/
 
 	for (int i = 10; i > 0; i--)
 	{
@@ -1644,7 +1510,7 @@ void SetupGameHooks()
 
 	AppLog.AddLog("Processing the recall\n");
 	Sleep(1000); // process the recall
-	
+
 	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
 	{
 		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
@@ -1663,33 +1529,6 @@ void SetupGameHooks()
 
 void MainLoop()
 {
-	/*if (g_onprocessspell != g_onprocessspell_last)
-	{
-		if (g_onprocessspell)
-		{
-			if (_LeagueHooksVEH.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell))
-			{
-				AppLog.AddLog("OnProcessSpellHook Success\n");
-				g_onprocessspell_last = g_onprocessspell;
-			}
-			else
-			{
-				AppLog.AddLog("OnProcessSpellHook Failed\n");
-			}
-		}
-		else
-		{
-			if (_LeagueHooksVEH.removeHook(oOnProcessSpell_addr))
-			{
-				AppLog.AddLog("OnProcessSpellHook remove Success\n");
-				g_onprocessspell_last = g_onprocessspell;
-			}
-			else
-			{
-				AppLog.AddLog("OnProcessSpellHook remove Failed\n");
-			}
-		}
-	}*/
 
 	if (g_onprocessspell != g_onprocessspell_last) { // onprocessspell hwbp
 		if (g_onprocessspell) {
@@ -1796,7 +1635,7 @@ void MainLoop()
 		}
 	}
 }
-
+#pragma endregion Hooking setup
 void RemoveGameHooks()
 {
 	LeagueHooks::deinit();

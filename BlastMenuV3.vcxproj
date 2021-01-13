@@ -171,10 +171,12 @@
   <ItemGroup>
     <ClCompile Include="BuffEntry.cpp" />
     <ClCompile Include="BuffManager.cpp" />
+    <ClCompile Include="Callbacks.cpp" />
     <ClCompile Include="Capture.cpp" />
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="Direct3D9Capture.cpp" />
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Drawings.cpp" />
     <ClCompile Include="DriverController.cpp" />
     <ClCompile Include="DXGICapture.cpp" />
     <ClCompile Include="FuncHook.cpp" />
@@ -203,12 +205,14 @@
     <ClInclude Include="BuffEntry.h" />
     <ClInclude Include="BuffManager.h" />
     <ClInclude Include="CallBackIntStates.h" />
+    <ClInclude Include="Callbacks.h" />
     <ClInclude Include="Capture.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="Direct3D9Capture.h" />
+    <ClInclude Include="Drawings.h" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="DriverController.h" />
     <ClInclude Include="DXGICapture.h" />
@@ -241,6 +245,7 @@
     <ClInclude Include="renderer\ImRenderer.h" />
     <ClInclude Include="skin_changer.hpp" />
     <ClInclude Include="skin_database.hpp" />
+    <ClInclude Include="SpellCastInfo.h" />
     <ClInclude Include="SpellData.h" />
     <ClInclude Include="SpellInfo.h" />
     <ClInclude Include="SpellSlot.h" />

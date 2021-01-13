@@ -79,6 +79,12 @@
     <Filter Include="Header Files\Orbwalker">
       <UniqueIdentifier>{538d23e3-1e97-4436-aae2-e1296c8320c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Hacks">
+      <UniqueIdentifier>{fbfca4bf-b757-45a5-bc5e-eb6a5b6e6f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Hacks">
+      <UniqueIdentifier>{157aebe0-ac4a-41a5-a489-c9cf9cb3144e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FuncHook.cpp">
@@ -166,6 +172,12 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="TargetSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawings.cpp">
+      <Filter>Source Files\Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="Callbacks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -327,6 +339,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StaticLists.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawings.h">
+      <Filter>Header Files\Hacks</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellCastInfo.h">
+      <Filter>Header Files\spell</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

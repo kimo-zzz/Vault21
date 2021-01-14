@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Misc.cpp" />
     <ClCompile Include="BuffEntry.cpp" />
     <ClCompile Include="BuffManager.cpp" />
     <ClCompile Include="Callbacks.cpp" />
@@ -176,7 +177,6 @@
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="Direct3D9Capture.cpp" />
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Drawings.cpp" />
     <ClCompile Include="DriverController.cpp" />
     <ClCompile Include="DXGICapture.cpp" />
     <ClCompile Include="FuncHook.cpp" />
@@ -202,6 +202,7 @@
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Misc.h" />
     <ClInclude Include="BuffEntry.h" />
     <ClInclude Include="BuffManager.h" />
     <ClInclude Include="CallBackIntStates.h" />
@@ -212,7 +213,6 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="Direct3D9Capture.h" />
-    <ClInclude Include="Drawings.h" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="DriverController.h" />
     <ClInclude Include="DXGICapture.h" />

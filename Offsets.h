@@ -120,6 +120,7 @@
 
 //MissileInfo
 #define oMissileSpellInfo 0x230 // 11.1
+#define oMissileSourceIndex 0x290 // 11.1
 #define oMissileTargetIndex 0x2E8 // 11.1 serge
 #define oMissileStartPos 0x2A8 // 11.1
 #define oMissileEndPos 0x2B4 // 11.1

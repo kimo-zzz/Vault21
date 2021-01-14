@@ -174,11 +174,11 @@
     <ClCompile Include="TargetSelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Drawings.cpp">
-      <Filter>Source Files\Hacks</Filter>
-    </ClCompile>
     <ClCompile Include="Callbacks.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc.cpp">
+      <Filter>Source Files\Hacks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,14 +341,14 @@
     <ClInclude Include="StaticLists.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Drawings.h">
-      <Filter>Header Files\Hacks</Filter>
-    </ClInclude>
     <ClInclude Include="SpellCastInfo.h">
       <Filter>Header Files\spell</Filter>
     </ClInclude>
     <ClInclude Include="Callbacks.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc.h">
+      <Filter>Header Files\Hacks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

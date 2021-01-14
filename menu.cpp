@@ -12,15 +12,18 @@
 #include "Globals.h"
 #include <StaticLists.h>
 
+
+#include "Misc.h"
 #include "Callbacks.h"
-#include "Drawings.h"
 #include "TargetSelector.h"
 
-std::list<CObject*> heroList = {};
-std::list<CObject*> minionList = {};
 
 CObjectManager* ObjManager;
 CFunctions Functions;
+ExampleAppLog AppLog;
+
+static SpellInfo* processedSpell = nullptr;
+
 namespace DX11
 {
 	using json = nlohmann::json;
@@ -36,6 +39,7 @@ namespace DX11
 
 	std::map<uint32_t, int32_t> config::current_combo_ally_skin_index;
 	std::map<uint32_t, int32_t> config::current_combo_enemy_skin_index;
+
 	auto config_json = json();
 
 	void config::save()
@@ -166,7 +170,7 @@ namespace DX11
 			ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 			if (BeginTabBar("Tabs", tab_bar_flags))
 			{
-				if (BeginTabItem("Awareness"))
+				if (BeginTabItem("Hacks"))
 				{
 					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Visuals");
 					Separator();
@@ -228,6 +232,8 @@ namespace DX11
 
 					TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Functions");
 					Separator();
+					Checkbox("Auto Tilt", &g_autoTilt);
+					SameLine();
 					Checkbox("Auto Smite", &g_autoSmite);
 					SameLine();
 					HelpMarker("Auto smite the major jungle objectives.");
@@ -590,7 +596,8 @@ namespace DX11
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
-			
+
+
 			auto me_IsAlive = me->IsAlive();
 
 			auto gameTime = Engine::GetGameTime();
@@ -845,6 +852,19 @@ namespace DX11
 							std::to_string(Pos.Z)).c_str(), true, _onCD);
 				}
 
+				if (g_autoTilt)
+				{
+					if (GetAsyncKeyState(0x59))
+					{
+						auto rndmMsg = rand() % 11;
+
+						std::string msgString = "/all " + tiltMessages[rndmMsg];
+
+						Engine::SendChat(msgString.c_str());
+					}
+				}
+
+
 
 				if (g_draw_wards)
 				{
@@ -962,19 +982,94 @@ namespace DX11
 
 #pragma region Spell Drawings
 
-				Drawings::EvadeDrawings(obj, heroList);
+				if (g_drawEnemyMissles)
+				{
+					if (obj->IsMissile())
+					{
+						if ((me->GetPos().DistTo(obj->GetPos()) >= 0.0f) && (me->GetPos().DistTo(obj->GetPos()) <= 4000.0f))
+						{
+							if (obj->GetParent(heroList) != nullptr)
+							{
+								if (obj->GetParent(heroList)->IsHero() && obj->GetParent(heroList)->IsEnemyTo(me))
+								{
+									auto spellStartPos = obj->GetSpellStartPos();
+									auto spellEndPos = obj->GetSpellEndPos();
+
+									Vector objspellstartpos_w2s;
+									Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
+
+									Vector objspellendpos_w2s;
+									Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
+
+									auto spellWidth = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellWidth();
+
+									ImColor _skillsShots = ImColor(255, 102, 102, 79);
+									render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
+										objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
+										spellWidth);
+
+									auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
+
+									auto color = createRGB(220, 20, 60); // crimson
+									Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+						}
+					}
+
+
+				}
 
 #pragma endregion Spell Drawings
 
 
 #pragma region Turrets
-				Drawings::DrawTurrets(obj);
+				if (obj->IsTurret())
+				{
+					if (g_enemy_turret)
+					{
+						if (obj->IsOnScreen())
+						{
+							auto IsAlive = obj->IsAlive();
+							if (IsAlive)
+							{
+								if (obj->IsEnemyTo(me))
+								{
+									auto boundingRadius = obj->GetBoundingRadius();
+									auto color = createRGB(220, 20, 60); // crimson
+									Engine::DrawCircle(&obj->GetPos(), 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+								}
+							}
+						}
+					}
+				}
 #pragma endregion Turrets
 
 
 
 #pragma region Inhibs
-				Drawings::DrawInhibitors(obj);
+				if (obj->IsInhibitor())
+				{
+					if (g_inhi_respawn)
+					{
+						if (obj->IsOnScreen())
+						{
+							auto inhiRespawnTime = obj->GetInhiRemainingRespawnTime();
+							if (inhiRespawnTime > 0)
+							{
+								Vector objpos_w2s;
+								Functions.WorldToScreen(&obj->GetPos(), &objpos_w2s);
+								ImColor color = ImColor(102, 255, 102, 174);
+
+								std::string str_respawnTime = Engine::SecondsToClock(
+									static_cast<int>(inhiRespawnTime));
+								render.draw_text(objpos_w2s.X, objpos_w2s.Y, str_respawnTime.c_str(), true, color);
+							}
+						}
+					}
+				}
 #pragma endregion Inhibs
 
 
@@ -1236,6 +1331,67 @@ namespace DX11
 								char skill_f[10]; ///
 								snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
 								render.draw_text(healthBarPos.X + 30, healthBarPos.Y, skill_f, true, _onCD);
+							}
+						}
+					}
+
+					if (g_display_spell_texture)
+					{
+						if (IsOnScreen)
+						{
+							auto screenPos = Vector(100, 200, 0);
+
+							std::string d_SpellFileName = getSpellImgByName(d_spellName_str, d_doneCD);
+							std::string f_SpellFileName = getSpellImgByName(f_spellName_str, f_doneCD);
+
+							if (render.draw_image(d_SpellFileName, 25, 25,
+								Vector(screenPos.X, screenPos.Y, 0)))
+							{
+								if (d_doneCD)
+								{
+									std::string d_humanSpellName = champName_str + "'s " + getHumanSpellByName(
+										d_spellName_str) + " : " + "READY";
+									Engine::SendChat(d_humanSpellName.c_str());
+								}
+								else
+								{
+									std::string d_humanSpellName = champName_str + "'s " +
+										getHumanSpellByName(d_spellName_str) + " : " + std::to_string(
+											static_cast<int>(d_RemainingCD)) + "s";
+									Engine::SendChat(d_humanSpellName.c_str());
+								}
+							}
+
+							if (render.draw_image(f_SpellFileName, 25, 25,
+								Vector(screenPos.X + 30, screenPos.Y, 0)))
+							{
+								if (f_doneCD)
+								{
+									std::string f_SpellFileName = champName_str + "'s " + getHumanSpellByName(
+										f_spellName_str) + " : " + "READY";
+									Engine::SendChat(f_SpellFileName.c_str());
+								}
+								else
+								{
+									std::string f_SpellFileName = champName_str + "'s " +
+										getHumanSpellByName(f_spellName_str) + " : " + std::to_string(
+											static_cast<int>(f_RemainingCD)) + "s";
+									Engine::SendChat(f_SpellFileName.c_str());
+								}
+							}
+
+							if (!d_doneCD)
+							{
+								char skill_d[10]; ///
+								snprintf(skill_d, sizeof(skill_d), "%d", static_cast<int>(d_RemainingCD));
+								render.draw_text(screenPos.X, screenPos.Y, skill_d, true, _onCD);
+							}
+
+							if (!f_doneCD)
+							{
+								char skill_f[10]; ///
+								snprintf(skill_f, sizeof(skill_f), "%d", static_cast<int>(f_RemainingCD));
+								render.draw_text(screenPos.X + 30, screenPos.Y, skill_f, true, _onCD);
 							}
 						}
 					}
@@ -1644,4 +1800,124 @@ void MainLoop()
 void RemoveGameHooks()
 {
 	LeagueHooks::deinit();
+}
+
+
+
+
+//Callbacks
+
+
+
+/// <summary>
+/// Recognizes all Created Objects.
+/// </summary>
+/// <param name="obj">Object which has been created.</param>
+/// <returns></returns>
+int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
+{
+	if (obj == nullptr)
+		return 0;
+
+	if (g_debug_cacheOnCreate)
+	{
+		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
+		{
+			AppLog.AddLog(("OnCreateObject: " + std::string(obj->GetName()) + " \n").c_str());
+		}
+	}
+
+	return Functions.OnCreateObject_h(obj, id);
+}
+
+/// <summary>
+/// Recognizes all Deleted Objects.
+/// </summary>
+/// <param name="obj">Object which will be deleted</param>
+/// <returns></returns>
+int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, CObject* obj)
+{
+	if (obj == nullptr)
+		return 0;
+
+	if (g_debug_cacheOnDelete)
+		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
+		{
+			AppLog.AddLog(("OnDeleteObject: " + std::string(obj->GetName()) + " \n").c_str());
+		}
+
+	return Functions.OnDeleteObject_h(thisPtr, obj);
+}
+
+//Recognizes all new upcoming paths
+int hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk1, float* dashSpeed, unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
+{
+	if (obj == nullptr)
+		return 0;
+
+	if (obj->IsHero())
+	{
+		if (obj->GetChampionName() == "Kalista" && dash != 1)
+			LastAttackCommandT = 0;
+
+
+		if (g_debug_cacheOnNewPath)
+		{
+			auto isDash = dash != 1;
+			auto speed = *dashSpeed != 0.0f ? *dashSpeed : obj->GetObjMoveSpeed();
+			auto isDash_str = (isDash ? "true" : "false");
+
+			AppLog.AddLog(
+				("OnNewPath: " + std::string(obj->GetName()) + ", Speed " + std::to_string(speed) + " \n").c_str());
+			AppLog.AddLog(("\t\t\tisDash: " + std::string(isDash_str) + " \n").c_str());
+			AppLog.AddLog(
+				("\t\t\tVectorstart X: " + std::to_string(start->X) + " Y: " + std::to_string(start->Y) + " Z: " +
+					std::to_string(start->Z) + " \n").c_str());
+		}
+
+
+	}
+	return Functions.OnNewPath_h(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
+}
+
+
+/// <summary>
+/// Callback which recognizes Spells/Missiles before they have been Created.
+/// </summary>
+/// <param name="spellInfo">SpellInfo Instance of currently processed Spell</param>
+/// <returns></returns>
+int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* spellInfo)
+{
+	if (spellInfo == nullptr)
+		return 0;
+
+	SpellInfo* derefSpellInfo = (SpellInfo*)*(DWORD*)(spellInfo);
+	short casterIndex = *(short*)((DWORD)spellBook + oSpellBookOwner);
+	CObject* caster = Engine::FindObjectByIndex(heroList, casterIndex);
+
+	if (caster != nullptr)
+	{
+		if (caster->IsValidHero(heroList))
+		{
+			if (caster->IsEnemyTo(me))
+			{
+				if (derefSpellInfo != nullptr)
+				{
+					processedSpell = derefSpellInfo;
+				}
+			}
+
+
+			if (g_debug_cacheOnProcessSpell)
+			{
+				AppLog.AddLog(
+					(std::string(caster->GetChampionName()) + " : " + std::string(
+						derefSpellInfo->GetSpellData()->GetSpellName2()) + " \n").c_str());
+			}
+
+		}
+
+	}
+
+	return Functions.OnProcessSpell_h(spellBook, spellInfo);
 }

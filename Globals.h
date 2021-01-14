@@ -3,8 +3,8 @@
 
 #include "Vector.h"
 
-extern std::list<CObject*> heroList;
-extern std::list<CObject*> minionList;
+static std::list<CObject*> heroList = {};
+static std::list<CObject*> minionList = {};
 
 static int lastObjCount = 0;
 static Vector me_lastPos = Vector(0, 0, 0);
@@ -87,8 +87,10 @@ static bool g_oncreateobject_last = false;
 static bool g_ondeleteobject_last = false;
 static bool g_onnewpath_last = false;
 
+static bool g_autoTilt = false;
+
 //Orb settings
-static float g_orbwalker_windup = 90.f;
+static float g_orbwalker_windup = 0.f;
 
 //Callback debugging
 static bool g_debug_cacheOnCreate = false;

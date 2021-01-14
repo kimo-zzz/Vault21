@@ -1,18 +1,5 @@
 #include "Orbwalker.h"
-
-/// <summary>
-	   /// The tick the most recent attack command was sent.
-	   /// </summary>
-int LastAttackCommandT;
-
-/// <summary>
-/// The tick the most recent move command was sent.
-/// </summary>
-int LastMoveCommandT;
-
-/// <summary>
-///     <c>true</c> if the orbwalker will disable the next attack.
-/// </summary>
+#include "Globals.h"
 bool DisableNextAttack = false;
 
 /// <summary>
@@ -28,15 +15,19 @@ int _lastTarget;
 
 bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 {
-	if(CanAttack() && target != nullptr)
+	if (IsChatBoxOpen)
+		return false;
+
+
+	if (CanAttack() && target != nullptr)
 	{
 		Engine::AttackTarget(target);
-		LastAttackCommandT = Engine::GetGameTimeTickCount() + 30;
+		LastAttackCommandT = float(GetTickCount()) + 30;
 	}
-	else if(CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
+	else if (CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
 		Engine::MoveTo(&Engine::GetMouseWorldPosition());
-		LastMoveCommandT = GetTickCount() + 50;
+		LastMoveCommandT = GetTickCount() + 20;
 	}
 	return true;
 }
@@ -47,7 +38,8 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 /// <returns></returns>
 bool Orbwalker::CanAttack()
 {
-	return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackDelay() * 1000;
+	//return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackDelay() * 1000;
+	return float(GetTickCount()) + 30 / 2.f  >= LastAttackCommandT +me->GetAttackDelay() * 1000.f;
 }
 
 /// <summary>
@@ -56,5 +48,5 @@ bool Orbwalker::CanAttack()
 /// <returns></returns>
 bool Orbwalker::CanMove(float extraWindup)
 {
-	return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackCastDelay() * 1000 + extraWindup;
+	return me->GetChampionName() == "Kalista" ||  float(GetTickCount()) + 30 * 0.5f >= LastAttackCommandT + me->GetAttackCastDelay() * 1000.f + (30 * 1.5f) + g_orbwalker_windup;
 }

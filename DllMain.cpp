@@ -45,6 +45,7 @@ PVOID hk_AddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER Ha
 extern DWORD WINAPI InitThread(LPVOID module);
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
+	RestoreZwQueryInformationProcess();
 	/*HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	DWORD NtQueryInformationProcessAddr = (DWORD)GetProcAddress(ntdll, "NtQueryInformationProcess");
 
@@ -85,9 +86,9 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 	Functions.IsInhibitor = (Typedefs::fnIsInhibitor)(baseAddr + oIsInhib); 
 	Functions.IsTroyEnt = (Typedefs::fnIsTroyEnt)(baseAddr + oIsTroy);
 
-	Functions.CastSpell = (Typedefs::fnCastSpell)(baseAddr + oCastSpell); //retaddr
-	Functions.IssueOrder = (Typedefs::fnIssueOrder)(baseAddr + oIssueOrder); //retaddr
-	Functions.DrawCircle = (Typedefs::fnDrawCircle)(baseAddr + oDrawCircle); //retaddr
+	//Functions.CastSpell = (Typedefs::fnCastSpell)(baseAddr + oCastSpell); //retaddr
+	//Functions.IssueOrder = (Typedefs::fnIssueOrder)(baseAddr + oIssueOrder); //retaddr
+	//Functions.DrawCircle = (Typedefs::fnDrawCircle)(baseAddr + oDrawCircle); //retaddr
 	Functions.WorldToScreen = (Typedefs::WorldToScreen)(baseAddr + oWorldToScreen);
 	Functions.WorldToScreenL = (Typedefs::WorldToScreenL)(baseAddr + oWorldToScreen);
 

@@ -85,6 +85,12 @@
     <Filter Include="Source Files\Hacks">
       <UniqueIdentifier>{157aebe0-ac4a-41a5-a489-c9cf9cb3144e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Zydis">
+      <UniqueIdentifier>{ed65c4bc-b7a6-40b6-9b3e-50fcee5cf168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{e823117c-c87a-488d-a94b-79d7b4de6ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FuncHook.cpp">
@@ -179,6 +185,54 @@
     </ClCompile>
     <ClCompile Include="Misc.cpp">
       <Filter>Source Files\Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueFunctions.cpp">
+      <Filter>LeagueHooks</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Decoder.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\DecoderData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Formatter.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterATT.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBase.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\MetaInfo.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Mnemonic.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Register.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\SharedData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\String.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Utils.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Zydis.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,5 +404,175 @@
     <ClInclude Include="Misc.h">
       <Filter>Header Files\Hacks</Filter>
     </ClInclude>
+    <ClInclude Include="LeagueFunctions.h">
+      <Filter>LeagueHooks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Allocator.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\API\Memory.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\API\Synchronization.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\API\Terminal.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\API\Thread.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\ArgParse.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Bitset.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Comparison.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Defines.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Format.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\LibC.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\List.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Object.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Status.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\String.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Types.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Vector.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zycore\Zycore.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Decoder.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\DecoderTypes.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Formatter.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\FormatterBuffer.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumInstructionCategory.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumISAExt.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumISASet.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumMnemonic.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumRegister.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\DecoderData.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterATT.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterBase.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterIntel.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\SharedData.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\String.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\MetaInfo.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Mnemonic.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Register.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\SharedTypes.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\ShortString.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Status.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Utils.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Zydis.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="ZycoreExportConfig.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="ZydisExportConfig.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Zydis\src\Generated\AccessedFlags.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\DecoderTables.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EncodableInstructions.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EnumInstructionCategory.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EnumISAExt.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EnumISASet.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EnumMnemonic.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\EnumRegister.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\FormatterStrings.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\InstructionDefinitions.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\InstructionEncodings.inc">
+      <Filter>Zydis</Filter>
+    </None>
+    <None Include="include\Zydis\src\Generated\OperandDefinitions.inc">
+      <Filter>Zydis</Filter>
+    </None>
   </ItemGroup>
 </Project>

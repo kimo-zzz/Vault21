@@ -122,61 +122,9 @@ public:
 		}
 	}
 
-	static void MoveTo(Vector* pos)
-	{
-		DWORD SpoofAddress = (DWORD)GetModuleHandle(nullptr) + oRetAddr; //retn instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(nullptr) + oIssueOrder; //IssueOrder
-		void* LocalPlayer = GetLocalObject();
-
-		if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
-			return; //This isn't the instruction we're looking for
-
-		__asm
-			{
-			push retnHere
-			mov ecx, LocalPlayer
-			push 0
-			push 0
-			push 0
-			push 0
-			push pos
-			push 2
-			push SpoofAddress
-			jmp IssueOrderAddr
-			retnHere :
-			}
-	}
-
-
-	static void AttackTarget(CObject* obj)
-	{
-		if (me->IsAlive())
-		{
-			DWORD SpoofAddress = (DWORD)GetModuleHandle(nullptr) + oRetAddr; //retn instruction
-			DWORD IssueOrderAddr = (DWORD)GetModuleHandle(nullptr) + oIssueOrder; //IssueOrder
-			void* LocalPlayer = GetLocalObject();
-			CObject* AttackTo = obj;
-			Vector* pos = &obj->GetPos();
-
-			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
-				return; //This isn't the instruction we're looking for
-
-			__asm
-				{
-				push retnHere
-				mov ecx, LocalPlayer
-				push 0
-				push 0
-				push 0
-				push AttackTo
-				push pos
-				push 3
-				push SpoofAddress
-				jmp IssueOrderAddr
-				retnHere :
-				}
-		}
-	}
+	static void MoveTo(Vector* pos);
+	static void AttackTarget(CObject* obj);
+	static void AttackTarget2(CObject* obj);
 
 	static void Engine::CastSpellSelf(int SlotID)
 	{

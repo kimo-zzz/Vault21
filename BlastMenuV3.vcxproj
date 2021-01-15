@@ -127,12 +127,12 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;WIN32;NDEBUG;_WINDOWS;_USRDLL;BLASTMENUV3_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>Zycore_EXPORTS;ZYCORE_EXPORTS;WINVER=0x0A00;_WIN32_WINNT=0x0A00;NTDDI_VERSION=0x0A000007;_CRT_SECURE_NO_DEPRECATE;WIN32;NDEBUG;_WINDOWS;_USRDLL;BLASTMENUV3_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)imgui;$(ProjectDir)renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)imgui;$(ProjectDir)renderer;$(ProjectDir)include;$(ProjectDir)include\Zydis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -170,6 +170,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="include\Zydis\src\Decoder.c" />
+    <ClCompile Include="include\Zydis\src\DecoderData.c" />
+    <ClCompile Include="include\Zydis\src\Formatter.c" />
+    <ClCompile Include="include\Zydis\src\FormatterATT.c" />
+    <ClCompile Include="include\Zydis\src\FormatterBase.c" />
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c" />
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c" />
+    <ClCompile Include="include\Zydis\src\MetaInfo.c" />
+    <ClCompile Include="include\Zydis\src\Mnemonic.c" />
+    <ClCompile Include="include\Zydis\src\Register.c" />
+    <ClCompile Include="include\Zydis\src\SharedData.c" />
+    <ClCompile Include="include\Zydis\src\String.c" />
+    <ClCompile Include="include\Zydis\src\Utils.c" />
+    <ClCompile Include="include\Zydis\src\Zydis.c" />
+    <ClCompile Include="LeagueFunctions.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="BuffEntry.cpp" />
     <ClCompile Include="BuffManager.cpp" />
@@ -203,6 +219,48 @@
     <ClCompile Include="Win32Exception.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Zycore\Allocator.h" />
+    <ClInclude Include="include\Zycore\API\Memory.h" />
+    <ClInclude Include="include\Zycore\API\Synchronization.h" />
+    <ClInclude Include="include\Zycore\API\Terminal.h" />
+    <ClInclude Include="include\Zycore\API\Thread.h" />
+    <ClInclude Include="include\Zycore\ArgParse.h" />
+    <ClInclude Include="include\Zycore\Bitset.h" />
+    <ClInclude Include="include\Zycore\Comparison.h" />
+    <ClInclude Include="include\Zycore\Defines.h" />
+    <ClInclude Include="include\Zycore\Format.h" />
+    <ClInclude Include="include\Zycore\LibC.h" />
+    <ClInclude Include="include\Zycore\List.h" />
+    <ClInclude Include="include\Zycore\Object.h" />
+    <ClInclude Include="include\Zycore\Status.h" />
+    <ClInclude Include="include\Zycore\String.h" />
+    <ClInclude Include="include\Zycore\Types.h" />
+    <ClInclude Include="include\Zycore\Vector.h" />
+    <ClInclude Include="include\Zycore\Zycore.h" />
+    <ClInclude Include="include\Zydis\Decoder.h" />
+    <ClInclude Include="include\Zydis\DecoderTypes.h" />
+    <ClInclude Include="include\Zydis\Formatter.h" />
+    <ClInclude Include="include\Zydis\FormatterBuffer.h" />
+    <ClInclude Include="include\Zydis\Generated\EnumInstructionCategory.h" />
+    <ClInclude Include="include\Zydis\Generated\EnumISAExt.h" />
+    <ClInclude Include="include\Zydis\Generated\EnumISASet.h" />
+    <ClInclude Include="include\Zydis\Generated\EnumMnemonic.h" />
+    <ClInclude Include="include\Zydis\Generated\EnumRegister.h" />
+    <ClInclude Include="include\Zydis\Internal\DecoderData.h" />
+    <ClInclude Include="include\Zydis\Internal\FormatterATT.h" />
+    <ClInclude Include="include\Zydis\Internal\FormatterBase.h" />
+    <ClInclude Include="include\Zydis\Internal\FormatterIntel.h" />
+    <ClInclude Include="include\Zydis\Internal\SharedData.h" />
+    <ClInclude Include="include\Zydis\Internal\String.h" />
+    <ClInclude Include="include\Zydis\MetaInfo.h" />
+    <ClInclude Include="include\Zydis\Mnemonic.h" />
+    <ClInclude Include="include\Zydis\Register.h" />
+    <ClInclude Include="include\Zydis\SharedTypes.h" />
+    <ClInclude Include="include\Zydis\ShortString.h" />
+    <ClInclude Include="include\Zydis\Status.h" />
+    <ClInclude Include="include\Zydis\Utils.h" />
+    <ClInclude Include="include\Zydis\Zydis.h" />
+    <ClInclude Include="LeagueFunctions.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="BuffEntry.h" />
     <ClInclude Include="BuffManager.h" />
@@ -259,6 +317,22 @@
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorLong.h" />
     <ClInclude Include="Win32Exception.h" />
+    <ClInclude Include="ZycoreExportConfig.h" />
+    <ClInclude Include="ZydisExportConfig.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Zydis\src\Generated\AccessedFlags.inc" />
+    <None Include="include\Zydis\src\Generated\DecoderTables.inc" />
+    <None Include="include\Zydis\src\Generated\EncodableInstructions.inc" />
+    <None Include="include\Zydis\src\Generated\EnumInstructionCategory.inc" />
+    <None Include="include\Zydis\src\Generated\EnumISAExt.inc" />
+    <None Include="include\Zydis\src\Generated\EnumISASet.inc" />
+    <None Include="include\Zydis\src\Generated\EnumMnemonic.inc" />
+    <None Include="include\Zydis\src\Generated\EnumRegister.inc" />
+    <None Include="include\Zydis\src\Generated\FormatterStrings.inc" />
+    <None Include="include\Zydis\src\Generated\InstructionDefinitions.inc" />
+    <None Include="include\Zydis\src\Generated\InstructionEncodings.inc" />
+    <None Include="include\Zydis\src\Generated\OperandDefinitions.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,6 +16,7 @@
 #include "Misc.h"
 #include "Callbacks.h"
 #include "TargetSelector.h"
+#include "LeagueFunctions.h"
 
 
 CObjectManager* ObjManager;
@@ -23,6 +24,8 @@ CFunctions Functions;
 ExampleAppLog AppLog;
 
 static SpellInfo* processedSpell = nullptr;
+
+extern DWORD __NewIssueOrderCheck;
 
 namespace DX11
 {
@@ -496,6 +499,17 @@ namespace DX11
 					Separator();
 					Text("Hidden Module %s", &hiddenBase_debug);
 					Text("Module %s", &base_debug);
+
+					ImGui::Text(("PEB: " + hexify<DWORD>((DWORD)LeagueFunctions::getCurrentProcessEnvironmentBlock())).c_str());
+					if (LeagueFunctions::IsDetected() == 1) {
+						ImGui::Text("PEB+0A00 : You will be banned!!!");
+					}
+					else if (LeagueFunctions::IsDetected() == 0) {
+						ImGui::Text("PEB+0A00 : You are safe!!!");
+					}
+					else {
+						ImGui::Text("PEB+0A00 : Unknown Status");
+					}
 
 					Separator();
 
@@ -1686,6 +1700,50 @@ void SetupGameHooks()
 	doneHookTimerAllowances = true;
 
 	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
+
+	////////////////////////////////////////
+	// PATCHING THE ISSUE ORDER RETCHECKS
+	////////////////////////////////////////
+	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
+
+	std::vector<BYTE> IssueOrderRsByte = {
+		0xCC,0xCC,0xCC,0xCC,0xCC
+	};
+
+	ReturnSig IssueOrderRs;
+	IssueOrderRs.returnCount = 1;
+	IssueOrderRs.returnSig = IssueOrderRsByte;
+
+	size_t sizeIssueOrder;
+	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
+	LeagueFunctions::ApplyIssueOrderPatches(NewIssueOrder, sizeIssueOrder);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
+
+	std::vector<BYTE> IssueOrderCheckRsByte = {
+		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
+	};
+
+	ReturnSig IssueOrderCheckRs;
+	IssueOrderCheckRs.returnCount = 1;
+	IssueOrderCheckRs.returnSig = IssueOrderCheckRsByte;
+
+	size_t sizeIssueOrderCheck;
+	DWORD EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+	DWORD NewIssueOrderCheck = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
+	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
+	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
+	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
+	__NewIssueOrderCheck = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+
+	//////////////////////////////////////////
+	// END PATCHING THE ISSUE ORDER RETCHECKS
+	//////////////////////////////////////////
 }
 
 void MainLoop()

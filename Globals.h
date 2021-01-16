@@ -90,7 +90,7 @@ static bool g_onnewpath_last = false;
 static bool g_autoTilt = false;
 
 //Orb settings
-static float g_orbwalker_windup = 0.f;
+static float g_orbwalker_windup = 80.f;
 
 //Callback debugging
 static bool g_debug_cacheOnCreate = false;

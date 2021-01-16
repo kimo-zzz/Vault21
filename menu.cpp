@@ -1944,36 +1944,10 @@ int hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk
 /// </summary>
 /// <param name="spellInfo">SpellInfo Instance of currently processed Spell</param>
 /// <returns></returns>
-int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellCastInfo* spellInfo)
+int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellCastInfo* spellCastInfo)
 {
-	if (spellInfo == nullptr)
+	if (spellCastInfo == nullptr)
 		return 0;
 
-	short casterIndex = *(short*)((DWORD)spellBook + oSpellBookOwner);
-	CObject* caster = Engine::FindObjectByIndex(heroList, casterIndex);
-
-	if (caster != nullptr)
-	{
-		if (caster->IsValidHero(heroList))
-		{
-			if (caster->IsEnemyTo(me))
-			{
-				if (spellInfo->GetSpellInfo() != nullptr)
-				{
-					processedSpell = spellInfo->GetSpellInfo();
-				}
-			}
-
-
-			if (g_debug_cacheOnProcessSpell)
-			{
-				AppLog.AddLog(
-					(std::string(spellInfo->GetCasterName()) + " : " + std::string(spellInfo->GetSpellInfo()->GetSpellData()->GetSpellName2()) + " \n").c_str());
-			}
-
-		}
-
-	}
-
-	return Functions.OnProcessSpell_h(spellBook, spellInfo);
+	return Functions.OnProcessSpell_h(spellBook, spellCastInfo);
 }

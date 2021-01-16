@@ -1944,12 +1944,11 @@ int hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk
 /// </summary>
 /// <param name="spellInfo">SpellInfo Instance of currently processed Spell</param>
 /// <returns></returns>
-int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* spellInfo)
+int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellCastInfo* spellInfo)
 {
 	if (spellInfo == nullptr)
 		return 0;
 
-	SpellInfo* derefSpellInfo = (SpellInfo*)*(DWORD*)(spellInfo);
 	short casterIndex = *(short*)((DWORD)spellBook + oSpellBookOwner);
 	CObject* caster = Engine::FindObjectByIndex(heroList, casterIndex);
 
@@ -1959,9 +1958,9 @@ int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* spellInf
 		{
 			if (caster->IsEnemyTo(me))
 			{
-				if (derefSpellInfo != nullptr)
+				if (spellInfo->GetSpellInfo() != nullptr)
 				{
-					processedSpell = derefSpellInfo;
+					processedSpell = spellInfo->GetSpellInfo();
 				}
 			}
 
@@ -1969,8 +1968,7 @@ int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* spellInf
 			if (g_debug_cacheOnProcessSpell)
 			{
 				AppLog.AddLog(
-					(std::string(caster->GetChampionName()) + " : " + std::string(
-						derefSpellInfo->GetSpellData()->GetSpellName2()) + " \n").c_str());
+					(std::string(spellInfo->GetCasterName()) + " : " + std::string(spellInfo->GetSpellInfo()->GetSpellData()->GetSpellName2()) + " \n").c_str());
 			}
 
 		}

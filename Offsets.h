@@ -166,10 +166,24 @@
 #define oSpellInfoSpellData 0x44 //11.1
 
 //ActiveSpellEntry
-#define oActiveSpellEntry 0x2728
-#define oSpellInfoStartPos 0x80
-#define oSpellInfoCastPos 0x98
-#define oSpellInfoEndPos 0x8c
+#define oActive_Spell_Entry 0x2728
+#define oActive_Spell_Instance 0x8
+#define oActive_Spell_SpellSlot 0xC
+#define oActive_Spell_MissleIndex 0x14
+#define oActive_Spell_CasterName 0x20
+#define oActive_Spell_SenderIndex 0x6c
+#define oActive_Spell_SpellStartPosition 0x80
+#define oActive_Spell_SpellEndPosition 0x8C
+#define oActive_Spell_CastPos 0x98
+#define oActive_Spell_TargetIndex 0xC0
+#define oActive_Spell_WindupTime 0x4C0
+#define oActive_Spell_Cooldown 0x4D4
+#define oActive_Spell_Spell 0x4DC
+#define oActive_Spell_IsBasicAttack 0x4E0
+#define oActive_Spell_IsSpecialAttack 0x4E1
+#define oActive_Spell_ManaCost 0x4F0
+#define oActive_Spell_CastStartTime 0x524
+#define oActive_Spell_CastEndTime 0x528
 
 //SpellData
 #define oSpellDataMissileName 0x0058 // not using

@@ -440,7 +440,7 @@ public:
 
 	SpellCastInfo* GetSpellCastInfo()
 	{
-	return *(SpellCastInfo**)((DWORD)this + oActiveSpellEntry);
+	return *(SpellCastInfo**)((DWORD)this + oActive_Spell_Entry);
 	}
 	
 	Vector GetSpellEndPos()

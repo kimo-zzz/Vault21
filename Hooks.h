@@ -44,7 +44,7 @@ public:
 	typedef CObject* (__thiscall* fnGetObjectOwner)(void*);
 
 	//events
-	typedef int (__thiscall* event_OnProcessSpell_h)(void* spellBook, SpellInfo* spellInfo);
+	typedef int (__thiscall* event_OnProcessSpell_h)(void* spellBook, SpellCastInfo* spellInfo);
 	typedef int (__thiscall* event_OnCreateObject_h)(CObject* obj, unsigned id);
 	typedef int (__thiscall* event_OnDeleteObject_h)(void* thisPtr, CObject* obj);
 	typedef int (__cdecl* event_OnNewPath_h)(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk1,

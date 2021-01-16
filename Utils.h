@@ -328,6 +328,43 @@ inline void writeDataToFile(string name, DWORD address) {
 	}
 }
 
+#define pakeke80
+
+#ifdef pakeke80
+inline DWORD RestoreZwQueryInformationProcess() {
+	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
+
+	DWORD ZwQueryInformationProcessAddr = reinterpret_cast<DWORD>(
+		GetProcAddress(ntdll, "ZwQueryInformationProcess"));
+
+	BYTE ZwQIP[] = {
+		0xB8, 0x19, 0x00, 0x00, 0x00,
+		0xE8, 0x00, 0x00, 0x00, 0x00,
+		0x5A,
+		0x80, 0x7A, 0x14, 0x4B,
+		0x75, 0x0E,
+		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
+		0xC2, 0x14, 0x00,
+		0x00, 0x00,
+		0xF5,
+		0x76, 0xBA,
+		0xD0, 0x60, 0xFD,
+		0x76, 0xFF,
+		0xD2, 0xC2,
+		0x14, 0x00,
+		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
+	};
+
+	int i = 0;
+	for (BYTE _byte : ZwQIP) {
+		*(BYTE*)(ZwQueryInformationProcessAddr + i) = _byte;
+		i++;
+	}
+
+	return ZwQueryInformationProcessAddr;
+}
+#else
 inline DWORD RestoreZwQueryInformationProcess() {
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
@@ -362,3 +399,4 @@ inline DWORD RestoreZwQueryInformationProcess() {
 
 	return ZwQueryInformationProcessAddr;
 }
+#endif

@@ -1672,6 +1672,12 @@ void SetupGameHooks()
 	DWORD leoAddr = LeagueHooks::init();
 	Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
 
+	int i = 0;
+	for (PVECTORED_EXCEPTION_HANDLER handler : PVECTORED_EXCEPTION_HANDLER_list) {
+		AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
+		i++;
+	}
+
 	for (int i = 10; i > 0; i--)
 	{
 		// give some time to finish loading client, then recall.

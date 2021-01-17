@@ -74,4 +74,6 @@ public:
 	float CastEndTime() {
 		return (float)((DWORD)this + oActive_Spell_CastEndTime);
 	}
+
+
 };

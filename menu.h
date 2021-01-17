@@ -19,6 +19,8 @@ namespace DX11
 		static void Render11();
 		static void Content();
 		static void Render9();
+
+		static void Log(const char* msg);
 	};
 
 	namespace config

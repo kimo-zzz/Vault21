@@ -331,7 +331,9 @@ inline void writeDataToFile(string name, DWORD address) {
 #define pakeke80
 
 #ifdef pakeke80
+
 inline DWORD RestoreZwQueryInformationProcess() {
+	
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
 
@@ -347,10 +349,10 @@ inline DWORD RestoreZwQueryInformationProcess() {
 		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
 		0xC2, 0x14, 0x00,
 		0x00, 0x00,
-		0xF5,
-		0x76, 0xBA,
-		0xD0, 0x60, 0xFD,
-		0x76, 0xFF,
+		0x5E,
+		0x77, 0xBA,
+		0x70, 0x71,
+		0x66, 0x77, 0xFF,
 		0xD2, 0xC2,
 		0x14, 0x00,
 		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
@@ -363,7 +365,11 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	}
 
 	return ZwQueryInformationProcessAddr;
+
 }
+
+
+
 #else
 inline DWORD RestoreZwQueryInformationProcess() {
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");

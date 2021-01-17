@@ -186,6 +186,7 @@
     <ClCompile Include="include\Zydis\src\Utils.c" />
     <ClCompile Include="include\Zydis\src\Zydis.c" />
     <ClCompile Include="LeagueFunctions.cpp" />
+    <ClCompile Include="LUA.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="BuffEntry.cpp" />
     <ClCompile Include="BuffManager.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="include\Zydis\Utils.h" />
     <ClInclude Include="include\Zydis\Zydis.h" />
     <ClInclude Include="LeagueFunctions.h" />
+    <ClInclude Include="LUA.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="BuffEntry.h" />
     <ClInclude Include="BuffManager.h" />
@@ -302,6 +304,7 @@
     <ClInclude Include="Orbwalker.h" />
     <ClInclude Include="PIDManager.h" />
     <ClInclude Include="renderer\ImRenderer.h" />
+    <ClInclude Include="SDK.h" />
     <ClInclude Include="skin_changer.hpp" />
     <ClInclude Include="skin_database.hpp" />
     <ClInclude Include="SpellCastInfo.h" />

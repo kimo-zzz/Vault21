@@ -5,16 +5,15 @@
 #include "skin_database.hpp"
 
 #include "json.hpp"
-#include "ExampleAppLog.h"
 #include "LeagueHooks.h"
-#include "HeavensGateHook.h"
 #include "Orbwalker.h"
 #include "Globals.h"
 #include <StaticLists.h>
 
-
 #include "Misc.h"
 #include "Callbacks.h"
+#include "HeavensGateHook.h"
+#include "LUA.h"
 #include "TargetSelector.h"
 #include "LeagueFunctions.h"
 
@@ -23,8 +22,8 @@ CObjectManager* ObjManager;
 CFunctions Functions;
 ExampleAppLog AppLog;
 
-static SpellInfo* processedSpell = nullptr;
-
+std::vector<SpellCastInfo*> ActiveSpellList = {};
+SpellCastInfo* ActiveSpell = nullptr;
 extern DWORD __NewIssueOrderCheck;
 
 namespace DX11
@@ -150,6 +149,7 @@ namespace DX11
 	{
 		if (isMainThreadAllow && !onInit)
 		{
+			//LUA::InitLuaScripts();
 			config::load();
 			skin_database::load();
 			zoomValue = *Engine::GetMaximumZoomAmount();
@@ -610,6 +610,7 @@ namespace DX11
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
+			LUA::ReloadScripts();
 
 
 			auto me_IsAlive = me->IsAlive();
@@ -705,7 +706,6 @@ namespace DX11
 				f_spellCDAbs_debug = std::to_string(me_f_spellSlot->GetAbsoluteCoolDown(gameTime));
 				f_spellIsDoneAbs_debug = (me_f_spellSlot->IsDoneAbsoluteCD(gameTime) ? "True" : "False");
 			}
-
 
 			if (g_draw_lp_range)
 			{
@@ -809,6 +809,8 @@ namespace DX11
 					u_key_flag = 0; //reset the flag
 				}
 			}
+
+
 
 			if (IsChatBoxOpen)
 			{
@@ -1000,39 +1002,31 @@ namespace DX11
 				{
 					if (obj->IsMissile())
 					{
-						if ((me->GetPos().DistTo(obj->GetPos()) >= 0.0f) && (me->GetPos().DistTo(obj->GetPos()) <= 4000.0f))
-						{
-							if (obj->GetParent(heroList) != nullptr)
-							{
-								if (obj->GetParent(heroList)->IsHero() && obj->GetParent(heroList)->IsEnemyTo(me))
-								{
-									auto spellStartPos = obj->GetSpellStartPos();
-									auto spellEndPos = obj->GetSpellEndPos();
 
-									Vector objspellstartpos_w2s;
-									Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
+						auto spellStartPos = obj->GetSpellStartPos();
+						auto spellEndPos = obj->GetSpellEndPos();
 
-									Vector objspellendpos_w2s;
-									Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
+						Vector objspellstartpos_w2s;
+						Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
 
-									auto spellWidth = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellWidth();
+						Vector objspellendpos_w2s;
+						Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
 
-									ImColor _skillsShots = ImColor(255, 102, 102, 79);
-									render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
-										objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
-										spellWidth);
+						auto spellWidth = 60.f;
 
-									auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
+						ImColor _skillsShots = ImColor(255, 102, 102, 79);
+						render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
+							objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
+							spellWidth);
 
-									auto color = createRGB(220, 20, 60); // crimson
-									Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
-								}
-							}
-						}
+						auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
+
+						auto color = createRGB(220, 20, 60); // crimson
+						Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+						render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+
+
 					}
-
-
 				}
 
 #pragma endregion Spell Drawings
@@ -1648,6 +1642,11 @@ namespace DX11
 	{
 		Content();
 	}
+
+	void Menu::Log(const char* msg)
+	{
+		AppLog.AddLog(msg);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1871,8 +1870,6 @@ void RemoveGameHooks()
 
 //Callbacks
 
-
-
 /// <summary>
 /// Recognizes all Created Objects.
 /// </summary>
@@ -1944,16 +1941,49 @@ int hk_OnNewPath(CObject* obj, Vector* start, Vector* end, Vector* tail, int unk
 	return Functions.OnNewPath_h(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 }
 
-
+bool printed = false;
 /// <summary>
 /// Callback which recognizes Spells/Missiles before they have been Created.
 /// </summary>
-/// <param name="spellInfo">SpellInfo Instance of currently processed Spell</param>
+/// <param name="spellCastInfo">SpellCastInfo Instance of currently processed Spell</param>
 /// <returns></returns>
+
 int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellCastInfo* spellCastInfo)
 {
 	if (spellCastInfo == nullptr)
 		return 0;
+
+	short casterIdx = *(short*)((DWORD)spellBook + oSpellBookOwner);
+	CObject* caster = Engine::FindObjectByIndex(heroList, casterIdx);
+
+	if (lua_init)
+	{
+		if (LUA::CheckLua(LuaVM, luaL_dofile(LuaVM, "Test.Lua")))
+		{
+			CallScriptFunction(LuaVM, "OnProcessSpell");
+		}
+	}
+
+	if (caster != nullptr)
+	{
+		if (caster->IsValidHero(heroList))
+		{
+			if (!caster->IsEnemyTo(me))
+			{
+				ActiveSpellList.push_back(spellCastInfo);
+			}
+
+
+			if (g_debug_cacheOnProcessSpell)
+			{
+				AppLog.AddLog(
+					(std::string(caster->GetChampionName()) + " : " + std::to_string(
+						spellCastInfo->GetSpellEndPos().Y) + " \n").c_str());
+			}
+
+		}
+
+	}
 
 	return Functions.OnProcessSpell_h(spellBook, spellCastInfo);
 }

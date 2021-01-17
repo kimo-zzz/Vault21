@@ -2,9 +2,13 @@
 #include <string>
 
 #include "Vector.h"
+#include <ExampleAppLog.h>
 
 static std::list<CObject*> heroList = {};
 static std::list<CObject*> minionList = {};
+//List with all currently active spell
+
+
 
 static int lastObjCount = 0;
 static Vector me_lastPos = Vector(0, 0, 0);

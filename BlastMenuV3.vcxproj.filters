@@ -91,6 +91,9 @@
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{e823117c-c87a-488d-a94b-79d7b4de6ebe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SDK">
+      <UniqueIdentifier>{7e5ff8b0-94de-4359-81db-010436c5cab1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FuncHook.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="LUA.cpp">
+      <Filter>sdk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,6 +541,12 @@
     </ClInclude>
     <ClInclude Include="ZydisExportConfig.h">
       <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA.h">
+      <Filter>Header Files\SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK.h">
+      <Filter>Header Files\SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

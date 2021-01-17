@@ -165,6 +165,7 @@
 //oSpellInfoSpellData
 #define oSpellInfoSpellData 0x44 //11.1
 
+
 //ActiveSpellEntry
 #define oActive_Spell_Entry 0x2728
 #define oActive_Spell_Instance 0x8
@@ -184,6 +185,10 @@
 #define oActive_Spell_ManaCost 0x4F0
 #define oActive_Spell_CastStartTime 0x524
 #define oActive_Spell_CastEndTime 0x528
+#define oActiveSpellEntry 0x2728
+#define oSpellInfoStartPos 0x78
+#define oSpellInfoCastPos 0x98
+#define oSpellInfoEndPos 0x84
 
 //SpellData
 #define oSpellDataMissileName 0x0058 // not using

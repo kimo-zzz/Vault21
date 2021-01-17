@@ -1,5 +1,6 @@
-struct ExampleAppLog
+class ExampleAppLog
 {
+public:
 	ImGuiTextBuffer Buf;
 	ImGuiTextFilter Filter;
 	ImVector<int> LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.

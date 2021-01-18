@@ -212,7 +212,7 @@
 #define oSpellDataMissileSpeed 0x440  // 11.1 jingz // not using
 #define oSpellDataSpellWidth 0x474 // 11.1 quakehero123
 #define oSpellDataSpellRange 0x3B4 // 11.1 quakehero123
-#define oSpellDataEffectSpellRange 0x10C // starts from F4 // not using
+#define oSpellDataEffectSpellRange 0x10C // 11.1
 #define oSpellDataEffectSpellRangeAfterEffect 0xB8 // starts from A0 // not using
 
 //champion_manager

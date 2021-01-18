@@ -8,17 +8,19 @@
 #include <Zydis/Zydis.h>
 
 
-extern ExampleAppLog AppLog;
+//extern ExampleAppLog AppLog;
 
 PVOID LeagueFunctions::NewIssueOrder = nullptr;
 PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
 DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
+DWORD LeagueFunctions::NewCastSpellAddr = 0;
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
+bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
 std::vector<AddressesToCopy> LeagueFunctions::addressToCopyList = {};
 
-DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig){
+DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig) {
 	size = 0;
 	int maxLoop = 0xFFFF;
 	DWORD OrigFnEndAddr = 0;
@@ -58,16 +60,14 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 			}
 
 			if (i == retSig.returnSig.size() - 1) {
-				if(matchBytes==i)
+				if (matchBytes == i)
 					foundRet++;
 			}
 		}
 
 		if (foundRet == retSig.returnCount) {
 			size += (retSig.returnSig.size() + 1);
-			OrigFnEndAddr = OrigAddress + size;
-
-			break;
+			return OrigFnEndAddr = OrigAddress + size;
 		}
 
 		if (maxLoop == size) {
@@ -77,73 +77,8 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 		size++;
 	}
 
-	return OrigFnEndAddr;
-}
-
-DWORD LeagueFunctions::CalcVirtualFunctionSize(DWORD Address, size_t& size, ReturnSig retSig) {
 	size = 0;
-	int maxLoop = 0xFFFF;
-	DWORD OrigFnEndAddr = 0;
-	int foundRet = 0;
-
-	MEMORY_BASIC_INFORMATION mbi;
-	memset(&mbi, 0, sizeof(mbi));
-	if (!VirtualQuery((PVOID)Address, &mbi, sizeof(mbi))) {
-		//AppLog.AddLog("VirtualQuery failed\n");
-		return 0;
-	}
-
-	//AppLog.AddLog(("State: " + hexify<DWORD>(mbi.State) + "\n").c_str());
-	//AppLog.AddLog(("Protect: " + hexify<DWORD>(mbi.Protect) + "\n").c_str());
-
-	if ((mbi.State == (MEM_COMMIT)) && (mbi.Protect == PAGE_EXECUTE_READWRITE)) {
-		while (true) {
-
-			int matchBytes = 0;
-
-			for (int i = 0; i < retSig.returnSig.size(); i++) {
-				if (!VirtualQuery((PVOID)(Address + size + i), &mbi, sizeof(mbi))) {
-					//AppLog.AddLog("VirtualQuery failed\n");
-					return 0;
-				}
-
-				//AppLog.AddLog(("State: " + hexify<DWORD>(mbi.State) + "\n").c_str());
-				//AppLog.AddLog(("Protect: " + hexify<DWORD>(mbi.Protect) + "\n").c_str());
-
-				if ((mbi.State == (MEM_COMMIT)) && (mbi.Protect == PAGE_EXECUTE_READWRITE)) {
-					if (((*(DWORD*)(Address + size + i)) & 0xFF) == retSig.returnSig[i]) {
-						matchBytes++;
-					}
-
-					if (i == retSig.returnSig.size() - 1) {
-						if (matchBytes == i)
-							foundRet++;
-					}
-				}else {
-					//AppLog.AddLog("Address Not Readable\n");
-				}
-
-			}
-
-			if (foundRet == retSig.returnCount) {
-				size += (retSig.returnSig.size() + 1);
-				OrigFnEndAddr = Address + size;
-
-				break;
-			}
-
-			if (maxLoop == size) {
-				break;
-			}
-
-			size++;
-		}
-
-		return OrigFnEndAddr;
-	}
-
-	//AppLog.AddLog("Address Not Readable\n");
-	return 0;
+	return OrigFnEndAddr;
 }
 
 DWORD LeagueFunctions::VirtualAllocateFunction(PVOID& NewFunction, DWORD OrigAddress, size_t size) {
@@ -314,6 +249,58 @@ void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 	//AppLog.AddLog("Done Patching\n");
 }
 
+void LeagueFunctions::ApplyCastSpellPatches(DWORD Address, size_t size) {
+	{
+		///////////////////////////////////////////////////////////////////////////////
+		// DO NOT SET BAN FLAGS!
+		///////////////////////////////////////////////////////////////////////////////
+
+		DWORD toBePatchStart = Address + 0x1C2;
+		DWORD toBePatchEnd = Address + 0x1F1 + 1;
+
+		//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
+		//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+		size_t currSize = 0;
+		size_t targetSize = toBePatchEnd - toBePatchStart;
+		while (currSize != targetSize) {
+
+			*(BYTE*)(toBePatchStart + currSize) = 0x90;
+			//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+			currSize++;
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		// END DO NOT SET BAN FLAGS!
+		///////////////////////////////////////////////////////////////////////////////
+	}
+
+	{
+		///////////////////////////////////////////////////////////////////////////////
+		// DO NOT SET AL (unknown effect but just check in IDA XD)
+		///////////////////////////////////////////////////////////////////////////////
+
+		DWORD toBePatchStart = Address + 0x1F6;
+		DWORD toBePatchEnd = Address + 0x1F9 + 1;
+
+		//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
+		//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+		size_t currSize = 0;
+		size_t targetSize = toBePatchEnd - toBePatchStart;
+		while (currSize != targetSize) {
+
+			*(BYTE*)(toBePatchStart + currSize) = 0x90;
+			//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+			currSize++;
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		// END DO NOT SET AL (unknown effect but just check in IDA XD)
+		///////////////////////////////////////////////////////////////////////////////
+	}
+
+	//AppLog.AddLog("Done Patching\n");
+}
+
 void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 	///////////////////////////////////////////////////////////////////////////////
 	// DO NOT SET PEB FLAGS!
@@ -341,8 +328,8 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 }
 
 void testValue(DWORD val, DWORD val2) {
-	AppLog.AddLog(("val location=" + hexify<DWORD>((DWORD)testValue) + "\n").c_str());
-	AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
+	//AppLog.AddLog(("val location=" + hexify<DWORD>((DWORD)testValue) + "\n").c_str());
+	//AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
 }
 
 int __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {

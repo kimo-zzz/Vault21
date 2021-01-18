@@ -1673,38 +1673,9 @@ void SetupGameHooks()
 
 	int i = 0;
 	for (PVECTORED_EXCEPTION_HANDLER handler : PVECTORED_EXCEPTION_HANDLER_list) {
-		AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
+		//AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
 		i++;
 	}
-
-	for (int i = 10; i > 0; i--)
-	{
-		// give some time to finish loading client, then recall.
-		Sleep(1000);
-		AppLog.AddLog(("Hooks ready in: " + std::to_string(i) + "\n").c_str());
-	}
-
-	// Only need this if onprocessspell is hwbp
-	AppLog.AddLog("Recalling to decrypt OnProcessSpell\n");
-	Engine::CastSpellSelf(13); // recall to trigger onprocessspell 1 time before hooking
-
-	AppLog.AddLog("Processing the recall\n");
-	Sleep(1000); // process the recall
-
-	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
-	{
-		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
-		AppLog.AddLog("Waiting for functions to be called once...\n");
-		Sleep(1000);
-	}
-
-	AppLog.AddLog("Giving some extra time...\n");
-	Sleep(1000); // just extra allowance
-
-	AppLog.AddLog("Hooks are now ready!\n");
-	doneHookTimerAllowances = true;
-
-	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
 
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
@@ -1720,7 +1691,12 @@ void SetupGameHooks()
 	IssueOrderCheckRs.returnSig = IssueOrderCheckRsByte;
 
 	size_t sizeIssueOrderCheck;
-	DWORD EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+	DWORD EndIssueOrderCheckAddr;
+	do {
+		EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
+		Sleep(1000);
+	} while (!sizeIssueOrderCheck);
 	DWORD NewIssueOrderCheck = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
@@ -1737,7 +1713,12 @@ void SetupGameHooks()
 	IssueOrderRs.returnSig = IssueOrderRsByte;
 
 	size_t sizeIssueOrder;
-	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	DWORD EndIssueOrderAddr;
+	do {
+		EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
+		Sleep(1000);
+	} while (!sizeIssueOrder);
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
@@ -1747,10 +1728,54 @@ void SetupGameHooks()
 	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
 	LeagueFunctions::IsDonePatchingIssueOrder = true;
+	AppLog.AddLog("IssueOrder is now patched\n");
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
 
+	//////////////////////////////////////////
+	// PATCHING THE CAST SPELL RETCHECKS
+	//////////////////////////////////////////
+	DWORD CastSpellAddr = baseAddr + oCastSpell;
+
+	std::vector<BYTE> CastSpellRsByte = {
+		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
+	};
+
+	ReturnSig CastSpellRs;
+	CastSpellRs.returnCount = 1;
+	CastSpellRs.returnSig = CastSpellRsByte;
+
+	size_t sizeCastSpell;
+	DWORD EndCastSpellAddr;
+	do {
+		EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+		AppLog.AddLog("Cannot Read SpellCast function. Try Casting some spells first.\n");
+		Sleep(1000);
+	} while (!sizeCastSpell);
+
+	DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
+	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
+	LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
+	LeagueFunctions::ApplyCastSpellPatches(NewCastSpell, sizeCastSpell);
+	LeagueFunctions::NewCastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell;
+	LeagueFunctions::IsDonePatchingCastSpell = true;
+	AppLog.AddLog("CastSpell is now patched\n");
+	//////////////////////////////////////////
+	// END PATCHING THE CAST SPELL RETCHECKS
+	//////////////////////////////////////////
+
+	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
+	{
+		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
+		AppLog.AddLog("Waiting for some functions to initialize...\n");
+		Sleep(1000);
+	}
+
+	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
+
+	AppLog.AddLog("Hooks are now ready!\n");
+	doneHookTimerAllowances = true;
 }
 
 void MainLoop()

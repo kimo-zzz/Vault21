@@ -13,6 +13,12 @@
 class Engine
 {
 public:
+	static void MoveTo(Vector* pos);
+	static void AttackTarget(CObject* obj);
+
+	static void CastSpellSelf(int SlotID);
+	static void CastSpellTargetted(int SlotID, CObject* obj);
+
 	static Vector GetMouseWorldPosition()
 	{
 		DWORD MousePtr = baseAddr + oHudInstance;
@@ -119,73 +125,6 @@ public:
 		if (ObjManager != nullptr && ID >= 0 && ID <= 10000)
 		{
 			//return ObjManager->objectArray[ID];
-		}
-	}
-
-	static void MoveTo(Vector* pos);
-	static void AttackTarget(CObject* obj);
-
-	static void Engine::CastSpellSelf(int SlotID)
-	{
-		if (me->IsAlive())
-		{
-			DWORD spellbook = (DWORD)me + static_cast<DWORD>(oObjSpellBook);
-			auto spellslot = me->GetSpellSlotByID(SlotID);
-			Vector* objPos = &me->GetPos();
-			Vector* mePos = &me->GetPos();
-			DWORD objNetworkID = 0;
-			DWORD SpoofAddress = baseAddr + static_cast<DWORD>(oRetAddr);
-			DWORD CastSpellAddr = baseAddr + static_cast<DWORD>(oCastSpell);
-
-			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
-				return; //This isn't the instruction we're looking for
-
-			__asm
-				{
-				push retnHere
-				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
-				push objNetworkID
-				push mePos
-				push objPos
-				push SlotID
-				push spellslot
-				push SpoofAddress
-				jmp CastSpellAddr
-				retnHere :
-				}
-		}
-	}
-
-
-	static void Engine::CastSpellTargetted(int SlotID, CObject* obj)
-	{
-		if (me->IsAlive())
-		{
-			auto spellbook = (DWORD)me + oObjSpellBook;
-			auto spellslot = me->GetSpellSlotByID(SlotID);
-
-			Vector* objPos = &obj->GetPos();
-			Vector* mePos = &me->GetPos();
-			DWORD objNetworkID = obj->GetNetworkID();
-			DWORD SpoofAddress = baseAddr + oRetAddr;
-			DWORD CastSpellAddr = baseAddr + oCastSpell;
-
-			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
-				return; //This isn't the instruction we're looking for
-
-			__asm
-				{
-				push retnHere
-				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
-				push objNetworkID
-				push mePos
-				push objPos
-				push SlotID
-				push spellslot
-				push SpoofAddress
-				jmp CastSpellAddr
-				retnHere :
-				}
 		}
 	}
 

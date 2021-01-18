@@ -180,9 +180,6 @@
     <ClCompile Include="imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="TargetSelector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Callbacks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -239,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="LUA.cpp">
       <Filter>sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetSelector.cpp">
+      <Filter>Source Files\Orbwalker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -388,9 +388,6 @@
     </ClInclude>
     <ClInclude Include="Orbwalker.h">
       <Filter>Header Files\Orbwalker</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetSelector.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Header Files</Filter>
@@ -547,6 +544,9 @@
     </ClInclude>
     <ClInclude Include="SDK.h">
       <Filter>Header Files\SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetSelector.h">
+      <Filter>Header Files\Orbwalker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

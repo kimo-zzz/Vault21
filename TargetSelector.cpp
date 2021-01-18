@@ -7,6 +7,8 @@ CObject* TargetSelector::GetOrbwalkerTarget()
 		return GetLowestHpTarget();
 	if (GetAsyncKeyState(0x56))
 		return GetWaveclearTarget();
+	if (GetAsyncKeyState(0x58))
+		return GetLasthitTarget();
 
 	return nullptr;
 }
@@ -37,8 +39,8 @@ CObject* TargetSelector::GetWaveclearTarget()
 				{
 					if (obj->GetTeam() == 300) //if neutral team 
 					{
-						if(obj->IsAlive() && obj->IsTargetable())
-						return obj;
+						if (obj->IsAlive() && obj->IsTargetable())
+							return obj;
 					}
 
 					if (obj->IsEnemyTo(me) && obj->IsAlive() && obj->IsTargetable())
@@ -86,11 +88,47 @@ CObject* TargetSelector::GetLowestHpTarget()
 				}
 
 			}
-
-
-			obj = holzer.GetNextObject(obj);
 		}
+		obj = holzer.GetNextObject(obj);
+	}
 
+	return target;
+}
+
+CObject* TargetSelector::GetLasthitTarget()
+{
+	CObject holzer;
+	auto obj = holzer.GetFirstObject();
+
+	CObject* target = nullptr; // Our orb target
+	while (obj)
+	{
+		if (obj != nullptr)
+		{
+			if (!obj->IsDeletedObject())
+			{
+				if (obj->IsMinion())
+				{
+					if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange() + Engine::GetLocalObject()->GetBoundingRadius())
+					{
+						if (obj->IsEnemyTo(Engine::GetLocalObject()))
+						{
+							if (obj->IsAlive() && obj->IsTargetable())
+							{
+								if (obj->GetHealth() < me->GetTotalAttackDamage())
+								{
+									if (target == nullptr || obj->GetHealth() < target->GetHealth())
+										target = obj;
+								}
+
+							}
+						}
+					}
+
+				}
+			}
+		}
+		obj = holzer.GetNextObject(obj);
 	}
 
 	return target;

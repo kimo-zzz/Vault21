@@ -323,7 +323,7 @@ public:
 	{
 		return reinterpret_cast<xor_value<bool>*>((DWORD)this + oObjIsOnScreen)->decrypt();
 	}
-
+	
 	float GetHealth()
 	{
 		return *(float*)((DWORD)this + oObjHealth);

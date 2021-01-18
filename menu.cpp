@@ -607,7 +607,7 @@ namespace DX11
 				}
 			}
 
-			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56))
+			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
 			LUA::ReloadScripts();

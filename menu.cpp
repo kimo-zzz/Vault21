@@ -1002,29 +1002,30 @@ namespace DX11
 				{
 					if (obj->IsMissile())
 					{
+						if (obj->GetParent(heroList)->IsHero())
+						{
+							auto spellStartPos = obj->GetSpellStartPos();
+							auto spellEndPos = obj->GetSpellEndPos();
 
-						auto spellStartPos = obj->GetSpellStartPos();
-						auto spellEndPos = obj->GetSpellEndPos();
+							Vector objspellstartpos_w2s;
+							Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
 
-						Vector objspellstartpos_w2s;
-						Functions.WorldToScreen(&spellStartPos, &objspellstartpos_w2s);
+							Vector objspellendpos_w2s;
+							Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
 
-						Vector objspellendpos_w2s;
-						Functions.WorldToScreen(&spellEndPos, &objspellendpos_w2s);
+							auto spellWidth = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellWidth();
 
-						auto spellWidth = 60.f;
+							ImColor _skillsShots = ImColor(255, 102, 102, 79);
+							render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
+								objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
+								spellWidth);
 
-						ImColor _skillsShots = ImColor(255, 102, 102, 79);
-						render.draw_line(objspellstartpos_w2s.X, objspellstartpos_w2s.Y,
-							objspellendpos_w2s.X, objspellendpos_w2s.Y, _skillsShots,
-							spellWidth);
+							auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
 
-						auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
-
-						auto color = createRGB(220, 20, 60); // crimson
-						Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-						render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
-
+							auto color = createRGB(220, 20, 60); // crimson
+							Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+							render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+						}
 
 					}
 				}

@@ -1709,23 +1709,6 @@ void SetupGameHooks()
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
-	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
-
-	std::vector<BYTE> IssueOrderRsByte = {
-		0xCC,0xCC,0xCC,0xCC,0xCC
-	};
-
-	ReturnSig IssueOrderRs;
-	IssueOrderRs.returnCount = 1;
-	IssueOrderRs.returnSig = IssueOrderRsByte;
-
-	size_t sizeIssueOrder;
-	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
-	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
-	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
-	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::ApplyIssueOrderPatches(NewIssueOrder, sizeIssueOrder);
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
 
 	std::vector<BYTE> IssueOrderCheckRsByte = {
@@ -1743,12 +1726,31 @@ void SetupGameHooks()
 	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
-	__NewIssueOrderCheck = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
 
+	std::vector<BYTE> IssueOrderRsByte = {
+		0xCC,0xCC,0xCC,0xCC,0xCC
+	};
+
+	ReturnSig IssueOrderRs;
+	IssueOrderRs.returnCount = 1;
+	IssueOrderRs.returnSig = IssueOrderRsByte;
+
+	size_t sizeIssueOrder;
+	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
+	LeagueFunctions::ApplyIssueOrderPatches(NewIssueOrder, sizeIssueOrder);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
+	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
+	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	LeagueFunctions::IsDonePatchingIssueOrder = true;
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
+
 }
 
 void MainLoop()

@@ -13,6 +13,8 @@ extern ExampleAppLog AppLog;
 PVOID LeagueFunctions::NewIssueOrder = nullptr;
 PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
+DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
+bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 
 std::vector<AddressesToCopy> LeagueFunctions::addressToCopyList = {};
 
@@ -337,108 +339,21 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 
 	//AppLog.AddLog("Done Patching\n");
 }
-/*
-typedef int(__fastcall* tIssueOrderCheck)(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
-tIssueOrderCheck IssueOrderCheck;
 
-int LeagueFunctions::NewIssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
-	AppLog.AddLog("NewIssueOrderCheckGateway: Called\n");
-	//MessageBoxA(0, "NewIssueOrderCheckGateway: Called","", 0);
-	//MessageBoxA(0, ("a10 = "+hexify<DWORD>(DWORD(a10))).c_str(), "", 0);
-	//return IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, (DWORD*)(baseAddr + 0x17681E));
-	IssueOrderCheck = (tIssueOrderCheck)((DWORD)LeagueFunctions::NewIssueOrderCheck);
-	return IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-	//return LeagueFunctions::NewIssueOrderCheckHook.Call<int>(a1, a2, a3, a4, a5, a6, a7, a8, a9, (DWORD*)(baseAddr + 0x17681E));
-}*/
-
-void Nah(DWORD ret1, DWORD ret2, DWORD a1, DWORD a2, DWORD a3, DWORD* a4, DWORD a5, DWORD a6, DWORD a7, DWORD a8, DWORD a9, DWORD* a10, DWORD a11, DWORD a12, DWORD a13, DWORD a14, DWORD a15, DWORD a16, DWORD a17, DWORD a18, DWORD a19, DWORD a20) {
-	/*AppLog.AddLog(("ret1 = " + hexify<DWORD>(DWORD(ret1)) + "\n").c_str());
-	AppLog.AddLog(("ret2 = " + hexify<DWORD>(DWORD(ret2)) + "\n").c_str());
-	AppLog.AddLog(("a1 = " + hexify<DWORD>(DWORD(a1)) + "\n").c_str());
-	AppLog.AddLog(("a2 = " + hexify<DWORD>(DWORD(a2)) + "\n").c_str());
-	AppLog.AddLog(("a3 = " + hexify<DWORD>(DWORD(a3)) + "\n").c_str());
-	AppLog.AddLog(("a4 = " + hexify<DWORD>(DWORD(a4)) + "\n").c_str());
-	AppLog.AddLog(("a5 = " + hexify<DWORD>(DWORD(a5)) + "\n").c_str());
-	AppLog.AddLog(("a6 = " + hexify<DWORD>(DWORD(a6)) + "\n").c_str());
-	AppLog.AddLog(("a7 = " + hexify<DWORD>(DWORD(a7)) + "\n").c_str());
-	AppLog.AddLog(("a8 = " + hexify<DWORD>(DWORD(a8)) + "\n").c_str());
-	AppLog.AddLog(("a9 = " + hexify<DWORD>(DWORD(a9)) + "\n").c_str());
-	AppLog.AddLog(("a10 = " + hexify<DWORD>(DWORD(a10)) + "\n").c_str());
-	AppLog.AddLog(("a11 = " + hexify<DWORD>(DWORD(a11)) + "\n").c_str());
-	AppLog.AddLog(("a12 = " + hexify<DWORD>(DWORD(a12)) + "\n").c_str());
-	AppLog.AddLog(("a13 = " + hexify<DWORD>(DWORD(a13)) + "\n").c_str());
-	AppLog.AddLog(("a14 = " + hexify<DWORD>(DWORD(a14)) + "\n").c_str());
-	AppLog.AddLog(("a15 = " + hexify<DWORD>(DWORD(a15)) + "\n").c_str());
-	AppLog.AddLog(("a16 = " + hexify<DWORD>(DWORD(a16)) + "\n").c_str());
-	AppLog.AddLog(("a17 = " + hexify<DWORD>(DWORD(a17)) + "\n").c_str());
-	AppLog.AddLog(("a18 = " + hexify<DWORD>(DWORD(a18)) + "\n").c_str());
-	AppLog.AddLog(("a19 = " + hexify<DWORD>(DWORD(a19)) + "\n").c_str());
-	AppLog.AddLog(("a20 = " + hexify<DWORD>(DWORD(a20)) + "\n").c_str());*/
+void testValue(DWORD val, DWORD val2) {
+	AppLog.AddLog(("val location=" + hexify<DWORD>((DWORD)testValue) + "\n").c_str());
+	AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
 }
 
-DWORD __Backup_Eax;
-DWORD __ret1;
-DWORD __ret2;
-DWORD a1, a2, a3, *a4, a5, a6, a7, a8, a9, *a10, a11, a12, a13, a14, a15, a16, a17, a18, a19,  a20;
-DWORD __NewIssueOrderCheck;
-
-void __declspec(naked) LeagueFunctions::NewIssueOrderCheckGateway()
-{
-	//AppLog.AddLog("NewIssueOrderCheckGateway: Called\n");
-	
-	__asm {
-		/*mov __Backup_Eax, eax
-		mov eax, [esp]
-		mov __ret1, eax
-		mov eax, [esp+0x4]
-		mov __ret2, eax
-		mov eax, [esp + 0x8]
-		mov a1, eax
-		mov eax, [esp + 0xC]
-		mov a2, eax
-		mov eax, [esp + 0x10]
-		mov a3, eax
-		mov eax, [esp + 0x14]
-		mov a4, eax
-		mov eax, [esp + 0x18]
-		mov a5, eax
-		mov eax, [esp + 0x1C]
-		mov a6, eax
-		mov eax, [esp + 0x20]
-		mov a7, eax
-		mov eax, [esp + 0x24]
-		mov a8, eax
-		mov eax, [esp + 0x28]
-		mov a9, eax
-		mov eax, [esp + 0x2C]
-		mov a10, eax
-		mov eax, [esp + 0x30]
-		mov a11, eax
-		mov eax, [esp + 0x34]
-		mov a12, eax
-		mov eax, [esp + 0x38]
-		mov a13, eax
-		mov eax, [esp + 0x3C]
-		mov a14, eax
-		mov eax, [esp + 0x40] //max
-		mov a15, eax
-		mov eax, [esp + 0x44]
-		mov a16, eax
-		mov eax, [esp + 0x48]
-		mov a17, eax
-		mov eax, [esp + 0x4C]
-		mov a18, eax
-		mov eax, [esp + 0x50]
-		mov a19, eax
-		mov eax, [esp + 0x54]
-		mov a20, eax
-		mov eax, __Backup_Eax*/
-	}
-	//__asm pushad
-	//Nah(__ret1, __ret2, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20);
-	//__asm popad
-	
-	__asm jmp __NewIssueOrderCheck
+int __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
+	DWORD oldVal = *a10;
+	//testValue((DWORD)a10, *a10);
+	*a10 = (DWORD)(baseAddr + oIssueOrderTrueReturn);
+	//testValue((DWORD)a10, *a10);
+	int ret = Functions.IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+	*a10 = oldVal;
+	//testValue((DWORD)a10, *a10);
+	return ret;
 }
 
 void LeagueFunctions::ReplaceCall(DWORD origAddress, DWORD newAddress, DWORD fnAddress, size_t size) {

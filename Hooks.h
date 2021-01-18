@@ -13,6 +13,7 @@ public:
 	typedef void (__thiscall* tSendChat)(DWORD ChatClient, const char* Message, int Color);
 	typedef int*(__thiscall* fnIssueOrder)(void* thisPtr, int Order, Vector* Loc, CObject* Target, bool IsAttackMove,
 	                                       bool IsMinion, DWORD Unknown);
+	typedef int(__fastcall* fnIssueOrderCheck)(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
 	typedef float (__cdecl* fnGetAttackCastDelay)(CObject* pObj);
 	typedef float (__cdecl* fnGetAttackDelay)(CObject* pObj);
 	typedef float (__thiscall* fnGetTimerExpiry)(CObject* camp);
@@ -72,6 +73,7 @@ public:
 
 
 	Typedefs::fnIssueOrder IssueOrder;
+	Typedefs::fnIssueOrderCheck IssueOrderCheck;
 	Typedefs::fnGetAttackCastDelay GetAttackCastDelay;
 	Typedefs::fnGetAttackDelay GetAttackDelay;
 	Typedefs::fnGetTimerExpiry GetTimerExpiry;

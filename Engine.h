@@ -124,7 +124,6 @@ public:
 
 	static void MoveTo(Vector* pos);
 	static void AttackTarget(CObject* obj);
-	static void AttackTarget2(CObject* obj);
 
 	static void Engine::CastSpellSelf(int SlotID)
 	{

@@ -10,7 +10,7 @@
 	
 void Engine::AttackTarget(CObject* obj)
 {
-	if (!(DWORD)LeagueFunctions::NewIssueOrder)
+	if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
 		return;
 	if (me->IsAlive())
 	{
@@ -40,20 +40,9 @@ void Engine::AttackTarget(CObject* obj)
 	}
 }
 
-void Engine::AttackTarget2(CObject* obj)
-{
-	if (me->IsAlive())
-	{
-		void* LocalPlayer = me;
-		CObject* AttackTo = obj;
-		Vector* pos = &obj->GetPos();
-
-		Functions.IssueOrder(LocalPlayer, 3, pos, AttackTo, 0, 0, 0);
-	}
-}
 void Engine::MoveTo(Vector* pos)
 {
-	if (!(DWORD)LeagueFunctions::NewIssueOrder)
+	if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
 		return;
 	DWORD SpoofAddress = (DWORD)GetModuleHandle(nullptr) + oRetAddr; //retn instruction
 	DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder

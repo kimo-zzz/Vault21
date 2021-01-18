@@ -48,6 +48,7 @@
 #define oHealthBarPosition 0x577650 //		E8 ?? ?? ?? ?? 8B 4E ?? 8D 54 ?? ?? 52 8B 01 FF ?? ?? 5E 83 ?? ?? C3 // sub_[offset]
 #define oBaseDrawPosition 0x16B860 //		E8 ?? ?? ?? ?? EB ?? 8B 01 8B 40 // sub_[offset]
 #define oIssueOrderCheck 0x1D5310 // 		83 EC 18 53 55 56 8B 74 24 28 8B E9 57 89 // fn
+#define oIssueOrderTrueReturn 0x58245C // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder)
 
 //functions - skinChanger
 #define translateString_UNSAFE_DONOTUSE 0xA90BF0 //		E8 ? ? ? ? 8B 0D ? ? ? ? 83 C4 04 8B F0 6A 0B // sub_[offset] // 83 EC 0C 56 8B 74 24 14 56 E8 ? ? ? ? 83 C4 04 89 74 24 04 89 44 24 08 A8 01 // fn

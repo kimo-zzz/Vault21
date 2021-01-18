@@ -15,7 +15,10 @@ public:
 	static std::vector<AddressesToCopy> addressToCopyList;
 	static PVOID NewIssueOrder;
 	static PVOID NewIssueOrderCheck;
+	static DWORD NewIssueOrderCheckAddr;
 	static PVOID NewCastSpell;
+
+	static bool IsDonePatchingIssueOrder;
 
 	static DWORD CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig);
 	static DWORD CalcVirtualFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig);
@@ -27,8 +30,7 @@ public:
 	//IssueOrder
 	static void ApplyIssueOrderPatches(DWORD NewIssueOrder, size_t size);
 	static void ApplyIssueOrderCheckPatches(DWORD NewIssueOrder, size_t size);
-	//static int NewIssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
-	static void NewIssueOrderCheckGateway();
+	static int __fastcall IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
 
 	static PPEB getCurrentProcessEnvironmentBlock();
 	static PPEB getProcessEnvironmentBlockAddress(HANDLE processHandle);

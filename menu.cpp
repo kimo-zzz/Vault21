@@ -603,10 +603,20 @@ namespace DX11
 			auto me_pos = me->GetPos();
 			auto me_IsOnScreen = me->IsOnScreen();
 
+
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
-			LUA::ReloadScripts();
+			/*
+if (lua_init)
+{
+	if (LUA::CheckLua(LuaVM, luaL_dofile(LuaVM, "Test.Lua")))
+	{
+		CallScriptFunction(LuaVM, "OnDraw");
+	}
+}
+*/
+//LUA::ReloadScripts();
 
 
 			auto me_IsAlive = me->IsAlive();
@@ -870,6 +880,13 @@ namespace DX11
 
 			while (obj)
 			{
+
+				//objCount++;
+
+				if (obj == nullptr)
+					continue;
+
+
 				auto IsHero = obj->IsHero();
 				auto IsMinion = obj->IsMinion();
 				auto IsInhibitor = obj->IsInhibitor();
@@ -1448,7 +1465,7 @@ namespace DX11
 						}
 					}
 
-					if (Index != me_index)
+					if (Index != me_index && obj->IsHero())
 					{
 						auto AttackRange = obj->GetAttackRange();
 						auto boundingRadius = obj->GetBoundingRadius();
@@ -1469,7 +1486,7 @@ namespace DX11
 						{
 							if (g_draw_enemy_range)
 							{
-								if (IsOnScreen)
+								if (IsOnScreen && obj->IsAlive())
 								{
 									auto color = createRGB(220, 20, 60); // crimson
 									Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
@@ -1693,6 +1710,7 @@ DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPa
 
 void SetupGameHooks()
 {
+
 	oOnProcessSpell_addr = baseAddr + oOnprocessSpell;
 	oOnCreateObject_addr = baseAddr + OnCreateObject;
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
@@ -1702,23 +1720,20 @@ void SetupGameHooks()
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnDeleteObject_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnNewPath_addr);
-
 	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
 	Process::RemoveAllHandlers();
 	DWORD leoAddr = LeagueHooks::init();
 	Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
-
 	int i = 0;
 	for (PVECTORED_EXCEPTION_HANDLER handler : PVECTORED_EXCEPTION_HANDLER_list) {
 		//AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
 		i++;
 	}
-
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
-	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
+	//LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr); //causes crashes for me somehow (Jiingz)
 	std::vector<BYTE> IssueOrderCheckRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1740,11 +1755,10 @@ void SetupGameHooks()
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
-	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
+	//LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 	std::vector<BYTE> IssueOrderRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC
 	};
-
 	ReturnSig IssueOrderRs;
 	IssueOrderRs.returnCount = 1;
 	IssueOrderRs.returnSig = IssueOrderRsByte;
@@ -1769,16 +1783,14 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
-
 	//////////////////////////////////////////
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
 	DWORD CastSpellAddr = baseAddr + oCastSpell;
-	LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
+	//LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 	std::vector<BYTE> CastSpellRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
-
 	ReturnSig CastSpellRs;
 	CastSpellRs.returnCount = 1;
 	CastSpellRs.returnSig = CastSpellRsByte;
@@ -1790,7 +1802,6 @@ void SetupGameHooks()
 		Sleep(1000);
 		EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
 	}
-
 	DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
@@ -1803,7 +1814,6 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 
 	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
-
 	AppLog.AddLog("Hooks are now ready!\n");
 	doneHookTimerAllowances = true;
 }

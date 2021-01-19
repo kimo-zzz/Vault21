@@ -34,6 +34,12 @@ bool CObject::IsDeletedObject()
 	return CompareObjectTypeFlags((int)ObjectTypeFlags::DeadObject);
 }
 
+bool CObject::IsInvalidObject()
+{
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::InvalidObject);
+}
+
+
 
 bool CObject::IsNexus() {
 	return Functions.IsNexus(this);

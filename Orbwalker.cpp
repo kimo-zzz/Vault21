@@ -15,11 +15,11 @@ int _lastTarget;
 
 bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 {
-	if (IsChatBoxOpen)
+	if (Engine::IsChatBoxOpen())
 		return false;
 
 
-	if (CanAttack() && target != nullptr)
+	if (CanAttack() && target != nullptr && target->IsVisible() && target->IsAlive() && target->IsTargetable())
 	{
 		Engine::AttackTarget(target);
 		LastAttackCommandT = float(GetTickCount()) + 30;
@@ -27,7 +27,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 	else if (CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
 		Engine::MoveTo(&Engine::GetMouseWorldPosition());
-		LastMoveCommandT = GetTickCount() + 20;
+		LastMoveCommandT = GetTickCount() + 50;
 	}
 	return true;
 }
@@ -48,5 +48,5 @@ bool Orbwalker::CanAttack()
 /// <returns></returns>
 bool Orbwalker::CanMove(float extraWindup)
 {
-	return me->GetChampionName() == "Kalista" ||  float(GetTickCount()) + 30 * 0.5f >= LastAttackCommandT + me->GetAttackCastDelay() * 1000.f + (30 * 1.5f) + g_orbwalker_windup;
+	return me->GetChampionName() == "Kalista" ||  float(GetTickCount()) + 30 * 0.5f >= LastAttackCommandT + me->GetAttackCastDelay() * 1000.f + (30 * 1.5f) + extraWindup;
 }

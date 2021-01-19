@@ -21,39 +21,37 @@ CObject* TargetSelector::GetWaveclearTarget()
 	CObject* target = nullptr; // Our orb target
 	while (obj)
 	{
-		if (!obj->IsDeletedObject())
+
+		if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange() + Engine::GetLocalObject()->GetBoundingRadius())
 		{
-			if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange() + Engine::GetLocalObject()->GetBoundingRadius())
+			if (obj->IsInhibitor() || obj->IsTurret() || obj->IsNexus())
 			{
-				if (obj->IsInhibitor() || obj->IsTurret() || obj->IsNexus())
+				if (obj->IsEnemyTo(me))
 				{
-					if (obj->IsEnemyTo(me))
-					{
-						if (obj->IsAlive() && obj->IsTargetable())
-							return obj;
-					}
-
+					if (obj->IsAlive() && obj->IsTargetable())
+						return obj;
 				}
-
-				if (obj->IsMinion())
-				{
-					if (obj->GetTeam() == 300) //if neutral team 
-					{
-						if (obj->IsAlive() && obj->IsTargetable())
-							return obj;
-					}
-
-					if (obj->IsEnemyTo(me) && obj->IsAlive() && obj->IsTargetable())
-					{
-						if (target == nullptr || obj->GetHealth() < target->GetHealth())
-						{
-							target = obj;
-						}
-					}
-				}
-
 
 			}
+
+			if (obj->IsMinion())
+			{
+				if (obj->GetTeam() == 300) //if neutral team 
+				{
+					if (obj->IsAlive() && obj->IsTargetable())
+						return obj;
+				}
+
+				if (obj->IsEnemyTo(me) && obj->IsAlive() && obj->IsTargetable())
+				{
+					if (target == nullptr || obj->GetHealth() < target->GetHealth())
+					{
+						target = obj;
+					}
+				}
+			}
+
+
 		}
 
 		obj = holzer.GetNextObject(obj);
@@ -105,27 +103,24 @@ CObject* TargetSelector::GetLasthitTarget()
 	{
 		if (obj != nullptr)
 		{
-			if (!obj->IsDeletedObject())
+			if (obj->IsMinion())
 			{
-				if (obj->IsMinion())
+				if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange() + Engine::GetLocalObject()->GetBoundingRadius())
 				{
-					if (obj->GetDistance(Engine::GetLocalObject()) < Engine::GetLocalObject()->GetAttackRange() + Engine::GetLocalObject()->GetBoundingRadius())
+					if (obj->IsEnemyTo(Engine::GetLocalObject()))
 					{
-						if (obj->IsEnemyTo(Engine::GetLocalObject()))
+						if (obj->IsAlive() && obj->IsTargetable())
 						{
-							if (obj->IsAlive() && obj->IsTargetable())
+							if (GetEffectiveHP(obj->GetArmor(), obj->GetHealth()) < me->GetTotalAttackDamage())
 							{
-								if (obj->GetHealth() < me->GetTotalAttackDamage())
-								{
-									if (target == nullptr || obj->GetHealth() < target->GetHealth())
-										target = obj;
-								}
-
+								if (target == nullptr || obj->GetHealth() < target->GetHealth())
+									target = obj;
 							}
+
 						}
 					}
-
 				}
+
 			}
 		}
 		obj = holzer.GetNextObject(obj);

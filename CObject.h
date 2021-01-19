@@ -165,6 +165,7 @@ public:
 
 	bool IsTargetable();
 	bool IsDeletedObject();
+	bool IsInvalidObject();
 
 	Vector GetHpBarPosition();
 	CObject* GetOwner();

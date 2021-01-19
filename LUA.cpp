@@ -45,7 +45,6 @@ void LUA::InitLuaScripts()
 	if (!lua_init)
 	{
 		luaL_openlibs(LuaVM);
-		Engine::SendChat("Initiated LUA.");
 	}
 
 	//CObject
@@ -55,29 +54,36 @@ void LUA::InitLuaScripts()
 
 	//Engine
 	lua_register(LuaVM, "SendChat", SDK::LeagueEngine::SendChat);
-	
-	//Orb
-	lua_register(LuaVM, "GetLowestHPTarget", SDK::TS::GetLowestTarget);
-	lua_register(LuaVM, "GetLeagueTickCount", SDK::LeagueEngine::GetLeagueTickCount);
+	lua_register(LuaVM, "IssueMove", SDK::Functions::IssueMove);
+	lua_register(LuaVM, "AttackTo", SDK::Functions::AttackTo);
 	lua_register(LuaVM, "GetAttackDelay", SDK::LeagueEngine::GetAttackDelay);
 	lua_register(LuaVM, "GetAttackCastDelay", SDK::LeagueEngine::GetAttackCastDelay);
 	lua_register(LuaVM, "GetMouseWorldPos", SDK::GetMousePos);
 
+
+	//Orb
+	lua_register(LuaVM, "GetLowestHPTarget", SDK::TS::GetLowestTarget);
+
+
 	//Utils
 	lua_register(LuaVM, "Debug", SDK::Utils::Print);
-	if (LUA::CheckLua(LuaVM, luaL_loadfile(LuaVM, "Test.Lua")))
+	lua_register(LuaVM, "IsSpacebarPressed", SDK::Utils::IsSpacebarDown);
+	lua_register(LuaVM, "GetTickCount", SDK::LeagueEngine::GetLeagueTickCount);
+
+	if (LUA::CheckLua(LuaVM, luaL_dofile(LuaVM, "Test.Lua")))
 	{
+		CallScriptFunction(LuaVM, "OnStart");
 		lua_init = true;
 	}
 }
 
 void LUA::ReloadScripts()
 {
-	if(GetAsyncKeyState(VK_F10))
+	if (GetAsyncKeyState(VK_F10))
 	{
 		lua_init = false;
 		InitLuaScripts();
 	}
-	
+
 }
 

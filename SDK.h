@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "LUA.h"
+#include "Orbwalker.h"
 #include "TargetSelector.h"
 namespace SDK
 {
@@ -55,11 +56,13 @@ namespace SDK
 	{
 		static int GetLowestTarget(lua_State* L)
 		{
-			int index = (int)lua_tonumber(L, 1);
-
 			CObject* target = TargetSelector::GetLowestHpTarget();
+			int targetidx = 0;
 
-			int targetidx = target->GetIndex();
+			if (target != nullptr)
+			{
+				targetidx = target->GetIndex();
+			}
 
 			lua_pushnumber(L, targetidx);
 
@@ -71,7 +74,7 @@ namespace SDK
 	{
 		static int GetLeagueTickCount(lua_State* L)
 		{
-			lua_pushnumber(L, GetTickCount());
+			lua_pushnumber(L, (float)GetTickCount());
 			return 1;
 		}
 
@@ -100,6 +103,20 @@ namespace SDK
 	{
 		static int IssueMove(lua_State* L)
 		{
+			Engine::MoveTo(&Engine::GetMouseWorldPosition());
+
+			return 1;
+		}
+
+		static int AttackTo(lua_State* L)
+		{
+			int targetIdx = (int)lua_tonumber(L, 1);
+
+			CObject* target = Engine::GetObjectByID(targetIdx);
+
+			Engine::AttackTarget(target);
+
+			return 1;
 		}
 	}
 
@@ -107,8 +124,17 @@ namespace SDK
 	{
 		static int Print(lua_State* L)
 		{
-			std::string msg ="\n[DEBUG] " + (std::string)lua_tostring(L, 1);
+			std::string msg = "\n[DEBUG] " + (std::string)lua_tostring(L, 1);
 			Menu::Log(msg.c_str());
+		}
+
+		static int IsSpacebarDown(lua_State* L)
+		{
+			bool state = GetAsyncKeyState(VK_SPACE) & 0x8000;
+
+			lua_pushboolean(L, state);
+
+			return 1;
 		}
 	}
 };

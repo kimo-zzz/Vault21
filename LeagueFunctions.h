@@ -31,7 +31,7 @@ public:
 	//IssueOrder
 	static void ApplyIssueOrderPatches(DWORD NewIssueOrder, size_t size);
 	static void ApplyIssueOrderCheckPatches(DWORD NewIssueOrder, size_t size);
-	static int __fastcall IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
+	static void* __fastcall IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10);
 
 	//CastSpell
 	static void ApplyCastSpellPatches(DWORD Address, size_t size);

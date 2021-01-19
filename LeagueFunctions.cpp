@@ -327,19 +327,19 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 	//AppLog.AddLog("Done Patching\n");
 }
 
-void testValue(DWORD val, DWORD val2) {
-	//AppLog.AddLog(("val location=" + hexify<DWORD>((DWORD)testValue) + "\n").c_str());
+void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {
+	//AppLog.AddLog(("val location=" + hexify<DWORD>((DWORD)testValueIssueOrderCheckGateway) + "\n").c_str());
 	//AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
 }
 
-int __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
+void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
 	DWORD oldVal = *a10;
-	//testValue((DWORD)a10, *a10);
+	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
 	*a10 = (DWORD)(baseAddr + oIssueOrderTrueReturn);
-	//testValue((DWORD)a10, *a10);
-	int ret = Functions.IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
+	void* ret = Functions.IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 	*a10 = oldVal;
-	//testValue((DWORD)a10, *a10);
+	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
 	return ret;
 }
 

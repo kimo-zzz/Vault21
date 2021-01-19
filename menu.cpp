@@ -22,7 +22,23 @@ CObjectManager* ObjManager;
 CFunctions Functions;
 ExampleAppLog AppLog;
 
-std::vector<SpellCastInfo*> ActiveSpellList = {};
+struct ActiveSpellInfo {
+	int SpellSlot;				// 0x4
+	float StartTime;			// 0x8				gametime of when the missile is started.
+	int SpellIndex;				// 0xC				this is a index of spells casted
+	Vector StartPos;			// 0x78
+	Vector EndPos;				// 0x84
+	Vector CastPos;				// 0x90
+	float winduptime;			// 0x4B8
+	float CoolDown;				// 0x4CC
+	float ManaCost;				// 0x4E0
+	float EndTime;				// 0x7D0			this ends WAY after spell missile has already been destroyed... 
+
+	int CasterIndex;			// part of a different struct but we're adding it in anyways so we can access this info...
+};
+
+std::map<int, struct ActiveSpellInfo> ActiveSpellMap;
+std::map<int, struct CObject*> ActiveMissiles;
 SpellCastInfo* ActiveSpell = nullptr;
 extern DWORD __NewIssueOrderCheck;
 
@@ -703,6 +719,56 @@ namespace DX11
 				}
 			}
 
+			std::vector<int> Deletable;
+
+			map<int, struct ActiveSpellInfo>::iterator it;
+
+			for (it = ActiveSpellMap.begin(); it != ActiveSpellMap.end(); it++) {
+				if (it->second.StartTime > Engine::GetGameTime()) {
+					Vector StartPos_W2S, EndPos_W2S;
+					Functions.WorldToScreen(&it->second.StartPos, &StartPos_W2S);
+					Functions.WorldToScreen(&it->second.EndPos, &EndPos_W2S);
+
+					auto Caster = Engine::FindObjectByIndex(heroList, it->second.CasterIndex);
+
+					auto SpellWidth = Caster->GetSpellSlotByID(it->second.SpellSlot)->GetSpellInfo()->GetSpellData()->GetSpellWidth();
+
+
+					ImColor Color = ImColor(1.0f, 1.0f, 1.0f, 0.4f);
+					if (Caster->IsEnemyTo(me))
+						Color = ImColor(1.0f, 0.0f, 0.0f, 0.4f);
+					else
+						Color = ImColor(0.0f, 1.0f, 0.0f, 0.4f);
+
+					render.draw_line(StartPos_W2S.X, StartPos_W2S.Y, EndPos_W2S.X, EndPos_W2S.Y, Color, SpellWidth);
+				} else {
+					Deletable.push_back(it->first);
+				}
+			}
+
+			map<int, struct CObject*>::iterator MissileIt;
+
+			for (MissileIt = ActiveMissiles.begin(); MissileIt != ActiveMissiles.end(); MissileIt++) {
+				Vector StartPos_W2S, EndPos_W2S;
+				Functions.WorldToScreen(&MissileIt->second->GetSpellStartPos(), &StartPos_W2S);
+				Functions.WorldToScreen(&MissileIt->second->GetSpellEndPos(), &EndPos_W2S);
+
+				ImColor Color = ImColor(1.0f, 1.0f, 1.0f, 0.4f);
+
+				if (Engine::FindObjectByIndex(heroList, MissileIt->second->GetObjSourceIndex())->IsEnemyTo(me))
+					Color = ImColor(1.0f, 0.0f, 0.0f, 0.4f);
+				else
+					Color = ImColor(0.0f, 1.0f, 0.0f, 0.4f);
+
+				render.draw_line(StartPos_W2S.X, StartPos_W2S.Y, EndPos_W2S.X, EndPos_W2S.Y, Color, MissileIt->second->GetMissileSpellInfo()->GetSpellData()->GetSpellWidth());
+			}
+
+			if (!Deletable.empty()) {
+				for (auto dlt : Deletable)
+					ActiveSpellMap.erase(dlt);
+				Deletable.clear();
+			}
+			
 			if (opt_autoCleanse_c != 0)
 			{
 				if (me)
@@ -1871,6 +1937,9 @@ int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
 	if (obj == nullptr)
 		return 0;
 
+	if (obj->IsMissile())
+		ActiveMissiles.insert(pair<int, struct CObject*>(obj->GetIndex(), obj));
+	
 	if (g_debug_cacheOnCreate)
 	{
 		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
@@ -1892,6 +1961,9 @@ int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, CObject* obj)
 	if (obj == nullptr)
 		return 0;
 
+	if (obj->IsMissile())
+		ActiveMissiles.erase(obj->GetIndex());
+	
 	if (g_debug_cacheOnDelete)
 		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
 		{
@@ -1959,11 +2031,21 @@ int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellCastInfo* spel
 	{
 		if (caster->IsValidHero(heroList))
 		{
-			if (!caster->IsEnemyTo(me))
-			{
-				ActiveSpellList.push_back(spellCastInfo);
-			}
+			ActiveSpellInfo temp;
+			temp.SpellSlot = *(int*)(((DWORD)spellCastInfo) + 0x4);
+			temp.StartTime = *(float*)(((DWORD)spellCastInfo) + 0x8);
+			temp.SpellIndex = *(short*)(((DWORD)spellCastInfo) + 0xC);
+			temp.StartPos = *(Vector*)(((DWORD)spellCastInfo) + 0x78);
+			temp.EndPos = *(Vector*)(((DWORD)spellCastInfo) + 0x84);
+			temp.CastPos = *(Vector*)(((DWORD)spellCastInfo) + 0x90);
+			temp.winduptime = *(float*)(((DWORD)spellCastInfo) + 0x4B8);
+			temp.CoolDown = *(float*)(((DWORD)spellCastInfo) + 0x4CC);
+			temp.ManaCost = *(float*)(((DWORD)spellCastInfo) + 0x4E0);
+			temp.EndTime = *(float*)(((DWORD)spellCastInfo) + 0x7D0);
 
+			temp.CasterIndex = *(short*)((DWORD)spellBook + oSpellBookOwner);
+
+			ActiveSpellMap.insert(pair<int, struct ActiveSpellInfo>(temp.SpellIndex, temp));
 
 			if (g_debug_cacheOnProcessSpell)
 			{

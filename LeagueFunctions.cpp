@@ -228,7 +228,7 @@ void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 	///////////////////////////////////////////////////////////////////////////////
 	// PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
 	///////////////////////////////////////////////////////////////////////////////
-	/*
+	
 	DWORD toBePatchStart = Address + 0x4E0;
 	DWORD toBePatchEnd = Address + 0x4F6 + 1;
 
@@ -243,7 +243,7 @@ void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 		//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
 		currSize++;
 	}
-	*/
+	
 	///////////////////////////////////////////////////////////////////////////////
 	// END PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
 	///////////////////////////////////////////////////////////////////////////////

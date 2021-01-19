@@ -16,6 +16,7 @@ public:
 	static PVOID NewIssueOrder;
 	static PVOID NewIssueOrderCheck;
 	static DWORD NewIssueOrderCheckAddr;
+	static DWORD TrueIssueOrderReturnAddress;
 	static PVOID NewCastSpell;
 	static DWORD NewCastSpellAddr;
 

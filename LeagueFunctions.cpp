@@ -15,6 +15,7 @@ PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
 DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
 DWORD LeagueFunctions::NewCastSpellAddr = 0;
+DWORD LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD)(baseAddr + oIssueOrderTrueReturn);
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
@@ -227,7 +228,7 @@ void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 	///////////////////////////////////////////////////////////////////////////////
 	// PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
 	///////////////////////////////////////////////////////////////////////////////
-
+	
 	DWORD toBePatchStart = Address + 0x4E0;
 	DWORD toBePatchEnd = Address + 0x4F6 + 1;
 
@@ -242,6 +243,7 @@ void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 		//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
 		currSize++;
 	}
+	
 	///////////////////////////////////////////////////////////////////////////////
 	// END PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
 	///////////////////////////////////////////////////////////////////////////////
@@ -335,7 +337,7 @@ void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {
 void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
 	DWORD oldVal = *a10;
 	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
-	*a10 = (DWORD)(baseAddr + oIssueOrderTrueReturn);
+	*a10 = TrueIssueOrderReturnAddress;
 	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
 	void* ret = Functions.IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 	*a10 = oldVal;

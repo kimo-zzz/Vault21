@@ -331,7 +331,7 @@ inline void writeDataToFile(string name, DWORD address) {
 /*
 	define by your name here. each of us have different bytes. this is the simplest way to change out for now.
 */
-#define dencelle
+#define pakeke80
 
 
 inline DWORD RestoreZwQueryInformationProcess() {

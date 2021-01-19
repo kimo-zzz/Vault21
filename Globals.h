@@ -8,11 +8,6 @@ static std::list<CObject*> heroList = {};
 static std::list<CObject*> minionList = {};
 //List with all currently active spell
 
-
-
-static int lastObjCount = 0;
-static Vector me_lastPos = Vector(0, 0, 0);
-
 static int CastSpellCtr = 0;
 
 static bool g_draw_lp_range = false;

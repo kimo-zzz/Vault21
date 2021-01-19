@@ -587,26 +587,6 @@ namespace DX11
 			auto me_pos = me->GetPos();
 			auto me_IsOnScreen = me->IsOnScreen();
 
-			if (!finishedOnNewPathInit)
-			{
-				if (me_IsOnScreen)
-				{
-					if (me_lastPos.X != 0 ||
-						me_lastPos.Y != 0 ||
-						me_lastPos.Z != 0)
-					{
-						if (me_pos.X != me_lastPos.X ||
-							me_pos.Y != me_lastPos.Y ||
-							me_pos.Z != me_lastPos.Z)
-						{
-							finishedOnNewPathInit = true;
-						}
-					}
-
-					me_lastPos = me_pos;
-				}
-			}
-
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 
@@ -822,12 +802,8 @@ namespace DX11
 			std::list<CObject*> _heroList = {};
 			std::list<CObject*> _minionList = {};
 
-			int objCount = 0;
-
 			while (obj)
 			{
-				objCount++;
-
 				auto IsHero = obj->IsHero();
 				auto IsMinion = obj->IsMinion();
 				auto IsInhibitor = obj->IsInhibitor();
@@ -1595,17 +1571,6 @@ namespace DX11
 
 				obj = holzer.GetNextObject(obj);
 			}
-			if (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit)
-			{
-				if (lastObjCount != 0)
-				{
-					if (objCount > lastObjCount)
-						finishedOnCreateObjectInit = true;
-					else
-						finishedOnDeleteObjectInit = true;
-				}
-				lastObjCount = objCount;
-			}
 
 			heroList = _heroList;
 			minionList = _minionList;
@@ -1658,7 +1623,6 @@ LeagueHooksHWBP _LeagueHooksHWBP; //supports only 4 hwbp (0,1,2,3)
 
 DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPath_addr;
 
-
 #pragma region Hooking setup
 
 void SetupGameHooks()
@@ -1667,6 +1631,11 @@ void SetupGameHooks()
 	oOnCreateObject_addr = baseAddr + OnCreateObject;
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
 	oOnNewPath_addr = baseAddr + oOnNewPath;
+
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnProcessSpell_addr);
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnDeleteObject_addr);
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnNewPath_addr);
 
 	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
 	Process::RemoveAllHandlers();
@@ -1683,7 +1652,7 @@ void SetupGameHooks()
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
-
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
 	std::vector<BYTE> IssueOrderCheckRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1693,19 +1662,19 @@ void SetupGameHooks()
 	IssueOrderCheckRs.returnSig = IssueOrderCheckRsByte;
 
 	size_t sizeIssueOrderCheck;
-	DWORD EndIssueOrderCheckAddr;
-	do {
-		EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+	DWORD EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+	while (!sizeIssueOrderCheck) {
 		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
 		Sleep(1000);
-	} while (!sizeIssueOrderCheck);
+		EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
+	}
 	DWORD NewIssueOrderCheck = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
-
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 	std::vector<BYTE> IssueOrderRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1715,12 +1684,12 @@ void SetupGameHooks()
 	IssueOrderRs.returnSig = IssueOrderRsByte;
 
 	size_t sizeIssueOrder;
-	DWORD EndIssueOrderAddr;
-	do {
-		EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	while (!sizeIssueOrder) {
 		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
 		Sleep(1000);
-	} while (!sizeIssueOrder);
+		EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
+	}
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
@@ -1739,7 +1708,7 @@ void SetupGameHooks()
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
 	DWORD CastSpellAddr = baseAddr + oCastSpell;
-
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 	std::vector<BYTE> CastSpellRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1749,12 +1718,12 @@ void SetupGameHooks()
 	CastSpellRs.returnSig = CastSpellRsByte;
 
 	size_t sizeCastSpell;
-	DWORD EndCastSpellAddr;
-	do {
-		EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+	DWORD EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+	while (!sizeCastSpell) {
 		AppLog.AddLog("Cannot Read SpellCast function. Try Casting some spells first.\n");
 		Sleep(1000);
-	} while (!sizeCastSpell);
+		EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+	}
 
 	DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
@@ -1766,13 +1735,6 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 	// END PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
-
-	while (!finishedOnCreateObjectInit || !finishedOnDeleteObjectInit || !finishedOnNewPathInit)
-	{
-		// these functions must be called atleast once before hooking so we'll test and wait for these functions. see above references.
-		AppLog.AddLog("Waiting for some functions to initialize...\n");
-		Sleep(1000);
-	}
 
 	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
 

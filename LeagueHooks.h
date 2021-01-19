@@ -64,8 +64,8 @@ struct LeagueDecryptData
 class LeagueDecrypt
 {
 public:
-	static int IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers, size_t& i);
-	static LeagueDecryptData decrypt(const wchar_t* szModule, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers);
+	static int IsMemoryDecrypted(PVOID Address);
+	static LeagueDecryptData decrypt(const wchar_t* szModule);
 };
 
 struct VECTORED_HANDLER_ENTRY

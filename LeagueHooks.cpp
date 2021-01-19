@@ -1317,8 +1317,7 @@ bool LeagueHooksHWBP::removeHook(uint8_t RegIndex)
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
-LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers)
-{
+LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule) {
 	LeagueDecryptData ldd;
 	ldd.totalFailedDecrypted = 0;
 	ldd.totalSuccessDecrypted = 0;
@@ -1336,45 +1335,39 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PV
 	auto scanBytes = reinterpret_cast<uint8_t*>(module) + textSection->VirtualAddress;
 
 
-	auto mbi = MEMORY_BASIC_INFORMATION{nullptr};
-	uint8_t* next_check_address = nullptr;
+	auto mbi = MEMORY_BASIC_INFORMATION{ 0 };
+	uint8_t* next_check_address = 0;
 
-	for (auto i = 0x3000; i < sizeOfImage; ++i)
-	{
+	bool isFirstRegion = true;
+	for (auto i = 0; i < sizeOfImage; ++i) {
+
 		auto current_address = scanBytes + i;
-		if (current_address >= next_check_address)
-		{
+		if (current_address >= next_check_address) {
 			if (!VirtualQuery(reinterpret_cast<void*>(current_address), &mbi, sizeof(mbi)))
 				continue;
 
-			if (mbi.Protect != PAGE_NOACCESS)
-			{
+			if (mbi.Protect != PAGE_NOACCESS || isFirstRegion) {
+				isFirstRegion = false;
 				i += ((std::uintptr_t(mbi.BaseAddress) + mbi.RegionSize) - (std::uintptr_t(scanBytes) + i));
 				i--;
 				continue;
 			}
-			else
-			{
+			else {
 				next_check_address = reinterpret_cast<uint8_t*>(mbi.BaseAddress) + mbi.RegionSize;
 			}
 		}
-		size_t size_i = 0;
-		int ret = IsMemoryDecrypted((PVOID)((DWORD)current_address), handlers, size_i);
-		if (ret != 0)
-		{
-			if (ret == 1)
-			{
+		int ret = IsMemoryDecrypted((PVOID)((DWORD)current_address));
+		if (ret != 0) {
+			if (ret == 1) {
 				ldd.totalSuccess_PAGE_NOACCESS++;
 			}
-			else if (ret == 2)
-			{
+			else if (ret == 2) {
 				ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION++;
 			}
 			//AppLog.AddLog(("Decryption Success for address " + hexify<uint8_t*>(current_address)).c_str());
 			ldd.totalSuccessDecrypted++;
 		}
-		else
-		{
+		else {
 			//AppLog.AddLog(("Decryption Failed for address " + hexify<uint8_t*>(current_address)).c_str());
 			ldd.totalFailedDecrypted++;
 		}
@@ -1382,7 +1375,10 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule, std::vector<PV
 	return ldd;
 }
 
-int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPTION_HANDLER> handlers, size_t& i)
+typedef BOOLEAN(__stdcall* t_RtlDispatchException)(PEXCEPTION_RECORD ExceptionRecord, PCONTEXT ContextRecord);
+t_RtlDispatchException fn_RtlDispatchException;
+
+int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 {
 	CONTEXT ctx;
 	EXCEPTION_RECORD exr;
@@ -1390,7 +1386,6 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPT
 	FLOATING_SAVE_AREA w64;
 	memset(&mbi, 0, sizeof(mbi));
 	VirtualQuery(Address, &mbi, sizeof(mbi));
-	PVOID AddressBase = mbi.BaseAddress;
 	if (mbi.Protect != PAGE_NOACCESS)
 	{
 		return 1;
@@ -1402,77 +1397,32 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address, std::vector<PVECTORED_EXCEPT
 #ifdef _WIN64
 	ctx.Rip = reinterpret_cast<DWORD64>(Address);// (DWORD)FinishThread;
 #else
-	ctx.Eip = reinterpret_cast<DWORD>(AddressBase); // (DWORD)FinishThread;
+	ctx.Eip = reinterpret_cast<DWORD>(Address);// (DWORD)FinishThread;
 #endif // 
 
-	//me 57101030
-	//base 6c0000
-	//stub 79fc0000
-	//hid 6540000
-	//ctx.ContextFlags = 0x1007F; //same for oDrawCircle and oCastSpell
-	//ctx.SegGs = 0x2b; //same for oDrawCircle and oCastSpell
-	//ctx.SegFs = 0x53; //same for oDrawCircle and oCastSpell
-	//ctx.SegEs = 0x2b; //same for oDrawCircle and oCastSpell
-	//ctx.SegDs = 0x2b; //same for oDrawCircle and oCastSpell
-	//ctx.Edi = 0x0; // not constant
-	//ctx.Esi = 0x5e2f758; // not constant
-	//ctx.Ebx = 0x5e2f848; // not constant
-	//ctx.Edx = 0xc3; // not constant
-	//ctx.Ecx = 0x55413ee8; // not constant
-	//ctx.Eax = (DWORD)Address; // not constant
-	//ctx.Ebp = 0x5e2f740;// not constant
-	//ctx.SegCs = 0x23; //same for oDrawCircle and oCastSpell
-	//ctx.EFlags = 0x10246; // not constant
-	//ctx.EFlags = 0x210216; // not constant
-	//ctx.Esp = 0x5e2f6ec; // not constant
-	//ctx.SegSs = 0x2b; //same for oDrawCircle and oCastSpell
-
-	//exr.ExceptionFlags = 0x0; //same for oDrawCircle and oCastSpell
-	//w64.ControlWord = 0x7f; //same for oDrawCircle and oCastSpell
-	//w64.TagWord = 0xffff; //same for oDrawCircle and oCastSpell
-	//ctx.FloatSave = w64;
-	exr.ExceptionAddress = AddressBase;
+	ctx.ContextFlags = 0x1007F;
+	ctx.SegCs = 0x23;
+	ctx.SegDs = 0x2b;
+	ctx.SegEs = 0x2b;
+	ctx.SegFs = 0x53;
+	ctx.SegGs = 0x2b;
+	ctx.SegSs = 0x2b;
+	exr.ExceptionAddress = Address;
 	exr.NumberParameters = 2;
 	exr.ExceptionCode = EXCEPTION_ACCESS_VIOLATION;
-	exr.ExceptionInformation[1] = reinterpret_cast<DWORD>(AddressBase);
+	exr.ExceptionInformation[1] = reinterpret_cast<DWORD>(Address);
 	_EXCEPTION_POINTERS ei;
 	ei.ContextRecord = &ctx;
 	ei.ExceptionRecord = &exr;
 
-	DWORD SpoofAddress = baseAddr + oRetAddr; // retn // c3
+	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-	for (; i < handlers.size(); i++)
-	{
-		PVECTORED_EXCEPTION_HANDLER handler = handlers[i];
-		auto _ei = &ei;
-		DWORD handlerAddr = (DWORD)handler;
-		DWORD res;
-		DWORD Backup_Eax;
-		__asm {
-			push retnHere
-			push _ei
-			push SpoofAddress
-			jmp handlerAddr
-			retnHere :
-			pushad
-			mov Backup_Eax, eax
-			mov res, eax
-			mov eax, Backup_Eax
-			popad
-			}
+	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x67FBC; //RtlDispatchException
 
-		if (res == EXCEPTION_CONTINUE_EXECUTION)
-		{
-			memset(&mbi, 0, sizeof(mbi));
-			VirtualQuery(AddressBase, &mbi, sizeof(mbi));
-			if (mbi.Protect == PAGE_EXECUTE_READ)
-			{
-				return 2;
-			}
-			else
-			{
-				return 0;
-			}
+	if (RtlDispatchExceptionAddr) {
+		fn_RtlDispatchException = (t_RtlDispatchException)(RtlDispatchExceptionAddr);
+		if (fn_RtlDispatchException(&exr, &ctx)) {
+			return 2;
 		}
 	}
 

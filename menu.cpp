@@ -1733,7 +1733,6 @@ void SetupGameHooks()
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr); //causes crashes for me somehow (Jiingz)
 	std::vector<BYTE> IssueOrderCheckRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1755,7 +1754,6 @@ void SetupGameHooks()
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 	std::vector<BYTE> IssueOrderRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1787,7 +1785,6 @@ void SetupGameHooks()
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
 	DWORD CastSpellAddr = baseAddr + oCastSpell;
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 	std::vector<BYTE> CastSpellRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};

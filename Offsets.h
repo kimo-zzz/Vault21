@@ -1,54 +1,54 @@
-﻿#pragma once
+#pragma once
 #define TARGET_GAMEVERSION "Version 11.1.352.5559 [PUBLIC]"  // 
 
 #define oRetAddr 0x6E502 // 				// find addr : ret // opcode : C3
 #define oDrawCircleRetAddr 0x6E4FF // 		// find addr : add esp, 28 ret // opcode : 83 C4 1C C3
-#define oNetClient 0x34F615C // 			8B 0D ? ? ? ? 85 C9 74 07 8B 01 6A 01 FF 50 08 8B // dword_[offset] // this addy us for IsTargetable as per chinese tool but nah~
-#define oPingInstance 0x34F615C //			8B 0D ? ? ? ? 85 C9 74 07 8B 01 6A 01 FF 50 08 8B // dword_[offset]
-#define oChatClientPtr 0x289EE80 //			8B 0D ? ? ? ? 6A 01 FF 74 24 08 // dword_[offset] // 8B ?? ?? ?? ?? ?? 6A ?? 50 E8 ?? ?? ?? ?? 33 C0 5F C2 // dword_[offset]
-#define oObjManager 0x1C52490 //			8B 0D ? ? ? ? 89 74 24 14 // dword_[offset]
-#define oZoomClass 0x34E67B4 //				A3 ? ? ? ? 83 FA 10 72 32 // dword_[offset]
-#define oGameInfo 0x289E910 // 				A1 ? ? ? ? 83 78 08 02 0F 94 C0 // dword_[offset]
-#define oHudInstance 0x1C524D0 //			8B 0D ? ? ? ? 6A 00 8B 49 34 E8 ? ? ? ? B0 // dword_[offset]
-#define oRenderer 0x35179E4 // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
-#define oUnderMouseObject 0x1BF2168 // 		8B 0D ? ? ? ? 89 0D // dword_[offset]
-#define oRenderer 0x35179E4 // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
-#define oLocalPlayer 0x34EEDE4 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
-#define oGameTime 0x34E6FD4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
-#define oMenuGUI 0x34EE8C8 // 				8B 0D ? ? ? ? 6A 00 E8 ? ? ? ? C7 // dword_[offset]
+#define oNetClient 0x34F3E54 // 			8B 0D ? ? ? ? 85 C9 74 07 8B 01 6A 01 FF 50 08 8B // dword_[offset] // this addy us for IsTargetable as per chinese tool but nah~
+#define oPingInstance 0x34F3E54 //			8B 0D ? ? ? ? 85 C9 74 07 8B 01 6A 01 FF 50 08 8B // dword_[offset] // why do we have that twice lol
+#define oChatClientPtr 0x289CB80 //			8B 0D ? ? ? ? 6A 01 FF 74 24 08 // dword_[offset] // 8B ?? ?? ?? ?? ?? 6A ?? 50 E8 ?? ?? ?? ?? 33 C0 5F C2 // dword_[offset]
+#define oObjManager 0x1C50190 //			8B 0D ? ? ? ? 89 74 24 14 // dword_[offset]
+#define oZoomClass 0x34E4C78 //				A3 ? ? ? ? 83 FA 10 72 32 // dword_[offset]
+#define oGameInfo 0x289C610 // 				A1 ? ? ? ? 83 78 08 02 0F 94 C0 // dword_[offset]
+#define oHudInstance 0x1C501D0 //			8B 0D ? ? ? ? 6A 00 8B 49 34 E8 ? ? ? ? B0 // dword_[offset]
+#define oRenderer 0x35116EC // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
+#define oUnderMouseObject 0x1BF2168 // 		8B 0D ? ? ? ? 89 0D // dword_[offset] // --BROKEN
+#define oRenderer 0x35116EC // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
+#define oLocalPlayer 0x34EC5E0 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
+#define oGameTime 0x34E4CD4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
+#define oMenuGUI 0x34EC5F0 // 				8B 0D ? ? ? ? 6A 00 E8 ? ? ? ? C7 // dword_[offset]
 
 // FUNCTIONS
-#define oGetNextObject 0x290480 //			E8 ? ? ? ? 8B F0 85 F6 75 E4 // sub_[offset]
-#define oGameVersion 0x545C00 //			E8 ? ? ? ? 50 68 ? ? ? ? 6A 00 6A 01 6A 02 E8 ? ? ? ? E8 ? ? ? ? // sub_[offset]
-#define oGetFirstObject 0x28F260 //			E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 53 8B 5C // sub_[offset]
-#define oWorldToScreen 0x961760 // 			83 EC 10 56 E8 ? ? ? ? 8B 08 // fn
-#define oCastSpell 0x5090D0 // 				xref: ERROR: Client Tried to cast a spell from an invalid slot: %d.\n
-#define oDrawCircle 0x502F70 //			 	E8 ? ? ? ? 83 C4 1C 8B 7C 24 28 // sub_[offset]
-#define oGetBasicAttack 0x169520 // 	 	53 8B D9 B8 ? ? ? ? 8B 93 // fn
-#define oGetAttackCastDelay 0x2A4920 // 	83 EC 0C 53 8B 5C 24 14 8B CB 56 57 8B 03 FF 90 // fn // E8 ?? ?? ?? ?? D9 ?? ?? ?? ?? ?? 56 E8 // sub_[offset]
-#define oGetAttackDelay 0x2A4A20 // 		E8 ? ? ? ? 8B 44 24 1C 83 C4 0C 8B CE // sub_[offset] // this addy is for oGetPing as per chinese tool but nah~
-#define oGetPing 0x336D20 // 				E8 ? ? ? ? 8B 4F 2C 85 C9 0F // sub_[offset]
-#define oGetSpellState 0x4FD5F0 // 			E8 ? ? ? ? 8B F8 8B CB 89 // sub_[offset] // this addy us for IsTargetable as per chinese tool but nah~
-#define oIsTargetable 0x1D9380 //			56 8B F1 E8 ? ? ? ? 84 C0 74 2E // fn
-#define oIsAlive 0x1A1BF0  // 				56 8B F1 8B 06 8B 80 ? ? ? ? FF D0 84 C0 74 19 // fn
-#define oIsBaron 0x1764E0 //				E8 ? ? ? ? 84 C0 74 0A BB // sub_[offset]
-#define oIsTurret 0x1B0EE0 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 09 5F // sub_[offset]
-#define oIsInhib 0x1B0AF0 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 38 // sub_[offset]
-#define oIsHero 0x1B0C70 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 2B 57 // sub_[offset]
-#define oIsMinion 0x1B0CB0 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 16 8B 0F // sub_[offset]
-#define oIsDragon 0x174710 //  				E8 ? ? ? ? 33 DB 84 C0 0F 95 C3 8D 1C 5D ? ? ? ? E9 // sub_[offset]
-#define oIsMissile 0x1B0CD0 //		   		E8 ?? ?? ?? ?? 83 C4 04 84 C0 74 60 // sub_[offset]
-#define oIsNexus 0x1B0BF0 //				E8 ? ? ? ? 83 C4 04 84 C0 0F 95 C0 C3 CC 8A // sub_[offset]
-#define oIsNotWall 0x8DED80 // 				E8 ? ? ? ? 33 C9 83 C4 0C 84 // sub_[offset]
-#define oIsTroy 0x1B0B70  // 				E8 ? ? ? ? 8B D8 83 C4 04 85 DB 0F 84 ? ? ? ? 6A 08 // go to sub_XXX then sub_[offset]
-#define oIssueOrder 0x176590 // 			81 EC ? ? ? ? 56 57 8B F9 C7 // fn // E8 ?? ?? ?? ?? 89 ?? ?? ?? ?? ?? 8B 84 ?? ?? ?? ?? ?? 8B CF F3 0F 7E 00 // sub_[offset]
-#define oPrintChat 0x590040 //				E8 ? ? ? ? 6A 00 68 ? ? ? ? E8 ? ? ? ? 83 C4 04 // sub_[offset]
-#define oSendChat 0x5D48A0 //				A1 ? ? ? ? 56 6A FF // fn
-#define oGetTimerExpiry 0x12E730 // 		E8 ? ? ? ? 51 D9 1C 24 E8 ? ? ? ? 8B // sub_[offset]
-#define oHealthBarPosition 0x577650 //		E8 ?? ?? ?? ?? 8B 4E ?? 8D 54 ?? ?? 52 8B 01 FF ?? ?? 5E 83 ?? ?? C3 // sub_[offset]
-#define oBaseDrawPosition 0x16B860 //		E8 ?? ?? ?? ?? EB ?? 8B 01 8B 40 // sub_[offset]
-#define oIssueOrderCheck 0x1D5310 // 		83 EC 18 53 55 56 8B 74 24 28 8B E9 57 89 // fn
-#define oIssueOrderTrueReturn 0x58245C // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder)
+#define oGetNextObject 0x291F20 //			E8 ? ? ? ? 8B F0 85 F6 75 E4 // sub_[offset]
+#define oGameVersion 0x548380 //			E8 ? ? ? ? 50 68 ? ? ? ? 6A 00 6A 01 6A 02 E8 ? ? ? ? E8 ? ? ? ? // sub_[offset]
+#define oGetFirstObject 0x290CF0 //			E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 53 8B 5C // sub_[offset]
+#define oWorldToScreen 0x9AD3E0 // 			83 EC 10 56 E8 ? ? ? ? 8B 08 // fn // --NOT SURE
+#define oCastSpell 0x50BB00 // 				xref: ERROR: Client Tried to cast a spell from an invalid slot: %d.\n
+#define oDrawCircle 0x505A00 //			 	E8 ? ? ? ? 83 C4 1C 8B 7C 24 28 // sub_[offset]
+#define oGetBasicAttack 0x169CB0 // 	 	53 8B D9 B8 ? ? ? ? 8B 93 // fn
+#define oGetAttackCastDelay 0x2A6350 // 	83 EC 0C 53 8B 5C 24 14 8B CB 56 57 8B 03 FF 90 // fn // E8 ?? ?? ?? ?? D9 ?? ?? ?? ?? ?? 56 E8 // sub_[offset]
+#define oGetAttackDelay 0x2A6450 // 		E8 ? ? ? ? 8B 44 24 1C 83 C4 0C 8B CE // sub_[offset] // this addy is for oGetPing as per chinese tool but nah~
+#define oGetPing 0x339280 // 				E8 ? ? ? ? 8B 4F 2C 85 C9 0F // sub_[offset]
+#define oGetSpellState 0x4FFFA0 // 			E8 ? ? ? ? 8B F8 8B CB 89 // sub_[offset] // this addy us for IsTargetable as per chinese tool but nah~
+#define oIsTargetable 0x1DA330 //			56 8B F1 E8 ? ? ? ? 84 C0 74 2E // fn
+#define oIsAlive 0x1A29E0  // 				56 8B F1 8B 06 8B 80 ? ? ? ? FF D0 84 C0 74 19 // fn
+#define oIsBaron 0x176C90 //				E8 ? ? ? ? 84 C0 74 0A BB // sub_[offset]
+#define oIsTurret 0x1B1D10 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 09 5F // sub_[offset]
+#define oIsInhib 0x1B1920 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 38 // sub_[offset]
+#define oIsHero 0x1B1AA0 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 2B 57 // sub_[offset]
+#define oIsMinion 0x1B1AE0 // 				E8 ? ? ? ? 83 C4 04 84 C0 74 16 8B 0F // sub_[offset]
+#define oIsDragon 0x174EC0 //  				E8 ? ? ? ? 33 DB 84 C0 0F 95 C3 8D 1C 5D ? ? ? ? E9 // sub_[offset]
+#define oIsMissile 0x1B1B00 //		   		E8 ?? ?? ?? ?? 83 C4 04 84 C0 74 60 // sub_[offset]
+#define oIsNexus 0x1B1A20 //				E8 ? ? ? ? 83 C4 04 84 C0 0F 95 C0 C3 CC 8A // sub_[offset]
+#define oIsNotWall 0x8DC990 // 				E8 ? ? ? ? 33 C9 83 C4 0C 84 // sub_[offset]
+#define oIsTroy 0x1B0B70  // 				E8 ? ? ? ? 8B D8 83 C4 04 85 DB 0F 84 ? ? ? ? 6A 08 // go to sub_XXX then sub_[offset] // --BROKEN
+#define oIssueOrder 0x176D40 // 			81 EC ? ? ? ? 56 57 8B F9 C7 // fn // E8 ?? ?? ?? ?? 89 ?? ?? ?? ?? ?? 8B 84 ?? ?? ?? ?? ?? 8B CF F3 0F 7E 00 // sub_[offset]
+#define oPrintChat 0x591250 //				E8 ? ? ? ? 6A 00 68 ? ? ? ? E8 ? ? ? ? 83 C4 04 // sub_[offset]
+#define oSendChat 0x5D46B0 //				A1 ? ? ? ? 56 6A FF // fn
+#define oGetTimerExpiry 0x62E7A0 // 		E8 ? ? ? ? 51 D9 1C 24 E8 ? ? ? ? 8B // sub_[offset]
+#define oHealthBarPosition 0x5793D0 //		E8 ?? ?? ?? ?? 8B 4E ?? 8D 54 ?? ?? 52 8B 01 FF ?? ?? 5E 83 ?? ?? C3 // sub_[offset]
+#define oBaseDrawPosition 0x16C000 //		E8 ?? ?? ?? ?? EB ?? 8B 01 8B 40 // sub_[offset]
+#define oIssueOrderCheck 0x1D62E0 // 		83 EC 18 53 55 56 8B 74 24 28 8B E9 57 89 // fn
+#define oIssueOrderTrueReturn 0x583FDC // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder) -- not sure
 
 //functions - skinChanger
 #define translateString_UNSAFE_DONOTUSE 0xA90BF0 //		E8 ? ? ? ? 8B 0D ? ? ? ? 83 C4 04 8B F0 6A 0B // sub_[offset] // 83 EC 0C 56 8B 74 24 14 56 E8 ? ? ? ? 83 C4 04 89 74 24 04 89 44 24 08 A8 01 // fn

@@ -8,7 +8,7 @@
 #include "LeagueHooks.h"
 #include "Orbwalker.h"
 #include "Globals.h"
-#include <StaticLists.h>
+#include "StaticLists.h"
 
 #include "Misc.h"
 #include "Callbacks.h"

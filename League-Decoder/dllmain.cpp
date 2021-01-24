@@ -1,5 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#include "pch.h"
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+// Windows Header Files
+#include <windows.h>
 #include <cstdint>
 #include <string>
 #include <process.h>
@@ -53,7 +55,7 @@ int IsMemoryDecrypted(PVOID Address)
 
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x67FBC; //RtlDispatchException
+	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x6852C; //RtlDispatchException
 
 	if (RtlDispatchExceptionAddr) {
 		fn_RtlDispatchException = (t_RtlDispatchException)(RtlDispatchExceptionAddr);
@@ -120,36 +122,14 @@ LeagueDecryptData decrypt(const wchar_t* szModule) {
 	return ldd;
 }
 
-#define oGameTime 0x34E6FD4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
-#define oLocalPlayer 0x34EEDE4 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
-#define baseAddr (DWORD)GetModuleHandle(NULL)
-#define me GetLocalObject()
-
-class CObject {};
-
-CObject* GetLocalObject() {
-	auto retaddr = *(DWORD*)(baseAddr + oLocalPlayer);
-	if (retaddr == NULL)
-		return NULL;
-
-	return (CObject*)retaddr;
-}
-
-float GetGameTime() {
-	return *(float*)(baseAddr + oGameTime);
-}
-
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
-	while (GetGameTime() < 1.0f || !me) {
-		Sleep(1);
-	}
 	LeagueDecryptData ldd = decrypt(nullptr);
 	MessageBoxA(0, (
 		"totalFailedDecrypted: " + std::to_string(ldd.totalFailedDecrypted) + "\n" +
 		"totalSuccessDecrypted: " + std::to_string(ldd.totalSuccessDecrypted) + "\n" +
 		"totalSuccess_EXCEPTION_CONTINUE_EXECUTION: " + std::to_string(ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION) + "\n" +
-		"totalSuccess_PAGE_NOACCESS: " + std::to_string(ldd.totalSuccess_PAGE_NOACCESS) + "\n"  +
+		"totalSuccess_PAGE_NOACCESS: " + std::to_string(ldd.totalSuccess_PAGE_NOACCESS) + "\n" +
 		"USE LEAGUE DUMPER NOW! Do not close this MessageBox!"
 		).c_str(), "LeagueNuke", 0);
 

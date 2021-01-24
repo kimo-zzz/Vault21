@@ -2,7 +2,7 @@
 
 extern "C"
 {
-#include <LUA/include/lua.h>
+#include "LUA/include/lua.h"
 #include "LUA/include/lauxlib.h"
 #include "LUA/include/lualib.h"
 #include "LUA/include/luaconf.h"

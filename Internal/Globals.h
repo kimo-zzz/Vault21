@@ -2,7 +2,7 @@
 #include <string>
 
 #include "Vector.h"
-#include <ExampleAppLog.h>
+#include "ExampleAppLog.h"
 
 static std::list<CObject*> heroList = {};
 static std::list<CObject*> minionList = {};

@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <inttypes.h>
-#include <Zydis/Zydis.h>
+#include "include/Zydis/Zydis.h"
 
 
 //extern ExampleAppLog AppLog;

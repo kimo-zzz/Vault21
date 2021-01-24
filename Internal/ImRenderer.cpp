@@ -3,7 +3,7 @@
 #include <d3dx9tex.h>
 #pragma comment (lib, "D3dx9.lib")
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include "stb_image.h"
 
 c_renderer render;
 static std::list<image> image_list;

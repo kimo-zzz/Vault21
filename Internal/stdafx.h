@@ -57,11 +57,10 @@ using namespace Microsoft::WRL;
 //#include "Direct3D12Renderer.h"
 #endif
 
-
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
-#include "imgui_impl_dx11.h"
+#include "../ImGui/imgui.h"
+#include "../ImGui/imgui_impl_win32.h"
+#include "../ImGui/imgui_impl_dx9.h"
+#include "../ImGui/imgui_impl_dx11.h"
 #include "inputhook.h"
 using namespace ImGui;
 

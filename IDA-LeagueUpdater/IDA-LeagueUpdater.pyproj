@@ -2,17 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>25bc8e7f-18cb-4e91-9aa2-3217f2768001</ProjectGuid>
+    <ProjectGuid>8c22c4ac-afd2-46c4-8cf5-59e6e19217de</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>IDA_Py_Tools.py</StartupFile>
+    <StartupFile>IDA_LeagueUpdater.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>IDA-Py-Tools</Name>
-    <RootNamespace>IDA-Py-Tools</RootNamespace>
-    <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <Name>IDA-LeagueUpdater</Name>
+    <RootNamespace>IDA-LeagueUpdater</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IDA_Py_Tools.py" />
+    <Compile Include="IDA_LeagueUpdater.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

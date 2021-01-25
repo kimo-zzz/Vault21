@@ -1,423 +1,495 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{408d384e-bdc0-4a5a-9766-191967fef583}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Zydis">
+      <UniqueIdentifier>{fd376735-00b3-4830-99c9-91a125d9432b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{755762fd-c28b-430e-be13-93b8fee2301e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\BuffEntry">
+      <UniqueIdentifier>{4eb93f28-d423-4dce-9a5d-be641b3bb711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\BuffManager">
+      <UniqueIdentifier>{f38873d5-a67e-4012-99ac-d23fed3f4b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\CallBacks">
+      <UniqueIdentifier>{15be7af4-b07e-4a14-a60f-80999fecb400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Capture">
+      <UniqueIdentifier>{7474d77d-d488-4af5-973a-5d6edcdcdf76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\CObject">
+      <UniqueIdentifier>{64c528b5-c2c1-4605-802f-451560620637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Direct3D9Capture">
+      <UniqueIdentifier>{b055f313-1119-4f48-95bf-1b5c1dd3643d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\LeagueFunctions">
+      <UniqueIdentifier>{5eddfeda-1659-4c37-b918-9cb38943f39c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeavensGate">
+      <UniqueIdentifier>{356b40d4-4cbe-4446-98ee-a10050bc7877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Exception">
+      <UniqueIdentifier>{c056e5ae-6786-4305-b134-17b06c9142a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\TargetSelector">
+      <UniqueIdentifier>{db63b1ef-e725-4e27-9272-79d34c3bc8b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\SkinChanger">
+      <UniqueIdentifier>{556a8703-428d-4540-8bf7-f20020b06387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\DriverController">
+      <UniqueIdentifier>{51010b22-8250-48cf-9fce-48e154f652b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Hooks">
+      <UniqueIdentifier>{ca1aa3fc-9d7a-4315-b7e1-ebbc58059773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Engine">
+      <UniqueIdentifier>{aa88be04-56fd-4270-ac27-3221fa2bf3df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Lua">
+      <UniqueIdentifier>{90a5d91a-d97d-49cc-8544-12295ef9f506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Menu">
+      <UniqueIdentifier>{acad25d7-96db-497e-ad8d-4fa20a3f12a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Misc">
+      <UniqueIdentifier>{fd90402b-7450-4e17-8779-0ddcc10d9426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Spell">
+      <UniqueIdentifier>{e8a875e5-c820-41a5-b036-61c44b238f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Orbwalker">
+      <UniqueIdentifier>{4e86d217-104a-4f52-91a2-d6f9dafb1c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\PIDManager">
+      <UniqueIdentifier>{87c9f732-9975-4dd5-b1de-0564aa483bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Vector">
+      <UniqueIdentifier>{a8b1d8e6-1bff-4454-8cd0-47a54d945b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Syscall">
+      <UniqueIdentifier>{5012f3ae-bd14-4264-bab0-4d746fa0c2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\AppLog">
+      <UniqueIdentifier>{3e777882-b9d7-4a49-84ac-a76eb0090f44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Json">
+      <UniqueIdentifier>{a42edf8d-6576-437c-b5f8-a5729b0debb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\StaticData">
+      <UniqueIdentifier>{765a9263-81ca-4c34-a225-4aeba8a193be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BuffEntry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BuffManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Callbacks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Capture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Direct3D9Capture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DllMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DriverController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DXGICapture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FuncHook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_classes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HeavensGateHook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ImRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="inputhook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LeagueFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LeagueHooks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LUA.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Orbwalker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PIDManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="skin_changer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="skin_database.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TargetSelector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Win32Exception.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\Decoder.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\DecoderData.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\Formatter.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterATT.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterBase.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\MetaInfo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\Mnemonic.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\Register.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\SharedData.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\String.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\Zydis\src\Utils.c">
-      <Filter>Source Files</Filter>
+      <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="include\Zydis\src\Zydis.c">
-      <Filter>Source Files</Filter>
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Utils.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\String.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\SharedData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Register.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Mnemonic.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\MetaInfo.c">
+      <Filter>Zydis</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_impl_dx9.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_impl_dx11.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\ImGui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImRenderer.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Formatter.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterATT.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBase.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\DecoderData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Decoder.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="BuffEntry.cpp">
+      <Filter>Framework\BuffEntry</Filter>
+    </ClCompile>
+    <ClCompile Include="BuffManager.cpp">
+      <Filter>Framework\BuffManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Callbacks.cpp">
+      <Filter>Framework\CallBacks</Filter>
+    </ClCompile>
+    <ClCompile Include="Capture.cpp">
+      <Filter>Framework\Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="CObject.cpp">
+      <Filter>Framework\CObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9Capture.cpp">
+      <Filter>Framework\Direct3D9Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueFunctions.cpp">
+      <Filter>Framework\LeagueFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>Win32Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="HeavensGateHook.cpp">
+      <Filter>HeavensGate</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetSelector.cpp">
+      <Filter>Framework\TargetSelector</Filter>
+    </ClCompile>
+    <ClCompile Include="skin_changer.cpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="DriverController.cpp">
+      <Filter>Framework\DriverController</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncHook.cpp">
+      <Filter>Framework\Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueHooks.cpp">
+      <Filter>Framework\Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="inputhook.cpp">
+      <Filter>Framework\Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Framework\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="LUA.cpp">
+      <Filter>Framework\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Framework\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc.cpp">
+      <Filter>Framework\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="skin_database.cpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="Orbwalker.cpp">
+      <Filter>Framework\Orbwalker</Filter>
+    </ClCompile>
+    <ClCompile Include="PIDManager.cpp">
+      <Filter>Framework\PIDManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DXGICapture.cpp">
+      <Filter>Framework\Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="game_classes.cpp">
+      <Filter>Framework\SkinChanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BuffEntry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BuffManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CallBackIntStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Callbacks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Capture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClassWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CObjectManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CSpellDataInst.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="defs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Direct3D9Capture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="driver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DriverController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXGICapture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="encryption.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ESpellSlot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExampleAppLog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fnv_hash.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FuncHook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HeavensGateHook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hooks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inputhook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="json.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeagueFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeagueHooks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LUA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="makesyscall.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Misc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Offsets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Orbwalker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PIDManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="skin_changer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="skin_database.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpellCastInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpellData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpellInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpellSlot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticLists.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="syscalls.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetSelector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VectorLong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Win32Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ZycoreExportConfig.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\Zydis.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
     <ClInclude Include="ZydisExportConfig.h">
-      <Filter>Header Files</Filter>
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="ImRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Decoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\DecoderTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Formatter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\FormatterBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\MetaInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Mnemonic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Register.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\SharedTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\ShortString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Status.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ZycoreExportConfig.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
     <ClInclude Include="include\Zydis\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Zydis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Internal\DecoderData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Internal\FormatterATT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Internal\FormatterBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Internal\FormatterIntel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Zydis\Internal\SharedData.h">
-      <Filter>Header Files</Filter>
+      <Filter>Zydis</Filter>
     </ClInclude>
     <ClInclude Include="include\Zydis\Internal\String.h">
-      <Filter>Header Files</Filter>
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="include\Zydis\Generated\EnumInstructionCategory.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\Status.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="include\Zydis\Generated\EnumISAExt.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\ShortString.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="include\Zydis\Generated\EnumISASet.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\SharedTypes.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="include\Zydis\Generated\EnumMnemonic.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\Internal\SharedData.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
-    <ClInclude Include="include\Zydis\Generated\EnumRegister.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Zydis\Register.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Mnemonic.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\MetaInfo.h">
+      <Filter>Zydis</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imconfig.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imgui.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imgui_impl_dx9.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imgui_impl_dx11.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imgui_impl_win32.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imgui_internal.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImRenderer.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\ImGui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterIntel.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Formatter.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterATT.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\FormatterBase.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\FormatterBuffer.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Internal\DecoderData.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Decoder.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffEntry.h">
+      <Filter>Framework\BuffEntry</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffManager.h">
+      <Filter>Framework\BuffManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CallBackIntStates.h">
+      <Filter>Framework\CallBacks</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks.h">
+      <Filter>Framework\CallBacks</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>Framework\Capture</Filter>
+    </ClInclude>
+    <ClInclude Include="CObject.h">
+      <Filter>Framework\CObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9Capture.h">
+      <Filter>Framework\Direct3D9Capture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumInstructionCategory.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumISAExt.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumISASet.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumMnemonic.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\Generated\EnumRegister.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueFunctions.h">
+      <Filter>Framework\LeagueFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Zydis\DecoderTypes.h">
+      <Filter>Zydis</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>Win32Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="HeavensGateHook.h">
+      <Filter>HeavensGate</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetSelector.h">
+      <Filter>Framework\TargetSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="skin_changer.hpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="driver.h">
+      <Filter>Framework\DriverController</Filter>
+    </ClInclude>
+    <ClInclude Include="DriverController.h">
+      <Filter>Framework\DriverController</Filter>
+    </ClInclude>
+    <ClInclude Include="CObjectManager.h">
+      <Filter>Framework\CObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncHook.h">
+      <Filter>Framework\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueHooks.h">
+      <Filter>Framework\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="inputhook.h">
+      <Filter>Framework\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Framework\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Framework\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA.h">
+      <Filter>Framework\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Framework\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="skin_database.hpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellCastInfo.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellData.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellInfo.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellSlot.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="Orbwalker.h">
+      <Filter>Framework\Orbwalker</Filter>
+    </ClInclude>
+    <ClInclude Include="PIDManager.h">
+      <Filter>Framework\PIDManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK.h">
+      <Filter>Framework\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="DXGICapture.h">
+      <Filter>Framework\Capture</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorLong.h">
+      <Filter>Framework\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Framework\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpellDataInst.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="ESpellSlot.h">
+      <Filter>Framework\Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="fnv_hash.hpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="makesyscall.h">
+      <Filter>Framework\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="encryption.hpp">
+      <Filter>Framework\SkinChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleAppLog.h">
+      <Filter>Framework\AppLog</Filter>
+    </ClInclude>
+    <ClInclude Include="syscalls.hpp">
+      <Filter>Framework\Syscall</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Framework\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Framework\StaticData</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticLists.h">
+      <Filter>Framework\StaticData</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassWrapper.h">
+      <Filter>Framework\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

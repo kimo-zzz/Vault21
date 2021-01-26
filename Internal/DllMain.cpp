@@ -45,7 +45,7 @@ PVOID hk_AddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER Ha
 extern DWORD WINAPI InitThread(LPVOID module);
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
-	RestoreZwQueryInformationProcess();
+	//RestoreZwQueryInformationProcess();
 	/*HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	DWORD NtQueryInformationProcessAddr = (DWORD)GetProcAddress(ntdll, "NtQueryInformationProcess");
 

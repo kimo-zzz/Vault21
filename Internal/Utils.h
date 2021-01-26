@@ -328,9 +328,25 @@ inline void writeDataToFile(string name, DWORD address) {
 	}
 }
 
+inline uint8_t* find_RtlDispatchExceptionAddress()
+{
+	auto address = find_signature("ntdll.dll", "E8 ? ? ? ? 0A C0");
+
+	if (!address)
+	{
+		return nullptr;
+	}
+
+	address = address + *reinterpret_cast<uint32_t*>(address + 1) + 5;
+
+	return address;
+}
+
 /*
 	define by your name here. each of us have different bytes. this is the simplest way to change out for now.
+	NOT SAFE. (still investigating)
 */
+/*
 #define jiingz
 
 
@@ -424,4 +440,4 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	}
 
 	return ZwQueryInformationProcessAddr;
-}
+}*/

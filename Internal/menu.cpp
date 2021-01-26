@@ -516,6 +516,10 @@ namespace DX11
 					Text("Hidden Module %s", &hiddenBase_debug);
 					Text("Module %s", &base_debug);
 
+					//////////////////////////////////////////////////////////////////////////////////////////
+					// NOT SAFE. (still investigating)
+					//////////////////////////////////////////////////////////////////////////////////////////
+					/*
 					ImGui::Text(("PEB: " + hexify<DWORD>((DWORD)LeagueFunctions::getCurrentProcessEnvironmentBlock())).c_str());
 					if (LeagueFunctions::IsDetected() == 1) {
 						ImGui::Text("PEB+0A00 : You will be banned!!!");
@@ -525,7 +529,7 @@ namespace DX11
 					}
 					else {
 						ImGui::Text("PEB+0A00 : Unknown Status");
-					}
+					}*/
 
 					Separator();
 
@@ -1710,6 +1714,7 @@ DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPa
 
 void SetupGameHooks()
 {
+	LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
 
 	oOnProcessSpell_addr = baseAddr + oOnprocessSpell;
 	oOnCreateObject_addr = baseAddr + OnCreateObject;

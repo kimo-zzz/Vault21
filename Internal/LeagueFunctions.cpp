@@ -417,7 +417,11 @@ void LeagueFunctions::ReplaceCall(DWORD origAddress, DWORD newAddress, DWORD fnA
 	//AppLog.AddLog(("Redirected Call Count: " + to_string(fixedAddressesCount) + "\n").c_str());
 }
 
-PPEB LeagueFunctions::getCurrentProcessEnvironmentBlock()
+//////////////////////////////////////////////////////////////////////////////////////////
+// NOT SAFE. (still investigating)
+//////////////////////////////////////////////////////////////////////////////////////////
+
+/*PPEB LeagueFunctions::getCurrentProcessEnvironmentBlock()
 {
 	return getProcessEnvironmentBlockAddress(GetCurrentProcess());
 }
@@ -461,4 +465,4 @@ int LeagueFunctions::IsDetected() {
 		}
 	}
 	return 2;
-}
+}*/

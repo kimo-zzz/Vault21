@@ -64,6 +64,7 @@ struct LeagueDecryptData
 class LeagueDecrypt
 {
 public:
+	static uint8_t* _RtlDispatchExceptionAddress;
 	static int IsMemoryDecrypted(PVOID Address);
 	static LeagueDecryptData decrypt(const wchar_t* szModule);
 };

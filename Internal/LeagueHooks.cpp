@@ -1378,12 +1378,13 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule) {
 typedef BOOLEAN(__stdcall* t_RtlDispatchException)(PEXCEPTION_RECORD ExceptionRecord, PCONTEXT ContextRecord);
 t_RtlDispatchException fn_RtlDispatchException;
 
+uint8_t* LeagueDecrypt::_RtlDispatchExceptionAddress = nullptr;
+
 int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 {
 	CONTEXT ctx;
 	EXCEPTION_RECORD exr;
 	MEMORY_BASIC_INFORMATION mbi;
-	FLOATING_SAVE_AREA w64;
 	memset(&mbi, 0, sizeof(mbi));
 	VirtualQuery(Address, &mbi, sizeof(mbi));
 	if (mbi.Protect != PAGE_NOACCESS)
@@ -1392,7 +1393,6 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 	}
 	RtlCaptureContext(&ctx);
 	memset(&exr, 0, sizeof(EXCEPTION_RECORD));
-	memset(&w64, 0, sizeof(WOW64_FLOATING_SAVE_AREA));
 
 #ifdef _WIN64
 	ctx.Rip = reinterpret_cast<DWORD64>(Address);// (DWORD)FinishThread;
@@ -1415,9 +1415,10 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 	ei.ContextRecord = &ctx;
 	ei.ExceptionRecord = &exr;
 
-	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+	if (!_RtlDispatchExceptionAddress)
+		return 0;
 
-	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x67FBC; //RtlDispatchException
+	DWORD RtlDispatchExceptionAddr = (DWORD)(_RtlDispatchExceptionAddress);
 
 	if (RtlDispatchExceptionAddr) {
 		fn_RtlDispatchException = (t_RtlDispatchException)(RtlDispatchExceptionAddr);

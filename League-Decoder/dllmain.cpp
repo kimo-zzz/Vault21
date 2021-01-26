@@ -137,8 +137,6 @@ int IsMemoryDecrypted(PVOID Address)
 	ei.ContextRecord = &ctx;
 	ei.ExceptionRecord = &exr;
 
-	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
-
 	if (!_RtlDispatchExceptionAddress)
 		return 0;
 

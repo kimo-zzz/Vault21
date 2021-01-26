@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <string>
 #include <process.h>
+#include <vector>
+
 struct LeagueDecryptData
 {
 	int totalSuccessDecrypted;
@@ -15,6 +17,86 @@ struct LeagueDecryptData
 
 typedef BOOLEAN(__stdcall* t_RtlDispatchException)(PEXCEPTION_RECORD ExceptionRecord, PCONTEXT ContextRecord);
 t_RtlDispatchException fn_RtlDispatchException;
+
+uint8_t* find_signature(LPCSTR szModule, const char* szSignature) {
+	auto module = GetModuleHandleA(szModule);
+	static auto pattern_to_byte = [](const char* pattern) {
+		auto bytes = std::vector<int>{};
+		auto start = const_cast<char*>(pattern);
+		auto end = const_cast<char*>(pattern) + strlen(pattern);
+
+		for (auto current = start; current < end; ++current) {
+			if (*current == '?') {
+				++current;
+				if (*current == '?')
+					++current;
+				bytes.push_back(-1);
+			}
+			else {
+				bytes.push_back(strtoul(current, &current, 16));
+			}
+		}
+		return bytes;
+	};
+
+	auto dosHeader = (PIMAGE_DOS_HEADER)module;
+	auto ntHeaders = (PIMAGE_NT_HEADERS)((uint8_t*)module + dosHeader->e_lfanew);
+	auto textSection = IMAGE_FIRST_SECTION(ntHeaders);
+
+	auto sizeOfImage = textSection->SizeOfRawData;
+	auto patternBytes = pattern_to_byte(szSignature);
+	auto scanBytes = reinterpret_cast<uint8_t*>(module) + textSection->VirtualAddress;
+
+	auto s = patternBytes.size();
+	auto d = patternBytes.data();
+
+	auto mbi = MEMORY_BASIC_INFORMATION{ 0 };
+	uint8_t* next_check_address = 0;
+
+	for (auto i = 0ul; i < sizeOfImage - s; ++i) {
+		bool found = true;
+		for (auto j = 0ul; j < s; ++j) {
+			auto current_address = scanBytes + i + j;
+			if (current_address >= next_check_address) {
+				if (!VirtualQuery(reinterpret_cast<void*>(current_address), &mbi, sizeof(mbi)))
+					break;
+
+				if (mbi.Protect == PAGE_NOACCESS) {
+					i += ((std::uintptr_t(mbi.BaseAddress) + mbi.RegionSize) - (std::uintptr_t(scanBytes) + i));
+					i--;
+					found = false;
+					break;
+				}
+				else {
+					next_check_address = reinterpret_cast<uint8_t*>(mbi.BaseAddress) + mbi.RegionSize;
+				}
+			}
+
+			if (scanBytes[i + j] != d[j] && d[j] != -1) {
+				found = false;
+				break;
+			}
+		}
+		if (found) {
+			return &scanBytes[i];
+		}
+	}
+	return nullptr;
+}
+
+uint8_t* find_RtlDispatchExceptionAddress()
+{
+	auto address = find_signature("ntdll.dll" , "E8 ? ? ? ? 0A C0");
+
+	if (!address)
+	{
+		return nullptr;
+	}
+
+	address = address + *reinterpret_cast<uint32_t*>(address + 1) + 5;
+
+	return address;
+}
 
 int IsMemoryDecrypted(PVOID Address)
 {
@@ -55,7 +137,12 @@ int IsMemoryDecrypted(PVOID Address)
 
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x6852C; //RtlDispatchException
+	uint8_t* _RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+
+	if (!_RtlDispatchExceptionAddress)
+		return 0;
+
+	DWORD RtlDispatchExceptionAddr = (DWORD)(_RtlDispatchExceptionAddress);
 
 	if (RtlDispatchExceptionAddr) {
 		fn_RtlDispatchException = (t_RtlDispatchException)(RtlDispatchExceptionAddr);

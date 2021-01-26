@@ -7,6 +7,8 @@
 #include <process.h>
 #include <vector>
 
+uint8_t* _RtlDispatchExceptionAddress;
+
 struct LeagueDecryptData
 {
 	int totalSuccessDecrypted;
@@ -137,8 +139,6 @@ int IsMemoryDecrypted(PVOID Address)
 
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-	uint8_t* _RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
-
 	if (!_RtlDispatchExceptionAddress)
 		return 0;
 
@@ -211,6 +211,8 @@ LeagueDecryptData decrypt(const wchar_t* szModule) {
 
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
+	_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+
 	LeagueDecryptData ldd = decrypt(nullptr);
 	MessageBoxA(0, (
 		"totalFailedDecrypted: " + std::to_string(ldd.totalFailedDecrypted) + "\n" +

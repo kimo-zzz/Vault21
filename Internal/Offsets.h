@@ -48,6 +48,9 @@
 #define oHealthBarPosition 0x5793d0 //		E8 ?? ?? ?? ?? 8B 4E ?? 8D 54 ?? ?? 52 8B 01 FF ?? ?? 5E 83 ?? ?? C3 // sub_[offset]
 #define oBaseDrawPosition 0x16c000 //		E8 ?? ?? ?? ?? EB ?? 8B 01 8B 40 // sub_[offset]
 #define oIssueOrderCheck 0x1D62E0 // 		83 EC 18 53 55 56 8B 74 24 28 8B E9 57 89 // fn
+
+//returns
+#define oCastSpellTrueReturn 0x52A179 // 	5E 5F B0 01 5B 59 C2 // above it should be: call sub_xxxx (CastSpell)
 #define oIssueOrderTrueReturn 0x583FDC // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder)
 
 //functions - skinChanger

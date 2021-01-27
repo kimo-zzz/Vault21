@@ -68,6 +68,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 		//MessageBoxA(0, "Initiallized.", "SUCCESS", MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 
 	}
+	Sleep(5000);
 
 	ObjManager = (CObjectManager*)(*(DWORD*)(baseAddr + oObjManager)); 
 

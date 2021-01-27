@@ -23,6 +23,9 @@ public:
 
 	static PVOID NewCastSpell;
 	static DWORD NewCastSpellAddr;
+	static DWORD TrueCastSpellReturnAddress;
+	static DWORD CastSpellStartHookGateway;
+	static DWORD CastSpellEndHookGateway;
 	static bool IsDonePatchingCastSpell;
 
 	static DWORD CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig);
@@ -40,6 +43,8 @@ public:
 
 	//CastSpell
 	static void ApplyCastSpellPatches(DWORD Address, size_t size);
+	static void NewCastSpellStartHook();
+	static void NewCastSpellEndHook();
 
 	static PPEB getCurrentProcessEnvironmentBlock();
 	static PPEB getProcessEnvironmentBlockAddress(HANDLE processHandle);

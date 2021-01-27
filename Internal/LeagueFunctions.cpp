@@ -22,6 +22,10 @@ bool LeagueFunctions::IsDonePatchingCastSpell = false;
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
+DWORD LeagueFunctions::TrueCastSpellReturnAddress = (DWORD)(baseAddr + oCastSpellTrueReturn);
+DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
+DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
+
 std::vector<AddressesToCopy> LeagueFunctions::addressToCopyList = {};
 
 DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig) {
@@ -256,12 +260,26 @@ void LeagueFunctions::HookStartAndEndFunction(DWORD fnAddress, size_t size, int 
 
 		while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, (PVOID)(fnAddress + offset), length - offset, &instruction)))
 		{
+			char buffer[256];
+			ZydisFormatterFormatInstruction(&formatter, &instruction, buffer, sizeof(buffer),
+				runtime_address);
+			//AppLog.AddLog(buffer);
+			//AppLog.AddLog("\n");
+
+			std::string mnemonic(buffer);
+			//AppLog.AddLog((hexify<DWORD>(fnAddress + offset) + ": " + mnemonic + "\n").c_str());
+
 			borrowedBytes += (int)instruction.length;
 
 			if (borrowedBytes >= 5) {
 				break;
 			}
+
+			offset += instruction.length;
+			runtime_address += instruction.length;
 		}
+
+		//AppLog.AddLog(("borrowedBytes = " + hexify<int>((int)borrowedBytes) + "\n").c_str());
 
 		// Create the gateway (len + 5 for the overwritten bytes + the jmp)
 		DWORD gateway = (DWORD)VirtualAlloc(0, borrowedBytes + 5, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
@@ -487,25 +505,25 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 }
 
 void testValueIssueOrder(DWORD val, DWORD val1) {
-	//AppLog.AddLog(("-----------\nbackup_returnAddr=" + hexify<DWORD>((DWORD)val) + "\nbackup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n").c_str());
+	//AppLog.AddLog(("-----------\nbackup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\nbackup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n").c_str());
 }
 
-std::vector<DWORD> backup_returnAddrStack;
-DWORD backup_returnAddr;
+std::vector<DWORD> backup_returnAddrStackNewIssueOrder;
+DWORD backup_returnAddrNewIssueOrder;
 DWORD backup_eax_NewIssueOrderStartHook;
 void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
 {
 	__asm {
 		mov backup_eax_NewIssueOrderStartHook, eax
 		mov eax, [esp]
-		mov backup_returnAddr, eax
+		mov backup_returnAddrNewIssueOrder, eax
 		mov eax, TrueIssueOrderReturnAddress
 		mov [esp], eax
 		mov eax, backup_eax_NewIssueOrderStartHook
 	}
 
 	__asm pushad
-	backup_returnAddrStack.push_back(backup_returnAddr);
+	backup_returnAddrStackNewIssueOrder.push_back(backup_returnAddrNewIssueOrder);
 	__asm popad
 
 	__asm {
@@ -516,33 +534,96 @@ void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
 
 DWORD backup_TrueIssueOrderReturnAddress;
 DWORD backup_eax_NewIssueOrderEndHook;
-DWORD backup_returnAddrFromStack;
+DWORD backup_returnAddrFromStackNewIssueOrder;
 void __declspec(naked) LeagueFunctions::NewIssueOrderEndHook()
 {
 	__asm add esp, 0xD0
 
 	__asm pushad
-	backup_returnAddrFromStack = backup_returnAddrStack[backup_returnAddrStack.size()-1];
+	backup_returnAddrFromStackNewIssueOrder = backup_returnAddrStackNewIssueOrder[backup_returnAddrStackNewIssueOrder.size()-1];
 	__asm popad
 
 	__asm pushad
-	backup_returnAddrStack.pop_back();
+	backup_returnAddrStackNewIssueOrder.pop_back();
 	__asm popad
 
 	__asm {
 		mov backup_eax_NewIssueOrderEndHook, eax
 		mov eax, [esp]
 		mov backup_TrueIssueOrderReturnAddress, eax
-		mov eax, backup_returnAddrFromStack
+		mov eax, backup_returnAddrFromStackNewIssueOrder
 		mov [esp], eax
 		mov eax, backup_eax_NewIssueOrderEndHook
 	}
 
 	__asm pushad
-	//testValueIssueOrder(backup_returnAddrFromStack, backup_TrueIssueOrderReturnAddress);
+	//testValueIssueOrder(backup_returnAddrFromStackNewIssueOrder, backup_TrueIssueOrderReturnAddress);
 	__asm popad
 
 	__asm ret 0x18
+}
+
+void testValueCastSpell(DWORD val, DWORD val1) {
+	//AppLog.AddLog(("-----------\nbackup_returnAddrNewCastSpell=" + hexify<DWORD>((DWORD)val) + "\nbackup_TrueCastSpellReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n").c_str());
+}
+
+std::vector<DWORD> backup_returnAddrStackNewCastSpell;
+DWORD backup_returnAddrNewCastSpell;
+DWORD backup_eax_NewCastSpellStartHook;
+void __declspec(naked) LeagueFunctions::NewCastSpellStartHook()
+{
+	__asm {
+		mov backup_eax_NewCastSpellStartHook, eax
+		mov eax, [esp]
+		mov backup_returnAddrNewCastSpell, eax
+		mov eax, TrueCastSpellReturnAddress
+		mov [esp], eax
+		mov eax, backup_eax_NewCastSpellStartHook
+	}
+
+	__asm pushad
+	backup_returnAddrStackNewCastSpell.push_back(backup_returnAddrNewCastSpell);
+	__asm popad
+
+	__asm {
+		push CastSpellStartHookGateway
+		retn
+	}
+}
+
+DWORD backup_TrueCastSpellReturnAddress;
+DWORD backup_eax_NewCastSpellEndHook;
+DWORD backup_returnAddrFromStackNewCastSpell;
+void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
+{
+	__asm {
+		pop     edi
+		pop     esi
+		add esp, 0x30
+	}
+
+	__asm pushad
+	backup_returnAddrFromStackNewCastSpell = backup_returnAddrStackNewCastSpell[backup_returnAddrStackNewCastSpell.size()-1];
+	__asm popad
+
+	__asm pushad
+	backup_returnAddrStackNewCastSpell.pop_back();
+	__asm popad
+
+	__asm {
+		mov backup_eax_NewCastSpellEndHook, eax
+		mov eax, [esp]
+		mov backup_TrueCastSpellReturnAddress, eax
+		mov eax, backup_returnAddrFromStackNewCastSpell
+		mov [esp], eax
+		mov eax, backup_eax_NewCastSpellEndHook
+	}
+
+	__asm pushad
+	//testValueCastSpell(backup_returnAddrFromStackNewCastSpell, backup_TrueCastSpellReturnAddress);
+	__asm popad
+
+	__asm ret 0x14
 }
 
 void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {

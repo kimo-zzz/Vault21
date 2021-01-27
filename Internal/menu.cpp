@@ -1706,19 +1706,22 @@ DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPa
 
 void SetupGameHooks()
 {
-	while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
-		LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
-	}
-
 	oOnProcessSpell_addr = baseAddr + oOnprocessSpell;
 	oOnCreateObject_addr = baseAddr + OnCreateObject;
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
 	oOnNewPath_addr = baseAddr + oOnNewPath;
 
+	while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
+		LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+	}
+
+	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnProcessSpell_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnDeleteObject_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnNewPath_addr);
+	Sleep(1000);
 	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
 	Process::RemoveAllHandlers();
 	DWORD leoAddr = LeagueHooks::init();
@@ -1728,11 +1731,13 @@ void SetupGameHooks()
 		//AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
 		i++;
 	}
+	
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
+	Sleep(1000);
 	std::vector<BYTE> IssueOrderCheckRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1757,7 +1762,6 @@ void SetupGameHooks()
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 	size_t sizeIssueOrder = 0xFFF;
 	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFFF;
-
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
@@ -1771,12 +1775,13 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
-
+	
 	//////////////////////////////////////////
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
 	DWORD CastSpellAddr = baseAddr + oCastSpell;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
+	Sleep(1000);
 	std::vector<BYTE> CastSpellRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1794,7 +1799,7 @@ void SetupGameHooks()
 	DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
-	LeagueFunctions::ApplyCastSpellPatches(NewCastSpell, sizeCastSpell);
+	LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 5, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
 	LeagueFunctions::NewCastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell;
 	LeagueFunctions::IsDonePatchingCastSpell = true;
 	AppLog.AddLog("CastSpell is now patched\n");

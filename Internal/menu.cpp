@@ -362,7 +362,7 @@ namespace DX11
 							*out_text = idx == 0 ? "Don't change" : vector.at(idx - 1).c_str();
 							return true;
 						};
-
+						
 						auto player = me;
 						if (player)
 						{
@@ -390,7 +390,7 @@ namespace DX11
 							Separator();
 							Spacing();
 						}
-
+						
 						TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Global skins settings:");
 						Separator();
 						if (Combo("Current minion skin", &config::current_combo_minion_index, vector_getter_default,
@@ -467,7 +467,7 @@ namespace DX11
 										values[config_entry.first->second - 1].skin_id);
 								}
 						}
-
+						
 						EndTabItem();
 					}
 				}
@@ -516,10 +516,6 @@ namespace DX11
 					Text("Hidden Module %s", &hiddenBase_debug);
 					Text("Module %s", &base_debug);
 
-					//////////////////////////////////////////////////////////////////////////////////////////
-					// NOT SAFE. (still investigating)
-					//////////////////////////////////////////////////////////////////////////////////////////
-					/*
 					ImGui::Text(("PEB: " + hexify<DWORD>((DWORD)LeagueFunctions::getCurrentProcessEnvironmentBlock())).c_str());
 					if (LeagueFunctions::IsDetected() == 1) {
 						ImGui::Text("PEB+0A00 : You will be banned!!!");
@@ -529,7 +525,7 @@ namespace DX11
 					}
 					else {
 						ImGui::Text("PEB+0A00 : Unknown Status");
-					}*/
+					}
 
 					Separator();
 
@@ -582,7 +578,6 @@ namespace DX11
 			End();
 		}
 
-
 		if (isMainThreadAllow)
 		{
 			if (Engine::IsChatBoxOpen())
@@ -607,10 +602,9 @@ namespace DX11
 			auto me_pos = me->GetPos();
 			auto me_IsOnScreen = me->IsOnScreen();
 
-
+			
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
-
 			/*
 if (lua_init)
 {
@@ -621,12 +615,12 @@ if (lua_init)
 }
 */
 //LUA::ReloadScripts();
-
+			
 
 			auto me_IsAlive = me->IsAlive();
 
 			auto gameTime = Engine::GetGameTime();
-
+			
 			auto me_d_spellSlot = me->GetSpellSlotByID(4);
 			auto me_f_spellSlot = me->GetSpellSlotByID(5);
 
@@ -653,7 +647,6 @@ if (lua_init)
 
 			f_spellCD_debug = std::to_string(me_f_spellSlot->GetRemainingCD(gameTime));
 			f_spellIsDone_debug = (me_f_spellSlot->IsDoneCD(gameTime) ? "True" : "False");
-
 
 			if (me_d_spellName_str.find("smite") != std::string::npos)
 			{
@@ -716,7 +709,7 @@ if (lua_init)
 				f_spellCDAbs_debug = std::to_string(me_f_spellSlot->GetAbsoluteCoolDown(gameTime));
 				f_spellIsDoneAbs_debug = (me_f_spellSlot->IsDoneAbsoluteCD(gameTime) ? "True" : "False");
 			}
-
+			
 			if (g_draw_lp_range)
 			{
 				if (me && me->IsAlive())
@@ -732,7 +725,7 @@ if (lua_init)
 					}
 				}
 			}
-
+			
 			std::vector<int> Deletable;
 
 			map<int, struct ActiveSpellInfo>::iterator it;
@@ -884,7 +877,6 @@ if (lua_init)
 
 			while (obj)
 			{
-
 				//objCount++;
 
 				if (obj == nullptr)
@@ -1714,7 +1706,9 @@ DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnNewPa
 
 void SetupGameHooks()
 {
-	LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+	while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
+		LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+	}
 
 	oOnProcessSpell_addr = baseAddr + oOnprocessSpell;
 	oOnCreateObject_addr = baseAddr + OnCreateObject;
@@ -1738,6 +1732,7 @@ void SetupGameHooks()
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
 	std::vector<BYTE> IssueOrderCheckRsByte = {
 		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
@@ -1759,24 +1754,14 @@ void SetupGameHooks()
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
-	std::vector<BYTE> IssueOrderRsByte = {
-		0xCC,0xCC,0xCC,0xCC,0xCC
-	};
-	ReturnSig IssueOrderRs;
-	IssueOrderRs.returnCount = 1;
-	IssueOrderRs.returnSig = IssueOrderRsByte;
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
+	size_t sizeIssueOrder = 0xFFF;
+	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFFF;
 
-	size_t sizeIssueOrder;
-	DWORD EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
-	while (!sizeIssueOrder) {
-		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
-		Sleep(1000);
-		EndIssueOrderAddr = LeagueFunctions::CalcFunctionSize(IssueOrderAddr, sizeIssueOrder, IssueOrderRs);
-	}
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::ApplyIssueOrderPatches(NewIssueOrder, sizeIssueOrder);
+	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6,(DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
 	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
@@ -1786,12 +1771,14 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
+
 	//////////////////////////////////////////
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
 	DWORD CastSpellAddr = baseAddr + oCastSpell;
+	LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 	std::vector<BYTE> CastSpellRsByte = {
-		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
+		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
 	};
 	ReturnSig CastSpellRs;
 	CastSpellRs.returnCount = 1;

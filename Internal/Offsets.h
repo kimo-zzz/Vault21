@@ -11,9 +11,9 @@
 #define oGameInfo 0x289c610 // 				A1 ? ? ? ? 83 78 08 02 0F 94 C0 // dword_[offset]
 #define oHudInstance 0x1c501d0 //			8B 0D ? ? ? ? 6A 00 8B 49 34 E8 ? ? ? ? B0 // dword_[offset]
 #define oRenderer 0x35116ec // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
-#define oUnderMouseObject 0x1bf0160 // 		8B 0D ? ? ? ? 89 0D // dword_[offset] // --BROKEN
+#define oUnderMouseObject 0x1bf0160 // 		8B 0D ? ? ? ? 89 0D // dword_[offset]
 #define oRenderer 0x35116ec // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
-#define oLocalPlayer 0x34e4cd4 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
+#define oLocalPlayer 0x34EC5E0 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
 #define oGameTime 0x34e4cd4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
 #define oMenuGUI 0x34ec5f0 // 				8B 0D ? ? ? ? 6A 00 E8 ? ? ? ? C7 // dword_[offset]
 
@@ -21,7 +21,7 @@
 #define oGetNextObject 0x291f20 //			E8 ? ? ? ? 8B F0 85 F6 75 E4 // sub_[offset]
 #define oGameVersion 0x548380 //			E8 ? ? ? ? 50 68 ? ? ? ? 6A 00 6A 01 6A 02 E8 ? ? ? ? E8 ? ? ? ? // sub_[offset]
 #define oGetFirstObject 0x290cf0 //			E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 53 8B 5C // sub_[offset]
-#define oWorldToScreen 0x95f620 // 			83 EC 10 56 E8 ? ? ? ? 8B 08 // fn // --NOT SURE
+#define oWorldToScreen 0x95f620 // 			83 EC 10 56 E8 ? ? ? ? 8B 08 // fn 
 #define oCastSpell 0x50bf30 // 				xref: ERROR: Client Tried to cast a spell from an invalid slot: %d.\n
 #define oDrawCircle 0x505a00 //			 	E8 ? ? ? ? 83 C4 1C 8B 7C 24 28 // sub_[offset]
 #define oGetBasicAttack 0x169cb0 // 	 	53 8B D9 B8 ? ? ? ? 8B 93 // fn
@@ -48,7 +48,7 @@
 #define oHealthBarPosition 0x5793d0 //		E8 ?? ?? ?? ?? 8B 4E ?? 8D 54 ?? ?? 52 8B 01 FF ?? ?? 5E 83 ?? ?? C3 // sub_[offset]
 #define oBaseDrawPosition 0x16c000 //		E8 ?? ?? ?? ?? EB ?? 8B 01 8B 40 // sub_[offset]
 #define oIssueOrderCheck 0x1D62E0 // 		83 EC 18 53 55 56 8B 74 24 28 8B E9 57 89 // fn
-#define oIssueOrderTrueReturn 0xC0583FDC // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder) -- not sure
+#define oIssueOrderTrueReturn 0x583FDC // 	8B 44 24 20 C7 05 // above it should be: call sub_xxxx (IssueOrder)
 
 //functions - skinChanger
 #define translateString_UNSAFE_DONOTUSE 0xa8f600 //		E8 ? ? ? ? 8B 0D ? ? ? ? 83 C4 04 8B F0 6A 0B // sub_[offset] // 83 EC 0C 56 8B 74 24 14 56 E8 ? ? ? ? 83 C4 04 89 74 24 04 89 44 24 08 A8 01 // fn
@@ -61,7 +61,7 @@
 #define IsLaneMinion 0x37a0 //		8A 87 ? ? ? ? 88 4C 24 0B // edi+[offset]h - 1
 
 // ai_base  - skinChanger
-#define CharacterDataStack 0x2ed4 //		E8 ? ? ? ? 8D 4C 24 10 E8 ? ? ? ? 8B 44 24 64 // go to fn xref to operand, go to 1 result, lea ecx, [esi+[offset]h]
+#define CharacterDataStack 0x2F58 //		83 C0 C0 8D // go to fn xref to operand, go to 1 result, lea ecx, [esi+[offset]h]
 #define SkinId 0xebc //		E8 ? ? ? ? 83 C4 0C 80 BF // scroll down, instruction: cmp byte ptr [xxx+[offset]h], 0
 
 //global - skinChanger
@@ -103,12 +103,12 @@
 #define oObjBonusMagicRes 0x1284 // ? // not using
 #define oObjBaseAtk 0x1270 // 11.1 jingz // not using
 #define oObjBonusAtk 0x11F0 // 11.1 jingz // not using
-#define oObjMoveSpeed 0x1290 // 11.1 jingz // not using
+#define oObjMoveSpeed 0x12B0 // 11.1 jingz // not using
 #define oObjAtkRange 0x12B8 // 11.1 jingz
 #define oObjBuffMgr 0x2160 // 11.1 quakehero123
 #define oObjSpellBook 0x2708 // 11.1 jingz (0x2B80 - 0x478)
 #define oObjChampionName 0x312c // 11.1 jingz
-#define oObjLevel 0x36b4 // 11.1 jingz // not using
+#define oObjLevel 0x36BC // 11.1 jingz // not using
 #define oObjIsOnScreen 0x1a8 // 11.1 me
 #define oObjSourceIndex 0x290 // 11.1 quakehero123
 #define oObjMovementSpeed 0x1290 // 11.1 jingz // not using
@@ -162,7 +162,7 @@
 #define oSpellSlotTime 0x28 //11.1
 #define oSpellSlotCD 0x18 // not using
 #define oSpellSlotDamage 0x94 //11.1
-#define oSpellSlotSpellInfo 0x134 //11.1
+#define oSpellSlotSpellInfo 0x13C //11.1
 #define oSpellSlotRemainingCD 0x28 //11.1
 
 //oSpellInfoSpellData

@@ -128,7 +128,7 @@ inline std::string getHumanSpellByName(std::string name) {
 	return ret;
 }
 
-inline std::string getSpellImgByName(std::string name, bool IsDoneCD) {
+/*inline std::string getSpellImgByName(std::string name, bool IsDoneCD) {
 	char* appdata = getenv("APPDATA");
 	std::string appdataPath(appdata);
 	std::string ret = "";
@@ -162,7 +162,42 @@ inline std::string getSpellImgByName(std::string name, bool IsDoneCD) {
 
 	return ret;
 	//return "C:\\Users\\dev\\Downloads\\cute.png";
+}*/
+
+inline std::string getSpellImgByName(std::string name, bool IsDoneCD) {
+	std::string ret = "";
+	std::string _isCD = ((!IsDoneCD) ? "_cd" : "");
+	if (name.find("boost") != std::string::npos)
+		ret = "images\\cleanse" + _isCD + ".png";
+
+	if (name.find("exhaust") != std::string::npos)
+		ret = "images\\exhaust" + _isCD + ".png";
+
+	if (name.find("flash") != std::string::npos)
+		ret = "images\\flash" + _isCD + ".png";
+
+	if (name.find("haste") != std::string::npos)
+		ret = "images\\ghost" + _isCD + ".png";
+
+	if (name.find("heal") != std::string::npos)
+		ret = "images\\heal" + _isCD + ".png";
+
+	if (name.find("smite") != std::string::npos)
+		ret = "images\\smite" + _isCD + ".png";
+
+	if (name.find("teleport") != std::string::npos)
+		ret = "images\\teleport" + _isCD + ".png";
+
+	if (name.find("dot") != std::string::npos)
+		ret = "images\\ignite" + _isCD + ".png";
+
+	if (name.find("barrier") != std::string::npos)
+		ret = "images\\barrier" + _isCD + ".png";
+
+	return ret;
+	//return "C:\\Users\\dev\\Downloads\\cute.png";
 }
+
 inline uint8_t* find_signature(LPCSTR szModule, const char* szSignature) {
 	auto module = GetModuleHandleA(szModule);
 	static auto pattern_to_byte = [](const char* pattern) {
@@ -336,19 +371,10 @@ inline uint8_t* find_RtlDispatchExceptionAddress()
 	{
 		return nullptr;
 	}
-
 	address = address + *reinterpret_cast<uint32_t*>(address + 1) + 5;
 
 	return address;
 }
-
-/*
-	define by your name here. each of us have different bytes. this is the simplest way to change out for now.
-	NOT SAFE. (still investigating)
-*/
-/*
-#define jiingz
-
 
 inline DWORD RestoreZwQueryInformationProcess() {
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
@@ -357,81 +383,9 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	DWORD ZwQueryInformationProcessAddr = reinterpret_cast<DWORD>(
 		GetProcAddress(ntdll, "ZwQueryInformationProcess"));
 
-#if defined(pakeke80)
 	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xF5,
-		0x76, 0xBA,
-		0x70, 0x71,
-		0xFD,
-		0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-
+		0xB8, 0x19, 0x00, 0x00, 0x00
 	};
-#endif
-#if defined(dencelle)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xE8, 0x76, 0xBA, 0x70, 0x71,
-		0xF0, 0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
-#if defined(jiingz)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xF5,
-		0x76, 0xBA,
-		0x70, 0x71,
-		0xFD,
-		0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
-#if defined(earl)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xE8, 0x76, 0xBA, 0x70, 0x71,
-		0xF0, 0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
 
 	int i = 0;
 	for (BYTE _byte : ZwQIP) {
@@ -440,4 +394,47 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	}
 
 	return ZwQueryInformationProcessAddr;
-}*/
+}
+
+inline bool Hook(char* src, char* dst, int len)
+{
+	if (len < 5) return false;
+
+	memset(src, 0x90, len);
+
+	uintptr_t relativeAddress = (uintptr_t)(dst - src - 5);
+
+	*src = (char)0xE9;
+	*(uintptr_t*)(src + 1) = (uintptr_t)relativeAddress;
+
+	return true;
+}
+
+template <typename T_STR, typename T_CHAR>
+T_STR remove_leading(T_STR const& str, T_CHAR c)
+{
+	auto end = str.end();
+
+	for (auto i = str.begin(); i != end; ++i) {
+		if (*i != c) {
+			return T_STR(i, end);
+		}
+	}
+
+	// All characters were leading or the string is empty.
+	return T_STR();
+}
+
+inline string removeZero(string str, char toRemove)
+{
+	// Count trailing zeros 
+	int i = 0;
+	while (str[i] == toRemove)
+		i++;
+
+	// The erase function removes i characters 
+	// from given index (0 here) 
+	str.erase(0, i);
+
+	return str;
+}

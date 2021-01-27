@@ -19,6 +19,9 @@ DWORD LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD)(baseAddr + oIssueOr
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
+DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
+DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
+
 std::vector<AddressesToCopy> LeagueFunctions::addressToCopyList = {};
 
 DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnSig retSig) {
@@ -224,6 +227,160 @@ void LeagueFunctions::FixRellocation(DWORD OldFnAddress, DWORD OldFnAddressEnd, 
 	//AppLog.AddLog(("Relocated Address Count: " + to_string(fixedAddressesCount) + "\n").c_str());
 }
 
+void LeagueFunctions::HookStartAndEndFunction(DWORD fnAddress, size_t size, int paramCount, DWORD StartHook, DWORD EndHook, DWORD& StartHookGateway, DWORD& EndHookGateway)
+{
+	/////////////////////////////////////////////
+	// HOOK the Start of function
+	/////////////////////////////////////////////
+	{
+		//AppLog.AddLog("HOOK the Start of function\n");
+		// Initialize decoder context
+		ZydisDecoder decoder;
+		ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
+
+		// Initialize formatter. Only required when you actually plan to do instruction
+		// formatting ("disassembling"), like we do here
+		ZydisFormatter formatter;
+		ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+
+		// Loop over the instructions in our buffer.
+		// The runtime-address (instruction pointer) is chosen arbitrary here in order to better
+		// visualize relative addressing
+		ZyanU32 runtime_address = fnAddress;
+		ZyanUSize offset = 0;
+		const ZyanUSize length = size;
+		ZydisDecodedInstruction instruction;
+		int fixedAddressesCount = 0;
+
+		int borrowedBytes = 0;
+
+		while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, (PVOID)(fnAddress + offset), length - offset, &instruction)))
+		{
+			borrowedBytes += (int)instruction.length;
+
+			if (borrowedBytes >= 5) {
+				break;
+			}
+		}
+
+		// Create the gateway (len + 5 for the overwritten bytes + the jmp)
+		DWORD gateway = (DWORD)VirtualAlloc(0, borrowedBytes + 5, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+		// Put the bytes that will be overwritten in the gateway
+		memcpy((PVOID)gateway, (PVOID)(fnAddress), borrowedBytes);
+
+		// Get the gateway to destination addy
+		uintptr_t gateJmpAddy = (uintptr_t)((fnAddress) - gateway - 5);
+
+		// Add the jmp opcode to the end of the gateway
+		*(char*)(gateway + borrowedBytes) = (char)0xE9;
+
+		// Add the address to the jmp
+		*(uintptr_t*)(gateway + borrowedBytes + 1) = gateJmpAddy;
+
+		//AppLog.AddLog(("gateway = " + hexify<DWORD>((DWORD)gateway) + "\n").c_str());
+
+		if (Hook((char*)fnAddress, (char*)StartHook, borrowedBytes))
+		{
+			StartHookGateway = (DWORD)gateway;
+		}
+	}
+	/////////////////////////////////////////////
+	// End HOOK the Start of function
+	/////////////////////////////////////////////
+
+	/////////////////////////////////////////////
+	// HOOK the End(s) of function
+	/////////////////////////////////////////////
+	{
+		//AppLog.AddLog("HOOK the End(s) of function\n");
+		// Initialize decoder context
+		ZydisDecoder decoder;
+		ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
+
+		// Initialize formatter. Only required when you actually plan to do instruction
+		// formatting ("disassembling"), like we do here
+		ZydisFormatter formatter;
+		ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+
+		// Loop over the instructions in our buffer.
+		// The runtime-address (instruction pointer) is chosen arbitrary here in order to better
+		// visualize relative addressing
+		ZyanU32 runtime_address = fnAddress;
+		ZyanUSize offset = 0;
+		const ZyanUSize length = size;
+		ZydisDecodedInstruction instruction;
+		int fixedAddressesCount = 0;
+
+		DWORD last_runtime_address[4] = {0,0,0,0};
+
+		string mnemonicToFind = "ret";
+		if (paramCount > 0) {
+			mnemonicToFind = hexify<DWORD>((DWORD)(paramCount*4));
+			mnemonicToFind = removeZero(mnemonicToFind, '0');
+			mnemonicToFind = removeZero(mnemonicToFind, 'x');
+			mnemonicToFind = removeZero(mnemonicToFind, '0');
+			mnemonicToFind = "ret 0x" + mnemonicToFind;
+		}
+		//AppLog.AddLog(("mnemonicToFind: " + mnemonicToFind + "\n").c_str());
+
+		while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, (PVOID)(fnAddress + offset), length - offset, &instruction)))
+		{
+			// Print current instruction pointer.
+			//AppLog.AddLog("%08" PRIX32 " ", runtime_address);
+
+			// Format & print the binary instruction structure to human readable format
+			char buffer[256];
+			ZydisFormatterFormatInstruction(&formatter, &instruction, buffer, sizeof(buffer),
+				runtime_address);
+			//AppLog.AddLog(buffer);
+			//AppLog.AddLog("\n");
+
+			std::string mnemonic(buffer);
+
+			//AppLog.AddLog((hexify<DWORD>(fnAddress + offset)+": "+mnemonic + "\n").c_str());
+			//////////////////////////////////////////////////////////////////////////////////////////
+			// FIND POSSIBLE ADDRESSES BEFORE THE RETURN THAT CAN BE JMP PATCHED
+			//////////////////////////////////////////////////////////////////////////////////////////
+			
+			if (mnemonic.find(mnemonicToFind) != std::string::npos) {
+				//AppLog.AddLog("\tfound\n");
+				int addressToPlaceJmpIndex = 0;
+				for (int i = 3; i >= 0; i--) {
+					DWORD sizeFromLastToCurr = (DWORD)(fnAddress + (size_t)offset) - last_runtime_address[i];
+					if (sizeFromLastToCurr >= 0x5) {
+						addressToPlaceJmpIndex = i;
+						break;
+					}
+				}
+				DWORD compatibleAddr = last_runtime_address[addressToPlaceJmpIndex];
+				DWORD sizeFromLastToCurr = DWORD((fnAddress + (size_t)offset) - compatibleAddr);
+				//AppLog.AddLog(("\tcompatible lastAddress:" + hexify<DWORD>(compatibleAddr) + "\n").c_str());
+				//AppLog.AddLog(("\tsize from last to curr:" + hexify<DWORD>(sizeFromLastToCurr) + "\n").c_str());
+
+				
+				if (Hook((char*)compatibleAddr, (char*)EndHook, sizeFromLastToCurr))
+				{
+					//AppLog.AddLog(("\tplaced jmp on:" + hexify<DWORD>(compatibleAddr) + "\n").c_str());
+				}
+
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////
+			// END FIND POSSIBLE ADDRESSES BEFORE THE RETURN THAT CAN BE JMP PATCHED
+			//////////////////////////////////////////////////////////////////////////////////////////
+			last_runtime_address[0] = last_runtime_address[1];
+			last_runtime_address[1] = last_runtime_address[2];
+			last_runtime_address[2] = last_runtime_address[3];
+			last_runtime_address[3] = (DWORD)runtime_address;
+			offset += instruction.length;
+			runtime_address += instruction.length;
+		}
+	}
+	/////////////////////////////////////////////
+	// End HOOK the End(s) of function
+	/////////////////////////////////////////////
+}
+
 void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
 	///////////////////////////////////////////////////////////////////////////////
 	// PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
@@ -308,7 +465,7 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 	// DO NOT SET PEB FLAGS!
 	///////////////////////////////////////////////////////////////////////////////
 
-	DWORD toBePatchStart = Address + 0x37;
+	DWORD toBePatchStart = Address + 0x43;
 	DWORD toBePatchEnd = Address + 0x7C + 1;
 
 	//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
@@ -327,6 +484,65 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 	///////////////////////////////////////////////////////////////////////////////
 
 	//AppLog.AddLog("Done Patching\n");
+}
+
+void testValueIssueOrder(DWORD val, DWORD val1) {
+	//AppLog.AddLog(("-----------\nbackup_returnAddr=" + hexify<DWORD>((DWORD)val) + "\nbackup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n").c_str());
+}
+
+std::vector<DWORD> backup_returnAddrStack;
+DWORD backup_returnAddr;
+DWORD backup_eax_NewIssueOrderStartHook;
+void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
+{
+	__asm {
+		mov backup_eax_NewIssueOrderStartHook, eax
+		mov eax, [esp]
+		mov backup_returnAddr, eax
+		mov eax, TrueIssueOrderReturnAddress
+		mov [esp], eax
+		mov eax, backup_eax_NewIssueOrderStartHook
+	}
+
+	__asm pushad
+	backup_returnAddrStack.push_back(backup_returnAddr);
+	__asm popad
+
+	__asm {
+		push IssueOrderStartHookGateway
+		retn
+	}
+}
+
+DWORD backup_TrueIssueOrderReturnAddress;
+DWORD backup_eax_NewIssueOrderEndHook;
+DWORD backup_returnAddrFromStack;
+void __declspec(naked) LeagueFunctions::NewIssueOrderEndHook()
+{
+	__asm add esp, 0xD0
+
+	__asm pushad
+	backup_returnAddrFromStack = backup_returnAddrStack[backup_returnAddrStack.size()-1];
+	__asm popad
+
+	__asm pushad
+	backup_returnAddrStack.pop_back();
+	__asm popad
+
+	__asm {
+		mov backup_eax_NewIssueOrderEndHook, eax
+		mov eax, [esp]
+		mov backup_TrueIssueOrderReturnAddress, eax
+		mov eax, backup_returnAddrFromStack
+		mov [esp], eax
+		mov eax, backup_eax_NewIssueOrderEndHook
+	}
+
+	__asm pushad
+	//testValueIssueOrder(backup_returnAddrFromStack, backup_TrueIssueOrderReturnAddress);
+	__asm popad
+
+	__asm ret 0x18
 }
 
 void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {
@@ -417,11 +633,7 @@ void LeagueFunctions::ReplaceCall(DWORD origAddress, DWORD newAddress, DWORD fnA
 	//AppLog.AddLog(("Redirected Call Count: " + to_string(fixedAddressesCount) + "\n").c_str());
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-// NOT SAFE. (still investigating)
-//////////////////////////////////////////////////////////////////////////////////////////
-
-/*PPEB LeagueFunctions::getCurrentProcessEnvironmentBlock()
+PPEB LeagueFunctions::getCurrentProcessEnvironmentBlock()
 {
 	return getProcessEnvironmentBlockAddress(GetCurrentProcess());
 }
@@ -465,4 +677,4 @@ int LeagueFunctions::IsDetected() {
 		}
 	}
 	return 2;
-}*/
+}

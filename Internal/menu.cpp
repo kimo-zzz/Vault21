@@ -719,9 +719,9 @@ if (lua_init)
 
 					if (me_IsAlive)
 					{
-						auto color = createRGB(0, 255, 0); // green
-						Engine::DrawCircle(&me_pos, me_attackRange + me_boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-						//render.draw_circle(me_pos, me_attackRange + me_boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+						auto color = ImColor(0.0f, 1.0f, 0.0f); // green
+						//Engine::DrawCircle(&me_pos, me_attackRange + me_boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+						render.draw_circle(me_pos, me_attackRange + me_boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 					}
 				}
 			}
@@ -940,19 +940,19 @@ if (lua_init)
 				if (g_draw_wards)
 				{
 					//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
-					auto color = createRGB(204, 106, 255); // violet
+					auto color = ImColor(204/255, 106/255, 255/255); // violet
 					if (Name_str.find("perks_ghostporo_idle") != std::string::npos)
 					{
 						// ghost poro
-						Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
-						//render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
+						//Engine::DrawCircle(&Pos, 450.0f, &color, 0, 0.0f, 0, 0.5f);
+						render.draw_circle(Pos, 450.0f, color, c_renderer::circle_3d, 50, 0.5f);
 					}
 
 					if (Name_str.find("perks_corruptedward_idle") != std::string::npos)
 					{
 						// zombieward
-						Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
-						//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+						//Engine::DrawCircle(&Pos, 900.0f, &color, 0, 0.0f, 0, 0.5f);
+						render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
 					}
 					//}
 				}
@@ -1078,9 +1078,9 @@ if (lua_init)
 
 								auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
 
-								auto color = createRGB(220, 20, 60); // crimson
-								Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
-								render.draw_circle(Pos, spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
+								auto color = ImColor(220/255, 20/255, 60/255); // crimson
+								//Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
+								render.draw_circle(obj->GetPos(), spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
 							}
 						}
 					}
@@ -1102,9 +1102,9 @@ if (lua_init)
 								if (obj->IsEnemyTo(me))
 								{
 									auto boundingRadius = obj->GetBoundingRadius();
-									auto color = createRGB(220, 20, 60); // crimson
-									Engine::DrawCircle(&obj->GetPos(), 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
+									auto color = ImColor(220/255, 20/255, 60/255); // crimson
+									//Engine::DrawCircle(&obj->GetPos(), 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(obj->GetPos(), 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
 							}
 						}
@@ -1153,12 +1153,13 @@ if (lua_init)
 								Vector w2s;
 								Functions.WorldToScreen(&obj->GetPos(), &w2s);
 
-								auto color = createRGB(220, 20, 60); // crimson	
+								auto color = ImColor(220/255, 20/255, 60/255); // crimson	
 								if (WardList.find(Name_str) != WardList.end())
 								{
-									Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
-									Engine::DrawCircle(&Pos, WardList.at(Name_str), &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, 900.0f, color, c_renderer::circle_3d, 50, 0.5f);
+									//Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(Pos, obj->GetBoundingRadius(), color, c_renderer::circle_3d, 50, 0.5f);
+									//Engine::DrawCircle(&Pos, WardList.at(Name_str), &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(Pos,WardList.at(Name_str), color, c_renderer::circle_3d, 50, 0.5f);
 									render.draw_text(w2s.X, w2s.Y, obj->GetName(), false, ImColor(255, 255, 255, 255));
 								}
 
@@ -1472,9 +1473,9 @@ if (lua_init)
 							{
 								if (IsOnScreen && obj->IsAlive())
 								{
-									auto color = createRGB(124, 252, 0); // lawngreen
-									Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+									auto color = ImColor(124/255, 252/255, 0/255); // lawngreen
+									//Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(Pos, AttackRange + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
 							}
 						}
@@ -1484,9 +1485,9 @@ if (lua_init)
 							{
 								if (IsOnScreen && obj->IsAlive())
 								{
-									auto color = createRGB(220, 20, 60); // crimson
-									Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
-									//render.draw_circle(Pos, AttackRange, color, c_renderer::circle_3d, 50, 0.5f);
+									auto color = ImColor(220/255, 20/255, 60/255); // crimson
+									//Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
+									render.draw_circle(Pos, AttackRange + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
 							}
 

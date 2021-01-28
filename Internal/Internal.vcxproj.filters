@@ -491,5 +491,11 @@
     <ClInclude Include="ClassWrapper.h">
       <Filter>Framework\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="UnitComponentInfo.h">
+      <Filter>Framework\CObject</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitComponentInfoProperties.h">
+      <Filter>Framework\CObject</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

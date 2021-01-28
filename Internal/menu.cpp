@@ -1531,6 +1531,8 @@ if (lua_init)
 								}
 							}
 
+							//Menu::Log(std::to_string(Engine::GetLocalObject()->GetTotalAtkSpeed()).c_str());
+							
 							if (g_spellTimer_message != 0)
 							{
 								if ((j_key_flag == 1 && is_j_key_ready) || (x_key_flag == 1 && is_x_key_ready))

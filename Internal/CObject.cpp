@@ -2,11 +2,11 @@
 #include "Hooks.h"
 
 bool CObject::IsAlive() {
-	return Functions.IsAlive(this) && this->GetHealth() > 0.0f;
+	return *(int*)((DWORD)this + oObjAlive) % 2 == 0 && this->GetHealth() > 0.0f;
 }
 
 bool CObject::IsMinion() {
-	return Functions.IsMinion(this);
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::Minion);
 }
 
 bool CObject::IsDragon() {
@@ -14,7 +14,7 @@ bool CObject::IsDragon() {
 }
 
 bool CObject::IsTurret() {
-	return Functions.IsTurret(this);
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::Turret);
 }
 
 bool CObject::IsHero() {
@@ -22,11 +22,11 @@ bool CObject::IsHero() {
 }
 
 bool CObject::IsMissile() {
-	return Functions.IsMissile(this);
+	return CompareObjectTypeFlags((int)ObjectTypeFlags::Missile);
 }
 
 bool CObject::IsTargetable() {
-	return Functions.IsTargetable(this);
+	return *(bool*)((DWORD)this + oObjTargetable);
 }
 
 bool CObject::IsDeletedObject()
@@ -42,11 +42,11 @@ bool CObject::IsInvalidObject()
 
 
 bool CObject::IsNexus() {
-	return Functions.IsNexus(this);
+	return Functions.IsNexus(this); //could use Building object flag here
 }
 
 bool CObject::IsInhibitor() {
-	return Functions.IsInhibitor(this);
+	return Functions.IsInhibitor(this); //could use Building object flag here
 }
 
 bool CObject::IsTroyEnt() {

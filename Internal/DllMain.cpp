@@ -74,14 +74,14 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 
 	Functions.PrintChat = (Typedefs::fnPrintChat)(baseAddr + oPrintChat);
 	Functions.SendChat = (Typedefs::fnSendChat)(baseAddr + oSendChat); 
-	Functions.IsTargetable = (Typedefs::fnIsTargetable)(baseAddr + oIsTargetable);
-	Functions.IsAlive = (Typedefs::fnIsAlive)(baseAddr + oIsAlive); 
+	//Functions.IsTargetable = (Typedefs::fnIsTargetable)(baseAddr + oIsTargetable);
+	//Functions.IsAlive = (Typedefs::fnIsAlive)(baseAddr + oIsAlive); 
 
-	Functions.IsMinion = (Typedefs::fnIsMinion)(baseAddr + oIsMinion); 
+	//Functions.IsMinion = (Typedefs::fnIsMinion)(baseAddr + oIsMinion); 
 	Functions.IsDragon = (Typedefs::fnIsDragon)(baseAddr + oIsDragon); 
-	Functions.IsTurret = (Typedefs::fnIsTurret)(baseAddr + oIsTurret); 
-	Functions.IsHero = (Typedefs::fnIsHero)(baseAddr + oIsHero); 
-	Functions.IsMissile = (Typedefs::fnIsMissile)(baseAddr + oIsMissile); 
+	//Functions.IsTurret = (Typedefs::fnIsTurret)(baseAddr + oIsTurret); 
+	//Functions.IsHero = (Typedefs::fnIsHero)(baseAddr + oIsHero); 
+	//Functions.IsMissile = (Typedefs::fnIsMissile)(baseAddr + oIsMissile); 
 	Functions.IsNexus = (Typedefs::fnIsNexus)(baseAddr + oIsNexus); 
 	Functions.IsInhibitor = (Typedefs::fnIsInhibitor)(baseAddr + oIsInhib); 
 	Functions.IsTroyEnt = (Typedefs::fnIsTroyEnt)(baseAddr + oIsTroy);

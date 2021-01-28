@@ -108,6 +108,7 @@
 #define oObjBonusAtk 0x11F0 // 11.1 jingz // not using
 #define oObjMoveSpeed 0x12B0 // 11.1 jingz // not using
 #define oObjAtkRange 0x12B8 // 11.1 jingz
+#define oObjAtkSpeedMod 0x126C
 #define oObjBuffMgr 0x2160 // 11.1 quakehero123
 #define oObjSpellBook 0x2708 // 11.1 jingz (0x2B80 - 0x478)
 #define oObjChampionName 0x312c // 11.1 jingz
@@ -118,6 +119,15 @@
 #define oObjPerk1 0x38A8  // 8D 8E ? ? ? ? E8 ? ? ? ? 8B CE E8 ? ? ? ? A1 // esi+[offset]h // 81 EC ? ? ? ? A1 ? ? ? ? 33 C4 89 84 24 ? ? ? ? 53 8B 9C 24 ? ? ? ? 56 8B F1 88 5C 24 0C // fn + 19F // not using
 #define oObjPerk2 0x2C8 // 51 53 8B D9 33 C9 + 18C // go to sub_XXXX then  + 44 // not using
 #define oInhiRemainingRespawnTime 0x1014 // 11.1 me
+#define oObjTargetable 0xD00
+#define oObjAlive 0x218
+#define oObjVisible 0x270
+
+#define oUnitComponentInfo 0x2F3C
+#define oUCIProperties 0x1C
+#define oBaseAtkSpeed 0x1D0
+
+
 
 //ObjectManager
 #define objectArray 0x14 // not using

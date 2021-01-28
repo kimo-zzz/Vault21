@@ -149,6 +149,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="syscalls.hpp" />
     <ClInclude Include="TargetSelector.h" />
+    <ClInclude Include="UnitComponentInfo.h" />
+    <ClInclude Include="UnitComponentInfoProperties.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorLong.h" />

@@ -11,6 +11,7 @@
 #include "fnv_hash.hpp"
 #include "encryption.hpp"
 #include "SpellCastInfo.h"
+#include "UnitComponentInfo.h"
 
 
 enum class ObjectTypeFlags
@@ -324,7 +325,7 @@ public:
 	{
 		return reinterpret_cast<xor_value<bool>*>((DWORD)this + oObjIsOnScreen)->decrypt();
 	}
-	
+
 	float GetHealth()
 	{
 		return *(float*)((DWORD)this + oObjHealth);
@@ -441,9 +442,24 @@ public:
 
 	SpellCastInfo* GetSpellCastInfo()
 	{
-	return *(SpellCastInfo**)((DWORD)this + oActive_Spell_Entry);
+		return *(SpellCastInfo**)((DWORD)this + oActive_Spell_Entry);
 	}
-	
+
+	UnitComponentInfo* GetUnitComponentInfo()
+	{
+		return *(UnitComponentInfo**)((DWORD)this + oUnitComponentInfo);
+	}
+
+	float GetAtkSpeedMod()
+	{
+		return *(float*)((DWORD)this + oObjAtkSpeedMod);
+	}
+
+	float GetTotalAtkSpeed()
+	{
+		return this->GetAtkSpeedMod() * this->GetUnitComponentInfo()->GetUCIProperties()->GetBaseAtkSpeed();
+	}
+
 	Vector GetSpellEndPos()
 	{
 		Vector spellEndPos = *(Vector*)((DWORD)this + oMissileEndPos);

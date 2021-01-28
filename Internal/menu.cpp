@@ -1712,8 +1712,12 @@ void SetupGameHooks()
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
 	oOnNewPath_addr = baseAddr + oOnNewPath;
 
+	LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+
 	while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
+		AppLog.AddLog("Cannot find _RtlDispatchExceptionAddress. Retrying...\n");
 		LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+		Sleep(1000);
 	}
 
 	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
@@ -1809,7 +1813,7 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 
 	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
-	AppLog.AddLog("Hooks are now ready!\n");
+	AppLog.AddLog("Hooks setup is now done and hooks are now ready!\n");
 	doneHookTimerAllowances = true;
 }
 

@@ -18,4 +18,5 @@ public:
 	static bool CanAttack();
 	static bool CanMove(float extraWindup);
 private:
+	static Vector Original_Pos;
 };

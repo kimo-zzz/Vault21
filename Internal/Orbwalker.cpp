@@ -58,7 +58,7 @@ void MoveCursorTo(float x, float y)
 	SendInput(1, &input, sizeof(INPUT));
 }
 
-
+//#define UseIssueOrder
 bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 {
 	if (Engine::IsChatBoxOpen())
@@ -76,7 +76,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 		MoveCursorTo(TargetPos_W2S.X, TargetPos_W2S.Y);
 		PressRightClick();
 #endif
-		LastAttackCommandT = float(GetTickCount()) + 30;
+		LastAttackCommandT = float(GetTickCount()) + 90;
 	}
 	else if (CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
@@ -90,7 +90,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 		}
 		PressRightClick();
 #endif
-		LastMoveCommandT = GetTickCount() + 50;
+		LastMoveCommandT = GetTickCount() + 150;
 	}
 	return true;
 }

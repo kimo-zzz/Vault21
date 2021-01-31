@@ -1769,6 +1769,7 @@ void SetupGameHooks()
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
+	Sleep(1000);
 	size_t sizeIssueOrder = 0xFFF;
 	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFFF;
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);

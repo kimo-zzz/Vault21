@@ -74,7 +74,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 		Functions.WorldToScreen(&Engine::GetMouseWorldPosition(), &Original_Pos);
 		Functions.WorldToScreen(&target->GetPos(), &TargetPos_W2S);
 		MoveCursorTo(TargetPos_W2S.X, TargetPos_W2S.Y);
-		PressLeftClick();
+		PressRightClick();
 #endif
 		LastAttackCommandT = float(GetTickCount()) + 30;
 	}
@@ -88,7 +88,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 			Original_Pos.X = 0.0f;
 			Original_Pos.Y = 0.0f;
 		}
-		PressLeftClick();
+		PressRightClick();
 #endif
 		LastMoveCommandT = GetTickCount() + 50;
 	}

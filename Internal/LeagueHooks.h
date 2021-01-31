@@ -100,4 +100,5 @@ public:
 	static void RemoveAllHandlers();
 	static void ReAddAllHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list);
 	static void ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list);
+	static void GetAllModules(DWORD procId);
 };

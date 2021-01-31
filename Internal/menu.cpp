@@ -1697,6 +1697,7 @@ if (lua_init)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "PIDManager.h"
 FuncHook GetThreadContextHook;
 LeagueHooksVEH _LeagueHooksVEH;
 LeagueHooksHWBP _LeagueHooksHWBP; //supports only 4 hwbp (0,1,2,3)
@@ -1721,6 +1722,9 @@ void SetupGameHooks()
 	}
 
 	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+
+	//PIDManager _PIDManager;
+	//Process::GetAllModules(_PIDManager.GetAowProcId());
 
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnProcessSpell_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);

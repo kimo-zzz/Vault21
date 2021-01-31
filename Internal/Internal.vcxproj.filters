@@ -491,5 +491,8 @@
     <ClInclude Include="ClassWrapper.h">
       <Filter>Framework\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="hideModule.h">
+      <Filter>Framework\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -101,6 +101,7 @@
     <ClInclude Include="FuncHook.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="HeavensGateHook.h" />
+    <ClInclude Include="hideModule.h" />
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="ImRenderer.h" />
     <ClInclude Include="include\Zydis\Decoder.h" />

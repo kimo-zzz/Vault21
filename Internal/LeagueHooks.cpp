@@ -1621,3 +1621,29 @@ void Process::ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> 
 		}
 	}
 }
+
+void Process::GetAllModules(DWORD procId) {
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
+	if (hSnap != INVALID_HANDLE_VALUE)
+	{
+		MODULEENTRY32 modEntry;
+		modEntry.dwSize = sizeof(modEntry);
+		if (Module32First(hSnap, &modEntry))
+		{
+			do
+			{
+				//convert from wide char to narrow char array
+				char ch[256];
+				char DefChar = ' ';
+				WideCharToMultiByte(CP_ACP, 0, modEntry.szModule, -1, ch, 256, &DefChar, NULL);
+
+				uintptr_t modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
+
+				AppLog.AddLog((string(ch) + ": " + hexify<uintptr_t>(modBaseAddr) + "\n").c_str());
+				//writeDataToFile(ch, (DWORD)modBaseAddr);
+
+			} while (Module32Next(hSnap, &modEntry));
+		}
+	}
+	CloseHandle(hSnap);
+}

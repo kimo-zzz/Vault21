@@ -1699,6 +1699,7 @@ if (lua_init)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "PIDManager.h"
 FuncHook GetThreadContextHook;
 LeagueHooksVEH _LeagueHooksVEH;
 LeagueHooksHWBP _LeagueHooksHWBP; //supports only 4 hwbp (0,1,2,3)
@@ -1714,11 +1715,18 @@ void SetupGameHooks()
 	oOnDeleteObject_addr = baseAddr + oOnDeleteObject;
 	oOnNewPath_addr = baseAddr + oOnNewPath;
 
+	LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+
 	while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
+		AppLog.AddLog("Cannot find _RtlDispatchExceptionAddress. Retrying...\n");
 		LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
+		Sleep(1000);
 	}
 
-	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+	//LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+
+	//PIDManager _PIDManager;
+	//Process::GetAllModules(_PIDManager.GetAowProcId());
 
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnProcessSpell_addr);
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);
@@ -1738,6 +1746,7 @@ void SetupGameHooks()
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
+	/*
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
 	Sleep(1000);
@@ -1760,9 +1769,13 @@ void SetupGameHooks()
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
+	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
+	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	*/
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
+	Sleep(1000);
 	size_t sizeIssueOrder = 0xFFF;
 	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFFF;
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
@@ -1770,9 +1783,7 @@ void SetupGameHooks()
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6,(DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
-	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	//LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::IsDonePatchingIssueOrder = true;
 	AppLog.AddLog("IssueOrder is now patched\n");
 	//////////////////////////////////////////
@@ -1811,7 +1822,7 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 
 	EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
-	AppLog.AddLog("Hooks are now ready!\n");
+	AppLog.AddLog("Hooks setup is now done and hooks are now ready!\n");
 	doneHookTimerAllowances = true;
 }
 

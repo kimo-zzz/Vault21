@@ -11,6 +11,8 @@ static float LastAttackCommandT = 0;
 /// </summary>
 static float LastMoveCommandT = 0;
 
+static Vector Original_Pos;
+
 class Orbwalker
 {
 public:

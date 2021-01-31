@@ -1,5 +1,8 @@
 #include "Orbwalker.h"
 #include "Globals.h"
+
+//#define UseIssueOrder
+
 bool DisableNextAttack = false;
 
 /// <summary>
@@ -12,7 +15,50 @@ bool _missileLaunched;
 /// </summary>
 int _lastTarget;
 
+void PressLeftClick()
+{
 
+	INPUT input = { 0 };
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	SendInput(1, &input, sizeof(INPUT));
+
+	Sleep(8);
+
+	input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	SendInput(1, &input, sizeof(INPUT));
+}
+
+void PressRightClick()
+{
+	INPUT input = { 0 };
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+	SendInput(1, &input, sizeof(INPUT));
+
+	Sleep(8);
+
+	input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+	SendInput(1, &input, sizeof(INPUT));
+}
+
+void MoveCursorTo(float x, float y)
+{
+	static float fScreenWidth = (float)::GetSystemMetrics(SM_CXSCREEN) - 1;
+	static float fScreenHeight = (float)::GetSystemMetrics(SM_CYSCREEN) - 1;
+
+	INPUT input = { 0 };
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+	input.mi.dx = (LONG)(x * (65535.0f / fScreenWidth));
+	input.mi.dy = (LONG)(y * (65535.0f / fScreenHeight));
+
+	// Sometimes this fails idk why the fuck but calling the function two times seems to solve it
+	SendInput(1, &input, sizeof(INPUT));
+	SendInput(1, &input, sizeof(INPUT));
+}
+
+//#define UseIssueOrder
 bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 {
 	if (Engine::IsChatBoxOpen())
@@ -21,13 +67,30 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 
 	if (CanAttack() && target != nullptr && target->IsVisible() && target->IsAlive() && target->IsTargetable())
 	{
+#if defined(UseIssueOrder)
 		Engine::AttackTarget(target);
-		LastAttackCommandT = float(GetTickCount()) + 30;
+#else
+		Vector TargetPos_W2S;
+		Functions.WorldToScreen(&Engine::GetMouseWorldPosition(), &Original_Pos);
+		Functions.WorldToScreen(&target->GetPos(), &TargetPos_W2S);
+		MoveCursorTo(TargetPos_W2S.X, TargetPos_W2S.Y);
+		PressRightClick();
+#endif
+		LastAttackCommandT = float(GetTickCount()) + 90;
 	}
 	else if (CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
+#if defined(UseIssueOrder)
 		Engine::MoveTo(&Engine::GetMouseWorldPosition());
-		LastMoveCommandT = GetTickCount() + 50;
+#else
+		if (Original_Pos.X || Original_Pos.Y) {
+			MoveCursorTo(Original_Pos.X, Original_Pos.Y);
+			Original_Pos.X = 0.0f;
+			Original_Pos.Y = 0.0f;
+		}
+		PressRightClick();
+#endif
+		LastMoveCommandT = GetTickCount() + 150;
 	}
 	return true;
 }

@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader\Loader.vcx
 		{08CD8C63-9682-4871-91BB-702680F1575E} = {08CD8C63-9682-4871-91BB-702680F1575E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "needle", "needle\needle.vcxproj", "{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -63,6 +65,12 @@ Global
 		{70ED2035-8710-434E-BC24-54CB51888D37}.Release|x64.Build.0 = Release|x64
 		{70ED2035-8710-434E-BC24-54CB51888D37}.Release|x86.ActiveCfg = Release|Win32
 		{70ED2035-8710-434E-BC24-54CB51888D37}.Release|x86.Build.0 = Release|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Debug|x64.ActiveCfg = Debug|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Debug|x86.ActiveCfg = Debug|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Debug|x86.Build.0 = Debug|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Release|x64.ActiveCfg = Release|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Release|x86.ActiveCfg = Release|Win32
+		{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-
+#include "hideModule.h"
 
 DWORD WINAPI InitThread(LPVOID);
 std::atomic_bool running;
@@ -22,8 +22,6 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 
 		std::atexit(OnExit);
 		initThreadHandle = _beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InitThread, hModule, 0, nullptr);
-
-		FreeLibrary(g_hModule);
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
@@ -46,6 +44,9 @@ extern DWORD WINAPI InitThread(LPVOID module);
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
 	RestoreZwQueryInformationProcess();
+	UnlinkModuleFromPEB(g_hModule);
+	ErasePEHeader(g_hModule);
+	EraseHeaders(g_hModule);
 	/*HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	DWORD NtQueryInformationProcessAddr = (DWORD)GetProcAddress(ntdll, "NtQueryInformationProcess");
 
@@ -157,6 +158,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 
 void OnExit() noexcept
 {
+	RelinkModuleToPEB(g_hModule);
 	config::save();
 	if (running)
 	{
@@ -174,4 +176,5 @@ void OnExit() noexcept
 
 		}
 	}
+	FreeLibrary(g_hModule);
 }

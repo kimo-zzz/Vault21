@@ -71,7 +71,6 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 		Engine::AttackTarget(target);
 #else
 		Vector TargetPos_W2S;
-		Vector OrgPos;
 		Functions.WorldToScreen(&Engine::GetMouseWorldPosition(), &Original_Pos);
 		Functions.WorldToScreen(&target->GetPos(), &TargetPos_W2S);
 		MoveCursorTo(TargetPos_W2S.X, TargetPos_W2S.Y);

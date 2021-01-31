@@ -1721,7 +1721,7 @@ void SetupGameHooks()
 		Sleep(1000);
 	}
 
-	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+	//LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
 
 	//PIDManager _PIDManager;
 	//Process::GetAllModules(_PIDManager.GetAowProcId());
@@ -1744,6 +1744,7 @@ void SetupGameHooks()
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
+	/*
 	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
 	Sleep(1000);
@@ -1766,6 +1767,9 @@ void SetupGameHooks()
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
 	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
 	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
+	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
+	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	*/
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
@@ -1777,9 +1781,7 @@ void SetupGameHooks()
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6,(DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
-	LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
+	//LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::IsDonePatchingIssueOrder = true;
 	AppLog.AddLog("IssueOrder is now patched\n");
 	//////////////////////////////////////////

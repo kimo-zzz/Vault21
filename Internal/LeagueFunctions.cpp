@@ -794,7 +794,7 @@ PPEB LeagueFunctions::getProcessEnvironmentBlockAddress(HANDLE processHandle)
 int LeagueFunctions::IsDetected() {
 	auto _peb = getCurrentProcessEnvironmentBlock();
 	if (_peb) {
-		if (*reinterpret_cast<bool*>(((DWORD)_peb) + 0x0A00)) {
+		if ((*reinterpret_cast<int*>(((DWORD)_peb) + 0x0A00)) > 0) {
 			return 1;
 		}
 		else {

@@ -15,14 +15,14 @@ PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
 DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
 DWORD LeagueFunctions::NewCastSpellAddr = 0;
-DWORD LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD)(baseAddr + oIssueOrderTrueReturn);
+DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(baseAddr + oIssueOrderTrueReturn);
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
-DWORD LeagueFunctions::TrueCastSpellReturnAddress = (DWORD)(baseAddr + oCastSpellTrueReturn);
+DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(baseAddr + oCastSpellTrueReturn);
 DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
 DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
 
@@ -505,10 +505,10 @@ void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
 }
 
 void testValueIssueOrder(DWORD *val, DWORD *val1) {
-	/*AppLog.AddLog(("-----------\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val) + 
-		"\n*backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)*val1) + "\n"
-		"\nbackup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\n"
-		"\nbackup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n"
+	/*AppLog.AddLog(("-----------\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val) + "\n"
+		"*backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)*val1) + "\n"
+		"backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\n"
+		"backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1)
 		).c_str());*/
 }
 
@@ -675,7 +675,7 @@ void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {
 	//AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
 }
 
-void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
+/*void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
 	DWORD oldVal = *a10;
 	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
 	*a10 = TrueIssueOrderReturnAddress;
@@ -684,7 +684,7 @@ void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3,
 	*a10 = oldVal;
 	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
 	return ret;
-}
+}*/
 
 void LeagueFunctions::ReplaceCall(DWORD origAddress, DWORD newAddress, DWORD fnAddress, size_t size) {
 	// Initialize decoder context

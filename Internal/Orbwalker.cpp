@@ -59,7 +59,7 @@ void MoveCursorTo(float x, float y)
 }
 
 #define UseIssueOrder
-bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
+bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 0.0f)
 {
 	if (Engine::IsChatBoxOpen())
 		return false;
@@ -74,12 +74,12 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 		Functions.WorldToScreen(&Engine::GetMouseWorldPosition(), &previousPos);
 		Functions.WorldToScreen(&target->GetPos(), &TargetPos_W2S);
 		MoveCursorTo(TargetPos_W2S.X, TargetPos_W2S.Y);
-		Sleep(20);
+		Sleep(50);
 		PressRightClick();
-		Sleep(20);
-#endif
-		LastAttackCommandT = float(GetTickCount()) + rand() % 80 + 100;
+		Sleep(50);
 		MoveCursorTo(previousPos.X, previousPos.Y);
+#endif
+		LastAttackCommandT = float(GetTickCount()) + rand() % 30 + 50;
 	}
 	else if (CanMove(extraWindup) && LastMoveCommandT < GetTickCount())
 	{
@@ -88,7 +88,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 90.f)
 #else
 		PressRightClick();
 #endif
-		LastMoveCommandT = GetTickCount() + rand() % 80 + 100;
+		LastMoveCommandT = GetTickCount() + rand() % 30 + 50;
 	}
 	return true;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <d3dx9math.h>
+
 #include "stdafx.h"
 #include <psapi.h>
 #include "makesyscall.h"
@@ -39,6 +41,7 @@ inline char* GetStr(DWORD offset) {
 	else
 		return (char*)offset;
 }
+
 
 inline char* GetStr2(DWORD offset) {
 	//if (*(int*)(offset + 0x10) > 15)

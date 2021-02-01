@@ -26,6 +26,22 @@ void c_renderer::init9(LPDIRECT3DDEVICE9 device)
 	/* ImGui::GetIO().Fonts->AddFontFromFileTTF("path_to_font", 14.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesCyrillic()); */
 }
 
+bool c_renderer::WorldToScreen(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3* pos, D3DXVECTOR3* out) {
+	D3DVIEWPORT9 viewPort;
+	D3DXMATRIX view, projection, world;
+
+	pDevice->GetViewport(&viewPort);
+	pDevice->GetTransform(D3DTS_VIEW, &view);
+	pDevice->GetTransform(D3DTS_PROJECTION, &projection);
+	D3DXMatrixIdentity(&world);
+
+	D3DXVec3Project(out, pos, &viewPort, &projection, &view, &world);
+	if (out->z < 1) {
+		return true;
+	}
+	return false;
+}
+
 void c_renderer::free9(void)
 {
 	ImGui_ImplDX9_Shutdown();

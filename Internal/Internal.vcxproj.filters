@@ -85,6 +85,9 @@
     <Filter Include="Framework\StaticData">
       <UniqueIdentifier>{765a9263-81ca-4c34-a225-4aeba8a193be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Prediction">
+      <UniqueIdentifier>{e3a70d19-55e7-4cbf-a3c0-ccea45584c29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp">
@@ -230,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="game_classes.cpp">
       <Filter>Framework\SkinChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPrediction.cpp">
+      <Filter>Framework\Prediction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,9 +443,6 @@
     <ClInclude Include="VectorLong.h">
       <Filter>Framework\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Framework\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="CSpellDataInst.h">
       <Filter>Framework\Spell</Filter>
     </ClInclude>
@@ -493,6 +496,14 @@
     </ClInclude>
     <ClInclude Include="hideModule.h">
       <Filter>Framework\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitComponentInfo.h" />
+    <ClInclude Include="UnitComponentInfoProperties.h" />
+    <ClInclude Include="HealthPrediction.h">
+      <Filter>Framework\Prediction</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Framework\Vector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -93,7 +93,7 @@ public:
 
 	LPDIRECT3DDEVICE9 get_device9(void) { return m_device9; }
 	ID3D11Device* get_device11(void) { return m_device11; }
-
+	bool WorldToScreen(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3* pos, D3DXVECTOR3* out);
 private:
 	LPDIRECT3DDEVICE9 m_device9 = nullptr;
 

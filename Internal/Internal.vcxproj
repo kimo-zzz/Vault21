@@ -39,6 +39,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FuncHook.cpp" />
     <ClCompile Include="game_classes.cpp" />
+    <ClCompile Include="HealthPrediction.cpp" />
     <ClCompile Include="HeavensGateHook.cpp" />
     <ClCompile Include="ImRenderer.cpp" />
     <ClCompile Include="include\Zydis\src\Decoder.c" />
@@ -100,6 +101,7 @@
     <ClInclude Include="fnv_hash.hpp" />
     <ClInclude Include="FuncHook.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="HealthPrediction.h" />
     <ClInclude Include="HeavensGateHook.h" />
     <ClInclude Include="hideModule.h" />
     <ClInclude Include="Hooks.h" />

@@ -14,7 +14,7 @@
 #define oUnderMouseObject 0x1bf0160 // 		8B 0D ? ? ? ? 89 0D // dword_[offset]
 #define oRenderer 0x35116ec // 				8B 15 ? ? ? ? 83 EC 08 F3 // dword_[offset]
 #define oLocalPlayer 0x34EC5E0 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
-#define oGameTime 0x34e4cd4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
+#define oGameTime 0x34E4CD4 // 				F3 0F 11 05 ? ? ? ? 8B 49 // dword_[offset]
 #define oMenuGUI 0x34ec5f0 // 				8B 0D ? ? ? ? 6A 00 E8 ? ? ? ? C7 // dword_[offset]
 
 // FUNCTIONS

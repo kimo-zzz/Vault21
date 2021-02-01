@@ -1682,6 +1682,7 @@ if (lua_init)
 		}
 	}
 
+	
 	void Menu::Render11()
 	{
 		Content();

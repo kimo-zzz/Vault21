@@ -221,7 +221,6 @@ int main_scanner() {
 	string dot = ".";
 	string x = "x";
 
-
 	string processName = L + e + a + g + u + e + space + o + f + space + L + e + g + e + n + d + s + dot + e + x + e;
 	string payloadPath = GetExePath() + "\\" + I + n + t + e + r + n + a + l + dot + d + l + l;
 

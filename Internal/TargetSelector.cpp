@@ -1,5 +1,7 @@
 ﻿#include "TargetSelector.h"
 
+#include "HealthPrediction.h"
+
 
 CObject* TargetSelector::GetOrbwalkerTarget()
 {
@@ -95,6 +97,7 @@ CObject* TargetSelector::GetLowestHpTarget()
 
 CObject* TargetSelector::GetLasthitTarget()
 {
+	HealthPrediction prediction;
 	CObject holzer;
 	auto obj = holzer.GetFirstObject();
 
@@ -111,11 +114,21 @@ CObject* TargetSelector::GetLasthitTarget()
 					{
 						if (obj->IsAlive() && obj->IsTargetable())
 						{
-							if (GetEffectiveHP(obj->GetArmor(), obj->GetHealth()) < me->GetTotalAttackDamage())
+							auto max = (int)max(0, obj->GetDistance(Engine::GetLocalObject()) - Engine::GetLocalObject()->GetBoundingRadius());
+							auto t = (Engine::GetLocalObject()->GetAttackCastDelay() * 1000) - 100 + 30 /*30 is ping*/ / 2 + 1000 * max;
+							auto landtime = Engine::GetGameTimeTickCount() + 1000 * (int)max(0, obj->GetPos().DistTo(Engine::GetLocalObject()->GetPos()) - obj->GetBoundingRadius()) / Engine::GetLocalObject()->GetAttackCastDelay() * 1000;
+							if (0 < Engine::GetGameTimeTickCount() + t)
 							{
-								if (target == nullptr || obj->GetHealth() < target->GetHealth())
-									target = obj;
+								if (GetEffectiveHP(obj->GetArmor(), obj->GetHealth()) < Engine::GetLocalObject()->GetTotalAttackDamage())
+								{
+									if (target == nullptr || obj->GetHealth() < target->GetHealth())
+										target = obj;
+								}
 							}
+
+
+
+
 
 						}
 					}

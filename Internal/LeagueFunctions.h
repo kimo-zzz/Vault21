@@ -16,14 +16,14 @@ public:
 	static PVOID NewIssueOrder;
 	static PVOID NewIssueOrderCheck;
 	static DWORD NewIssueOrderCheckAddr;
-	static DWORD* TrueIssueOrderReturnAddress;
+	static DWORD TrueIssueOrderReturnAddress;
 	static DWORD IssueOrderStartHookGateway;
 	static DWORD IssueOrderEndHookGateway;
 	static bool IsDonePatchingIssueOrder;
 
 	static PVOID NewCastSpell;
 	static DWORD NewCastSpellAddr;
-	static DWORD* TrueCastSpellReturnAddress;
+	static DWORD TrueCastSpellReturnAddress;
 	static DWORD CastSpellStartHookGateway;
 	static DWORD CastSpellEndHookGateway;
 	static bool IsDonePatchingCastSpell;

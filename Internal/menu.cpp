@@ -22,6 +22,8 @@ CObjectManager* ObjManager;
 CFunctions Functions;
 ExampleAppLog AppLog;
 
+int lastKeyPress = 0;
+
 struct ActiveSpellInfo {
 	int SpellSlot;				// 0x4
 	float StartTime;			// 0x8				gametime of when the missile is started.
@@ -362,7 +364,7 @@ namespace DX11
 							*out_text = idx == 0 ? "Don't change" : vector.at(idx - 1).c_str();
 							return true;
 						};
-						
+
 						auto player = me;
 						if (player)
 						{
@@ -390,7 +392,7 @@ namespace DX11
 							Separator();
 							Spacing();
 						}
-						
+
 						TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Global skins settings:");
 						Separator();
 						if (Combo("Current minion skin", &config::current_combo_minion_index, vector_getter_default,
@@ -467,7 +469,7 @@ namespace DX11
 										values[config_entry.first->second - 1].skin_id);
 								}
 						}
-						
+
 						EndTabItem();
 					}
 				}
@@ -602,7 +604,7 @@ namespace DX11
 			auto me_pos = me->GetPos();
 			auto me_IsOnScreen = me->IsOnScreen();
 
-			
+
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
 			/*
@@ -615,12 +617,12 @@ if (lua_init)
 }
 */
 //LUA::ReloadScripts();
-			
+
 
 			auto me_IsAlive = me->IsAlive();
 
 			auto gameTime = Engine::GetGameTime();
-			
+
 			auto me_d_spellSlot = me->GetSpellSlotByID(4);
 			auto me_f_spellSlot = me->GetSpellSlotByID(5);
 
@@ -709,7 +711,7 @@ if (lua_init)
 				f_spellCDAbs_debug = std::to_string(me_f_spellSlot->GetAbsoluteCoolDown(gameTime));
 				f_spellIsDoneAbs_debug = (me_f_spellSlot->IsDoneAbsoluteCD(gameTime) ? "True" : "False");
 			}
-			
+
 			if (g_draw_lp_range)
 			{
 				if (me && me->IsAlive())
@@ -725,7 +727,7 @@ if (lua_init)
 					}
 				}
 			}
-			
+
 			std::vector<int> Deletable;
 
 			map<int, struct ActiveSpellInfo>::iterator it;
@@ -748,7 +750,8 @@ if (lua_init)
 						Color = ImColor(0.0f, 1.0f, 0.0f, 0.4f);
 
 					render.draw_line(StartPos_W2S.X, StartPos_W2S.Y, EndPos_W2S.X, EndPos_W2S.Y, Color, SpellWidth);
-				} else {
+				}
+				else {
 					Deletable.push_back(it->first);
 				}
 			}
@@ -775,7 +778,7 @@ if (lua_init)
 					ActiveSpellMap.erase(dlt);
 				Deletable.clear();
 			}
-			
+
 			if (opt_autoCleanse_c != 0)
 			{
 				if (me)
@@ -925,13 +928,28 @@ if (lua_init)
 
 				if (g_autoTilt)
 				{
-					if (GetAsyncKeyState(0x59))
+					if (GetKeyState(0x47) & 0x8000 && lastKeyPress < GetTickCount())
 					{
+						lastKeyPress = GetTickCount() + 200;
 						auto rndmMsg = rand() % 11;
 
 						std::string msgString = "/all " + tiltMessages[rndmMsg];
 
+						if (lastTiltMessage != "")
+						{
+							while (tiltMessages[rndmMsg] == lastTiltMessage)
+							{
+								rndmMsg = rand() % 11;
+								msgString = "/all " + tiltMessages[rndmMsg];
+							}
+						}
+
+						lastTiltMessage = tiltMessages[rndmMsg];
+
 						Engine::SendChat(msgString.c_str());
+
+
+
 					}
 				}
 
@@ -940,7 +958,7 @@ if (lua_init)
 				if (g_draw_wards)
 				{
 					//if (IsTeammate) { // perks cant be determined if enemy side or ally side :(
-					auto color = ImColor((float)204/255, (float)106/255, (float)255/255); // violet
+					auto color = ImColor((float)204 / 255, (float)106 / 255, (float)255 / 255); // violet
 					if (Name_str.find("perks_ghostporo_idle") != std::string::npos)
 					{
 						// ghost poro
@@ -1078,7 +1096,7 @@ if (lua_init)
 
 								auto spellEffectRange = obj->GetMissileSpellInfo()->GetSpellData()->GetSpellEffectRange();
 
-								auto color = ImColor((float)220/255, (float)20/255, (float)60/255); // crimson
+								auto color = ImColor((float)220 / 255, (float)20 / 255, (float)60 / 255); // crimson
 								//Engine::DrawCircle(&obj->GetPos(), spellEffectRange, &color, 0, 0.0f, 0, 0.5f);
 								render.draw_circle(obj->GetPos(), spellEffectRange, color, c_renderer::circle_3d, 50, 0.5f);
 							}
@@ -1102,7 +1120,7 @@ if (lua_init)
 								if (obj->IsEnemyTo(me))
 								{
 									auto boundingRadius = obj->GetBoundingRadius();
-									auto color = ImColor((float)220/255, (float)20/255, (float)60/255); // crimson
+									auto color = ImColor((float)220 / 255, (float)20 / 255, (float)60 / 255); // crimson
 									//Engine::DrawCircle(&obj->GetPos(), 800.0f + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
 									render.draw_circle(obj->GetPos(), 800.0f + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
@@ -1153,13 +1171,13 @@ if (lua_init)
 								Vector w2s;
 								Functions.WorldToScreen(&obj->GetPos(), &w2s);
 
-								auto color = ImColor((float)220/255, (float)20/255, (float)60/255); // crimson	
+								auto color = ImColor((float)220 / 255, (float)20 / 255, (float)60 / 255); // crimson	
 								if (WardList.find(Name_str) != WardList.end())
 								{
 									//Engine::DrawCircle(&Pos, obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
 									render.draw_circle(Pos, obj->GetBoundingRadius(), color, c_renderer::circle_3d, 50, 0.5f);
 									//Engine::DrawCircle(&Pos, WardList.at(Name_str), &color, 0, 0.0f, 0, 0.5f);
-									render.draw_circle(Pos,WardList.at(Name_str), color, c_renderer::circle_3d, 50, 0.5f);
+									render.draw_circle(Pos, WardList.at(Name_str), color, c_renderer::circle_3d, 50, 0.5f);
 									render.draw_text(w2s.X, w2s.Y, obj->GetName(), false, ImColor(255, 255, 255, 255));
 								}
 
@@ -1473,7 +1491,7 @@ if (lua_init)
 							{
 								if (IsOnScreen && obj->IsAlive())
 								{
-									auto color = ImColor((float)124/255, (float)252/255, (float)0); // lawngreen
+									auto color = ImColor((float)124 / 255, (float)252 / 255, (float)0); // lawngreen
 									//Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
 									render.draw_circle(Pos, AttackRange + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
@@ -1485,7 +1503,7 @@ if (lua_init)
 							{
 								if (IsOnScreen && obj->IsAlive())
 								{
-									auto color = ImColor((float)220/255, (float)20/255, (float)60/255); // crimson
+									auto color = ImColor((float)220 / 255, (float)20 / 255, (float)60 / 255); // crimson
 									//Engine::DrawCircle(&Pos, AttackRange + boundingRadius, &color, 0, 0.0f, 0, 0.5f);
 									render.draw_circle(Pos, AttackRange + boundingRadius, color, c_renderer::circle_3d, 50, 0.5f);
 								}
@@ -1532,7 +1550,7 @@ if (lua_init)
 							}
 
 							//Menu::Log(std::to_string(Engine::GetLocalObject()->GetTotalAtkSpeed()).c_str());
-							
+
 							if (g_spellTimer_message != 0)
 							{
 								if ((j_key_flag == 1 && is_j_key_ready) || (x_key_flag == 1 && is_x_key_ready))
@@ -1682,7 +1700,7 @@ if (lua_init)
 		}
 	}
 
-	
+
 	void Menu::Render11()
 	{
 		Content();
@@ -1743,7 +1761,7 @@ void SetupGameHooks()
 		//AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
 		i++;
 	}
-	
+
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
@@ -1782,7 +1800,7 @@ void SetupGameHooks()
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6,(DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
+	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6, (DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
 	LeagueFunctions::IsDonePatchingIssueOrder = true;
@@ -1790,7 +1808,7 @@ void SetupGameHooks()
 	//////////////////////////////////////////
 	// END PATCHING THE ISSUE ORDER RETCHECKS
 	//////////////////////////////////////////
-	
+
 	//////////////////////////////////////////
 	// PATCHING THE CAST SPELL RETCHECKS
 	//////////////////////////////////////////
@@ -1958,7 +1976,7 @@ int __fastcall hk_OnCreateObject(CObject* obj, void* edx, unsigned id)
 
 	if (obj->IsMissile())
 		ActiveMissiles.insert(pair<int, struct CObject*>(obj->GetIndex(), obj));
-	
+
 	if (g_debug_cacheOnCreate)
 	{
 		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
@@ -1982,7 +2000,7 @@ int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, CObject* obj)
 
 	if (obj->IsMissile())
 		ActiveMissiles.erase(obj->GetIndex());
-	
+
 	if (g_debug_cacheOnDelete)
 		if (obj->IsMissile() || obj->IsHero() || obj->IsMinion() || obj->IsTurret() || obj->IsInhibitor())
 		{

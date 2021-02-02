@@ -19,6 +19,8 @@ std::string tiltMessages[] =
 
 };
 
+std::string lastTiltMessage = "";
+
 void Misc::AutoTilt()
 {
 	if (g_autoTilt)

@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 extern std::string tiltMessages[];
-
+extern std::string lastTiltMessage;
 class Misc
 {
 public:

@@ -15,14 +15,14 @@ PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
 DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
 DWORD LeagueFunctions::NewCastSpellAddr = 0;
-DWORD LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD)(baseAddr + oIssueOrderTrueReturn);
+DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(baseAddr + oIssueOrderTrueReturn);
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
-DWORD LeagueFunctions::TrueCastSpellReturnAddress = (DWORD)(baseAddr + oCastSpellTrueReturn);
+DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(baseAddr + oCastSpellTrueReturn);
 DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
 DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
 
@@ -510,23 +510,19 @@ void testValueIssueOrder(DWORD val, DWORD val1) {
 		).c_str());
 }
 
-void testValueIssueOrderParams(DWORD* val1, DWORD val2, DWORD val3, DWORD val4, DWORD val5, DWORD val6, DWORD val7) {
-	/*AppLog.AddLog(("-----------\nbackup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val1) + 
-		"\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val1) +
-		"\nval2=" + hexify<DWORD>((DWORD)val2)  + 
-		"\nval3=" + hexify<DWORD>((DWORD)val3)  +
-		"\nval4=" + hexify<DWORD>((DWORD)val4)  +
-		"\nval5=" + hexify<DWORD>((DWORD)val5)  +
-		"\nval6=" + hexify<DWORD>((DWORD)val6)  +
-		"\nval7" + hexify<DWORD>((DWORD)val7) + "\n"
-		).c_str());*/
+void testValueIssueOrder(DWORD* val, DWORD* val1) {
+	AppLog.AddLog(("-----------\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val) + "\n"
+		"*backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)*val1) + "\n"
+		"backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\n"
+		"backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1)
+		).c_str());
 }
 
-std::vector<DWORD> backup_returnAddrStackNewIssueOrder;
-DWORD backup_returnAddrNewIssueOrder;
+std::vector<DWORD*> backup_returnAddrStackNewIssueOrder;
+DWORD* backup_returnAddrNewIssueOrder;
 DWORD backup_eax_NewIssueOrderStartHook;
 
-DWORD _ret;
+DWORD* _ret;
 DWORD param2, param3, param4, param5, param6, param7;
 
 
@@ -575,9 +571,9 @@ void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
 	}
 }
 
-DWORD backup_TrueIssueOrderReturnAddress;
+DWORD* backup_TrueIssueOrderReturnAddress;
 DWORD backup_eax_NewIssueOrderEndHook;
-DWORD backup_returnAddrFromStackNewIssueOrder;
+DWORD* backup_returnAddrFromStackNewIssueOrder;
 void __declspec(naked) LeagueFunctions::NewIssueOrderEndHook()
 {
 	__asm add esp, 0xD0
@@ -611,8 +607,8 @@ void testValueCastSpell(DWORD val, DWORD val1) {
 	//AppLog.AddLog(("-----------\nbackup_returnAddrNewCastSpell=" + hexify<DWORD>((DWORD)val) + "\nbackup_TrueCastSpellReturnAddress=" + hexify<DWORD>((DWORD)val1) + "\n").c_str());
 }
 
-std::vector<DWORD> backup_returnAddrStackNewCastSpell;
-DWORD backup_returnAddrNewCastSpell;
+std::vector<DWORD*> backup_returnAddrStackNewCastSpell;
+DWORD* backup_returnAddrNewCastSpell;
 DWORD backup_eax_NewCastSpellStartHook;
 void __declspec(naked) LeagueFunctions::NewCastSpellStartHook()
 {
@@ -636,9 +632,9 @@ void __declspec(naked) LeagueFunctions::NewCastSpellStartHook()
 	}
 }
 
-DWORD backup_TrueCastSpellReturnAddress;
+DWORD* backup_TrueCastSpellReturnAddress;
 DWORD backup_eax_NewCastSpellEndHook;
-DWORD backup_returnAddrFromStackNewCastSpell;
+DWORD* backup_returnAddrFromStackNewCastSpell;
 void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
 {
 	__asm {

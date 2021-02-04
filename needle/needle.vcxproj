@@ -13,7 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2F9CC34E-144F-481B-8A41-E0A5D4918BC3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>needle</RootNamespace>
+    <RootNamespace>LeagueInjector</RootNamespace>
+    <ProjectName>LeagueInjector</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

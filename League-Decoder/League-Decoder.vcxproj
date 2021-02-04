@@ -27,6 +27,7 @@
     <ProjectGuid>{00131814-a1cb-464a-878a-8fac479dca31}</ProjectGuid>
     <RootNamespace>LeagueDecoder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>LeagueDecoder</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

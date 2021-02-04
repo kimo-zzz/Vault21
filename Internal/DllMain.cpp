@@ -85,7 +85,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 	//Functions.IsMissile = (Typedefs::fnIsMissile)(baseAddr + oIsMissile); 
 	Functions.IsNexus = (Typedefs::fnIsNexus)(baseAddr + oIsNexus); 
 	Functions.IsInhibitor = (Typedefs::fnIsInhibitor)(baseAddr + oIsInhib); 
-	Functions.IsTroyEnt = (Typedefs::fnIsTroyEnt)(baseAddr + oIsTroy);
+	//Functions.IsTroyEnt = (Typedefs::fnIsTroyEnt)(baseAddr + oIsTroy);
 
 	//Functions.CastSpell = (Typedefs::fnCastSpell)(baseAddr + oCastSpell); //retaddr
 	//Functions.IssueOrder = (Typedefs::fnIssueOrder)(baseAddr + oIssueOrder); //retaddr

@@ -67,6 +67,13 @@ static std::string me_healthPercentage_debug = "100%";
 
 static std::string IsChatOpen_debug = "false";
 
+static std::string me_index_debug = "0";
+static std::string me_pos_x_debug = "0.0";
+static std::string me_pos_y_debug = "0.0";
+static std::string me_pos_z_debug = "0.0";
+static std::string me_IsAlive_debug = "false";
+static std::string me_IsOnScreen_debug = "false";
+
 static std::string base_debug = "0x0";
 static std::string hiddenBase_debug = "0x0";
 

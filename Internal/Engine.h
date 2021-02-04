@@ -61,8 +61,7 @@ public:
 
 	static bool IsChatBoxOpen()
 	{
-		DWORD ChatClient = *(DWORD*)(baseAddr + oChatClientPtr);
-		DWORD ChatClientStruct = *(DWORD*)(ChatClient + oChatClientStruct);
+		DWORD ChatClientStruct = *(DWORD*)(baseAddr + oChatClientStruct);
 
 		return *(bool*)(static_cast<DWORD>(ChatClientStruct) + oIsChatOpen);
 	}

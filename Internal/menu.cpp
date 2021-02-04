@@ -547,6 +547,13 @@ namespace DX11
 					Checkbox("Cache OnProcessSpell", &g_debug_cacheOnProcessSpell);
 					Checkbox("Cache OnNewPath", &g_debug_cacheOnNewPath);
 
+					Text("me_index %s", &me_index_debug);
+					Text("me_pos.x %s", &me_pos_x_debug);
+					Text("me_pos.y %s", &me_pos_y_debug);
+					Text("me_pos.z %s", &me_pos_z_debug);
+					Text("me_IsAlive %s", &me_IsAlive_debug); 
+					Text("me_IsOnScreen %s", &me_IsOnScreen_debug);
+
 					Text("IsChatBoxOpen %s", &IsChatOpen_debug);
 					Text("Health %s%", &me_healthPercentage_debug);
 					Text("CastSpell Ctr. %s", &castSpellCtr_debug);
@@ -579,7 +586,7 @@ namespace DX11
 
 			End();
 		}
-
+		
 		if (isMainThreadAllow)
 		{
 			if (Engine::IsChatBoxOpen())
@@ -600,14 +607,24 @@ namespace DX11
 			}
 
 			auto me_index = me->GetIndex();
+			me_index_debug = to_string(me_index);
 
 			auto me_pos = me->GetPos();
-			auto me_IsOnScreen = me->IsOnScreen();
+			me_pos_x_debug = to_string(me_pos.X);
+			me_pos_y_debug = to_string(me_pos.Y);
+			me_pos_z_debug = to_string(me_pos.Z);
 
+			auto me_IsOnScreen = me->IsOnScreen();
+			if (me_IsOnScreen) {
+				me_IsOnScreen_debug = "true";
+			}
+			else {
+				me_IsOnScreen_debug = "false";
+			}
 
 			if (GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(0x56) || GetAsyncKeyState(0x58))
 				Orbwalker::Orbwalk(TargetSelector::GetOrbwalkerTarget(), g_orbwalker_windup);
-			/*
+/*
 if (lua_init)
 {
 	if (LUA::CheckLua(LuaVM, luaL_dofile(LuaVM, "Test.Lua")))
@@ -617,9 +634,13 @@ if (lua_init)
 }
 */
 //LUA::ReloadScripts();
-
-
 			auto me_IsAlive = me->IsAlive();
+			if (me_IsAlive) {
+				me_IsAlive_debug = "true";
+			}
+			else {
+				me_IsAlive_debug = "false";
+			}
 
 			auto gameTime = Engine::GetGameTime();
 
@@ -639,7 +660,6 @@ if (lua_init)
 			bool me_isDoneCDSmite = false;
 			int me_smiteSpellSlot = 0;
 			float me_smiteDamage = 0;
-
 
 			d_spellName_debug = me_d_spellName_str;
 			f_spellName_debug = me_f_spellName_str;
@@ -877,7 +897,7 @@ if (lua_init)
 
 			std::list<CObject*> _heroList = {};
 			std::list<CObject*> _minionList = {};
-
+			
 			while (obj)
 			{
 				//objCount++;
@@ -1742,7 +1762,7 @@ void SetupGameHooks()
 		Sleep(1000);
 	}
 
-	//LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
+	LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
 
 	//PIDManager _PIDManager;
 	//Process::GetAllModules(_PIDManager.GetAowProcId());
@@ -1765,44 +1785,16 @@ void SetupGameHooks()
 	////////////////////////////////////////
 	// PATCHING THE ISSUE ORDER RETCHECKS
 	////////////////////////////////////////
-	/*
-	DWORD IssueOrderCheckAddr = baseAddr + oIssueOrderCheck;
-	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderCheckAddr);
-	Sleep(1000);
-	std::vector<BYTE> IssueOrderCheckRsByte = {
-		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
-	};
-
-	ReturnSig IssueOrderCheckRs;
-	IssueOrderCheckRs.returnCount = 1;
-	IssueOrderCheckRs.returnSig = IssueOrderCheckRsByte;
-
-	size_t sizeIssueOrderCheck;
-	DWORD EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
-	while (!sizeIssueOrderCheck) {
-		AppLog.AddLog("Cannot Read IssueOrderCheck function. Try moving your character first.\n");
-		Sleep(1000);
-		EndIssueOrderCheckAddr = LeagueFunctions::CalcFunctionSize(IssueOrderCheckAddr, sizeIssueOrderCheck, IssueOrderCheckRs);
-	}
-	DWORD NewIssueOrderCheck = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
-	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrderCheck, IssueOrderCheckAddr, sizeIssueOrderCheck);
-	LeagueFunctions::FixRellocation(IssueOrderCheckAddr, EndIssueOrderCheckAddr, (DWORD)LeagueFunctions::NewIssueOrderCheck, sizeIssueOrderCheck);
-	LeagueFunctions::ApplyIssueOrderCheckPatches(NewIssueOrderCheck, sizeIssueOrderCheck);
-	Functions.IssueOrderCheck = (Typedefs::fnIssueOrderCheck)(NewIssueOrderCheck);
-	LeagueFunctions::NewIssueOrderCheckAddr = (DWORD)LeagueFunctions::NewIssueOrderCheck;
-	*/
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	DWORD IssueOrderAddr = baseAddr + oIssueOrder;
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 	Sleep(1000);
-	size_t sizeIssueOrder = 0xFFF;
-	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFFF;
+
+	size_t sizeIssueOrder = 0xFAF;
+	DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFAF;
 	DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 	LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
-	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6, (DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//LeagueFunctions::ReplaceCall(IssueOrderCheckAddr, (DWORD)LeagueFunctions::IssueOrderCheckGateway, NewIssueOrder, sizeIssueOrder);
+	LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6,(DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
 	LeagueFunctions::IsDonePatchingIssueOrder = true;
 	AppLog.AddLog("IssueOrder is now patched\n");
 	//////////////////////////////////////////
@@ -1816,7 +1808,7 @@ void SetupGameHooks()
 	LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 	Sleep(1000);
 	std::vector<BYTE> CastSpellRsByte = {
-		0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC,0xCC
+		0xC2,0x14,0x00,0xCC,0xCC
 	};
 	ReturnSig CastSpellRs;
 	CastSpellRs.returnCount = 1;
@@ -1833,7 +1825,6 @@ void SetupGameHooks()
 	LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 	LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
 	LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 5, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
-	LeagueFunctions::NewCastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell;
 	LeagueFunctions::IsDonePatchingCastSpell = true;
 	AppLog.AddLog("CastSpell is now patched\n");
 	//////////////////////////////////////////
@@ -1847,7 +1838,6 @@ void SetupGameHooks()
 
 void MainLoop()
 {
-
 	if (g_onprocessspell != g_onprocessspell_last) { // onprocessspell hwbp
 		if (g_onprocessspell) {
 			if (_LeagueHooksHWBP.addHook(oOnProcessSpell_addr, (DWORD)hk_OnProcessSpell, 3)) {

@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Captures">
+      <UniqueIdentifier>{f07722db-b747-4691-bbc5-d28f05776b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Captures">
+      <UniqueIdentifier>{88370850-d477-424b-b38a-f1087590ad6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ThirdParty">
+      <UniqueIdentifier>{cddc4755-1434-4972-bbff-475e26c43104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ThirdParty">
+      <UniqueIdentifier>{6172c80e-9495-4802-a90b-26c9cfb4388c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{66264543-5713-4347-953e-a2cc10d23df5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{939b7091-21a8-411f-9a88-4be04e747dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{565fe2dd-2e13-4327-aa21-60b8169a805c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LeagueHooks">
+      <UniqueIdentifier>{89852eea-5203-4163-a560-1c28a55e067b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Zydis">
+      <UniqueIdentifier>{56087b6a-fa7c-4366-bf2c-53000f95ba09}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FuncHook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Capture.cpp">
+      <Filter>Source Files\Captures</Filter>
+    </ClCompile>
+    <ClCompile Include="DXGICapture.cpp">
+      <Filter>Source Files\Captures</Filter>
+    </ClCompile>
+    <ClCompile Include="DllMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="inputhook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9Capture.cpp">
+      <Filter>Source Files\Captures</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\ImRenderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueHooks.cpp">
+      <Filter>LeagueHooks</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBase.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\MetaInfo.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Mnemonic.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Register.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\SharedData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\String.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Utils.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Zydis.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Decoder.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\DecoderData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Formatter.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterATT.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncHook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>Header Files\Captures</Filter>
+    </ClInclude>
+    <ClInclude Include="DXGICapture.h">
+      <Filter>Header Files\Captures</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>Header Files\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Header Files\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorLong.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="inputhook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9Capture.h">
+      <Filter>Header Files\Captures</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx9.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\ImRenderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleAppLog.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="makesyscall.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueHooks.h">
+      <Filter>LeagueHooks</Filter>
+    </ClInclude>
+    <ClInclude Include="syscalls.hpp">
+      <Filter>LeagueHooks</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

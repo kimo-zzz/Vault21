@@ -1,0 +1,764 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{ce778c05-04e0-42d1-bc2d-ee59a00d1761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="League of Legends">
+      <UniqueIdentifier>{4ecb907a-6a43-4e0b-b8d7-3bd69a3e14ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{726fb6b1-1b5a-40a3-8a01-b9cb1b2c4f40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{bf96f95b-7252-4126-8196-77b831fd984f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Patchable">
+      <UniqueIdentifier>{a4556342-6c47-4e62-88f0-659dfefc2603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files">
+      <UniqueIdentifier>{30665aff-c7cc-4bfa-a358-db821eb1b609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files">
+      <UniqueIdentifier>{0bb183e8-2da1-4149-9d5b-b642618e969d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ClockFacade">
+      <UniqueIdentifier>{7bcab45a-c9c0-4e6b-b8ee-8c4b8b877f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\DeviceHandler">
+      <UniqueIdentifier>{32453e26-6d60-406c-9d96-388be0ecacb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ClockFacade">
+      <UniqueIdentifier>{6c7a433a-9310-4eec-b93f-80996653107b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\DeviceHandler">
+      <UniqueIdentifier>{93001c91-4421-4ea6-8d2a-f1af67dca7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\GameClient">
+      <UniqueIdentifier>{aeebe271-dfd7-43a0-b064-809fa393d037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\HashFunctions">
+      <UniqueIdentifier>{5772e21d-1f07-4255-9532-f9fd47d75534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\HudManager">
+      <UniqueIdentifier>{ddb160ef-e266-4d75-bef4-fe5cf2e11057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\NetClient">
+      <UniqueIdentifier>{c7e47cf2-4574-419e-b593-57114604dcda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager">
+      <UniqueIdentifier>{fc1b6a6e-a627-4667-a516-ffb1f225daae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\RenderLayer">
+      <UniqueIdentifier>{1149cb9d-a68b-4006-8df1-1348866ef8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\GameClient">
+      <UniqueIdentifier>{ecf535d9-852c-4f5e-9910-a6bf3fffb64e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\HashFunctions">
+      <UniqueIdentifier>{983ffa3c-2e2e-4aca-8021-d18ee06f4adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\HudManager">
+      <UniqueIdentifier>{017eb4eb-51b4-45ac-ac5e-25f631c9a010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\NetClient">
+      <UniqueIdentifier>{be1594f8-1f9f-4671-835b-5b7b8b9b6ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager">
+      <UniqueIdentifier>{25edf3c5-d8b6-4378-a3fd-b5d760e8a217}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\RenderLayer">
+      <UniqueIdentifier>{c20be6f4-96ad-4155-9536-d1bcc6692b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Header Files">
+      <UniqueIdentifier>{1eff0e3d-f4bc-43fa-8e0b-0bdbd5869c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Source Files">
+      <UniqueIdentifier>{6c6e1191-268a-4f4e-9c36-982c07e3e3a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject">
+      <UniqueIdentifier>{3b8e0d00-f68d-43fe-a1fc-cecb4bb7ae19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\Buffs">
+      <UniqueIdentifier>{52679c79-0c74-4d07-9167-aa184fe06d0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\CharacterData">
+      <UniqueIdentifier>{af32b84b-8cf4-4c2b-aaaa-f6d5e9099ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\Experience">
+      <UniqueIdentifier>{85925580-db89-429f-9591-482d31ce7422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\HeroInventory">
+      <UniqueIdentifier>{f27078f3-270c-475b-827b-cbbf7c663e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\PathController">
+      <UniqueIdentifier>{5f9a7b1e-d257-4164-b1ae-622164f8521f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\Spells">
+      <UniqueIdentifier>{931afb94-c14b-4c06-b75f-216452c8490a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager\GameObject">
+      <UniqueIdentifier>{2062fa58-5d4d-43ab-b8a7-a1500ff38052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager\GameObject\Buffs">
+      <UniqueIdentifier>{24e51120-e6e6-46b6-9bb9-9fb39ace3966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager\GameObject\Spells">
+      <UniqueIdentifier>{3ea9edcc-e54a-44e9-99da-b504f6df991b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Damage">
+      <UniqueIdentifier>{4d6e8f74-5cbf-45b0-8e36-ca9990c1de22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Events">
+      <UniqueIdentifier>{0486df5d-2d28-4b67-95c1-c0e8bf68fcde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Menu">
+      <UniqueIdentifier>{dcbf1662-c051-4347-bb81-e46163791d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Orbwalker">
+      <UniqueIdentifier>{ec651646-0863-4a35-84ba-6aeb4d24d677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\TargetSelector">
+      <UniqueIdentifier>{505321e6-b372-4c5f-b21f-ade95dbf8788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Events\Header Files">
+      <UniqueIdentifier>{368987f8-7878-4513-a9a0-a2e7efbe70f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Events\Source Files">
+      <UniqueIdentifier>{be17a26c-9e94-4c94-9c01-c5ed2ff83ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Menu\Header Files">
+      <UniqueIdentifier>{3fbad66c-d12a-41db-990d-249462901196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Menu\Source Files">
+      <UniqueIdentifier>{c17d868b-1f69-4cff-bd8e-ae340128850f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\TargetSelector\Header Files">
+      <UniqueIdentifier>{a8bc561c-a6ac-48f0-98a2-90d27458b35b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\TargetSelector\Source Files">
+      <UniqueIdentifier>{83445b11-e8c8-46f7-b532-40f8d81c8c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Menu\Header Files\Components">
+      <UniqueIdentifier>{dec5cb5f-13de-4f6e-a51d-f0044be58705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Menu\Source Files\Components">
+      <UniqueIdentifier>{e3e5bc00-6b62-4b43-b2bd-016e71728eb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Orbwalker\Source Files">
+      <UniqueIdentifier>{62dc680e-45fe-4e3d-ab50-4be199843e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Orbwalker\Header Files">
+      <UniqueIdentifier>{3aa6238c-e4d4-41ee-b3c4-b9d81e1272fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Damage\Header Files">
+      <UniqueIdentifier>{b879d4ff-f206-4335-9ddd-0158cfa47c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Damage\Source Files">
+      <UniqueIdentifier>{35077b59-63f7-4dda-99b4-18de42cba5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ManagerTemplate">
+      <UniqueIdentifier>{8d6c6450-6ccf-4be9-aa19-f68b3f18e83b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ManagerTemplate">
+      <UniqueIdentifier>{62899822-1d2e-4ca3-a456-cbc6dc077a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\ClassData">
+      <UniqueIdentifier>{1f6b5341-b6ba-4cde-a991-1a22de2664dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\HealthPrediction">
+      <UniqueIdentifier>{a5085560-98c0-43e5-8fdb-34f252de01fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\HealthPrediction\Header Files">
+      <UniqueIdentifier>{6b295107-414c-441a-8880-76d267cfcf9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\HealthPrediction\SourceFiles">
+      <UniqueIdentifier>{e6520136-b5ce-4d13-80c9-4d558b3ed6b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager\GameObject\PathController">
+      <UniqueIdentifier>{61086684-016c-4816-b9a9-fa2e8ed8f48e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\CharacterDataStack">
+      <UniqueIdentifier>{5004d3c3-5118-46cd-9b19-e610178f08dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\UnitInfoComponent">
+      <UniqueIdentifier>{c0f78c69-e860-486d-93f6-b3a80e3118fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{e6c520dd-cddf-4ee2-8025-6c4c9f46973e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\SkinChanger">
+      <UniqueIdentifier>{f489e108-d1c8-4207-907b-e575acda5dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\SkinChanger\Header Files">
+      <UniqueIdentifier>{67bbaef7-0c4d-4d50-bcc9-bacd24e75cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\SkinChanger\Source Files">
+      <UniqueIdentifier>{e4a593a9-a1bd-4c21-936a-3ea08dec6685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{18b3f5d1-f08a-4d48-afc0-ba4df45e1917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Header Files">
+      <UniqueIdentifier>{6b8cf852-acbc-45a2-81c9-13dd8a899780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\Source Files">
+      <UniqueIdentifier>{d1bb5ffd-d24d-42b7-8254-641e4741cb91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Vayne">
+      <UniqueIdentifier>{bac09109-7c66-42e6-a63c-61c94514ce31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\Missiles">
+      <UniqueIdentifier>{39e2b967-77cc-472e-9770-45d5658f1efe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Hook">
+      <UniqueIdentifier>{86a586db-3dea-459e-bd83-e4588e9f1bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Evade">
+      <UniqueIdentifier>{03b7b802-b449-4c28-9874-f1f7ccf34702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Header Files\ObjectManager\GameObject\NavGrid">
+      <UniqueIdentifier>{2d968435-bb5f-4e4a-b97d-5c72607cf02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="League of Legends\Source Files\ObjectManager\GameObject\NavGrid">
+      <UniqueIdentifier>{ee3bf756-5079-40d8-a479-14b35a2ed38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Activator">
+      <UniqueIdentifier>{61eeb19d-ee5d-4c8b-b17c-cb19fc501480}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx9.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Imgui\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Patchable</Filter>
+    </ClInclude>
+    <ClInclude Include="OffsetsChina.h">
+      <Filter>Patchable</Filter>
+    </ClInclude>
+    <ClInclude Include="OffsetsGarena.h">
+      <Filter>Patchable</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClockFacade.h">
+      <Filter>League of Legends\Header Files\ClockFacade</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceHandler.h">
+      <Filter>League of Legends\Header Files\DeviceHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClient.h">
+      <Filter>League of Legends\Header Files\GameClient</Filter>
+    </ClInclude>
+    <ClInclude Include="HashFunctions.h">
+      <Filter>League of Legends\Header Files\HashFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="NetClient.h">
+      <Filter>League of Legends\Header Files\NetClient</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderLayer.h">
+      <Filter>League of Legends\Header Files\RenderLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Geometry\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Geometry\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HudManager.h">
+      <Filter>League of Legends\Header Files\HudManager</Filter>
+    </ClInclude>
+    <ClInclude Include="HudCursorTargetLogic.h">
+      <Filter>League of Legends\Header Files\HudManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>League of Legends\Header Files\ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffScript.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffScriptInstance.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffManager.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffInstance.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterData.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\CharacterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Experience.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Experience</Filter>
+    </ClInclude>
+    <ClInclude Include="PathControllerCommon.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\PathController</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationPath.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\PathController</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemInfo.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\HeroInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemData.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\HeroInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="InventorySlot.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\HeroInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="HeroInventoryCommon.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\HeroInventory</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellDataResource.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellDataScript.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellData.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellCastInfo.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellDataInst.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellInstanceClient.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellbookClient.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Spells</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Instances.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>SDK\Events\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportEventArgs.h">
+      <Filter>SDK\Events\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Geometry\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetSelector.h">
+      <Filter>SDK\TargetSelector\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuComponent.h">
+      <Filter>SDK\Menu\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckBox.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Slider.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Keybind.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBind.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Info.h">
+      <Filter>SDK\Menu\Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Orbwalker.h">
+      <Filter>SDK\Orbwalker\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManagerTemplate.h">
+      <Filter>League of Legends\Header Files\ManagerTemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSettings.h">
+      <Filter>SDK\Menu\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassData.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\ClassData</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualTableManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassData.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\ClassData</Filter>
+    </ClInclude>
+    <ClInclude Include="Damage.h">
+      <Filter>SDK\Damage\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPrediction.h">
+      <Filter>SDK\HealthPrediction\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterDataStack.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\CharacterDataStack</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitInfoComponent.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\UnitInfoComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingInfoBar.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\UnitInfoComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinChanger.h">
+      <Filter>Plugins\SkinChanger\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OffsetsRiot.h">
+      <Filter>Patchable</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterProperties.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\CharacterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vayne.h">
+      <Filter>Plugins\Vayne</Filter>
+    </ClInclude>
+    <ClInclude Include="MissileClient.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\Missiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9Capture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="DXGICapture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="fnv_hash.hpp">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncHook.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="clipper.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Template.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillshotData.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="EvadeConstants.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellDB.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygons.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Evade.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="EvaderDB.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMath.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Skillshot.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="EvadeMath.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="NavGrid.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\NavGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumMacro.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AiManager.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\PathController</Filter>
+    </ClInclude>
+    <ClInclude Include="PathManager.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\PathController</Filter>
+    </ClInclude>
+    <ClInclude Include="MalichetePred.h">
+      <Filter>Plugins\Evade</Filter>
+    </ClInclude>
+    <ClInclude Include="NavGridCell.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\NavGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="NavGridCellFlags.h">
+      <Filter>League of Legends\Header Files\ObjectManager\GameObject\NavGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="Activator.h">
+      <Filter>Plugins\Activator</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Imgui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Imgui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx9.cpp">
+      <Filter>Imgui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>Imgui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockFacade.cpp">
+      <Filter>League of Legends\Source Files\ClockFacade</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceHandler.cpp">
+      <Filter>League of Legends\Source Files\DeviceHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Geometry\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Geometry\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClient.cpp">
+      <Filter>League of Legends\Source Files\GameClient</Filter>
+    </ClCompile>
+    <ClCompile Include="HashFunctions.cpp">
+      <Filter>League of Legends\Source Files\HashFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="HudManager.cpp">
+      <Filter>League of Legends\Source Files\HudManager</Filter>
+    </ClCompile>
+    <ClCompile Include="NetClient.cpp">
+      <Filter>League of Legends\Source Files\NetClient</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderLayer.cpp">
+      <Filter>League of Legends\Source Files\RenderLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellCastInfo.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Spells</Filter>
+    </ClCompile>
+    <ClCompile Include="BuffScript.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="BuffInstance.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Buffs</Filter>
+    </ClCompile>
+    <ClCompile Include="Instances.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>SDK\Events\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>Geometry\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetSelector.cpp">
+      <Filter>SDK\TargetSelector\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuComponent.cpp">
+      <Filter>SDK\Menu\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckBox.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Slider.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Imgui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBind.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Info.cpp">
+      <Filter>SDK\Menu\Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Orbwalker.cpp">
+      <Filter>SDK\Orbwalker\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ManagerTemplate.cpp">
+      <Filter>League of Legends\Source Files\ManagerTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="ManagerTemplate.cpp">
+      <Filter>League of Legends\Source Files\ManagerTemplate</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSettings.cpp">
+      <Filter>SDK\Menu\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualTableManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPrediction.cpp">
+      <Filter>SDK\HealthPrediction\SourceFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Damage.cpp">
+      <Filter>SDK\Damage\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellInstanceClient.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Spells</Filter>
+    </ClCompile>
+    <ClCompile Include="PathControllerCommon.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\PathController</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinChanger.cpp">
+      <Filter>Plugins\SkinChanger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellbookClient.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Spells</Filter>
+    </ClCompile>
+    <ClCompile Include="Vayne.cpp">
+      <Filter>Plugins\Vayne</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellDataInst.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\Spells</Filter>
+    </ClCompile>
+    <ClCompile Include="Capture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9Capture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="DXGICapture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncHook.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="clipper.cpp">
+      <Filter>Plugins\Evade</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillshotData.cpp">
+      <Filter>Plugins\Evade</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellDB.cpp">
+      <Filter>Plugins\Evade</Filter>
+    </ClCompile>
+    <ClCompile Include="Evade.cpp">
+      <Filter>Plugins\Evade</Filter>
+    </ClCompile>
+    <ClCompile Include="NavGrid.cpp">
+      <Filter>League of Legends\Source Files\ObjectManager\GameObject\NavGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Activator.cpp">
+      <Filter>Plugins\Activator</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

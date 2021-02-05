@@ -46,7 +46,7 @@ namespace HACKUZAN
 
 	PathControllerCommon* GameObject::GetPathController()
 	{
-		return reinterpret_cast<PathControllerCommon*(__thiscall*)(GameObject*)>(this->VTable[(DWORD)Offsets::GameObject::Virtual_GetPathController])(this);
+		return reinterpret_cast<PathControllerCommon * (__thiscall*)(GameObject*)>(this->VTable[(DWORD)Offsets::GameObject::Virtual_GetPathController])(this);
 		//typedef PathControllerCommon* (__thiscall* OriginalFn)(PVOID);
 		//return CallVirtual<OriginalFn>(this, (DWORD)Offsets::GameObject::Virtual_GetPathController)(this);
 	}
@@ -121,36 +121,31 @@ namespace HACKUZAN
 	{
 		if (this->Spellbook.GetSpellState(slot) == SpellState_Ready && ClockFacade::GameTickCount() - LastCastSpellTick >= 100) {
 
-			SpellbookClient* spellbook = &this->Spellbook;
-			auto pSpellInfo = this->Spellbook.GetSpell(slot);
-			auto pSDI = pSpellInfo->GetSpellTargetingClient();
-			auto pContainer = (void*)((uintptr_t)pSDI + 0x4);
-			pSDI->Caster = Caster;
-			pSDI->TargetPos2 = TargetPos;
-			pSDI->TargetPos = TargetPos;
+			DWORD spellbook = Caster + (DWORD)Offsets::GameObject::Spellbook;
+			SpellDataInst* pSpellInfo = this->Spellbook.GetSpell(slot);
+			Vector3* mePos = &this->Position;
+			Vector3* targetPos = &TargetPos;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
 			DWORD CastSpellAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::NewCastSpell;
 
+			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
+				return; //This isn't the instruction we're looking for
 
-			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, 0x0)) {
-
-				if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
-					return; //This isn't the instruction we're looking for
-
-				__asm
-				{
-					push retnHere //address of our function,  
-					mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
-					push 0
-					push pContainer
-					push slot
-					push pSpellInfo
-					push SpoofAddress
-					jmp CastSpellAddr
-					retnHere :
-				}
+			__asm
+			{
+				push retnHere //address of our function,  
+				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
+				push 0
+				push mePos
+				push targetPos
+				push slot
+				push pSpellInfo
+				push SpoofAddress
+				jmp CastSpellAddr
+				retnHere :
 			}
+
 			LastCastSpellTick = ClockFacade::GameTickCount();
 		}
 	}
@@ -247,18 +242,18 @@ namespace HACKUZAN
 				return; //This isn't the instruction we're looking for
 
 			__asm {
-					push retnHere; //address of our function
+				push retnHere; //address of our function
 
-					mov ecx, this; //If the function is a __thiscall don't forget to set ECX
-					push networkID //Push args to league function, typically left to right 
+				mov ecx, this; //If the function is a __thiscall don't forget to set ECX
+				push networkID //Push args to league function, typically left to right 
 					push 0  //Push args to league function, typically left to right 
 					push 1  //Push args to league function, typically left to right 
 					push target  //Push args to league function, typically left to right 
 					push pos  //Push args to league function, typically left to right 
 					push order  //Push args to league function, typically left to right 
 					push retInstruction;
-					jmp IssueOrderAddr; //Jump to league function
-					retnHere:
+				jmp IssueOrderAddr; //Jump to league function
+			retnHere:
 			}
 		}
 	}
@@ -274,18 +269,18 @@ namespace HACKUZAN
 				return; //This isn't the instruction we're looking for
 
 			__asm {
-					push retnHere; //address of our function
+				push retnHere; //address of our function
 
-					mov ecx, this; //If the function is a __thiscall don't forget to set ECX
-					push 0  //Push args to league function, typically left to right 
+				mov ecx, this; //If the function is a __thiscall don't forget to set ECX
+				push 0  //Push args to league function, typically left to right 
 					push 0  //Push args to league function, typically left to right 
 					push 0  //Push args to league function, typically left to right 
 					push 0  //Push args to league function, typically left to right 
 					push position  //Push args to league function, typically left to right 
 					push order  //Push args to league function, typically left to right 
 					push retInstruction;
-					jmp IssueOrderAddr; //Jump to league function
-					retnHere:
+				jmp IssueOrderAddr; //Jump to league function
+			retnHere:
 			}
 		}
 	}
@@ -305,14 +300,14 @@ namespace HACKUZAN
 
 				mov ecx, this; //If the function is a __thiscall don't forget to set ECX
 				push 0  //Push args to league function, typically left to right 
-				push 0  //Push args to league function, typically left to right 
-				push 0  //Push args to league function, typically left to right 
-				push 0  //Push args to league function, typically left to right 
-				push position  //Push args to league function, typically left to right 
-				push order  //Push args to league function, typically left to right 
-				push retInstruction;
+					push 0  //Push args to league function, typically left to right 
+					push 0  //Push args to league function, typically left to right 
+					push 0  //Push args to league function, typically left to right 
+					push position  //Push args to league function, typically left to right 
+					push order  //Push args to league function, typically left to right 
+					push retInstruction;
 				jmp IssueOrderAddr; //Jump to league function
-				retnHere:
+			retnHere:
 			}
 		}
 	}
@@ -330,14 +325,14 @@ namespace HACKUZAN
 
 			mov ecx, this; //If the function is a __thiscall don't forget to set ECX
 			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push position  //Push args to league function, typically left to right 
-			push order  //Push args to league function, typically left to right 
-			push retInstruction;
+				push 0  //Push args to league function, typically left to right 
+				push 0  //Push args to league function, typically left to right 
+				push 0  //Push args to league function, typically left to right 
+				push position  //Push args to league function, typically left to right 
+				push order  //Push args to league function, typically left to right 
+				push retInstruction;
 			jmp IssueOrderAddr; //Jump to league function
-			retnHere:
+		retnHere:
 		}
 	}
 
@@ -354,14 +349,14 @@ namespace HACKUZAN
 
 			mov ecx, this; //If the function is a __thiscall don't forget to set ECX
 			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push position  //Push args to league function, typically left to right 
-			push order  //Push args to league function, typically left to right 
-			push retInstruction;
+				push 0  //Push args to league function, typically left to right 
+				push 0  //Push args to league function, typically left to right 
+				push 0  //Push args to league function, typically left to right 
+				push position  //Push args to league function, typically left to right 
+				push order  //Push args to league function, typically left to right 
+				push retInstruction;
 			jmp IssueOrderAddr; //Jump to league function
-			retnHere:
+		retnHere:
 		}
 	}
 
@@ -378,14 +373,14 @@ namespace HACKUZAN
 
 			mov ecx, this; //If the function is a __thiscall don't forget to set ECX
 			push 0  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push 1  //Push args to league function, typically left to right 
-			push 0  //Push args to league function, typically left to right 
-			push position  //Push args to league function, typically left to right 
-			push order  //Push args to league function, typically left to right 
-			push retInstruction;
+				push 0  //Push args to league function, typically left to right 
+				push 1  //Push args to league function, typically left to right 
+				push 0  //Push args to league function, typically left to right 
+				push position  //Push args to league function, typically left to right 
+				push order  //Push args to league function, typically left to right 
+				push retInstruction;
 			jmp IssueOrderAddr; //Jump to league function
-			retnHere:
+		retnHere:
 		}
 	}
 
@@ -638,7 +633,7 @@ namespace HACKUZAN
 				{
 					auto hash = buff->Script->Hash;
 					if (hash == 0x6FF6CCC4 // "BlitzcrankManaBarrierCD"
-					|| hash == 0xDEE0E3A1) // "ManaBarrier"
+						|| hash == 0xDEE0E3A1) // "ManaBarrier"
 					{
 						return result;
 					}
@@ -1056,7 +1051,7 @@ namespace HACKUZAN
 				return item;
 			}
 		}
-		return nullptr;        
+		return nullptr;
 	}
 
 	kSpellSlot GameObject::FindItemSpellSLot(Item itemId)

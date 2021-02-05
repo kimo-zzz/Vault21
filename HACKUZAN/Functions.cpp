@@ -41,7 +41,7 @@ namespace HACKUZAN {
 
 	void Functions::Initialize() {
 
-		GetGameTime = (fnGetGameTime)DEFINE_RVA(Offsets::ClockFacade::GetGameTime);
+		//GetGameTime = (fnGetGameTime)DEFINE_RVA(Offsets::ClockFacade::GetGameTime);
 		TranslateString = (fnTranslateString)DEFINE_RVA(Offsets::HashFunctions::TranslateString);
 		GetPing = (fnGetPing)DEFINE_RVA(Offsets::NetClient::GetPing);
 		ChangerCharacterData = (fnChangerCharacterData)DEFINE_RVA(Offsets::Functions::ChangerCharacterData);

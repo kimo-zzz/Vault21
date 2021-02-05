@@ -100,7 +100,7 @@ bool Orbwalker::Orbwalk(CObject* target, float extraWindup = 0.0f)
 bool Orbwalker::CanAttack()
 {
 	//return Engine::GetGameTimeTickCount() + 30 / 2 >= LastAttackCommandT + Engine::GetLocalObject()->GetAttackDelay() * 1000;
-	return float(GetTickCount()) + 30 / 2.f >= LastAttackCommandT + me->GetAttackDelay() * 1000.f;
+	return float(GetTickCount()) + 30 / 2.f +25.f >= LastAttackCommandT + me->GetAttackDelay() * 1000.f;
 }
 
 /// <summary>

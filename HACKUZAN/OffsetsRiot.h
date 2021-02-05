@@ -11,7 +11,7 @@ namespace HACKUZAN {
 		enum class ClockFacade {   //update
 			Instance = 0x1C5D7FC,									// ?? --not used anyways, we can ignore
 			GetGameTime = 0x34e6fd4,								// 11.3
-			GameTime = 0x34e6fd4,									// 11.3
+			GameTime = 0x02f4759c,									// 11.3
 			GetExeTime = 0x8C2EE0,									// ?? --not used anyways, we can ignore
 			FrameClock = 0x8,										// ?? --not used anyways, we can ignore
 		};
@@ -404,7 +404,7 @@ namespace HACKUZAN {
 
 		enum class CharacterDataStack {
 			SkinName = 0xC,
-			SkinId = 0x0EBC // E8 ? ? ? ? 83 C4 0C 80 BF // scroll down, instruction: cmp byte ptr [xxx+[offset]h], 0
+			SkinId = 0x18//0x0EBC // E8 ? ? ? ? 83 C4 0C 80 BF // scroll down, instruction: cmp byte ptr [xxx+[offset]h], 0
 		};
 
 		enum class CharacterData {

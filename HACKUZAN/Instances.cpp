@@ -12,7 +12,7 @@ namespace HACKUZAN {
 	void Instances::Initialize() {
 
 		//ClockFacade::Instance = *(ClockFacade**)DEFINE_RVA(Offsets::ClockFacade::Instance);
-		NavGrid::Instance = *(NavGrid**)DEFINE_RVA(Offsets::NavGrid::Instance);
+		//NavGrid::Instance = *(NavGrid**)DEFINE_RVA(Offsets::NavGrid::Instance);
 		HudManager::Instance = *(HudManager**)DEFINE_RVA(Offsets::HudManager::Instance);
 		NetClient::Instance = *(NetClient**)DEFINE_RVA(Offsets::NetClient::Instance);
 		ObjectManager::Instance = (ObjectManager*)(*(DWORD*)(baseAddr + (DWORD)Offsets::ObjectManager::Instance));

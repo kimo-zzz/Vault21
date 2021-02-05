@@ -171,7 +171,7 @@ namespace LeagueHook {
 			}
 			Sleep(2000);
 			GameClient::PrintChat("Recalling to decrypt OnProcessSpell...", IM_COL32(122, 69, 0, 122));
-			ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player);// recall to trigger onprocessspell 1 time before hooking
+			//ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player, ObjectManager::Player->Position);// recall to trigger onprocessspell 1 time before hooking
 
 			GameClient::PrintChat("Processing the recall....", IM_COL32(134, 69, 0, 134));
 			Sleep(2000);

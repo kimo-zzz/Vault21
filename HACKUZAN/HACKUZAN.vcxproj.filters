@@ -234,6 +234,9 @@
     <Filter Include="Plugins\Activator">
       <UniqueIdentifier>{61eeb19d-ee5d-4c8b-b17c-cb19fc501480}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Zydis">
+      <UniqueIdentifier>{5aa1a37c-7d7e-4777-be08-c929749d341c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -569,12 +572,6 @@
     <ClInclude Include="Draven.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="driver.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DriverController.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GapCloserDB.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -597,6 +594,12 @@
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hideModule.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueFunctions.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -796,9 +799,6 @@
     <ClCompile Include="Draven.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DriverController.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LeagueHooks.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
@@ -807,6 +807,51 @@
     </ClCompile>
     <ClCompile Include="SpellInfo.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueFunctions.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Decoder.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\DecoderData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Formatter.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterATT.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBase.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\MetaInfo.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Mnemonic.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Register.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\SharedData.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\String.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Utils.c">
+      <Filter>Zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Zydis\src\Zydis.c">
+      <Filter>Zydis</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

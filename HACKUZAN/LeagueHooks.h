@@ -64,8 +64,9 @@ struct LeagueDecryptData
 class LeagueDecrypt
 {
 public:
+	static uint8_t* _RtlDispatchExceptionAddress;
 	static int IsMemoryDecrypted(PVOID Address);
-	static LeagueDecryptData decrypt(const wchar_t* szModule);
+	static LeagueDecryptData decrypt(char* szModule);
 };
 
 struct VECTORED_HANDLER_ENTRY
@@ -99,4 +100,5 @@ public:
 	static void RemoveAllHandlers();
 	static void ReAddAllHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list);
 	static void ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> _PVECTORED_EXCEPTION_HANDLER_list);
+	static void GetAllModules(DWORD procId);
 };

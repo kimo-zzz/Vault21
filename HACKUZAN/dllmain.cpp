@@ -15,15 +15,15 @@
 #include "Functions.h"
 #include "ManagerTemplate.h"
 #include "HeavensGateHook.h"
+#include "hideModule.h"
+#include "LeagueFunctions.h"
 
 CConsole Console;
 using namespace HACKUZAN;
 using namespace HACKUZAN::SDK;
 
-bool Triggered = true;
-bool Ready = false;
-FuncHook GetThreadContextHook;
-LeagueHooksVEH LeagueHookVEH;
+bool Ready = true;
+
 LeagueHooksHWBP LeagueHookHWBP;		
 
 DWORD WINAPI InitThread(LPVOID);
@@ -33,31 +33,7 @@ HMODULE g_hModule;
 
 void OnExit() noexcept;
 
-__declspec(dllexport, naked) void __stdcall unpackman() {
-	__asm pushfd
-	__asm pushad
-	__asm push 0
-	__asm push 1
-	__asm push unpackman
-	__asm call unpackman
-	__asm popad
-	__asm popfd
-	__asm ret
-}
-
-/*template< typename T >
-std::string hexify(T i)
-{
-	std::stringbuf buf;
-	std::ostream os(&buf);
-
-
-	os << "0x" << std::setfill('0') << std::setw(sizeof(T) * 2)
-		<< std::hex << i;
-
-	return buf.str().c_str();
-}*/
-
+DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnFinishCast_addr;
 
 namespace LeagueHook {
 
@@ -160,97 +136,129 @@ namespace LeagueHook {
 
 	void LoadHooks() {
 
-		if (Triggered) {
-			Triggered = false;
+		if (Ready) {
+			oOnProcessSpell_addr = DEFINE_RVA(Offsets::Functions::OnProcessSpellW);
+			oOnCreateObject_addr = DEFINE_RVA(Offsets::Functions::OnCreateObject);
+			oOnDeleteObject_addr = DEFINE_RVA(Offsets::Functions::OnDeleteObject);
+			oOnFinishCast_addr = DEFINE_RVA(Offsets::Functions::OnStopCast);
 
-			//RestoreZwQueryInformationProcess();
+			LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
 
-			for (int i = 5; i > 0; i--) { // give some time to finish loading client
+			while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
+				GameClient::PrintChat("Cannot find _RtlDispatchExceptionAddress. Retrying...", IM_COL32(255, 69, 0, 255));
+				LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
 				Sleep(1000);
-				GameClient::PrintChat(("Hooks ready in: " + std::to_string(i)).c_str(), IM_COL32(255, 69 + (i * 100), 0, 255));
 			}
-			Sleep(2000);
-			GameClient::PrintChat("Recalling to decrypt OnProcessSpell...", IM_COL32(122, 69, 0, 122));
-			//ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player, ObjectManager::Player->Position);// recall to trigger onprocessspell 1 time before hooking
 
-			GameClient::PrintChat("Processing the recall....", IM_COL32(134, 69, 0, 134));
-			Sleep(2000);
-			ObjectManager::Player->IssueOrder(GameObjectOrder::MoveTo, &Vector3(ObjectManager::Player->Position.X, ObjectManager::Player->Position.Y - 10, ObjectManager::Player->Position.Z));
-			GameClient::PrintChat("Getting ready for Hooks...", IM_COL32(200, 69, 0, 255));
-			Sleep(2000);
-			Ready = true;
-			GameClient::PrintChat("Hooks ready...", IM_COL32(220, 69, 0, 255));
-			Sleep(2000);
+			LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
 
-			//EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
-		}
+			//PIDManager _PIDManager;
+			//Process::GetAllModules(_PIDManager.GetAowProcId());
 
-		auto _player = (GameObject*)*(DWORD*)DEFINE_RVA(Offsets::ObjectManager::Player);
-		if (Ready && _player->Alive() && ClockFacade::GetGameTime() > 0) {
-			if (!Triggered) {
-
-				GameClient::PrintChat("Client worker trying to hook...", IM_COL32(220, 69, 0, 255));
-				Sleep(2000);
-
-				//OnPlayAnimation
-				//if (LeagueHookVEH.addHook(DEFINE_RVA(Offsets::Functions::OnPlayAnimation), (DWORD)hk_OnPlayAnimation)) {
-				//	GameClient::PrintChat("OnPlayAnimation1 Hook success!.", IM_COL32(255, 69, 0, 255));
-				//	Sleep(3000);
-					//OnProcessSpellW
-					if (LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 0)) {
-						GameClient::PrintChat("OnProcessSpell Hook success!.", IM_COL32(255, 69, 0, 255));
-						Sleep(3000);
-						//Ready = false;
-						//OnStopCast
-						if (LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnStopCast), (DWORD)hk_OnStopCast, 1)) {
-							GameClient::PrintChat("OnStopCast Hook success!.", IM_COL32(255, 69, 0, 255));
-							Sleep(3000);
-							//OnCreateObject
-							if (LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2)) {
-								GameClient::PrintChat("OnCreateObject Hook success!.", IM_COL32(255, 69, 0, 255));
-								Sleep(3000);
-								//OnDeleteObject
-								if (LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnDeleteObject), (DWORD)hk_OnDeleteObject, 3)) {
-									GameClient::PrintChat("OnDeleteObject Hook success!.", IM_COL32(255, 69, 0, 255));
-									Sleep(3000);
-									Ready = false;
-									GameClient::PrintChat("Hooks Initialized~! : All credits goes to pakeke80 <3", IM_COL32(255, 69, 0, 255));
-								}
-								else
-								{
-									GameClient::PrintChat("OnDeleteObject Hook failed.", IM_COL32(255, 69, 0, 255));
-								}
-							}
-							else
-							{
-								GameClient::PrintChat("OnCreateObject Hook failed.", IM_COL32(255, 69, 0, 255));
-							}
-						}
-						else
-						{
-							GameClient::PrintChat("OnStopCast Hook failed.", IM_COL32(255, 69, 0, 255));
-						}
-					}
-					else
-					{
-						GameClient::PrintChat("OnProcessSpell Hook failed.", IM_COL32(255, 69, 0, 255));
-					}
-				//}
-				//else
-				//{
-				//	GameClient::PrintChat("OnPlayAnimation Hook failed.", IM_COL32(255, 69, 0, 255));
-				//}
-				//OnFinishCast
-				//LeagueHookHWBP.addHook(oOnFinishCast_addr, (DWORD)hk_OnFinishCast, 1);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnProcessSpell_addr);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnCreateObject_addr);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnDeleteObject_addr);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)oOnFinishCast_addr);
+			Sleep(1000);
+			std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
+			Process::RemoveAllHandlers();
+			DWORD leoAddr = LeagueHooks::init();
+			Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
+			int i = 0;
+			for (PVECTORED_EXCEPTION_HANDLER handler : PVECTORED_EXCEPTION_HANDLER_list) {
+				//AppLog.AddLog(("Handler[" + to_string(i) + "]: " + hexify<DWORD>((DWORD)handler) + "\n").c_str());
+				i++;
 			}
+
+			////////////////////////////////////////
+			// PATCHING THE ISSUE ORDER RETCHECKS
+			////////////////////////////////////////
+			DWORD IssueOrderAddr = DEFINE_RVA(Offsets::Functions::IssueOrder);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
+			Sleep(1000);
+
+			size_t sizeIssueOrder = 0xFAF;
+			DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFAF;
+			DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
+			LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
+			LeagueFunctions::HookStartAndEndFunction(NewIssueOrder, sizeIssueOrder, 6, (DWORD)LeagueFunctions::NewIssueOrderStartHook, (DWORD)LeagueFunctions::NewIssueOrderEndHook, LeagueFunctions::IssueOrderStartHookGateway, LeagueFunctions::IssueOrderEndHookGateway);
+			LeagueFunctions::IsDonePatchingIssueOrder = true;
+			GameClient::PrintChat("IssueOrder is now patched", IM_COL32(255, 69, 0, 255));
+			//////////////////////////////////////////
+			// END PATCHING THE ISSUE ORDER RETCHECKS
+			//////////////////////////////////////////
+
+			//////////////////////////////////////////
+			// PATCHING THE CAST SPELL RETCHECKS
+			//////////////////////////////////////////
+			DWORD CastSpellAddr = DEFINE_RVA(Offsets::Functions::CastSpell);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
+			Sleep(1000);
+			std::vector<BYTE> CastSpellRsByte = {
+				0xC2,0x14,0x00,0xCC,0xCC
+			};
+			ReturnSig CastSpellRs;
+			CastSpellRs.returnCount = 1;
+			CastSpellRs.returnSig = CastSpellRsByte;
+
+			size_t sizeCastSpell;
+			DWORD EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+			while (!sizeCastSpell) {
+				GameClient::PrintChat("Cannot Read SpellCast function. Try Casting some spells first.", IM_COL32(255, 69, 0, 255));
+				Sleep(1000);
+				EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
+			}
+			DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
+			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
+			LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
+			LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 5, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
+			LeagueFunctions::IsDonePatchingCastSpell = true;
+			GameClient::PrintChat("CastSpell is now patched", IM_COL32(255, 69, 0, 255));
+			//////////////////////////////////////////
+			// END PATCHING THE CAST SPELL RETCHECKS
+			//////////////////////////////////////////
+
+			GameClient::PrintChat("Client worker trying to hook...", IM_COL32(220, 69, 0, 255));
+			Sleep(2000);
+
+			bool isOnProcessHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 0);
+			while (!isOnProcessHooked) {
+				GameClient::PrintChat("OnProcessSpell Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnProcessHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 0);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnProcessSpell Hook success!.", IM_COL32(255, 69, 0, 255));
+
+			bool isOnStopCastHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnStopCast), (DWORD)hk_OnStopCast, 1);
+			while (!isOnStopCastHooked) {
+				GameClient::PrintChat("OnStopCast Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnStopCastHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnStopCast), (DWORD)hk_OnStopCast, 1);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnStopCast Hook success!.", IM_COL32(255, 69, 0, 255));
+
+			bool isOnCreateObjectHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
+			while (!isOnCreateObjectHooked) {
+				GameClient::PrintChat("OnCreateObject Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnCreateObjectHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnCreateObject Hook success!.", IM_COL32(255, 69, 0, 255));
+
+			bool isOnDeleteObjectHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnDeleteObject), (DWORD)hk_OnDeleteObject, 3);
+			while (!isOnDeleteObjectHooked) {
+				GameClient::PrintChat("OnDeleteObject Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnDeleteObjectHooked = LeagueHookHWBP.addHook(DEFINE_RVA(Offsets::Functions::OnDeleteObject), (DWORD)hk_OnDeleteObject, 3);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnDeleteObject Hook success!.", IM_COL32(255, 69, 0, 255));
+			GameClient::PrintChat("Hooks Initialized~! : All credits goes to Vault21 Team <3", IM_COL32(255, 69, 0, 255));
+
+			EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
+			Ready = false;
 		}
 	}
-
-	void OnGameUpdate() {
-
-
-	}
-
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
@@ -280,8 +288,13 @@ Capture* capture = nullptr;
 extern DWORD WINAPI InitThread(LPVOID module);
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
-	if (!(*(DWORD*)DEFINE_RVA(Offsets::ObjectManager::Player)) && *(float*)(baseAddr + (DWORD)Offsets::ClockFacade::GameTime) < 1)
-		return 0;
+	RestoreZwQueryInformationProcess();
+	UnlinkModuleFromPEB(g_hModule);
+	ErasePEHeader(g_hModule);
+	EraseHeaders(g_hModule);
+
+	while (!(*(DWORD*)DEFINE_RVA(Offsets::ObjectManager::Player)) && (*(float*)(baseAddr + (DWORD)Offsets::ClockFacade::GameTime) < 1))
+		Sleep(1);
 
 	Globals::Initialize();
 	Functions::Initialize();
@@ -290,23 +303,11 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 	RenderLayer::Instance = *(RenderLayer**)DEFINE_RVA(Offsets::RenderLayer::Instance);
 	Events::Initialize();
 	SpellDb::Initialize();
-	//GapClosersDB = new GapCloserDB;
-
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)DEFINE_RVA(Offsets::Functions::OnProcessSpellW));
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)DEFINE_RVA(Offsets::Functions::OnStopCast));
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)DEFINE_RVA(Offsets::Functions::OnCreateObject));
-	//LeagueDecrypt::IsMemoryDecrypted((PVOID)DEFINE_RVA(Offsets::Functions::OnDeleteObject));
-
-	std::vector<PVECTORED_EXCEPTION_HANDLER> PVECTORED_EXCEPTION_HANDLER_list = Process::GetAllHandlers();
-	Process::RemoveAllHandlers();
-	DWORD leoAddr = LeagueHooks::init();
-	Process::ReAddAllHandlers(PVECTORED_EXCEPTION_HANDLER_list);
 
 	int count = 0;
 	running = true;
 	HMODULE hModule = (HMODULE)module;
 
-	//MessageBoxA(0, "Capturing Module...", "SUCCESS", MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 	Capture* captures[] = {
 		Direct3D9Capture::singleton(),
 		DXGICapture::singleton(),
@@ -320,21 +321,21 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 	if (!running)
 		return 0;
 	HRESULT hr = 0;
-	//MessageBoxA(0, "Try Capture...", "SUCCESS", MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 	do
 	{
 		hr = capture->TryCapture();
 		if (FAILED(hr)) {
-			//MessageBoxA(0, "Cannot Capture", "Fatal Error", MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 		}
 		else if (SUCCEEDED(hr)) {
-			//MessageBoxA(0, "Capture Success", "SUCCESS", MB_ICONERROR | MB_DEFAULT_DESKTOP_ONLY);
 		}
 	} while (FAILED(hr));
 
+	Sleep(3000); // Just give extra time after loading gui
+	LeagueHook::LoadHooks();
+
 	while (running)
 	{
-		LeagueHook::LoadHooks();
+		
 	}
 
 	LeagueHooks::deinit();
@@ -344,6 +345,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 
 void OnExit() noexcept
 {
+	RelinkModuleToPEB(g_hModule);
 	if (running)
 	{
 		running = false;
@@ -352,6 +354,7 @@ void OnExit() noexcept
 
 		try
 		{
+			Direct3D9Capture::destroy_singleton();
 			DXGICapture::destroy_singleton();
 			Plugins::Dispose();
 			Menu::Dispose();

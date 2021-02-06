@@ -125,10 +125,11 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;NOMINMAX;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>Zycore_EXPORTS;ZYCORE_EXPORTS;WINVER=0x0A00;_WIN32_WINNT=0x0A00;NTDDI_VERSION=0x0A000007;_CRT_SECURE_NO_DEPRECATE;WIN32;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;NOMINMAX;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)include\Zydis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,8 +179,6 @@
     <ClInclude Include="Direct3D9Capture.h" />
     <ClInclude Include="Draven.h" />
     <ClInclude Include="Draw.h" />
-    <ClInclude Include="driver.h" />
-    <ClInclude Include="DriverController.h" />
     <ClInclude Include="DXGICapture.h" />
     <ClInclude Include="EnumMacro.h" />
     <ClInclude Include="Evade.h" />
@@ -193,7 +192,9 @@
     <ClInclude Include="GapCloserDB.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="HeavensGateHook.h" />
+    <ClInclude Include="hideModule.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="LeagueFunctions.h" />
     <ClInclude Include="LeagueHooks.h" />
     <ClInclude Include="makesyscall.h" />
     <ClInclude Include="MalichetePred.h" />
@@ -290,13 +291,27 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Draven.cpp" />
     <ClCompile Include="Draw.cpp" />
-    <ClCompile Include="DriverController.cpp" />
     <ClCompile Include="DXGICapture.cpp" />
     <ClCompile Include="Evade.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="FuncHook.cpp" />
     <ClCompile Include="HealthPrediction.cpp" />
+    <ClCompile Include="include\Zydis\src\Decoder.c" />
+    <ClCompile Include="include\Zydis\src\DecoderData.c" />
+    <ClCompile Include="include\Zydis\src\Formatter.c" />
+    <ClCompile Include="include\Zydis\src\FormatterATT.c" />
+    <ClCompile Include="include\Zydis\src\FormatterBase.c" />
+    <ClCompile Include="include\Zydis\src\FormatterBuffer.c" />
+    <ClCompile Include="include\Zydis\src\FormatterIntel.c" />
+    <ClCompile Include="include\Zydis\src\MetaInfo.c" />
+    <ClCompile Include="include\Zydis\src\Mnemonic.c" />
+    <ClCompile Include="include\Zydis\src\Register.c" />
+    <ClCompile Include="include\Zydis\src\SharedData.c" />
+    <ClCompile Include="include\Zydis\src\String.c" />
+    <ClCompile Include="include\Zydis\src\Utils.c" />
+    <ClCompile Include="include\Zydis\src\Zydis.c" />
+    <ClCompile Include="LeagueFunctions.cpp" />
     <ClCompile Include="LeagueHooks.cpp" />
     <ClCompile Include="MenuSettings.cpp" />
     <ClCompile Include="Functions.cpp" />

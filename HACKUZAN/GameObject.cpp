@@ -9,6 +9,7 @@
 #include "Orbwalker.h"
 #include "GameClient.h"
 #include "ClockFacade.h"
+#include "LeagueFunctions.h"
 
 namespace HACKUZAN
 {
@@ -82,6 +83,9 @@ namespace HACKUZAN
 
 	void GameObject::CastSpell(kSpellSlot slot, DWORD Caster)
 	{
+		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
+			return;
+
 		if (this->Spellbook.GetSpellState(slot) == SpellState_Ready && ClockFacade::GameTickCount() - LastCastSpellTick >= 100) {
 
 			SpellbookClient* spellbook = &this->Spellbook;
@@ -91,8 +95,7 @@ namespace HACKUZAN
 			pSDI->Caster = Caster;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
-			DWORD CastSpellAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::NewCastSpell;
-
+			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
 			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, 0x0)) {
 
@@ -119,6 +122,9 @@ namespace HACKUZAN
 
 	void GameObject::CastSpellPos(kSpellSlot slot, DWORD Caster, Vector3 TargetPos)
 	{
+		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
+			return;
+
 		if (this->Spellbook.GetSpellState(slot) == SpellState_Ready && ClockFacade::GameTickCount() - LastCastSpellTick >= 100) {
 
 			DWORD spellbook = Caster + (DWORD)Offsets::GameObject::Spellbook;
@@ -127,7 +133,7 @@ namespace HACKUZAN
 			Vector3* targetPos = &TargetPos;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
-			DWORD CastSpellAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::NewCastSpell;
+			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
 			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 				return; //This isn't the instruction we're looking for
@@ -152,6 +158,9 @@ namespace HACKUZAN
 
 	void GameObject::CastPredictSpell(kSpellSlot slot, Vector3 start_position, Vector3 end_position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
+			return;
+
 		if (this->Spellbook.GetSpellState(slot) == SpellState_Ready && ClockFacade::GameTickCount() - LastCastSpellTick >= 100) {
 
 			SpellbookClient* spellbook = &this->Spellbook;
@@ -165,7 +174,7 @@ namespace HACKUZAN
 			pSDI->TargetPos2 = end_position;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
-			DWORD CastSpellAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::NewCastSpell;
+			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
 			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, 0x0)) {
 
@@ -192,6 +201,8 @@ namespace HACKUZAN
 
 	void GameObject::CastTargetSpell(kSpellSlot slot, DWORD Caster, DWORD Target, Vector3 StartPos, Vector3 TargetPos, DWORD netid)
 	{
+		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
+			return;
 
 		if (this->Spellbook.GetSpellState(slot) == SpellState_Ready && ClockFacade::GameTickCount() - LastCastSpellTick >= 100) {
 
@@ -204,7 +215,7 @@ namespace HACKUZAN
 			pSDI->TargetPos2 = TargetPos;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
-			DWORD CastSpellAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::NewCastSpell;
+			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
 			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, netid)) {
 
@@ -231,8 +242,11 @@ namespace HACKUZAN
 
 	void GameObject::IssueOrder(GameObjectOrder order, GameObject* target)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 		Vector3* pos = &target->Position;
 		DWORD networkID = target->NetworkId;
 
@@ -260,8 +274,11 @@ namespace HACKUZAN
 
 	void GameObject::IssueOrder(GameObjectOrder order, Vector3* position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 
 		if (EventManager::TriggerProcess(LeagueEvents::OnIssueOrder, this, order, position, nullptr))
 		{
@@ -287,8 +304,11 @@ namespace HACKUZAN
 
 	void GameObject::IssueOrderHoldPos(GameObjectOrder order, Vector3* position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 
 		if (EventManager::TriggerProcess(LeagueEvents::OnIssueOrder, this, order, position, nullptr))
 		{
@@ -314,8 +334,11 @@ namespace HACKUZAN
 
 	void GameObject::OverrideIssueOrder(GameObjectOrder order, Vector3* position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 
 		if (((*(DWORD*)retInstruction) & 0xFF) != 0xC3)
 			return; //This isn't the instruction we're looking for
@@ -338,8 +361,11 @@ namespace HACKUZAN
 
 	void GameObject::EvadeIssueOrder(GameObjectOrder order, Vector3* position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 
 		if (((*(DWORD*)retInstruction) & 0xFF) != 0xC3)
 			return; //This isn't the instruction we're looking for
@@ -362,8 +388,11 @@ namespace HACKUZAN
 
 	void GameObject::EvadeIssueOrderHoldPos(GameObjectOrder order, Vector3* position)
 	{
+		if ((!(DWORD)LeagueFunctions::NewIssueOrder) || (!LeagueFunctions::IsDonePatchingIssueOrder))
+			return;
+
 		DWORD retInstruction = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress; //Address of a return instruction
-		DWORD IssueOrderAddr = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::IssueOrder; //Address of the function you want to call
+		DWORD IssueOrderAddr = (DWORD)LeagueFunctions::NewIssueOrder; //IssueOrder
 
 		if (((*(DWORD*)retInstruction) & 0xFF) != 0xC3)
 			return; //This isn't the instruction we're looking for

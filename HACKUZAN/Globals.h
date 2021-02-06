@@ -11,6 +11,5 @@ namespace HACKUZAN {
 		extern bool InGame;
 
 		void Initialize();
-		DWORD FindHiddenModule();
 	}
 }

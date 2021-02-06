@@ -189,56 +189,6 @@ inline uint8_t* find_signature(LPCSTR szModule, const char* szSignature) {
 	return nullptr;
 }
 
-inline bool UnHookNTDLL() {
-	HANDLE process = GetCurrentProcess();
-	MODULEINFO mi = {};
-	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
-
-	GetModuleInformation(process, ntdllModule, &mi, sizeof(mi));
-	LPVOID ntdllBase = (LPVOID)mi.lpBaseOfDll;
-	HANDLE ntdllFile = CreateFileA("c:\\windows\\syswow64\\ntdll.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	HANDLE ntdllMapping = CreateFileMapping(ntdllFile, NULL, PAGE_READONLY | SEC_IMAGE, 0, 0, NULL);
-	LPVOID ntdllMappingAddress = MapViewOfFile(ntdllMapping, FILE_MAP_READ, 0, 0, 0);
-
-	PIMAGE_DOS_HEADER hookedDosHeader = (PIMAGE_DOS_HEADER)ntdllBase;
-	PIMAGE_NT_HEADERS hookedNtHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)ntdllBase + hookedDosHeader->e_lfanew);
-
-	for (WORD i = 0; i < hookedNtHeader->FileHeader.NumberOfSections; i++) {
-		PIMAGE_SECTION_HEADER hookedSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD_PTR)IMAGE_FIRST_SECTION(hookedNtHeader) + ((DWORD_PTR)IMAGE_SIZEOF_SECTION_HEADER * i));
-
-		if (!strcmp((char*)hookedSectionHeader->Name, (char*)".text")) {
-			DWORD oldProtection = 0;
-			//bool isProtected = VirtualProtect((LPVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress), hookedSectionHeader->Misc.VirtualSize, PAGE_EXECUTE_READWRITE, &oldProtection);
-
-			auto addr = (PVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress);
-			auto size = (SIZE_T)(hookedSectionHeader->Misc.VirtualSize);
-			NTSTATUS res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READWRITE, &oldProtection);
-			if (!NT_SUCCESS(res)) {
-				CloseHandle(process);
-				CloseHandle(ntdllFile);
-				CloseHandle(ntdllMapping);
-				return false;
-			}
-			memcpy((LPVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress), (LPVOID)((DWORD_PTR)ntdllMappingAddress + (DWORD_PTR)hookedSectionHeader->VirtualAddress), hookedSectionHeader->Misc.VirtualSize);
-			//isProtected = VirtualProtect((LPVOID)((DWORD_PTR)ntdllBase + (DWORD_PTR)hookedSectionHeader->VirtualAddress), hookedSectionHeader->Misc.VirtualSize, oldProtection, &oldProtection);
-
-			res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(GetCurrentProcess(), &addr, &size, oldProtection & oldProtection);
-			if (!NT_SUCCESS(res)) {
-				CloseHandle(process);
-				CloseHandle(ntdllFile);
-				CloseHandle(ntdllMapping);
-				return false;
-			}
-		}
-	}
-
-	CloseHandle(process);
-	CloseHandle(ntdllFile);
-	CloseHandle(ntdllMapping);
-	//FreeLibrary(ntdllModule);
-	return true;
-}
-
 #define INRANGE(x,a,b)    (x >= a && x <= b) 
 #define getBits( x )    (INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
 #define getByte( x )    (getBits(x[0]) << 4 | getBits(x[1]))
@@ -278,12 +228,39 @@ inline DWORD FindPatternV2(std::string moduleName, std::string Mask)
 	return NULL;
 }
 
+inline DWORD FindHiddenModule()
+{
+	MEMORY_BASIC_INFORMATION mbi = { 0 };
+	DWORD start = 0;
+	DWORD result = 0;
+	while (VirtualQuery((LPVOID)start, &mbi, sizeof(MEMORY_BASIC_INFORMATION)) != 0)
+	{
+		if (mbi.Protect & PAGE_READWRITE && mbi.State == 0x1000 && mbi.Type == 0x40000)
+		{
+			result = (DWORD)mbi.AllocationBase;
+			if (*(WORD*)(result) == 0x5A4D)
+			{
+				auto ntPtr = reinterpret_cast<PIMAGE_NT_HEADERS>(result + reinterpret_cast<PIMAGE_DOS_HEADER>(result)->e_lfanew);
+				if (ntPtr->FileHeader.NumberOfSections == 9)
+				{
+					//ENGINE_MSG("found : %02X - TimeDateStamp : %02X - State %02X Type %02X", mbi.AllocationBase, ntPtr->FileHeader.TimeDateStamp, mbi.State, mbi.Type);
+					break;
+				}
+
+			}
+		}
+
+		start += mbi.RegionSize;
+	}
+	return result;
+}
+
 inline void writeDataToFile(string name, DWORD address) {
 	FILE* logfile;
 	// _CRT_SECURE_NO_DEPRECATE;
 	if ((logfile = fopen("log.txt", "a+")) != NULL)
 	{
-		//fprintf(logfile, (name + " : " + hexify<DWORD>(address) + "\n").c_str());
+		fprintf(logfile, (name + " : " + hexify<DWORD>(address) + "\n").c_str());
 		fclose(logfile);
 	}
 }
@@ -295,7 +272,19 @@ inline DWORD getMbiBase(DWORD Address) {
 	return (DWORD)mbi.BaseAddress;
 }
 
-#define pakeke80
+inline uint8_t* find_RtlDispatchExceptionAddress()
+{
+	auto address = find_signature("ntdll.dll", "E8 ? ? ? ? 0A C0");
+
+	if (!address)
+	{
+		return nullptr;
+	}
+	address = address + *reinterpret_cast<uint32_t*>(address + 1) + 5;
+
+	return address;
+}
+
 inline DWORD RestoreZwQueryInformationProcess() {
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
@@ -303,74 +292,9 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	DWORD ZwQueryInformationProcessAddr = reinterpret_cast<DWORD>(
 		GetProcAddress(ntdll, "ZwQueryInformationProcess"));
 
-#if defined(pakeke80)
 	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,	
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0x24, 0x77,
-		0xBA, 0xD0, 0x60, 0x2C, 0x77,
-		0xFF, 0xD2,
-		0xC2, 0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
+		0xB8, 0x19, 0x00, 0x00, 0x00
 	};
-#endif
-#if defined(dencelle)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xE8, 0x76, 0xBA, 0x70, 0x71,
-		0xF0, 0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
-#if defined(jiingz)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xE8, 0x76, 0xBA, 0x70, 0x71,
-		0xF0, 0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
-#if defined(earl)
-	BYTE ZwQIP[] = {
-		0xB8, 0x19, 0x00, 0x00, 0x00,
-		0xE8, 0x00, 0x00, 0x00, 0x00,
-		0x5A,
-		0x80, 0x7A, 0x14, 0x4B,
-		0x75, 0x0E,
-		0x64, 0xFF, 0x15, 0xC0, 0x00, 0x00, 0x00,
-		0xC2, 0x14, 0x00,
-		0x00, 0x00,
-		0xE8, 0x76, 0xBA, 0x70, 0x71,
-		0xF0, 0x76, 0xFF,
-		0xD2, 0xC2,
-		0x14, 0x00,
-		0x8D, 0xA4, 0x24, 0x00, 0x00, 0x00, 0x00
-	};
-#endif
 
 	int i = 0;
 	for (BYTE _byte : ZwQIP) {
@@ -379,4 +303,47 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	}
 
 	return ZwQueryInformationProcessAddr;
+}
+
+inline bool Hook(char* src, char* dst, int len)
+{
+	if (len < 5) return false;
+
+	memset(src, 0x90, len);
+
+	uintptr_t relativeAddress = (uintptr_t)(dst - src - 5);
+
+	*src = (char)0xE9;
+	*(uintptr_t*)(src + 1) = (uintptr_t)relativeAddress;
+
+	return true;
+}
+
+template <typename T_STR, typename T_CHAR>
+T_STR remove_leading(T_STR const& str, T_CHAR c)
+{
+	auto end = str.end();
+
+	for (auto i = str.begin(); i != end; ++i) {
+		if (*i != c) {
+			return T_STR(i, end);
+		}
+	}
+
+	// All characters were leading or the string is empty.
+	return T_STR();
+}
+
+inline string removeZero(string str, char toRemove)
+{
+	// Count trailing zeros 
+	int i = 0;
+	while (str[i] == toRemove)
+		i++;
+
+	// The erase function removes i characters 
+	// from given index (0 here) 
+	str.erase(0, i);
+
+	return str;
 }

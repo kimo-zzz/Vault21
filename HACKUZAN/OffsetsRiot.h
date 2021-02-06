@@ -104,10 +104,13 @@ namespace HACKUZAN {
 			ChangerCharacterData = 0x3506498,						// ??			-- no clue
 			IssueOrder = 0x15C5D0,									// 11.3
 
+			IssueOrderTrueReturn = 0x15C864,
+			TrueCastSpellReturn = 0x4EBA7C,
+
 			OnProcessSpellW = 0x4D5190,								// ??
 			OnFinishCast = 0x4CD9C0,								// 11.3
 			OnStopCast = 0x4D7C30,									// 11.3
-			NewCastSpell = 0x4D55E0,								// this is actually the old cast spell we use. wrong naming
+			CastSpell = 0x4D55E0,									// 11.3 oldCastSpell
 
 			OnCreateObject = 0x2794E0,								// 11.3
 			OnDeleteObject = 0x26A4F0,								// 11.3

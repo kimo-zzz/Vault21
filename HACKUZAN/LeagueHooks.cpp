@@ -1,14 +1,13 @@
 #pragma once
 #include "stdafx.h"
 #include "LeagueHooks.h"
-#include "driver.h"
 #include "PIDManager.h"
 //#include <iostream> 
 //#include <string>
 #include "makesyscall.h"
-//#include "ExampleAppLog.h"
 //#include <winternl.h>
 #include <TlHelp32.h>
+#include <comdef.h>
 #ifdef _WIN64
 #define XIP Rip
 #else
@@ -53,7 +52,6 @@ typedef struct _CLIENT_ID
     }
 #endif
 
-//extern ExampleAppLog AppLog;
 /*
 template< typename T >
 std::string hexify(T i)
@@ -886,7 +884,7 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId())
 					//Ignore threads from other processes AND the own thread of course
 				{
-					//std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
+					std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
 
 					//bool isDone = false;
 					//while (!isDone) {
@@ -1104,7 +1102,7 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 				if (te32.th32OwnerProcessID == GetCurrentProcessId() && te32.th32ThreadID != GetCurrentThreadId())
 					//Ignore threads from other processes AND the own thread of course
 				{
-					//std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
+					std::string threadId = hexify<DWORD>(static_cast<DWORD>(te32.th32ThreadID));
 
 					//bool isDone = false;
 					//while (!isDone) {
@@ -1315,14 +1313,14 @@ bool LeagueHooksHWBP::removeHook(uint8_t RegIndex)
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
-LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule) {
+LeagueDecryptData LeagueDecrypt::decrypt(char* szModule) {
 	LeagueDecryptData ldd;
 	ldd.totalFailedDecrypted = 0;
 	ldd.totalSuccessDecrypted = 0;
 	ldd.totalSuccess_PAGE_NOACCESS = 0;
 	ldd.totalSuccess_EXCEPTION_CONTINUE_EXECUTION = 0;
 
-	auto module = GetModuleHandle((LPCSTR)szModule);
+	auto module = GetModuleHandleA(szModule);
 
 
 	auto dosHeader = (PIMAGE_DOS_HEADER)module;
@@ -1376,12 +1374,13 @@ LeagueDecryptData LeagueDecrypt::decrypt(const wchar_t* szModule) {
 typedef BOOLEAN(__stdcall* t_RtlDispatchException)(PEXCEPTION_RECORD ExceptionRecord, PCONTEXT ContextRecord);
 t_RtlDispatchException fn_RtlDispatchException;
 
+uint8_t* LeagueDecrypt::_RtlDispatchExceptionAddress = nullptr;
+
 int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 {
 	CONTEXT ctx;
 	EXCEPTION_RECORD exr;
 	MEMORY_BASIC_INFORMATION mbi;
-	FLOATING_SAVE_AREA w64;
 	memset(&mbi, 0, sizeof(mbi));
 	VirtualQuery(Address, &mbi, sizeof(mbi));
 	if (mbi.Protect != PAGE_NOACCESS)
@@ -1390,7 +1389,6 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 	}
 	RtlCaptureContext(&ctx);
 	memset(&exr, 0, sizeof(EXCEPTION_RECORD));
-	memset(&w64, 0, sizeof(WOW64_FLOATING_SAVE_AREA));
 
 #ifdef _WIN64
 	ctx.Rip = reinterpret_cast<DWORD64>(Address);// (DWORD)FinishThread;
@@ -1413,9 +1411,10 @@ int LeagueDecrypt::IsMemoryDecrypted(PVOID Address)
 	ei.ContextRecord = &ctx;
 	ei.ExceptionRecord = &exr;
 
-	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+	if (!_RtlDispatchExceptionAddress)
+		return 0;
 
-	DWORD RtlDispatchExceptionAddr = (DWORD)ntdll + 0x67FBC;// (DWORD)HACKUZAN::Offsets::Functions::RetAddress;//0x67FBC; //RtlDispatchException
+	DWORD RtlDispatchExceptionAddr = (DWORD)(_RtlDispatchExceptionAddress);
 
 	if (RtlDispatchExceptionAddr) {
 		fn_RtlDispatchException = (t_RtlDispatchException)(RtlDispatchExceptionAddr);
@@ -1617,4 +1616,33 @@ void Process::ReAddAllContinueHandlers(std::vector<PVECTORED_EXCEPTION_HANDLER> 
 			//AppLog.AddLog("\tAddVectoredExceptionHandler: Failed\n");
 		}
 	}
+}
+
+void Process::GetAllModules(DWORD procId) {
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
+	if (hSnap != INVALID_HANDLE_VALUE)
+	{
+		MODULEENTRY32 modEntry;
+		modEntry.dwSize = sizeof(modEntry);
+		if (Module32First(hSnap, &modEntry))
+		{
+			do
+			{
+				//convert from wide char to narrow char array
+				char ch[256];
+				char DefChar = ' ';
+				_bstr_t c(modEntry.szModule);
+				const WCHAR* wc = c;
+
+				WideCharToMultiByte(CP_ACP, 0, (LPCWCH)wc, -1, ch, 256, &DefChar, NULL);
+
+				uintptr_t modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
+
+				//AppLog.AddLog((string(ch) + ": " + hexify<uintptr_t>(modBaseAddr) + "\n").c_str());
+				//writeDataToFile(ch, (DWORD)modBaseAddr);
+
+			} while (Module32Next(hSnap, &modEntry));
+		}
+	}
+	CloseHandle(hSnap);
 }

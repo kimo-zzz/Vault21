@@ -5,7 +5,6 @@
 #include "RenderLayer.h"
 #include "Instances.h"
 #include "Renderer.h"
-#include "Hooks.h"
 #include "Events.h"
 #include "Plugins.h"
 #include "Menu.h"

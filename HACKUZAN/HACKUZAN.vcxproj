@@ -210,7 +210,6 @@
     <ClInclude Include="HashFunctions.h" />
     <ClInclude Include="HealthPrediction.h" />
     <ClInclude Include="HeroInventoryCommon.h" />
-    <ClInclude Include="Hooks.h" />
     <ClInclude Include="HudCursorTargetLogic.h" />
     <ClInclude Include="HudManager.h" />
     <ClInclude Include="imconfig.h" />
@@ -319,7 +318,6 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="HashFunctions.cpp" />
-    <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="HudManager.cpp" />
     <ClCompile Include="imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

@@ -39,16 +39,16 @@ namespace HACKUZAN {
 
 						Instances::Initialize();
 
-						//Objects::Initialize();
-					//	GameTick::Initialize();
-						//SpellCast::Initialize();
-					//	NewPath::Initialize();
+						Objects::Initialize();
+						GameTick::Initialize();
+						SpellCast::Initialize();
+						NewPath::Initialize();
 
 						Menu::Initialize();
-					//	HealthPrediction::Initialize();
-					//	TargetSelector::Initialize();
-					//	Orbwalker::Initialize();
-					//	Plugins::Initialize();
+						HealthPrediction::Initialize();
+						TargetSelector::Initialize();
+						Orbwalker::Initialize();
+						Plugins::Initialize();
 
 						Globals::InGame = true;
 						EventManager::Trigger(LeagueEvents::OnGameStart);

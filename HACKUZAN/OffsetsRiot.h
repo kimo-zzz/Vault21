@@ -25,7 +25,7 @@ namespace HACKUZAN {
 
 		enum class ManagerTemplate {
 			Unknown_List = 0x16B2AB8,								// 11.3
-			AIBases = 0x289E8CC,									// ??			-- object manager?
+			AIBases = 0x22FEE78,									// 11.3
 			Turrets = 0x2F46554,									// 11.3
 			Inhibitor = 0x2F4F888,									// 11.3
 			Heroes = 0x16B09E4,										// 11.3
@@ -73,19 +73,19 @@ namespace HACKUZAN {
 		};
 
 		enum class ObjectManager {
-			Instance = 0x308c10,  // update 
+			Instance = 0x016b2a74,  // update 
 			GetFirstObject = 0x26CA90, //E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 53 8B 5C // sub_[offset]
 			GetNextObject = 0x26E8D0, //E8 ? ? ? ? 8B F0 85 F6 75 E4 // sub_[offset]
 			GetObjectByIndex = 0x2BA1A0, //MISSING replaceable?
 			GetObjectByNetworkId = 0x2BC7F0, //MISSSING replaceable?
-			Player = 0x2f4f764, //MISSING replaceable?
+			Player = 0x2F4F764, //MISSING replaceable?
 
 			ObjectsArray = 0x14,
 			MaxObjects = 0x4 + 0x8, //should still be correct
 		};
 
 		enum class RenderLayer {
-			Instance = 0x02f73e78,//0x35179E4, //MISSING ; what is this
+			Instance = 0x2F73E78,//0x35179E4, //MISSING ; what is this
 			WorldToScreen = 0x91BA50, // 83 EC 10 56 E8 ? ? ? ? 8B 08 // fn 
 
 			ClientWidth = 0x10, //0x14,
@@ -104,10 +104,10 @@ namespace HACKUZAN {
 			ChangerCharacterData = 0x3506498,						// ??			-- no clue
 			IssueOrder = 0x15C5D0,									// 11.3
 
-			OnProcessSpellW = 0x4D7940,								// ??
-			OnFinishCast = 0x00504830,								// ??
-			OnStopCast = 0x4F0130,									// 11.3
-			NewCastSpell = 0x4D5930,								// this is actually the old cast spell we use. wrong naming
+			OnProcessSpellW = 0x4D5190,								// ??
+			OnFinishCast = 0x4CD9C0,								// 11.3
+			OnStopCast = 0x4D7C30,									// 11.3
+			NewCastSpell = 0x4D55E0,								// this is actually the old cast spell we use. wrong naming
 
 			OnCreateObject = 0x2794E0,								// 11.3
 			OnDeleteObject = 0x26A4F0,								// 11.3
@@ -126,8 +126,8 @@ namespace HACKUZAN {
 
 		// MISSING ; We might replace this, mainly used to check for IsWall. We can use !IsNotwall func instead
 		enum class NavGrid {
-			Instance = 0x035103d8,
-			GetCell = 0x008d9ac0,
+			Instance = 0x2F6C888,									// 11.3
+			GetCell = 0x8941B0,										// 11.3
 			GetHeightForPosition = 0x8E2010
 		};
 
@@ -135,7 +135,7 @@ namespace HACKUZAN {
 		enum class AIManagerClient
 		{
 			CreatePath = 0x1C4B60,
-			CalculatePath = 0x008d6c40,
+			CalculatePath = 0x891330,								// 11.3
 			SmoothPath = 0x1BD750,
 		};
 
@@ -297,10 +297,10 @@ namespace HACKUZAN {
 			CantCancelWhileChanneling = 0x36C,
 			ChannelIsInterruptedByAttacking = 0x370,
 			CanMoveWhileChanneling = 0x378,
-			MissileSpeed = 0x440,//0x450,
-			SpellDataSpellWidth = 0x474,//0x458,
-			SpellDataSpellRadius = 0x3EC,
-			CastRange = 0x3B4,
+			MissileSpeed = 0x44C,//0x450,
+			SpellDataSpellWidth = 0x434,//0x458,
+			SpellDataSpellRadius = 0x3F8,
+			CastRange = 0x3DC,
 			CastRangeDisplayOverride = 0x3B8,
 			SpellDataEffectSpellRange = 0x10C, // starts from F4
 			SpellDataEffectSpellRangeAfterEffect = 0xB8 // starts from A0

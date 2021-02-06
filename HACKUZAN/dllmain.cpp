@@ -245,7 +245,6 @@ namespace LeagueHook {
 
 			EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
 			Ready = false;
-			ObjectManager::Player->CastSpell(HACKUZAN::kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player);
 		}
 	}
 }

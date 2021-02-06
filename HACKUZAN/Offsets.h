@@ -6,16 +6,8 @@
 
 #define RIOT_BUILD
 
-#if defined(CHINA_BUILD)
-#define LOL_VERSION "9.8.270.9450"
-#include "OffsetsChina.h"
-
-#elif defined(GARENA_BUILD)
-#define LOL_VERSION "9.8.270.9450"
-#include "OffsetsGarena.h"
-
-#elif defined(RIOT_BUILD)
-#define LOL_VERSION "9.8.270.9450"
+#if defined(RIOT_BUILD)
+#define LOL_VERSION "11.3.357.5376"
 #include "OffsetsRiot.h"
 
 #endif

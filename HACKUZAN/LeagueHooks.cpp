@@ -1,13 +1,14 @@
 #pragma once
 #include "stdafx.h"
 #include "LeagueHooks.h"
+
 #include "PIDManager.h"
 //#include <iostream> 
 //#include <string>
 #include "makesyscall.h"
+#include <comdef.h>
 //#include <winternl.h>
 #include <TlHelp32.h>
-#include <comdef.h>
 #ifdef _WIN64
 #define XIP Rip
 #else
@@ -52,6 +53,7 @@ typedef struct _CLIENT_ID
     }
 #endif
 
+//extern ExampleAppLog AppLog;
 /*
 template< typename T >
 std::string hexify(T i)
@@ -159,7 +161,7 @@ void LeagueHooksVEH::deinit() {
 void print_parameters(PCONTEXT debug_context) {
 
 	MessageBoxA(0,(
-		"EAX: "+hexify<DWORD>(debug_context->Eax) + "\n" +
+		"EAX: "+hexify<DWORD>(debug_context->Eax) + "\n" + 
 		"EBX: " + hexify<DWORD>(debug_context->Ebx) + "\n" +
 		"EDX: " + hexify<DWORD>(debug_context->Edx) + "\n"
 		).c_str(), "", 0);
@@ -577,8 +579,8 @@ LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 			auto addr = (PVOID)hs.og_fun;
 			auto size = static_cast<SIZE_T>(static_cast<int>(1));
 			NTSTATUS res = makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2,
-				0x14, 0x00)(GetCurrentProcess(), &addr, &size,
-					PAGE_EXECUTE_READ | PAGE_GUARD, &dwOld);
+			                                     0x14, 0x00)(GetCurrentProcess(), &addr, &size,
+			                                                 PAGE_EXECUTE_READ | PAGE_GUARD, &dwOld);
 		}
 
 		for (HookStructHWBP hs : hookListHWBP)
@@ -899,9 +901,9 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 					ClientId.UniqueThread = (PVOID)te32.th32ThreadID;
 
 					NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64",
-						0x170, 0xC2, 0x10, 0x00)(
-							&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
-							&ObjectAttributes, &ClientId);
+					                                     0x170, 0xC2, 0x10, 0x00)(
+						&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
+						&ObjectAttributes, &ClientId);
 					if (NT_SUCCESS(res))
 					{
 						if (ThreadHandle)
@@ -982,7 +984,7 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 										// size of 1 (val 0), at 18-19, 22-23, 26-27, 30-31
 										Ctx.Dr7 |= 1ULL << (2 * RegIndex);
 										DWORD bitsToRemove = ((1 << (2 * RegIndex)) | (3 << (((2 * (RegIndex)) * 2) + 16
-											)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
+										)) | (3 << (((2 * (RegIndex)) * 2) + 18)));
 										Ctx.Dr7 -= bitsToRemove;
 										DR7 = Ctx.Dr7;
 
@@ -992,7 +994,7 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 										if (NT_SUCCESS(
 											makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00,
 												"RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle
-													, &Ctx)))
+												, &Ctx)))
 										{
 											//AppLog.AddLog((threadId + ": SetThreadContext success\n").c_str());
 											//isDone = true;
@@ -1042,7 +1044,8 @@ bool LeagueHooksHWBP::UnHook(uint8_t RegIndex)
 					}
 					//}
 				}
-			} while (Thread32Next(hThreadSnap, &te32));
+			}
+			while (Thread32Next(hThreadSnap, &te32));
 			CloseHandle(hThreadSnap);
 			return true;
 		}
@@ -1117,9 +1120,9 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 					ClientId.UniqueThread = (PVOID)te32.th32ThreadID;
 
 					NTSTATUS res = makesyscall<NTSTATUS>(0x2E, 0x01, 0x00, 0x00, "RtlInterlockedCompareExchange64",
-						0x170, 0xC2, 0x10, 0x00)(
-							&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
-							&ObjectAttributes, &ClientId);
+					                                     0x170, 0xC2, 0x10, 0x00)(
+						&ThreadHandle, THREAD_GET_CONTEXT | THREAD_SET_CONTEXT | THREAD_SUSPEND_RESUME,
+						&ObjectAttributes, &ClientId);
 					if (NT_SUCCESS(res))
 					{
 						if (ThreadHandle)
@@ -1208,7 +1211,7 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 										if (NT_SUCCESS(
 											makesyscall<NTSTATUS>(0x8B, 0x01, 0x00, 0x00,
 												"RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x08, 0x00)(ThreadHandle
-													, &Ctx)))
+												, &Ctx)))
 										{
 											//AppLog.AddLog((threadId + ": SetThreadContext success\n").c_str());
 											//isDone = true;
@@ -1258,7 +1261,8 @@ bool LeagueHooksHWBP::Hook(DWORD original_fun, DWORD hooked_fun, uint8_t RegInde
 					}
 					//}
 				}
-			} while (Thread32Next(hThreadSnap, &te32));
+			}
+			while (Thread32Next(hThreadSnap, &te32));
 			CloseHandle(hThreadSnap);
 
 			return true;
@@ -1440,10 +1444,10 @@ enum _PROCESSINFOCLASS
 
 #pragma comment(lib, "ntdll.lib")
 extern "C" NTSYSCALLAPI NTSTATUS NTAPI NtQueryInformationProcess(IN HANDLE ProcessHandle,
-	IN PROCESSINFOCLASS ProcessInformationClass,
-	OUT PVOID ProcessInformation,
-	IN ULONG ProcessInformationLength,
-	OUT PULONG ReturnLength OPTIONAL);
+                                                                 IN PROCESSINFOCLASS ProcessInformationClass,
+                                                                 OUT PVOID ProcessInformation,
+                                                                 IN ULONG ProcessInformationLength,
+                                                                 OUT PULONG ReturnLength OPTIONAL);
 
 DWORD Process::process_cookie_ = 0;
 
@@ -1554,11 +1558,11 @@ std::vector<PVECTORED_EXCEPTION_HANDLER> Process::GetAllHandlers()
 	return _PVECTORED_EXCEPTION_HANDLER_list;
 }
 
-typedef PVOID(__stdcall* t_AddVectoredExceptionHandler)(ULONG FirstHandler,
-	PVECTORED_EXCEPTION_HANDLER VectorHandler/*, ULONG Type*/);
+typedef PVOID (__stdcall* t_AddVectoredExceptionHandler)(ULONG FirstHandler,
+                                                         PVECTORED_EXCEPTION_HANDLER VectorHandler/*, ULONG Type*/);
 t_AddVectoredExceptionHandler fn_AddVectoredExceptionHandler;
 
-typedef BOOL(__stdcall* t_RemoveVectoredExceptionHandler)(PVOID Handle/*, ULONG Type*/);
+typedef BOOL (__stdcall* t_RemoveVectoredExceptionHandler)(PVOID Handle/*, ULONG Type*/);
 t_RemoveVectoredExceptionHandler fn_RemoveVectoredExceptionHandler;
 
 void Process::RemoveAllHandlers()
@@ -1566,7 +1570,7 @@ void Process::RemoveAllHandlers()
 	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
 	DWORD remove_exception_handler = reinterpret_cast<DWORD>(GetProcAddress(ntdll, "RtlRemoveVectoredExceptionHandler")
-		);
+	);
 	fn_RemoveVectoredExceptionHandler = (t_RemoveVectoredExceptionHandler)remove_exception_handler;
 	//AppLog.AddLog(("t_RemoveVectoredExceptionHandler: " + hexify<DWORD>((DWORD)remove_exception_handler) + "\n").c_str());
 
@@ -1631,12 +1635,11 @@ void Process::GetAllModules(DWORD procId) {
 				//convert from wide char to narrow char array
 				char ch[256];
 				char DefChar = ' ';
-				_bstr_t c(modEntry.szModule);
-				const WCHAR* wc = c;
-
-				WideCharToMultiByte(CP_ACP, 0, (LPCWCH)wc, -1, ch, 256, &DefChar, NULL);
 
 				uintptr_t modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
+				_bstr_t c(modEntry.szModule);
+				const WCHAR* wc = c;
+				WideCharToMultiByte(CP_ACP, 0, (LPCWCH)wc, -1, ch, 256, &DefChar, NULL);
 
 				//AppLog.AddLog((string(ch) + ": " + hexify<uintptr_t>(modBaseAddr) + "\n").c_str());
 				//writeDataToFile(ch, (DWORD)modBaseAddr);

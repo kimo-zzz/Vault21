@@ -1,15 +1,14 @@
 #pragma once
 #include "stdafx.h"
 #include "LeagueFunctions.h"
+//#include "ExampleAppLog.h"
 
 #include <stdio.h>
 #include <inttypes.h>
 #include "include/Zydis/Zydis.h"
-
-#include "Offsets.h"
-//extern ExampleAppLog AppLog;
-
 using namespace HACKUZAN;
+
+//extern ExampleAppLog AppLog;
 
 PVOID LeagueFunctions::NewIssueOrder = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;

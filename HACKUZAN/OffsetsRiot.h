@@ -10,10 +10,7 @@ namespace HACKUZAN {
 		// MISSING
 		enum class ClockFacade {   //update
 			Instance = 0x1C5D7FC,									// ?? --not used anyways, we can ignore
-			GetGameTime = 0x34e6fd4,								// 11.3
 			GameTime = 0x02f4759c,									// 11.3
-			GetExeTime = 0x8C2EE0,									// ?? --not used anyways, we can ignore
-			FrameClock = 0x8,										// ?? --not used anyways, we can ignore
 		};
 
 		//MISSING
@@ -24,8 +21,8 @@ namespace HACKUZAN {
 		};
 
 		enum class ManagerTemplate {
-			Unknown_List = 0x16B2AB8,								// 11.3
-			AIBases = 0x22FEE78,									// 11.3
+
+			AIBases = 0x22FEE78,									// 11.3  
 			Turrets = 0x2F46554,									// 11.3
 			Inhibitor = 0x2F4F888,									// 11.3
 			Heroes = 0x16B09E4,										// 11.3
@@ -76,12 +73,10 @@ namespace HACKUZAN {
 			Instance = 0x016b2a74,  // update 
 			GetFirstObject = 0x26CA90, //E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 53 8B 5C // sub_[offset]
 			GetNextObject = 0x26E8D0, //E8 ? ? ? ? 8B F0 85 F6 75 E4 // sub_[offset]
-			GetObjectByIndex = 0x2BA1A0, //MISSING replaceable?
-			GetObjectByNetworkId = 0x2BC7F0, //MISSSING replaceable?
+
 			Player = 0x2F4F764, //MISSING replaceable?
 
 			ObjectsArray = 0x14,
-			MaxObjects = 0x4 + 0x8, //should still be correct
 		};
 
 		enum class RenderLayer {
@@ -101,16 +96,16 @@ namespace HACKUZAN {
 		///////////////////////////////////FUNCTIONS//////////////////////////////////////
 
 		enum class Functions {
-			ChangerCharacterData = 0x3506498,						// ??			-- no clue
+
 			IssueOrder = 0x15C5D0,									// 11.3
 
 			IssueOrderTrueReturn = 0x15C864,
 			TrueCastSpellReturn = 0x4EBA7C,
 
-			OnProcessSpellW = 0x4D5190,								// ??
+			OnProcessSpellW = 0x4D5190,								// 11.3  
 			OnFinishCast = 0x4CD9C0,								// 11.3
 			OnStopCast = 0x4D7C30,									// 11.3
-			CastSpell = 0x4D55E0,									// 11.3 oldCastSpell
+			CastSpell = 0x4D55E0,									// 11.3 
 
 			OnCreateObject = 0x2794E0,								// 11.3
 			OnDeleteObject = 0x26A4F0,								// 11.3
@@ -137,9 +132,9 @@ namespace HACKUZAN {
 		//MISSING ; this stuff is needed sadly
 		enum class AIManagerClient
 		{
-			CreatePath = 0x1C4B60,
-			CalculatePath = 0x891330,								// 11.3
-			SmoothPath = 0x1BD750,
+			CreatePath = 0x1A7D70,									// 11.3  //xref CalculatePath   83 EC 10 56 8B F1 57 8B BE
+			CalculatePath = 0x891330,								// 11.3  //inside CreatePath	83 EC 50 8B 44 24 58
+			SmoothPath = 0x1A6320,									// 11.3  inside IssueOrder		55 8B EC 83 E4 F0 83 EC 68 6B
 		};
 
 		///////////////////////////////////STRUCTS///////////////////////////////////////
@@ -169,7 +164,6 @@ namespace HACKUZAN {
 			ResourceType = MaxResource + 0x40,
 			SecondaryResource = ResourceType + 0x20,
 			MaxSecondaryResource = SecondaryResource + 0x10,
-			LifeTime = 0xC6C, // idk
 			StatusFlags = 0x3D0,
 			IsTargetable = 0xD00, // 88 83 ? ? ? ? C6 83 ? ? ? ? ? C7 // fn + EBE
 			IsUntargetableToAllies = IsTargetable + 0x10,
@@ -207,11 +201,6 @@ namespace HACKUZAN {
 			IsSpecialAttack = IsBasicAttack + 0x4,
 			Slot = 0x710,
 			StartTime = 0x75C,
-		};
-
-		enum class ParticleClient {
-			LifeTime = 0x264,
-			ExpireTime = 0x5D0,
 		};
 
 		enum class ClassData {
@@ -402,7 +391,7 @@ namespace HACKUZAN {
 			fEffect9 = fEffect8 + 0x4,
 			fEffect10 = fEffect9 + 0x4,
 			fEffect11 = fEffect10 + 0x4,
-			SpellData = 0x134, //"SpellDataInstClient::SetSpellData: %s n"...
+			SpellData = 0x13C, //"SpellDataInstClient::SetSpellData: %s n"...
 		};
 
 		enum class CharacterDataStack {

@@ -59,88 +59,16 @@ namespace HACKUZAN {
 
 			namespace Objects {
 				GameObject* CachedGameObjects[10000];
-				std::unordered_map<GameObject*, int> mActiveMissileMap;
 
 				void Initialize() {
-
-					mActiveMissileMap = std::unordered_map<GameObject*, int>();
-
-					//auto minion_list = HACKUZAN::GameObject::GetMinions();
-					//for (size_t i = 0; i < minion_list->size; i++)
-					//{
-					/*auto aibase_list = HACKUZAN::GameObject::GetAIBases();
-					for (size_t i = 0; i < aibase_list->size; i++)
-					{
-						auto gameObject = aibase_list->entities[i];
-						CachedGameObjects[i] = gameObject;
-						if (gameObject) {
-							EventManager::Trigger(LeagueEvents::OnCreateObject, gameObject);
-						}
-					}
-
-					auto missile_list = HACKUZAN::GameObject::GetMissiles();
-					for (size_t i = 0; i < missile_list->size; i++)
-					{
-						auto gameObject = missile_list->entities[i];
-
-						CachedGameObjects[i] = gameObject;
-						EventManager::Trigger(LeagueEvents::OnCreateMissile, gameObject);
-					}*/
 
 					EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
 				}
 
-				void AddMissile(GameObject* missile)
-				{
-					std::pair<GameObject*, int> newMissile(missile, 1000 * (missile->MissileStartTime));
-					mActiveMissileMap.insert(newMissile);
-				}
 
 				void OnGameUpdate() {
 
-					//auto minion_list = HACKUZAN::GameObject::GetMinions();
-					//for (size_t i = 0; i < minion_list->size; i++)
-					//{
-					/*auto aibase_list = HACKUZAN::GameObject::GetAIBases();
-					for (size_t i = 0; i < aibase_list->size; i++)
-					{
-						auto gameObject = aibase_list->entities[i];
-						auto& cachedGameObject = CachedGameObjects[i];
-
-						if (!cachedGameObject && gameObject) {
-							cachedGameObject = gameObject;
-							EventManager::Trigger(LeagueEvents::OnCreateObject, gameObject);
-						}
-						else if (cachedGameObject && gameObject != cachedGameObject) {
-							EventManager::Trigger(LeagueEvents::OnDeleteObject, cachedGameObject);
-							cachedGameObject = gameObject;
-							if (gameObject) {
-								EventManager::Trigger(LeagueEvents::OnCreateObject, gameObject);
-							}
-						}
-					}*/
-
-					/*auto missile_list = HACKUZAN::GameObject::GetMissiles();
-					for (size_t i = 0; i < missile_list->size; i++)
-					{
-						auto gameObject = missile_list->entities[i];
-						auto& cachedGameObject = CachedGameObjects[i];
-
-						if (!cachedGameObject && gameObject) {
-							cachedGameObject = gameObject;
-
-							Draw.DrawCircle3D(gameObject->Position, 50, 50, IM_COL32(255, 255, 69, 69));
-
-							EventManager::Trigger(LeagueEvents::OnCreateMissile, gameObject);
-						}
-						else if (cachedGameObject && gameObject != cachedGameObject) {
-							EventManager::Trigger(LeagueEvents::OnDeleteMissile, cachedGameObject);
-							cachedGameObject = gameObject;
-							if (gameObject) {
-								EventManager::Trigger(LeagueEvents::OnCreateMissile, gameObject);
-							}
-						}
-					}*/
+					
 				}
 			}
 
@@ -174,26 +102,12 @@ namespace HACKUZAN {
 
 					if (MenuSettings::DeveloperMode) {
 
-						/*auto unknown_list = HACKUZAN::GameObject::GetUnknownList();
-						for (size_t i = 0; i < unknown_list->size; i++)
-						{
-							auto gameObject = unknown_list->entities[i];
-							if (gameObject) {
-
-								Vector2 pos2D;
-								if (!RenderLayer::WorldToScreen(gameObject->Position, pos2D))
-									continue;
-								Renderer::AddText(10, pos2D + Vector2(0, i), 0xFFFFA500, gameObject->Name.c_str());
-								Draw.DrawCircle3D(gameObject->Position, 50, 50, IM_COL32(255, 255, 69, 69));
-							}
-						}*/
-
 						auto cursorPos = HudManager::Instance->CursorTargetLogic->CursorPosition;
 						Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 0), 0xFFFFA500, "Screen Position: X:%d Y:%d", (int)HudManager::CursorPos2D.X, (int)HudManager::CursorPos2D.Y);
 						Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 20), 0xFFFFA500, "Game Position: X:%f Y:%f Z:%f", cursorPos.X, cursorPos.Y, cursorPos.Z);
 						//auto navMeshCell = NavigationMesh::Instance->WorldToCell(cursorPos.X, cursorPos.Z);
 						//Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 40), 0xFFFFA500, "NavigationMesh Position: X:%f Y:%f", navMeshCell.X, navMeshCell.Y);
-						Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 60), 0xFFFFDEAD, "Collision flags: %d", NavGrid::Instance->GetCell(&cursorPos)->m_Flags);
+						//Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 60), 0xFFFFDEAD, "Collision flags: %d", NavGrid::Instance->GetCell(&cursorPos)->m_Flags);
 
 						auto aibase_list = HACKUZAN::GameObject::GetAIBases();
 						for (size_t i = 0; i < aibase_list->size; i++)

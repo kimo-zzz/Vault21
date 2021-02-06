@@ -14,7 +14,7 @@ namespace HACKUZAN
 		union
 		{
 			DEFINE_MEMBER_N(GameObject** ObjectsArray, Offsets::ObjectManager::ObjectsArray)
-			DEFINE_MEMBER_N(unsigned int MaxObjects, Offsets::ObjectManager::MaxObjects)
+			//DEFINE_MEMBER_N(unsigned int MaxObjects, Offsets::ObjectManager::MaxObjects)
 		};
 
 		static GameObject* Get(unsigned short id);

@@ -11,7 +11,7 @@ namespace HACKUZAN
 
 		union
 		{
-			DEFINE_MEMBER_N(DWORD* FrameClock, Offsets::ClockFacade::FrameClock)
+			//DEFINE_MEMBER_N(DWORD* FrameClock, Offsets::ClockFacade::FrameClock)
 		};
 
 		static float GetGameTime();

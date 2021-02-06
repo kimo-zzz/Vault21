@@ -18,10 +18,5 @@ namespace HACKUZAN {
 		ObjectManager::Instance = (ObjectManager*)(*(DWORD*)(baseAddr + (DWORD)Offsets::ObjectManager::Instance));
 		ObjectManager::Player = *(GameObject**)DEFINE_RVA(Offsets::ObjectManager::Player);
 
-		ManagerTemplate::AIBases = *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::AIBases);
-		ManagerTemplate::Turrets = *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Turrets);
-		ManagerTemplate::Inhibitor = *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Inhibitor);
-		ManagerTemplate::Minions = *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Minions);
-		ManagerTemplate::Heroes = *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Heroes);
 	}
 }

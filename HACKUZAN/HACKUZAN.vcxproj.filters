@@ -189,6 +189,9 @@
     <Filter Include="League of Legends\RenderLayer">
       <UniqueIdentifier>{1149cb9d-a68b-4006-8df1-1348866ef8b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Draven">
+      <UniqueIdentifier>{e3ee3740-2ddf-46e3-9a4f-b038b0a94db2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -518,9 +521,6 @@
     <ClInclude Include="Activator.h">
       <Filter>Plugins\Activator</Filter>
     </ClInclude>
-    <ClInclude Include="Draven.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GapCloserDB.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -550,6 +550,9 @@
     </ClInclude>
     <ClInclude Include="LeagueFunctions.h">
       <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Draven.h">
+      <Filter>Plugins\Draven</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -628,9 +631,6 @@
     <ClCompile Include="Orbwalker.cpp">
       <Filter>SDK\Orbwalker\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ManagerTemplate.cpp">
-      <Filter>League of Legends\Source Files\ManagerTemplate</Filter>
-    </ClCompile>
     <ClCompile Include="MenuSettings.cpp">
       <Filter>SDK\Menu\Source Files</Filter>
     </ClCompile>
@@ -687,9 +687,6 @@
     </ClCompile>
     <ClCompile Include="Activator.cpp">
       <Filter>Plugins\Activator</Filter>
-    </ClCompile>
-    <ClCompile Include="Draven.cpp">
-      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LeagueHooks.cpp">
       <Filter>Core\Source Files</Filter>
@@ -798,6 +795,12 @@
     </ClCompile>
     <ClCompile Include="SpellInstanceClient.cpp">
       <Filter>League of Legends\ObjectManager\GameObject\Spells</Filter>
+    </ClCompile>
+    <ClCompile Include="ManagerTemplate.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Draven.cpp">
+      <Filter>Plugins\Draven</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

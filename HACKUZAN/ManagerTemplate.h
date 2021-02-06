@@ -6,15 +6,7 @@
 
 namespace HACKUZAN
 {
-	//ManagerTemplate
-	template<typename T>
-	struct SEntityList
-	{
-		char pad_0000[0x4]; //0x0000
-		T** entities;
-		size_t size;
-		size_t max_size;
-	};
+
 
 	struct StopCast
 	{
@@ -26,18 +18,6 @@ namespace HACKUZAN
 		unsigned int missileNetworkID;
 		unsigned int counter;
 	};
-
-	namespace ManagerTemplate
-	{
-		extern SEntityList<GameObject>* AIBases;
-		extern SEntityList<GameObject>* Missiles;
-		extern SEntityList<GameObject>* Turrets;
-		extern SEntityList<GameObject>* Inhibitor;
-		extern SEntityList<GameObject>* Minions;
-		extern SEntityList<GameObject>* Heroes;
-
-		extern std::vector<StopCast*>Args;
-	}
 
 
 #pragma  region  Delayaction

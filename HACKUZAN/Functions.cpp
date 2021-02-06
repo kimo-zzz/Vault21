@@ -44,7 +44,7 @@ namespace HACKUZAN {
 		//GetGameTime = (fnGetGameTime)DEFINE_RVA(Offsets::ClockFacade::GetGameTime);
 		TranslateString = (fnTranslateString)DEFINE_RVA(Offsets::HashFunctions::TranslateString);
 		GetPing = (fnGetPing)DEFINE_RVA(Offsets::NetClient::GetPing);
-		ChangerCharacterData = (fnChangerCharacterData)DEFINE_RVA(Offsets::Functions::ChangerCharacterData);
+
 		IssueOrder = (fnIssueOrder)DEFINE_RVA(Offsets::Functions::IssueOrder);
 		//CastSpell = (fnCastSpell)DEFINE_RVA(Offsets::Functions::CastSpell);
 		GetAttackCastDelay = (fnGetAttackCastDelay)DEFINE_RVA(Offsets::Functions::GetAttackCastDelay);

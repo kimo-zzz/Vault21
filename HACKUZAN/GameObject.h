@@ -125,7 +125,6 @@ namespace HACKUZAN
 			DEFINE_MEMBER_N(GameObjectResourceType ResourceType, Offsets::GameObject::ResourceType)
 			DEFINE_MEMBER_N(float SecondaryResource, Offsets::GameObject::SecondaryResource)
 			DEFINE_MEMBER_N(float MaxSecondaryResource, Offsets::GameObject::MaxSecondaryResource)
-			DEFINE_MEMBER_N(float LifeTime, Offsets::GameObject::LifeTime)
 			DEFINE_MEMBER_N(kGameObjectStatusFlags StatusFlags, Offsets::GameObject::StatusFlags)
 			DEFINE_MEMBER_N(bool IsUntargetableToEnemies, Offsets::GameObject::IsUntargetableToEnemies)
 			DEFINE_MEMBER_N(bool IsUntargetableToAllies, Offsets::GameObject::IsUntargetableToAllies)
@@ -172,9 +171,6 @@ namespace HACKUZAN
 
 			DEFINE_MEMBER_N(SpellbookClient Spellbook, Offsets::GameObject::Spellbook)
 
-			//PARTICLE CLIENT
-			DEFINE_MEMBER_N(float ParticleLifeTime, Offsets::ParticleClient::LifeTime)
-			DEFINE_MEMBER_N(float ParticleExpireTime, Offsets::ParticleClient::ExpireTime)
 			//MISSILE CLIENT
 			DEFINE_MEMBER_N(SpellData* MissileSpellInfo, Offsets::MissileClient::MissileSpellCastInfo)
 			DEFINE_MEMBER_N(unsigned short MissileSourceId, Offsets::MissileClient::SourceId)
@@ -233,10 +229,7 @@ namespace HACKUZAN
 			{
 				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Missiles);
 			}
-			static SEntityList<GameObject>* GetUnknownList()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Unknown_List);
-			}
+
 
 		//VTable functions
 		float GetBoundingRadius();

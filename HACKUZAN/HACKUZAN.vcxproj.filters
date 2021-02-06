@@ -196,6 +196,9 @@
     <Filter Include="Core\Funcs\Syscall">
       <UniqueIdentifier>{d29c15be-210b-41c6-a9b9-902fcd0336ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Draven">
+      <UniqueIdentifier>{108afdee-c7b5-4c85-8f9a-78fb7d713575}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -556,9 +559,6 @@
       <Filter>Core\LeagueCore</Filter>
     </ClInclude>
     <ClInclude Include="Draven.h">
-      <Filter>Core\LeagueCore</Filter>
-    </ClInclude>
-    <ClInclude Include="Draven.h">
       <Filter>Plugins\Draven</Filter>
     </ClInclude>
   </ItemGroup>
@@ -616,6 +616,9 @@
     </ClCompile>
     <ClCompile Include="Orbwalker.cpp">
       <Filter>SDK\Orbwalker\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ManagerTemplate.cpp">
+      <Filter>League of Legends\Source Files\ManagerTemplate</Filter>
     </ClCompile>
     <ClCompile Include="MenuSettings.cpp">
       <Filter>SDK\Menu\Source Files</Filter>
@@ -804,7 +807,7 @@
       <Filter>Core\LeagueCore</Filter>
     </ClCompile>
     <ClCompile Include="Draven.cpp">
-      <Filter>Core\LeagueCore</Filter>
+      <Filter>Plugins\Draven</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -194,24 +194,13 @@ namespace LeagueHook {
 			DWORD CastSpellAddr = DEFINE_RVA(Offsets::Functions::CastSpell);
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 			Sleep(1000);
-			std::vector<BYTE> CastSpellRsByte = {
-				0xC2,0x14,0x00,0xCC,0xCC
-			};
-			ReturnSig CastSpellRs;
-			CastSpellRs.returnCount = 1;
-			CastSpellRs.returnSig = CastSpellRsByte;
 
-			size_t sizeCastSpell;
-			DWORD EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
-			while (!sizeCastSpell) {
-				GameClient::PrintChat("Cannot Read SpellCast function. Try Casting some spells first.", IM_COL32(255, 69, 0, 255));
-				Sleep(1000);
-				EndCastSpellAddr = LeagueFunctions::CalcFunctionSize(CastSpellAddr, sizeCastSpell, CastSpellRs);
-			}
+			size_t sizeCastSpell = 0x37F;
+			DWORD EndCastSpellAddr = CastSpellAddr + 0x37F;
 			DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 			LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
-			LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 5, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
+			LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 4, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
 			LeagueFunctions::IsDonePatchingCastSpell = true;
 			GameClient::PrintChat("CastSpell is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////
@@ -256,6 +245,7 @@ namespace LeagueHook {
 
 			EnableHeavensGateHook(); // WEAPONIZING THE HEAVEN'S GATE
 			Ready = false;
+			ObjectManager::Player->CastSpell(HACKUZAN::kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player);
 		}
 	}
 }

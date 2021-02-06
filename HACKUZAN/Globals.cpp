@@ -11,7 +11,7 @@ namespace HACKUZAN {
 
 
 	void Globals::Initialize() {
-		MainModule = GetModuleHandle("League of Legends.exe");
+		MainModule = GetModuleHandleA(NULL);
 		HiddenModule = FindHiddenModule();
 		D3D9Module = GetModuleHandle("d3d9.dll");
 		MainWindow = *(HWND*)DEFINE_RVA(Offsets::RiotWindow::Instance);

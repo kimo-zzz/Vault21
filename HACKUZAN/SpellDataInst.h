@@ -46,7 +46,7 @@ namespace HACKUZAN
 
 		SpellTargetingClient* GetSpellTargetingClient()
 		{
-			return *(SpellTargetingClient**)((DWORD)this + 0x130);
+			return *(SpellTargetingClient**)((DWORD)this + 0x138);
 		}
 	};
 }

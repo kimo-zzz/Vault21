@@ -98,14 +98,14 @@ namespace HACKUZAN {
 		enum class Functions {
 
 			IssueOrder = 0x15C5D0,									// 11.3
-
 			IssueOrderTrueReturn = 0x15C864,
-			TrueCastSpellReturn = 0x4EBA7C,
+			
+			CastSpell = 0x4D55E0,
+			TrueCastSpellReturn = 0x58A994,
 
 			OnProcessSpellW = 0x4D5190,								// 11.3  
 			OnFinishCast = 0x4CD9C0,								// 11.3
 			OnStopCast = 0x4D7C30,									// 11.3
-			CastSpell = 0x4D55E0,									// 11.3 
 
 			OnCreateObject = 0x2794E0,								// 11.3
 			OnDeleteObject = 0x26A4F0,								// 11.3

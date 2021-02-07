@@ -9,10 +9,7 @@ namespace HACKUZAN
 	{
 		return *(SpellDataInst**)((DWORD)this + 0x478 + (0x4 * slot));
 	}
-	SpellDataInst* SpellbookClient::GetSpell2(kSpellSlot slot, DWORD caster)
-	{
-		return *(SpellDataInst**)(caster + ((DWORD)HACKUZAN::Offsets::GameObject::Spellbook + 0x478) + (0x4 * slot));
-	}
+
 	kSpellState SpellbookClient::GetSpellState(kSpellSlot slot)
 	{
 		return

@@ -100,7 +100,7 @@ namespace HACKUZAN {
 			IssueOrder = 0x15C5D0,									// 11.3
 			IssueOrderTrueReturn = 0x15C864,
 			
-			CastSpell = 0x4D55E0,
+			CastSpell = 0x4D5960,
 			TrueCastSpellReturn = 0x58A994,
 
 			OnProcessSpellW = 0x4D5190,								// 11.3  

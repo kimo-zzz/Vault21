@@ -176,8 +176,8 @@ namespace LeagueHook {
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
 			Sleep(1000);
 
-			size_t sizeIssueOrder = 0xFAF;
-			DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFAF;
+			size_t sizeIssueOrder = 0xFB0;
+			DWORD EndIssueOrderAddr = IssueOrderAddr + 0xFB0;
 			DWORD NewIssueOrder = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewIssueOrder, IssueOrderAddr, sizeIssueOrder);
 			LeagueFunctions::FixRellocation(IssueOrderAddr, EndIssueOrderAddr, (DWORD)LeagueFunctions::NewIssueOrder, sizeIssueOrder);
@@ -195,12 +195,12 @@ namespace LeagueHook {
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
 			Sleep(1000);
 
-			size_t sizeCastSpell = 0x37F;
-			DWORD EndCastSpellAddr = CastSpellAddr + 0x37F;
+			size_t sizeCastSpell = 0x370;
+			DWORD EndCastSpellAddr = CastSpellAddr + 0x370;
 			DWORD NewCastSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewCastSpell, CastSpellAddr, sizeCastSpell);
 			LeagueFunctions::FixRellocation(CastSpellAddr, EndCastSpellAddr, (DWORD)LeagueFunctions::NewCastSpell, sizeCastSpell);
-			LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 4, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
+			LeagueFunctions::HookStartAndEndFunction(NewCastSpell, sizeCastSpell, 5, (DWORD)LeagueFunctions::NewCastSpellStartHook, (DWORD)LeagueFunctions::NewCastSpellEndHook, LeagueFunctions::CastSpellStartHookGateway, LeagueFunctions::CastSpellEndHookGateway);
 			LeagueFunctions::IsDonePatchingCastSpell = true;
 			GameClient::PrintChat("CastSpell is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////

@@ -32,7 +32,6 @@ namespace HACKUZAN
 		};
 
 		SpellDataInst* GetSpell(kSpellSlot slot);
-		SpellDataInst* GetSpell2(kSpellSlot slot, DWORD caster);
 
 		kSpellState GetSpellState(kSpellSlot slot);
 

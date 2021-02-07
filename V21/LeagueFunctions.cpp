@@ -538,8 +538,8 @@ DWORD* backup_returnAddrFromStackNewCastSpell;
 void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
 {
 	__asm {
+		pop     edi
 		pop     esi
-		pop     ebp
 		add esp, 0x34
 	}
 
@@ -564,7 +564,7 @@ void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
 	//testValueCastSpell(backup_returnAddrFromStackNewCastSpell, backup_TrueCastSpellReturnAddress);
 	__asm popad
 
-	__asm ret 0x10
+	__asm ret 0x14
 }
 
 void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {

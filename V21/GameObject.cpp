@@ -90,14 +90,13 @@ namespace HACKUZAN
 
 			SpellbookClient* spellbook = &this->Spellbook;
 			auto pSpellInfo = this->Spellbook.GetSpell(slot);
-			auto pSDI = pSpellInfo->GetSpellTargetingClient();
-			auto pContainer = (void*)((uintptr_t)pSDI + 0x4);
-			pSDI->Caster = Caster;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
 			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
-			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, 0x0)) {
+			Vector3* mePos = &this->Position;
+
+			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, mePos, mePos, 0x0)) {
 
 				if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 					return; //This isn't the instruction we're looking for
@@ -107,7 +106,8 @@ namespace HACKUZAN
 					push retnHere //address of our function,  
 					mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
 					push 0
-					push pContainer
+					push mePos
+					push mePos
 					push slot
 					push pSpellInfo
 					push SpoofAddress
@@ -165,18 +165,14 @@ namespace HACKUZAN
 
 			SpellbookClient* spellbook = &this->Spellbook;
 			auto pSpellInfo = this->Spellbook.GetSpell(slot);
-			auto pSDI = pSpellInfo->GetSpellTargetingClient();
-			auto pContainer = (void*)((uintptr_t)pSDI + 0x4);
-			//pSDI->Caster = Caster;
-			pSDI->StartPos = start_position;
-			pSDI->StartPos2 = start_position;
-			pSDI->TargetPos = end_position;
-			pSDI->TargetPos2 = end_position;
+
+			Vector3* _start_position = &start_position;
+			Vector3* _end_position = &end_position;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
 			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
-			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, 0x0)) {
+			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, _end_position, _start_position, 0x0)) {
 
 				if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 					return; //This isn't the instruction we're looking for
@@ -186,7 +182,8 @@ namespace HACKUZAN
 					push retnHere //address of our function,  
 					mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
 					push 0
-					push pContainer
+					push _start_position
+					push _end_position
 					push slot
 					push pSpellInfo
 					push SpoofAddress
@@ -208,16 +205,16 @@ namespace HACKUZAN
 
 			SpellbookClient* spellbook = &this->Spellbook;
 			auto pSpellInfo = this->Spellbook.GetSpell(slot);
-			auto pSDI = pSpellInfo->GetSpellTargetingClient();
-			auto pContainer = (void*)((uintptr_t)pSDI + 0x4);
-			pSDI->Caster = Caster;
-			pSDI->StartPos = StartPos;
-			pSDI->TargetPos2 = TargetPos;
 
 			DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
 			DWORD CastSpellAddr = (DWORD)LeagueFunctions::NewCastSpell; //CastSpell
 
-			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, pContainer, netid)) {
+			Vector3* mePos = &this->Position;
+
+			GameObject* targetGO = (GameObject*)Target;
+			Vector3* targetPos = &targetGO->Position;
+
+			if (EventManager::TriggerProcess(LeagueEvents::OnCastSpell, spellbook, pSpellInfo, slot, targetPos, mePos, 0x0)) {
 
 				if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
 					return; //This isn't the instruction we're looking for
@@ -227,7 +224,8 @@ namespace HACKUZAN
 					push retnHere //address of our function,  
 					mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
 					push netid
-					push pContainer
+					push mePos
+					push targetPos
 					push slot
 					push pSpellInfo
 					push SpoofAddress

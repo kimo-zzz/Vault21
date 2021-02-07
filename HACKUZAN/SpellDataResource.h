@@ -50,6 +50,7 @@ namespace HACKUZAN
 			DEFINE_MEMBER_N(float aEffect1, Offsets::SpellDataResource::aEffect1)
 			DEFINE_MEMBER_N(float aEffect2, Offsets::SpellDataResource::aEffect2)
 			DEFINE_MEMBER_N(float CastTime, Offsets::SpellDataResource::CastTime)
+			DEFINE_MEMBER_N(float CastDelay, Offsets::SpellDataResource::CastDelay)
 			DEFINE_MEMBER_N(bool CantCancelWhileWindingUp, Offsets::SpellDataResource::CantCancelWhileWindingUp)
 			DEFINE_MEMBER_N(bool CantCancelWhileChanneling, Offsets::SpellDataResource::CantCancelWhileChanneling)
 			DEFINE_MEMBER_N(bool ChannelIsInterruptedByAttacking, Offsets::SpellDataResource::ChannelIsInterruptedByAttacking)

@@ -284,15 +284,16 @@ namespace HACKUZAN {
 			eEffect11 = eEffect10 + 0x1C,
 			aEffect1 = 0x200,
 			aEffect2 = 0x204,
-			CastTime = 0x258,
+			CastDelay = 0x250,
+			CastTime = 0x270,
 			CantCancelWhileWindingUp = 0x35C,
 			CantCancelWhileChanneling = 0x36C,
 			ChannelIsInterruptedByAttacking = 0x370,
 			CanMoveWhileChanneling = 0x378,
-			MissileSpeed = 0x44C,//0x450,
-			SpellDataSpellWidth = 0x434,//0x458,
+			MissileSpeed = 0x434,//0x450,
+			SpellDataSpellWidth = 0x44C,//0x458,
 			SpellDataSpellRadius = 0x3F8,
-			CastRange = 0x3DC,
+			CastRange = 0x3C0,
 			CastRangeDisplayOverride = 0x3B8,
 			SpellDataEffectSpellRange = 0x10C, // starts from F4
 			SpellDataEffectSpellRangeAfterEffect = 0xB8 // starts from A0
@@ -437,8 +438,8 @@ namespace HACKUZAN {
 		enum class ItemData {
 			ItemId = 0x68, // "ItemId" 0x13BDDC7B
 			MaxStacks = 0xA8,//0x6C, // "MaxStack" 0x8CCDDBB3
-			Price = 0x4A0,//0x80, // "Price" 0xB44452A
-			DisplayNameLocalizationKey = 0x4A4//0x3E8 // 0x74D44065
+			Price = 0x4AC,
+			DisplayNameLocalizationKey = 0x4B0
 		};
 
 		enum class PathControllerCommon {

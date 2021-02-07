@@ -20,11 +20,11 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{353E6004-216E-4591-802B-D0EE965CCD9F}</ProjectGuid>
+    <ProjectGuid>{921B982F-2809-41DB-B3BF-20BB78D02244}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CrystalSharp</RootNamespace>
+    <RootNamespace>V21</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>HACKUZAN</ProjectName>
+    <ProjectName>V21</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,23 +71,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\HACKUZAN\Downloads\Detours Version 3.0 Build_343\Detours\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(ProjectDir)Dependencies\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(ProjectDir)Dependencies\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\Windows Kits\10\Lib;$(LibraryPath)</LibraryPath>
-    <TargetName>HACKUZAN</TargetName>
+    <TargetName>V21</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\HACKUZAN\Downloads\Detours Version 3.0 Build_343\Detours\src;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\Windows Kits\10\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\HACKUZAN\Downloads\Detours Version 3.0 Build_343\Detours\src;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(ProjectDir)Dependencies\Include;C:\Program Files %28x86%29\Microsoft DirectX SDK\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(ProjectDir)Dependencies\Include;C:\Program Files %28x86%29\Microsoft DirectX SDK\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\Windows Kits\10\Lib;C:\Program Files %28x86%29\Microsoft DirectX SDK\Lib\x86;$(LibraryPath)</LibraryPath>
-    <TargetName>HACKUZAN</TargetName>
+    <TargetName>V21</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\HACKUZAN\Downloads\Detours Version 3.0 Build_343\Detours\src;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files %28x86%29\Windows Kits\10\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,7 +113,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;CrystalSharp_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;V21_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -145,7 +145,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CrystalSharp_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;V21_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -296,20 +296,20 @@
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="FuncHook.cpp" />
     <ClCompile Include="HealthPrediction.cpp" />
-    <ClCompile Include="include\Zydis\src\Decoder.c" />
-    <ClCompile Include="include\Zydis\src\DecoderData.c" />
-    <ClCompile Include="include\Zydis\src\Formatter.c" />
-    <ClCompile Include="include\Zydis\src\FormatterATT.c" />
-    <ClCompile Include="include\Zydis\src\FormatterBase.c" />
-    <ClCompile Include="include\Zydis\src\FormatterBuffer.c" />
-    <ClCompile Include="include\Zydis\src\FormatterIntel.c" />
-    <ClCompile Include="include\Zydis\src\MetaInfo.c" />
-    <ClCompile Include="include\Zydis\src\Mnemonic.c" />
-    <ClCompile Include="include\Zydis\src\Register.c" />
-    <ClCompile Include="include\Zydis\src\SharedData.c" />
-    <ClCompile Include="include\Zydis\src\String.c" />
-    <ClCompile Include="include\Zydis\src\Utils.c" />
-    <ClCompile Include="include\Zydis\src\Zydis.c" />
+    <ClCompile Include="Include\Zydis\src\Decoder.c" />
+    <ClCompile Include="Include\Zydis\src\DecoderData.c" />
+    <ClCompile Include="Include\Zydis\src\Formatter.c" />
+    <ClCompile Include="Include\Zydis\src\FormatterATT.c" />
+    <ClCompile Include="Include\Zydis\src\FormatterBase.c" />
+    <ClCompile Include="Include\Zydis\src\FormatterBuffer.c" />
+    <ClCompile Include="Include\Zydis\src\FormatterIntel.c" />
+    <ClCompile Include="Include\Zydis\src\MetaInfo.c" />
+    <ClCompile Include="Include\Zydis\src\Mnemonic.c" />
+    <ClCompile Include="Include\Zydis\src\Register.c" />
+    <ClCompile Include="Include\Zydis\src\SharedData.c" />
+    <ClCompile Include="Include\Zydis\src\String.c" />
+    <ClCompile Include="Include\Zydis\src\Utils.c" />
+    <ClCompile Include="Include\Zydis\src\Zydis.c" />
     <ClCompile Include="LeagueFunctions.cpp" />
     <ClCompile Include="LeagueHooks.cpp" />
     <ClCompile Include="MenuSettings.cpp" />

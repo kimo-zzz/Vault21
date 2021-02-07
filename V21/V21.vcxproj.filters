@@ -4,6 +4,14 @@
     <Filter Include="Core">
       <UniqueIdentifier>{ce778c05-04e0-42d1-bc2d-ee59a00d1761}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
     <Filter Include="League of Legends">
       <UniqueIdentifier>{4ecb907a-6a43-4e0b-b8d7-3bd69a3e14ef}</UniqueIdentifier>
     </Filter>
@@ -94,17 +102,20 @@
     <Filter Include="Plugins\SkinChanger\Source Files">
       <UniqueIdentifier>{e4a593a9-a1bd-4c21-936a-3ea08dec6685}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Imgui">
+    <Filter Include="ImGui">
       <UniqueIdentifier>{18b3f5d1-f08a-4d48-afc0-ba4df45e1917}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Imgui\Header Files">
+    <Filter Include="ImGui\Header Files">
       <UniqueIdentifier>{6b8cf852-acbc-45a2-81c9-13dd8a899780}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Imgui\Source Files">
+    <Filter Include="ImGui\Source Files">
       <UniqueIdentifier>{d1bb5ffd-d24d-42b7-8254-641e4741cb91}</UniqueIdentifier>
     </Filter>
     <Filter Include="Plugins\Vayne">
       <UniqueIdentifier>{bac09109-7c66-42e6-a63c-61c94514ce31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Hook">
+      <UniqueIdentifier>{86a586db-3dea-459e-bd83-e4588e9f1bfa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Plugins\Evade">
       <UniqueIdentifier>{03b7b802-b449-4c28-9874-f1f7ccf34702}</UniqueIdentifier>
@@ -178,52 +189,37 @@
     <Filter Include="League of Legends\RenderLayer">
       <UniqueIdentifier>{1149cb9d-a68b-4006-8df1-1348866ef8b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Funcs">
-      <UniqueIdentifier>{86a586db-3dea-459e-bd83-e4588e9f1bfa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Funcs\d3d">
-      <UniqueIdentifier>{4565538b-3367-42f3-a64b-213f3ae2d9c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Funcs\hooks">
-      <UniqueIdentifier>{8467f13a-9864-4618-8e5d-c069c349381a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\LeagueCore">
-      <UniqueIdentifier>{e097aa86-c847-4454-ab25-12272170daae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Funcs\Utils">
-      <UniqueIdentifier>{a112c70e-02b2-41bb-b209-044b5e88cd7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Funcs\Syscall">
-      <UniqueIdentifier>{d29c15be-210b-41c6-a9b9-902fcd0336ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Draven">
-      <UniqueIdentifier>{108afdee-c7b5-4c85-8f9a-78fb7d713575}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="imconfig.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_dx9.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_win32.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imstb_textedit.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
-      <Filter>Imgui\Header Files</Filter>
+      <Filter>ImGui\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Offsets.h">
       <Filter>Patchable</Filter>
@@ -233,6 +229,12 @@
     </ClInclude>
     <ClInclude Include="OffsetsGarena.h">
       <Filter>Patchable</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClockFacade.h">
       <Filter>League of Legends\ClockFacade</Filter>
@@ -327,6 +329,12 @@
     <ClInclude Include="SpellbookClient.h">
       <Filter>League of Legends\ObjectManager\GameObject\Spells</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Instances.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Events.h">
       <Filter>SDK\Events\Header Files</Filter>
     </ClInclude>
@@ -375,6 +383,9 @@
     <ClInclude Include="ClassData.h">
       <Filter>League of Legends\ObjectManager\GameObject\ClassData</Filter>
     </ClInclude>
+    <ClInclude Include="VirtualTableManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ClassData.h">
       <Filter>League of Legends\Header Files\ObjectManager\GameObject\ClassData</Filter>
     </ClInclude>
@@ -396,17 +407,50 @@
     <ClInclude Include="SkinChanger.h">
       <Filter>Plugins\SkinChanger\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Plugins.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="OffsetsRiot.h">
       <Filter>Patchable</Filter>
     </ClInclude>
     <ClInclude Include="CharacterProperties.h">
       <Filter>League of Legends\ObjectManager\GameObject\CharacterData</Filter>
     </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Vayne.h">
       <Filter>Plugins\Vayne</Filter>
     </ClInclude>
     <ClInclude Include="MissileClient.h">
       <Filter>League of Legends\ObjectManager\GameObject\Missiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9Capture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="DXGICapture.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="fnv_hash.hpp">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncHook.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Exception.h">
+      <Filter>Core\Hook</Filter>
     </ClInclude>
     <ClInclude Include="clipper.h">
       <Filter>Plugins\Evade</Filter>
@@ -453,6 +497,9 @@
     <ClInclude Include="EnumMacro.h">
       <Filter>Plugins\Evade</Filter>
     </ClInclude>
+    <ClInclude Include="Draw.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="AiManager.h">
       <Filter>League of Legends\ObjectManager\GameObject\PathController</Filter>
     </ClInclude>
@@ -471,115 +518,79 @@
     <ClInclude Include="Activator.h">
       <Filter>Plugins\Activator</Filter>
     </ClInclude>
-    <ClInclude Include="hideModule.h">
-      <Filter>Core\Funcs</Filter>
-    </ClInclude>
-    <ClInclude Include="LeagueFunctions.h">
-      <Filter>Core\Funcs</Filter>
-    </ClInclude>
-    <ClInclude Include="syscalls.h">
-      <Filter>Core\Funcs\Syscall</Filter>
-    </ClInclude>
-    <ClInclude Include="VirtualTableManager.h">
-      <Filter>Core\Funcs</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="SpellInfo.h">
-      <Filter>League of Legends\ObjectManager\GameObject\Spells</Filter>
-    </ClInclude>
-    <ClInclude Include="PIDManager.h">
-      <Filter>Core\Funcs</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Direct3D9Capture.h">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="DXGICapture.h">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw.h">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClInclude>
-    <ClInclude Include="Capture.h">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="FuncHook.h">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="HeavensGateHook.h">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="LeagueHooks.h">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="json.hpp">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="fnv_hash.hpp">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="defs.h">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Win32Exception.h">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="makesyscall.h">
-      <Filter>Core\Funcs\Syscall</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Core\Funcs</Filter>
-    </ClInclude>
-    <ClInclude Include="Console.h">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Plugins.h">
-      <Filter>Core\LeagueCore</Filter>
-    </ClInclude>
-    <ClInclude Include="Instances.h">
-      <Filter>Core\LeagueCore</Filter>
+    <ClInclude Include="Draven.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GapCloserDB.h">
-      <Filter>Core\LeagueCore</Filter>
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Core\LeagueCore</Filter>
+    <ClInclude Include="HeavensGateHook.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Core\LeagueCore</Filter>
+    <ClInclude Include="LeagueHooks.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Draven.h">
-      <Filter>Plugins\Draven</Filter>
+    <ClInclude Include="makesyscall.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PIDManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpellInfo.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="syscalls.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hideModule.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueFunctions.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>Imgui\Source Files</Filter>
+      <Filter>ImGui\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>Imgui\Source Files</Filter>
+      <Filter>ImGui\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_dx9.cpp">
-      <Filter>Imgui\Source Files</Filter>
+      <Filter>ImGui\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>Imgui\Source Files</Filter>
+      <Filter>ImGui\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>Geometry\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vector3.cpp">
       <Filter>Geometry\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Instances.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Events.cpp">
       <Filter>SDK\Events\Source Files</Filter>
@@ -606,7 +617,7 @@
       <Filter>SDK\Menu\Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>Imgui\Source Files</Filter>
+      <Filter>ImGui\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyBind.cpp">
       <Filter>SDK\Menu\Source Files\Components</Filter>
@@ -617,11 +628,11 @@
     <ClCompile Include="Orbwalker.cpp">
       <Filter>SDK\Orbwalker\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ManagerTemplate.cpp">
-      <Filter>League of Legends\Source Files\ManagerTemplate</Filter>
-    </ClCompile>
     <ClCompile Include="MenuSettings.cpp">
       <Filter>SDK\Menu\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualTableManager.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HealthPrediction.cpp">
       <Filter>SDK\HealthPrediction\SourceFiles</Filter>
@@ -632,8 +643,29 @@
     <ClCompile Include="SkinChanger.cpp">
       <Filter>Plugins\SkinChanger\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Plugins.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Vayne.cpp">
       <Filter>Plugins\Vayne</Filter>
+    </ClCompile>
+    <ClCompile Include="Capture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9Capture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="DXGICapture.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncHook.cpp">
+      <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Exception.cpp">
+      <Filter>Core\Hook</Filter>
     </ClCompile>
     <ClCompile Include="clipper.cpp">
       <Filter>Plugins\Evade</Filter>
@@ -647,49 +679,67 @@
     <ClCompile Include="Evade.cpp">
       <Filter>Plugins\Evade</Filter>
     </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Activator.cpp">
       <Filter>Plugins\Activator</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Decoder.c">
+    <ClCompile Include="Draven.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueHooks.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PIDManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpellInfo.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LeagueFunctions.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Zydis\src\Decoder.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\DecoderData.c">
+    <ClCompile Include="Include\Zydis\src\DecoderData.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Formatter.c">
+    <ClCompile Include="Include\Zydis\src\Formatter.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterATT.c">
+    <ClCompile Include="Include\Zydis\src\FormatterATT.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterBase.c">
+    <ClCompile Include="Include\Zydis\src\FormatterBase.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterBuffer.c">
+    <ClCompile Include="Include\Zydis\src\FormatterBuffer.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\FormatterIntel.c">
+    <ClCompile Include="Include\Zydis\src\FormatterIntel.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\MetaInfo.c">
+    <ClCompile Include="Include\Zydis\src\MetaInfo.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Mnemonic.c">
+    <ClCompile Include="Include\Zydis\src\Mnemonic.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Register.c">
+    <ClCompile Include="Include\Zydis\src\Register.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\SharedData.c">
+    <ClCompile Include="Include\Zydis\src\SharedData.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\String.c">
+    <ClCompile Include="Include\Zydis\src\String.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Utils.c">
+    <ClCompile Include="Include\Zydis\src\Utils.c">
       <Filter>Zydis</Filter>
     </ClCompile>
-    <ClCompile Include="include\Zydis\src\Zydis.c">
+    <ClCompile Include="Include\Zydis\src\Zydis.c">
       <Filter>Zydis</Filter>
     </ClCompile>
     <ClCompile Include="ClockFacade.cpp">
@@ -746,68 +796,8 @@
     <ClCompile Include="SpellInstanceClient.cpp">
       <Filter>League of Legends\ObjectManager\GameObject\Spells</Filter>
     </ClCompile>
-    <ClCompile Include="LeagueFunctions.cpp">
-      <Filter>Core\Funcs</Filter>
-    </ClCompile>
-    <ClCompile Include="VirtualTableManager.cpp">
-      <Filter>Core\Funcs</Filter>
-    </ClCompile>
-    <ClCompile Include="PIDManager.cpp">
-      <Filter>Core\Funcs</Filter>
-    </ClCompile>
-    <ClCompile Include="DXGICapture.cpp">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Direct3D9Capture.cpp">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw.cpp">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Core\Funcs\d3d</Filter>
-    </ClCompile>
-    <ClCompile Include="Capture.cpp">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="FuncHook.cpp">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="LeagueHooks.cpp">
-      <Filter>Core\Funcs\hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="Win32Exception.cpp">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Core\Funcs</Filter>
-    </ClCompile>
-    <ClCompile Include="SpellInfo.cpp">
-      <Filter>League of Legends\ObjectManager\GameObject\Spells</Filter>
-    </ClCompile>
-    <ClCompile Include="Console.cpp">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Core\Funcs\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugins.cpp">
-      <Filter>Core\LeagueCore</Filter>
-    </ClCompile>
-    <ClCompile Include="Instances.cpp">
-      <Filter>Core\LeagueCore</Filter>
-    </ClCompile>
-    <ClCompile Include="Functions.cpp">
-      <Filter>Core\LeagueCore</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Core\LeagueCore</Filter>
-    </ClCompile>
-    <ClCompile Include="Draven.cpp">
-      <Filter>Plugins\Draven</Filter>
+    <ClCompile Include="ManagerTemplate.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

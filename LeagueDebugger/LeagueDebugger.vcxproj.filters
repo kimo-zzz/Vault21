@@ -54,7 +54,7 @@
     <ClCompile Include="DXGICapture.cpp">
       <Filter>Source Files\Captures</Filter>
     </ClCompile>
-    <ClCompile Include="DllMain.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">

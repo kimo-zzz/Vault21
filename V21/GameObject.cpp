@@ -257,7 +257,7 @@ namespace HACKUZAN
 				push retnHere; //address of our function
 
 				mov ecx, this; //If the function is a __thiscall don't forget to set ECX
-				push networkID //Push args to league function, typically left to right 
+				push 0 //Push args to league function, typically left to right 
 					push 0  //Push args to league function, typically left to right 
 					push 1  //Push args to league function, typically left to right 
 					push target  //Push args to league function, typically left to right 

@@ -31,7 +31,7 @@ jobs:
       - name:  Cache create
         if:    steps.cache.outputs.cache-hit != 'true'
         run:   |
-          curl -L https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -o _DX2010_.exe
+          curl -L https://dl.filehorse.com/win/developer-tools/directx-sdk/DXSDK_Jun10.exe?st=iL8Rwjm3vMrk_d3uhCNhuw&e=1612822986&fn=DXSDK_Jun10.exe -o _DX2010_.exe
           7z x _DX2010_.exe DXSDK/Include -o_DX2010_
           7z x _DX2010_.exe DXSDK/Lib/x86 -o_DX2010_
           mv _DX2010_/DXSDK $HOME/cache

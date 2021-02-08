@@ -80,6 +80,22 @@ namespace HACKUZAN
 		return ((fnGetNext)(baseAddr + (DWORD)Offsets::ObjectManager::GetNextObject))(*(void**)(baseAddr + (DWORD)Offsets::ObjectManager::Instance), object);
 	}
 
+	int GameObject::CountEnemiesInRange(float range)
+	{
+		auto count = 0;
+		auto hero_list = HACKUZAN::GameObject::GetHeroes();
+		for (size_t i = 0; i < hero_list->size; i++)
+		{
+			auto hero = hero_list->entities[i];
+			if (hero && hero->IsValidTarget() && hero->IsEnemy()) {
+				if (hero->Position.Distance(this->Position) <= range)
+				{
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 
 	void GameObject::CastSpell(kSpellSlot slot, DWORD Caster)
 	{

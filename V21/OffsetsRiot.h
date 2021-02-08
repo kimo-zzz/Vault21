@@ -103,7 +103,7 @@ namespace HACKUZAN {
 			CastSpell = 0x4D5960,
 			TrueCastSpellReturn = 0x58A994,
 
-			OnProcessSpellW = 0x4D5190,								// 11.3  
+			OnProcessSpellW = 0x4d7970,								// 11.3  
 			OnFinishCast = 0x4CD9C0,								// 11.3
 			OnStopCast = 0x4D7C30,									// 11.3
 

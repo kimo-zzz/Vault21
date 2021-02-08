@@ -23,8 +23,7 @@ namespace HACKUZAN {
 			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
-			//void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			int CountEnemiesInRange(float range);
+			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 			GameObject* GetTarget();
 		}
 	}

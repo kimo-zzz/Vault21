@@ -85,6 +85,14 @@ namespace HACKUZAN {
 			return  true;
 		}
 
+		void ChampionName::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		{
+			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+			if (!castInfo)
+				return;
+
+		}
+
 		void ChampionName::OnCreateObject(GameObject* unit)
 		{
 
@@ -105,7 +113,7 @@ namespace HACKUZAN {
 
 		void ChampionName::OnGameUpdate()
 		{
-			auto target = GetTarget();
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
 
 			if (!Orbwalker::OrbwalkerEvading) {
 
@@ -129,22 +137,6 @@ namespace HACKUZAN {
 
 				}
 			}
-		}
-
-
-		GameObject* ChampionName::GetTarget()
-		{
-			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
-			for (size_t i = 0; i < hero_list->size; i++)
-			{
-				auto hero = hero_list->entities[i];
-
-				if (hero && hero->IsEnemy() && hero->IsValidTarget(1000)) {
-					heroes.push_back(hero);
-				}
-			}
-			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
 	}

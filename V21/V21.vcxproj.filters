@@ -111,9 +111,6 @@
     <Filter Include="ImGui\Source Files">
       <UniqueIdentifier>{d1bb5ffd-d24d-42b7-8254-641e4741cb91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Vayne">
-      <UniqueIdentifier>{bac09109-7c66-42e6-a63c-61c94514ce31}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Hook">
       <UniqueIdentifier>{86a586db-3dea-459e-bd83-e4588e9f1bfa}</UniqueIdentifier>
     </Filter>
@@ -188,6 +185,36 @@
     </Filter>
     <Filter Include="League of Legends\RenderLayer">
       <UniqueIdentifier>{1149cb9d-a68b-4006-8df1-1348866ef8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins">
+      <UniqueIdentifier>{3a4dab49-e512-4ea3-88f0-97929e6b6cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Vayne">
+      <UniqueIdentifier>{bac09109-7c66-42e6-a63c-61c94514ce31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Draven">
+      <UniqueIdentifier>{f06d949b-801d-4968-963d-7ff0003f7d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Draven\Header Files">
+      <UniqueIdentifier>{379b5a0e-2bbb-4a37-9433-435fb563039e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Draven\Source Files">
+      <UniqueIdentifier>{62e8d64e-a127-4cd2-8feb-3dafb93fa049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Lucian">
+      <UniqueIdentifier>{7145e5e9-4832-4515-b55c-7832a030ee6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Lucian\Header Files">
+      <UniqueIdentifier>{a3be6a14-38b6-4f43-9f28-8502ca429a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Lucian\Source Files">
+      <UniqueIdentifier>{d5a94fc5-5c6c-4563-8f62-8426877c5842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\TEMPLATE">
+      <UniqueIdentifier>{3b3a4b21-e049-4192-8346-16d841598be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\SkillPrediction">
+      <UniqueIdentifier>{5c580b66-42a8-4577-83c0-e4ec9add2380}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -420,7 +447,7 @@
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vayne.h">
-      <Filter>Plugins\Vayne</Filter>
+      <Filter>Plugins\Champion Plugins\Vayne</Filter>
     </ClInclude>
     <ClInclude Include="MissileClient.h">
       <Filter>League of Legends\ObjectManager\GameObject\Missiles</Filter>
@@ -518,9 +545,6 @@
     <ClInclude Include="Activator.h">
       <Filter>Plugins\Activator</Filter>
     </ClInclude>
-    <ClInclude Include="Draven.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GapCloserDB.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -550,6 +574,15 @@
     </ClInclude>
     <ClInclude Include="LeagueFunctions.h">
       <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Draven.h">
+      <Filter>Plugins\Champion Plugins\Draven\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lucian.h">
+      <Filter>Plugins\Champion Plugins\Lucian\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginTemplate.h">
+      <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -650,7 +683,7 @@
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vayne.cpp">
-      <Filter>Plugins\Vayne</Filter>
+      <Filter>Plugins\Champion Plugins\Vayne</Filter>
     </ClCompile>
     <ClCompile Include="Capture.cpp">
       <Filter>Core\Hook</Filter>
@@ -684,9 +717,6 @@
     </ClCompile>
     <ClCompile Include="Activator.cpp">
       <Filter>Plugins\Activator</Filter>
-    </ClCompile>
-    <ClCompile Include="Draven.cpp">
-      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LeagueHooks.cpp">
       <Filter>Core\Source Files</Filter>
@@ -798,6 +828,15 @@
     </ClCompile>
     <ClCompile Include="ManagerTemplate.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Draven.cpp">
+      <Filter>Plugins\Champion Plugins\Draven\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lucian.cpp">
+      <Filter>Plugins\Champion Plugins\Lucian\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginTemplate.cpp">
+      <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

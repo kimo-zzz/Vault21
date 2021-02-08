@@ -196,6 +196,7 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="LeagueFunctions.h" />
     <ClInclude Include="LeagueHooks.h" />
+    <ClInclude Include="Lucian.h" />
     <ClInclude Include="makesyscall.h" />
     <ClInclude Include="MalichetePred.h" />
     <ClInclude Include="ManagerTemplate.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="PIDManager.h" />
     <ClInclude Include="Plugins.h" />
+    <ClInclude Include="PluginTemplate.h" />
     <ClInclude Include="Polygons.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
@@ -312,6 +314,7 @@
     <ClCompile Include="Include\Zydis\src\Zydis.c" />
     <ClCompile Include="LeagueFunctions.cpp" />
     <ClCompile Include="LeagueHooks.cpp" />
+    <ClCompile Include="Lucian.cpp" />
     <ClCompile Include="MenuSettings.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GameClient.cpp" />
@@ -352,6 +355,7 @@
     <ClCompile Include="PathControllerCommon.cpp" />
     <ClCompile Include="PIDManager.cpp" />
     <ClCompile Include="Plugins.cpp" />
+    <ClCompile Include="PluginTemplate.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ManagerTemplate.cpp" />

@@ -2,6 +2,7 @@
 #include "Plugins.h"
 #include "Draven.h"
 #include "Vayne.h"
+#include "Lucian.h"
 #include "SkinChanger.h"
 #include "Activator.h"
 #include "Evade.h"
@@ -20,6 +21,9 @@ namespace HACKUZAN {
 		case Character::Draven:
 			Draven::Initialize();
 			break;
+		case Character::Lucian:
+			Lucian::Initialize();
+			break;
 		}
 	}
 
@@ -34,6 +38,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Draven:
 			Draven::Dispose();
+			break;
+		case Character::Lucian:
+			Lucian::Dispose();
 			break;
 		}
 	}

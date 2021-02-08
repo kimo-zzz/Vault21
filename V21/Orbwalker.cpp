@@ -90,6 +90,131 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::Initialize() {
+			switch (ObjectManager::Player->BaseCharacterData->SkinHash) {
+			case Character::Ashe:
+				IsAshe = true;
+				break;
+			case Character::Azir:
+				IsAzir = true;
+				break;
+			case Character::Blitzcrank:
+				AttackResetSlot = SpellSlot_E;
+				break;
+			case Character::Camille:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Chogath:
+				AttackResetSlot = SpellSlot_E;
+				break;
+			case Character::Darius:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::DrMundo:
+				AttackResetSlot = SpellSlot_E;
+				break;
+			case Character::Elise:
+				AttackResetSlot = SpellSlot_W;
+				AttackResetHash = 0x211D8403; // "EliseSpiderW"
+				break;
+			case Character::Fiora:
+				AttackResetSlot = SpellSlot_E;
+				break;
+			case Character::Fizz:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Garen:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Graves:
+				IsGraves = true;
+				AttackUsesAmmo = true;
+				AttackResetSlot = SpellSlot_E;
+				IsDashAttackReset = true;
+				break;
+			case Character::Kassadin:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Illaoi:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Jax:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Jayce:
+				AttackResetSlot = SpellSlot_W;
+				AttackResetHash = 0xE95D0E7; // "JayceHyperCharge"
+				break;
+			case Character::Jhin:
+				AttackUsesAmmo = true;
+				break;
+			case Character::Leona:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Lucian:
+				AttackResetSlot = SpellSlot_E;
+				IsDashAttackReset = true;
+				break;
+			case Character::MasterYi:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Mordekaiser:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Nasus:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Nautilus:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Nidalee:
+				AttackResetSlot = SpellSlot_Q;
+				AttackResetHash = 0xCCD4C05E; // "Takedown"
+				break;
+			case Character::RekSai:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Rengar:
+				IsRengar = true;
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Renekton:
+				AttackResetSlot = SpellSlot_W;
+				break;
+			case Character::Riven:
+				AttackResetSlot = SpellSlot_Q;
+				IsDashAttackReset = true;
+				break;
+			case Character::Shyvana:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Sivir:
+				AttackResetSlot = SpellSlot_W;
+			case Character::Talon:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Trundle:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Vayne:
+				AttackResetSlot = SpellSlot_Q;
+				IsDashAttackReset = true;
+				break;
+			case Character::Vi:
+				AttackResetSlot = SpellSlot_E;
+				break;
+			case Character::Volibear:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::MonkeyKing:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::XinZhao:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			case Character::Yorick:
+				AttackResetSlot = SpellSlot_Q;
+				break;
+			}
 
 			auto menu = Menu::CreateMenu("Orbwalker", "Orbwalker");
 
@@ -279,11 +404,13 @@ namespace HACKUZAN {
 				switch (order) {
 				case GameObjectOrder::MoveTo:
 					LastOrder = GameObjectOrder::MoveTo;
+					//LastMoveCommandT = ClockFacade::GameTickCount();
 					LastMovePosition = position;
 					LastTarget = nullptr;
 					break;
 				case GameObjectOrder::AttackUnit:
 					LastOrder = GameObjectOrder::AttackUnit;
+					//LastAATick = ClockFacade::GameTickCount();
 					LastTarget = target;
 					break;
 				case GameObjectOrder::Stop:
@@ -297,7 +424,27 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnSpellCast(kSpellSlot slot) {
-
+			if (slot == AttackResetSlot /*&& !IsDashAttackReset*/) {
+				if (IsAshe) {
+					LastAATick -= ObjectManager::Player->GetAttackDelay() * 0.4f;
+				}
+				else if (IsRengar) {
+					auto pathController = ObjectManager::Player->GetPathController();
+					if (!pathController->HasNavigationPath || !pathController->GetNavigationPath()->IsDashing) {
+						ResetAutoAttack();
+					}
+				}
+				else if (!AttackResetHash || ObjectManager::Player->Spellbook.GetSpell(slot)->SpellData->Script->Hash == AttackResetHash) {
+					ResetAutoAttack();
+				}
+			}
+			else if (slot >= SpellSlot_Item1 && slot <= SpellSlot_Item6) {
+				auto inventorySlot = ObjectManager::Player->HeroInventory.Slots[slot - SpellSlot_Item1];
+				auto itemInfo = inventorySlot->ItemInfo;
+				if (itemInfo && itemInfo->ItemData->ItemId == Item::Titanic_Hydra) {
+					ResetAutoAttack();
+				}
+			}
 		}
 
 		void Orbwalker::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
@@ -308,8 +455,8 @@ namespace HACKUZAN {
 				LastOrder = GameObjectOrder::None;
 				LastMovePosition = Vector3(0, 0, 0);
 
-				if (IsAutoAttackReset(spellData->SpellName) && spellData->CastDelay == 0) {
-					ResetAutoAttack();
+				if (IsAutoAttackReset(spellData->SpellName) && spellData->CastTime == 0) {
+					//ResetAutoAttack();
 				}
 
 				if (!IsAutoAttack(spellData->SpellName))
@@ -348,7 +495,7 @@ namespace HACKUZAN {
 		{
 			if (IsAutoAttackReset(spellData->SpellName))
 			{
-				Delay->Add(300 - NetClient::Instance->GetPing(), []() { ResetAutoAttack(); });
+				//Delay->Add(500 - NetClient::Instance->GetPing(), []() { ResetAutoAttack(); });
 			}
 			if (IsAutoAttack(spellData->SpellName))
 			{
@@ -371,10 +518,12 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {
-
+			//if (IsAzir && unit->Flags() & GameObjectFlags_AIMinionClient && unit->BaseCharacterData->SkinHash == Character::AzirSoldier) {
 			if (IsAzir && unit->Minion() && unit->BaseCharacterData->SkinHash == Character::AzirSoldier) {
 				AzirSoldiers.push_back(unit);
 			}
+
+			//GameClient::PrintChat(unit->Name.c_str(), IM_COL32(255, 69, 0, 255));
 		}
 
 		void Orbwalker::OnDeleteObject(GameObject* unit) {
@@ -427,6 +576,12 @@ namespace HACKUZAN {
 					auto AlmostLastHitMinion_laneClearHealth = FLT_MAX;
 					auto LaneClearMinion_laneClearHealth = 0;
 
+					//for (auto attack : HealthPrediction::IncomingAttacks) {
+					//	if (attack.Source != nullptr && attack.Target == minion) {
+					//		lastHitHealth -= attack.GetDamage(attackCastDelay + (attackMissileSpeed != FLT_MAX ? std::max(0.0f, minion->Position.Distance(ObjectManager::Player->Position) - ObjectManager::Player->GetBoundingRadius()) / attackMissileSpeed : 0.0f) + std::max(0.0f, LastAttack + GetAttackDelay(minion) - ClockFacade::GetGameTime()) + Config::Farming::ExtraFarmDelay->Value * 0.001f);
+					//		laneClearHealth -= attack.GetDamage(attackCastDelay + GetAttackDelay(minion) + (attackMissileSpeed != FLT_MAX ? ObjectManager::Player->GetAutoAttackRange(minion) / attackMissileSpeed : 0.0f) + Config::Farming::ExtraFarmDelay->Value * 0.001f);
+					//	}
+					//}
 					auto t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2
 						+ 1000 * (int)std::max(0.0f, ObjectManager::Player->Position.Distance(minion->Position) - ObjectManager::Player->GetBoundingRadius())
 						/ (int)attackMissileSpeed;
@@ -946,6 +1101,12 @@ namespace HACKUZAN {
 
 		bool Orbwalker::CanAttack(GameObject* target) {
 
+			//if (ObjectManager::Player->Spellbook.ActiveSpellInstance) {
+			//	auto castInfo = ObjectManager::Player->Spellbook.ActiveSpellInstance;
+			//	if (castInfo->SpellData->Resource->ChannelIsInterruptedByAttacking && (!castInfo->IsInstantCast || !castInfo->SpellWasCast)) {
+			//		return false;
+			//	}
+			//}
 
 			if ((ObjectManager::Player->IsRanged() && target->Hero() && target->IsMelee() && ObjectManager::Player->Position.Distance(target->Position) <= target->AttackRange + 75 &&
 				ObjectManager::Player->Health <= (30 / 100.0) * ObjectManager::Player->MaxHealth) && target->Health >= ObjectManager::Player->Health) {
@@ -985,6 +1146,13 @@ namespace HACKUZAN {
 		}
 
 		bool Orbwalker::CanMove() {
+
+			//if (ObjectManager::Player->Spellbook.ActiveSpellInstance) {
+			//	auto castInfo = ObjectManager::Player->Spellbook.ActiveSpellInstance;
+			//	if (!castInfo->SpellData->Resource->CanMoveWhileChanneling && (!castInfo->IsInstantCast || !castInfo->SpellWasCast)) {
+			//		return false;
+			//	}
+			//}
 
 			std::string _championName = ObjectManager::Player->BaseCharacterData->SkinName;
 

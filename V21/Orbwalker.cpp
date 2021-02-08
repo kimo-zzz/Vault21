@@ -219,7 +219,7 @@ namespace HACKUZAN {
 			auto menu = Menu::CreateMenu("Orbwalker", "Orbwalker");
 
 			auto hoykeysMenu = menu->AddMenu("Hotkeys", "Hotkeys");
-			Config::Hotkeys::Combo = hoykeysMenu->AddKeyBind("Combo", "Combo", 'S', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::Combo = hoykeysMenu->AddKeyBind("Combo", "Combo", ' ', false, false, [](KeyBind * self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_Combo;
 				}
@@ -235,7 +235,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_Harass;
 				}
 				});
-			Config::Hotkeys::LaneClear = hoykeysMenu->AddKeyBind("LaneClear", "LaneClear", 'X', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::LaneClear = hoykeysMenu->AddKeyBind("LaneClear", "LaneClear", 'V', false, false, [](KeyBind * self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_LaneClear;
 				}
@@ -243,7 +243,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_LaneClear;
 				}
 				});
-			Config::Hotkeys::JungleClear = hoykeysMenu->AddKeyBind("JungleClear", "JungleClear", 'X', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::JungleClear = hoykeysMenu->AddKeyBind("JungleClear", "JungleClear", 'Y', false, false, [](KeyBind * self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_JungleClear;
 				}
@@ -251,7 +251,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_JungleClear;
 				}
 				});
-			Config::Hotkeys::LastHit = hoykeysMenu->AddKeyBind("LastHit", "LastHit", 'A', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::LastHit = hoykeysMenu->AddKeyBind("LastHit", "LastHit", 'X', false, false, [](KeyBind * self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_LastHit;
 				}
@@ -280,7 +280,7 @@ namespace HACKUZAN {
 			auto farmingMenu = menu->AddMenu("Farming", "Farming");
 			Config::Farming::LastHitPriority = farmingMenu->AddCheckBox("LastHitPriority", "Prioritize lasthit over harass", true);
 			Config::Farming::PushPriority = farmingMenu->AddCheckBox("PushPriority", "Prioritize push over freeze", true);
-			Config::Farming::ExtraFarmDelay = farmingMenu->AddSlider("ExtraFarmDelay", "Extra farm delay", 0, -80, 80, 10);
+			Config::Farming::ExtraFarmDelay = farmingMenu->AddSlider("ExtraFarmDelay", "Extra farm delay", 70, -80, 80, 10);
 
 			auto meleeMenu = menu->AddMenu("Melee", "Melee");
 			Config::Melee::StickToTarget = meleeMenu->AddCheckBox("StickToTarget", "Stick to target", false);
@@ -946,7 +946,8 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OrbwalkTo(Vector3 position) {
-			
+			if (!ObjectManager::Player->Alive())
+				return;
 			if (ClockFacade::GameTickCount() - LastAttackCommandT < Config::Configuration::MovementDelay->Value + std::min(60, NetClient::Instance->GetPing())) {
 				return;
 			}
@@ -992,7 +993,8 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::MoveTo(Vector3 position) {
-
+			if (!ObjectManager::Player->Alive())
+				return;
 			if (ClockFacade::GameTickCount() - LastMoveCommandT < Config::Configuration::MovementDelay->Value + std::min(60, NetClient::Instance->GetPing())) {
 				return;
 			}

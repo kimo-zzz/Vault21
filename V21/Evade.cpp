@@ -109,7 +109,7 @@ namespace HACKUZAN {
 
 				auto caster = ObjectManager::Instance->ObjectsArray[unit->SourceID];
 				//if (caster == nullptr || !caster->Hero() || !caster->IsEnemy() || unit->MissileIsBasicAttack)
-				if(unit->MissileIsBasicAttack)
+				if (unit->MissileIsBasicAttack)
 					return;
 
 				for (auto skillshot_data : SpellDb::spells) {
@@ -118,7 +118,7 @@ namespace HACKUZAN {
 						//if (skillshot_data->missile_name == unit->Name || skillshot_data->missile_name == unit->MissileSpellInfo->Resource->SpellName || skillshot_data->missile_name == unit->MissileSpellInfo->Name || skillshot_data->missile_name == unit->MissileSpellInfo->Resource->MissileName)
 						if (skillshot_data->missile_name == unit->MissileSpellInfo->Resource->MissileName
 							|| std::find(skillshot_data->extra_spell_names.begin(), skillshot_data->extra_spell_names.end(), unit->MissileSpellInfo->Resource->SpellName) != skillshot_data->extra_spell_names.end())
-						{							
+						{
 							GetDetectedSSOnCreateMissile(skillshot_data, unit);
 						}
 					}
@@ -153,6 +153,9 @@ namespace HACKUZAN {
 
 			void Evade::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 			{
+				if (!castInfo)
+					return;
+
 				auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 				if (caster && caster->Hero() && caster != ObjectManager::Player && caster->IsEnemy()) {
 					if (!castInfo->IsAutoAttack()) {

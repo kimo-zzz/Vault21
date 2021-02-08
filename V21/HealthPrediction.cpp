@@ -105,7 +105,7 @@ namespace HACKUZAN {
 			for (auto attack : IncomingAttacks)
 			{
 				auto attackDamage = 0.0f;
-				if (!attack.Processed && unit != nullptr && unit->Id == attack.Target->Id) {
+				if (!attack.Processed && unit != nullptr && unit->NetworkId == attack.Target->NetworkId) {
 
 					auto landTime = attack.StartTime + attack.Delay
 						+ 1000 * std::max(0.f, unit->Position.Distance(attack.Source->Position) - attack.Source->GetBoundingRadius())

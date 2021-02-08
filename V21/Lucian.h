@@ -26,6 +26,8 @@ namespace HACKUZAN {
 			//void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 			int CountEnemiesInRange(float range);
 			GameObject* GetTarget();
+			GameObject* GetLasthitTarget();
+			GameObject* GetWaveclerTarget();
 		}
 	}
 }

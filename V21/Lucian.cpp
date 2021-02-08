@@ -66,8 +66,9 @@ namespace HACKUZAN {
 			LucianConfig::LucianFarm::UseE = farm->AddCheckBox("Use E", "Use SpellSlot E", true);
 			LucianConfig::LucianFarm::EmaNa = farm->AddSlider("EmaNa", "Minimum E mana", 50, 0, 100, 5);
 
-			auto misc = menu->AddMenu("misc", "Misc");
-
+			auto drawings = menu->AddMenu("Drawings", "Drawings");
+			LucianConfig::LucianDrawings::DrawQ = drawings->AddCheckBox("Draw Q", "Draw Q", true);
+			LucianConfig::LucianDrawings::DrawW = drawings->AddCheckBox("Draw Q", "Draw Q", true);
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -142,21 +143,35 @@ namespace HACKUZAN {
 					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
 
-					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
+					auto after = ObjectManager::Player->Position + (HudManager::Instance->CursorTargetLogic->CursorPosition - ObjectManager::Player->Position).Normalized() * 300;
+
+					auto disafter = target->Position.DistanceSquared(after);
+
+					if ((disafter < 630 * 630) && disafter > 150 * 150)
+					{
+						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+							ObjectManager::Player->CastPredictSpell(SpellSlot_W, after, target->Position);
+					}
 
 					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
 				}
 			}
 
-			if (ActiveMode != OrbwalkerMode_LastHit) {
+			if (ActiveMode & OrbwalkerMode_LastHit) {
+				GameObject* lasthitTarget_ = GetLasthitTarget();
+				if (lasthitTarget_)
+				{
+					if (Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(lasthitTarget_)) {
 
-				if (Orbwalker::CanCastAfterAttack()) {
-
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
+					}
 				}
+
 			}
 		}
+
+
 
 
 		GameObject* Lucian::GetTarget()
@@ -174,5 +189,26 @@ namespace HACKUZAN {
 			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
+		GameObject* Lucian::GetLasthitTarget()
+		{
+			std::vector<GameObject*> minions;
+			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			for (size_t i = 0; i < minion_list->size; i++)
+			{
+				auto minion = minion_list->entities[i];
+
+				if (minion && minion->IsMinion() && minion->IsValidTarget(500)) {
+					auto dmg = Damage::CalculatePhysicalDamage(ObjectManager::Player, minion, 95 + ((60 * ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->Level) / ObjectManager::Player->TotalBonusAttackDamage()));
+					if (dmg >= minion->TotalHealth())
+						return minion;
+				}
+			}
+			return nullptr;
+		}
+
+		GameObject* Lucian::GetWaveclerTarget()
+		{
+			return nullptr;
+		}
 	}
 }

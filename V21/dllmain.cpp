@@ -77,6 +77,10 @@ namespace LeagueHook {
 	}
 		
 	int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* CastInfo) {
+
+		if (CastInfo == nullptr)
+			return 0;
+
 		//auto casterIndex = *(short*)((DWORD)spellBook + 0x1C);
 		auto caster = ObjectManager::Instance->ObjectsArray[CastInfo->SourceId];
 

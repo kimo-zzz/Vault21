@@ -82,7 +82,7 @@ namespace HACKUZAN {
 
 			auto Misc = EvadeMenu->AddMenu("Misc", "Misc");
 			Config::Misc::EvadeDelay = Misc->AddSlider("EvadeDelay", "Evade Delay", 150, 0, 200, 1);
-			Config::Misc::EvadeBuffer = Misc->AddSlider("EvadeBuffer", "Evade Buffer", 250, 0, 500, 1);
+			//Config::Misc::EvadeBuffer = Misc->AddSlider("EvadeBuffer", "Evade Buffer", 250, 0, 500, 1);
 			Config::Misc::BoundingRadius = Misc->AddSlider("BoundingRadius", "Extra Hitbox Radius", 100, 0, 500, 10);
 			Config::Misc::ExtraRange = Misc->AddSlider("ExtraRange", "Extra Evade Range", 250, 0, 500, 10);
 
@@ -90,7 +90,7 @@ namespace HACKUZAN {
 			Config::EvadeSkillMenu::EvadeWithWalking = EvadeSkillMenu->AddCheckBox("EvadeWithWalking", "Enable Evade Walking", true);
 			Config::EvadeSkillMenu::EvadeWithWalkingDanger = EvadeSkillMenu->AddList("EvadeWithWalkingDanger", "Min Walk Danger Level", { "Low", "Medium", "High", "Extreme" }, 0);
 			Config::EvadeSkillMenu::EvadeWithFlash = EvadeSkillMenu->AddCheckBox("EvadeWithFlash", "Evade with Flash", true);
-			Config::EvadeSkillMenu::EvadeWithFLashDanger = EvadeSkillMenu->AddList("EvadeWithFLashDanger", "Min Flash Danger Level", { "Low", "Medium", "High", "Extreme" }, 2);
+			Config::EvadeSkillMenu::EvadeWithFLashDanger = EvadeSkillMenu->AddList("EvadeWithFLashDanger", "Min Flash Danger Level", { "Low", "Medium", "High", "Extreme" }, 3);
 			Config::EvadeSkillMenu::EvadeWithHourglass = EvadeSkillMenu->AddCheckBox("EvadeWithHourglass", "Evade with Zhonya's", true);
 			Config::EvadeSkillMenu::EvadeWithHourglassDanger = EvadeSkillMenu->AddList("EvadeWithHourglassDanger", "Min Zhonya's Danger Level", { "Low", "Medium", "High", "Extreme" }, 1);
 			for (Evader* spell : EvadersDB->EvadeSpells)

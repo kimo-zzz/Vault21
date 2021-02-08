@@ -219,7 +219,7 @@ namespace HACKUZAN {
 			auto menu = Menu::CreateMenu("Orbwalker", "Orbwalker");
 
 			auto hoykeysMenu = menu->AddMenu("Hotkeys", "Hotkeys");
-			Config::Hotkeys::Combo = hoykeysMenu->AddKeyBind("Combo", "Combo", ' ', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::Combo = hoykeysMenu->AddKeyBind("Combo", "Combo", ' ', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_Combo;
 				}
@@ -227,7 +227,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_Combo;
 				}
 				});
-			Config::Hotkeys::Harass = hoykeysMenu->AddKeyBind("Harass", "Harass", 'C', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::Harass = hoykeysMenu->AddKeyBind("Harass", "Harass", 'C', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_Harass;
 				}
@@ -235,7 +235,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_Harass;
 				}
 				});
-			Config::Hotkeys::LaneClear = hoykeysMenu->AddKeyBind("LaneClear", "LaneClear", 'V', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::LaneClear = hoykeysMenu->AddKeyBind("LaneClear", "LaneClear", 'V', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_LaneClear;
 				}
@@ -243,7 +243,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_LaneClear;
 				}
 				});
-			Config::Hotkeys::JungleClear = hoykeysMenu->AddKeyBind("JungleClear", "JungleClear", 'Y', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::JungleClear = hoykeysMenu->AddKeyBind("JungleClear", "JungleClear", 'Y', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_JungleClear;
 				}
@@ -251,7 +251,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_JungleClear;
 				}
 				});
-			Config::Hotkeys::LastHit = hoykeysMenu->AddKeyBind("LastHit", "LastHit", 'X', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::LastHit = hoykeysMenu->AddKeyBind("LastHit", "LastHit", 'X', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_LastHit;
 				}
@@ -259,7 +259,7 @@ namespace HACKUZAN {
 					ActiveMode &= ~OrbwalkerMode_LastHit;
 				}
 				});
-			Config::Hotkeys::Flee = hoykeysMenu->AddKeyBind("Flee", "Flee", 'Z', false, false, [](KeyBind * self, bool newValue) {
+			Config::Hotkeys::Flee = hoykeysMenu->AddKeyBind("Flee", "Flee", 'Z', false, false, [](KeyBind* self, bool newValue) {
 				if (newValue) {
 					ActiveMode |= OrbwalkerMode_Flee;
 				}
@@ -374,8 +374,8 @@ namespace HACKUZAN {
 			"kindredwolfbasicattack", "gravesautoattackrecoil"
 		};
 
-		bool Orbwalker::IsAutoAttack(string name){
-		
+		bool Orbwalker::IsAutoAttack(string name) {
+
 			for (auto noattacks : NoAttacks) {
 				if (strcmp("attack", name.c_str()) && !GameClient::StringEquals(noattacks.c_str(), name.c_str(), TRUE)) {
 					return true;
@@ -559,9 +559,10 @@ namespace HACKUZAN {
 				auto minion_list = HACKUZAN::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
+
 					auto minion = minion_list->entities[i];
 
-					if (minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
+					if (minion && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
 						continue;
 					}
 
@@ -797,7 +798,7 @@ namespace HACKUZAN {
 		}
 
 		GameObject* Orbwalker::GetTargetByType(OrbwalkerTargetType targetType) {
-			switch (targetType) 
+			switch (targetType)
 			{
 			case OrbwalkerTargetType::Hero: {
 				if (IsAzir) {
@@ -957,7 +958,7 @@ namespace HACKUZAN {
 				auto target = GetTarget();
 				if (target && target->IsValidTarget() && CanAttack(target))
 				{
-					DisableNextAttack = false;
+					//DisableNextAttack = false;
 					//FireBeforeAttack(target);
 
 					if (!DisableNextAttack)
@@ -1107,7 +1108,7 @@ namespace HACKUZAN {
 			//	}
 			//}
 
-			if ((ObjectManager::Player->IsRanged() && target->Hero() && target->IsMelee() && ObjectManager::Player->Position.Distance(target->Position) <= target->AttackRange + 75 && 
+			if ((ObjectManager::Player->IsRanged() && target->Hero() && target->IsMelee() && ObjectManager::Player->Position.Distance(target->Position) <= target->AttackRange + 75 &&
 				ObjectManager::Player->Health <= (30 / 100.0) * ObjectManager::Player->MaxHealth) && target->Health >= ObjectManager::Player->Health) {
 				return false;
 			}
@@ -1172,7 +1173,7 @@ namespace HACKUZAN {
 				}
 			}
 			return (ClockFacade::GameTickCount() + NetClient::Instance->GetPing() / 2 >= LastAATick + GetAttackCastDelay() * 1000 + Config::Configuration::ExtraWindUpTime->Value + localExtraWindup);
-		} 
+		}
 
 		bool Orbwalker::CanCastAfterAttack() {
 

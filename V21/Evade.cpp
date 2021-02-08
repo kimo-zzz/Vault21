@@ -55,6 +55,8 @@ namespace HACKUZAN {
 							return false;
 						}
 					}
+					Orbwalker::DisableNextAttack = false;
+					Orbwalker::OrbwalkerEvading = false;
 				}
 				if (unit == ObjectManager::Player && order == GameObjectOrder::MoveTo && ShouldBlock(DetectedSkillShots, ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition, Config::EvadeSkillMenu::EvadeWithWalkingDanger->Value))
 				{
@@ -64,6 +66,8 @@ namespace HACKUZAN {
 						Orbwalker::OrbwalkerEvading = true;
 						return false;
 					}
+					Orbwalker::DisableNextAttack = false;
+					Orbwalker::OrbwalkerEvading = false;
 				}
 
 				return  true;
@@ -187,7 +191,7 @@ namespace HACKUZAN {
 							//GameClient::PrintChat("remove 1", IM_COL32(255, 69, 0, 255));
 							float distance = Distance(i.Start, i.End);
 							return !i.IsMissile && ClockFacade::GameTickCount() - i.DetectionTime >= i.Data->delay + i.Data->extra_duration
-								+ distance * 1000 / i.Data->missile_speed;// +(2 * Config::Misc::EvadeBuffer->Value);
+								+ distance * 1000 / i.Data->missile_speed;
 						}
 						else
 						{
@@ -220,17 +224,19 @@ namespace HACKUZAN {
 							ObjectManager::Player->EvadeIssueOrder(GameObjectOrder::MoveTo, &Extend(ObjectManager::Player->Position, ToVec3(EvadeWalkingPoint), Config::Misc::ExtraRange->Value));
 							LastEvadeTick = ClockFacade::GameTickCount();
 						}
-					}
 
-					if (ShouldHoldOn(DetectedSkillShots, ObjectManager::Player, Config::EvadeSkillMenu::EvadeWithWalkingDanger->Value))
-					{
-						if (ClockFacade::GameTickCount() - LastEvadeTick >= 1 + Config::Misc::EvadeDelay->Value)
+						if (ShouldHoldOn(DetectedSkillShots, ObjectManager::Player, Config::EvadeSkillMenu::EvadeWithWalkingDanger->Value))
 						{
-							//ObjectManager::Player->EvadeIssueOrderHoldPos(GameObjectOrder::HoldPosition, &ObjectManager::Player->Position);
-							ObjectManager::Player->EvadeIssueOrder(GameObjectOrder::MoveTo, &Extend(ObjectManager::Player->Position, HudManager::Instance->CursorTargetLogic->CursorPosition.Perpendicular(), Config::Misc::ExtraRange->Value));
-							LastEvadeTick = ClockFacade::GameTickCount();
+							if (ClockFacade::GameTickCount() - LastEvadeTick >= 1 + Config::Misc::EvadeDelay->Value)
+							{
+								//ObjectManager::Player->EvadeIssueOrderHoldPos(GameObjectOrder::HoldPosition, &ObjectManager::Player->Position);
+								ObjectManager::Player->EvadeIssueOrder(GameObjectOrder::MoveTo, &Extend(ObjectManager::Player->Position, HudManager::Instance->CursorTargetLogic->CursorPosition.Perpendicular(), Config::Misc::ExtraRange->Value));
+								LastEvadeTick = ClockFacade::GameTickCount();
+							}
 						}
 					}
+
+
 				}
 				// HOURGLASS
 				if (Config::EvadeSkillMenu::EvadeWithHourglass->Value)

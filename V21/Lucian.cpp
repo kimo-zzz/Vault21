@@ -140,8 +140,9 @@ namespace HACKUZAN {
 					Orbwalker::ResetAutoAttack();
 
 				if (target && Orbwalker::CanCastAfterAttack()) {
-					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
+					if (Distance(target, ObjectManager::Player) <= 500)
+						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
 
 					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
@@ -180,7 +181,7 @@ namespace HACKUZAN {
 			{
 				auto hero = hero_list->entities[i];
 
-				if (hero && hero->IsEnemy() && hero->IsValidTarget(1000)) {
+				if (hero && hero->IsEnemy() && hero->IsValidTarget(900)) {
 					heroes.push_back(hero);
 				}
 			}

@@ -137,11 +137,9 @@ namespace HACKUZAN {
 				EvadePoint = Points.FirstOrDefault();
 			}
 		}
-		
+
 		return  EvadePoint;
 		return Vector2(0, 0);*/
-
-
 
 		SArray<DetectedSKillShot> detected = Detected.Where([&](DetectedSKillShot i) {return GetDodgeStage(i, Dangerouslevel); });
 		DetectedSKillShot skillshot;
@@ -166,11 +164,11 @@ namespace HACKUZAN {
 			Points.Add(middle);
 			Points.Add(middle2);
 		}
-		//float dists = Distance(target->GetPos(), ToVec3(Polygon.Points.back()), ToVec3(Polygon.Points[0]));
-		//Vec2 middle = Extend(target->GetPos()->To2D(), GetLineLineIntersections(target->GetPos()->To2D(), target->GetPos()->To2D() + Pendicular(ToVec3((Polygon.Points.front() - Polygon.Points.back()))).To2D(),
-		//	Polygon.Points.front(), Polygon.Points.back()), dists + 50);
-		//Points.Add(middle);
-		//}
+		float dists = Distance(target->Position, ToVec3(Polygon.Points.back()), ToVec3(Polygon.Points[0]));
+		Vector2 middle = Extend(target->Position.To2D(), GetLineLineIntersections(target->Position.To2D(), target->Position.To2D() + Pendicular(ToVec3((Polygon.Points.front() - Polygon.Points.back()))).To2D(),
+			Polygon.Points.front(), Polygon.Points.back()), dists + 50);
+		Points.Add(middle);
+
 
 		if (Points.Any())
 			EvadePoint = Points.MinOrDefault<float>([&](Vector2 i) {return DistanceSqr(ToVec3(i), target->Position); });
@@ -271,7 +269,7 @@ namespace HACKUZAN {
 		break;
 		case Wall:
 		{
-			if (skillshot.Data->missile_name != "" )
+			if (skillshot.Data->missile_name != "")
 			{
 				ObjectManager::Player->CastSpellPos(evader->Slot, (DWORD)ObjectManager::Player, ToVec3(skillshot.Start));
 			}

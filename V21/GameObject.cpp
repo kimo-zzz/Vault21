@@ -788,7 +788,6 @@ namespace HACKUZAN
 			auto result = this->AttackRange + this->GetBoundingRadius();
 			if (target)
 			{
-				result += target->GetBoundingRadius();
 				switch (this->BaseCharacterData->SkinHash)
 				{
 				case Character::Caitlyn:

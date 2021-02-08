@@ -276,6 +276,7 @@ namespace HACKUZAN
 		Zhonyas_Hourglass = 3157,
 		Zhonyas_Paradox = 3386,
 		ZzRot_Portal = 3512,
+		Noonquiver = 6670,
 	};
 
 	class ItemData

@@ -288,6 +288,11 @@ namespace HACKUZAN
 				isItemChecked[static_cast<int>(itemID)] = true;
 
 				switch (itemID) {
+				case Item::Noonquiver: {
+					if (target->IsMinion())
+						result.PhysicalDamage += 20;
+					break;
+				}
 				case Item::Blade_of_the_Ruined_King: {
 					auto itemDamage = target->Health * 0.08f;
 					//if (targetFlags & GameObjectFlags_AIMinionClient) {

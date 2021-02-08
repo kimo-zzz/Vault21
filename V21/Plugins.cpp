@@ -6,6 +6,7 @@
 #include "SkinChanger.h"
 #include "Activator.h"
 #include "Evade.h"
+#include "Twitch.h"
 
 namespace HACKUZAN {
 	void Plugins::Initialize() {
@@ -24,6 +25,9 @@ namespace HACKUZAN {
 		case Character::Lucian:
 			Lucian::Initialize();
 			break;
+		case Character::Twitch:
+			Twitch::Initialize();
+			break;
 		}
 	}
 
@@ -41,6 +45,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Lucian:
 			Lucian::Dispose();
+			break;
+		case Character::Twitch:
+			Twitch::Dispose();
 			break;
 		}
 	}

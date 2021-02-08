@@ -216,6 +216,15 @@
     <Filter Include="SDK\SkillPrediction">
       <UniqueIdentifier>{5c580b66-42a8-4577-83c0-e4ec9add2380}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Champion Plugins\Twitch">
+      <UniqueIdentifier>{f2952d22-9c76-431e-8d6e-99cdc89c0cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Twitch\Header Files">
+      <UniqueIdentifier>{d7ab7807-b80b-4b07-ac1f-d91905d78d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Twitch\Source Files">
+      <UniqueIdentifier>{7c88bca3-685f-4e4b-9093-cf8fa17c639e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -584,6 +593,9 @@
     <ClInclude Include="PluginTemplate.h">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
     </ClInclude>
+    <ClInclude Include="Twitch.h">
+      <Filter>Plugins\Champion Plugins\Twitch\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -837,6 +849,9 @@
     </ClCompile>
     <ClCompile Include="PluginTemplate.cpp">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
+    </ClCompile>
+    <ClCompile Include="Twitch.cpp">
+      <Filter>Plugins\Champion Plugins\Twitch\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -44,7 +44,7 @@ namespace HACKUZAN {
 
 		void HACKUZAN::Plugins::ChampionName::Initialize()
 		{
-			auto menu = Menu::CreateMenu("Draven", "Draven");
+			auto menu = Menu::CreateMenu("Template", "Template");
 
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
 			
@@ -61,7 +61,7 @@ namespace HACKUZAN {
 			EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnDraw);
 
-			GameClient::PrintChat("Draven Script Loaded~!", IM_COL32(255, 69, 255, 255));
+			GameClient::PrintChat("Template Script Loaded~!", IM_COL32(255, 69, 255, 255));
 		}
 
 		void ChampionName::Dispose()

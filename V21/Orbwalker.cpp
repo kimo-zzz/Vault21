@@ -994,7 +994,7 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::MoveTo(Vector3 position) {
-			if (!ObjectManager::Player->Alive())
+			if (ObjectManager::Player->IsImmovable() || !ObjectManager::Player->Alive() || Orbwalker::OrbwalkerEvading)
 				return;
 			if (ClockFacade::GameTickCount() - LastMoveCommandT < Config::Configuration::MovementDelay->Value + std::min(60, NetClient::Instance->GetPing())) {
 				return;

@@ -83,6 +83,9 @@ namespace HACKUZAN
 
 	void GameObject::CastSpell(kSpellSlot slot, DWORD Caster)
 	{
+		if (!ObjectManager::Player->CanCast())
+			return;
+
 		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
 			return;
 
@@ -122,6 +125,9 @@ namespace HACKUZAN
 
 	void GameObject::CastSpellPos(kSpellSlot slot, DWORD Caster, Vector3 TargetPos)
 	{
+		if (!ObjectManager::Player->CanCast())
+			return;
+
 		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
 			return;
 
@@ -158,6 +164,9 @@ namespace HACKUZAN
 
 	void GameObject::CastPredictSpell(kSpellSlot slot, Vector3 start_position, Vector3 end_position)
 	{
+		if (!ObjectManager::Player->CanCast())
+			return;
+
 		if ((!(DWORD)LeagueFunctions::NewCastSpell) || (!LeagueFunctions::IsDonePatchingCastSpell))
 			return;
 

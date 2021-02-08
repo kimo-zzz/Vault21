@@ -82,6 +82,8 @@ namespace HACKUZAN {
 
 		void Vayne::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
+			if (!castInfo)
+				return;
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 			
 			/*for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
@@ -177,6 +179,8 @@ namespace HACKUZAN {
 
 		bool HACKUZAN::Plugins::Vayne::IsCondemnable(GameObject* target)
 		{
+			if (!target)
+				return false;
 			auto  pushDistance = VayneConfig::VayneMisc::PushDistance->Value;
 			auto targetPosition = target->Position;
 			float checkDistance = pushDistance / 40.0f;

@@ -198,17 +198,18 @@ namespace HACKUZAN {
 
 				if (ActiveMode & OrbwalkerMode_Harass)
 				{
+					/*
 					if ((TwitchConfig::TwitchHarass::WMana->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && TwitchConfig::TwitchHarass::UseW)
 						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
-
+*/
 					if (TwitchConfig::TwitchHarass::UseE)
 					{
 						int stackAmount = target->FindBuffName("TwitchDeadlyVenom")->GetCount();
 
-						/*
+
 						if ((TwitchConfig::TwitchHarass::EMana->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && stackAmount >= TwitchConfig::TwitchHarass::EStackAmount->Value)
 							ObjectManager::Player->CastSpell(SpellSlot_E, (DWORD)ObjectManager::Player);
-							*/
+
 					}
 				}
 

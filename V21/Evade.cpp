@@ -327,7 +327,8 @@ namespace HACKUZAN {
 					Position.Y = Position.Y + 25;
 					DWORD Color =
 						Config::EvadeMenu::EvadeEnable->Value ? IM_COL32(255, 255, 255, 255) : IM_COL32(255, 69, 0, 255);
-					string Text = Config::EvadeMenu::EvadeEnable->Value ? "Evade : ON" : "Evade : OFF";
+					string Text = Config::EvadeMenu::EvadeToogleKey->Value ? "Evade : ON" : "Evade : OFF";
+					Config::EvadeMenu::EvadeEnable->Value = Config::EvadeMenu::EvadeToogleKey->Value;
 					Renderer::AddText(Text.c_str(), 15, Position, Color);
 				}
 			}

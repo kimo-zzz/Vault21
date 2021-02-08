@@ -143,18 +143,16 @@ namespace HACKUZAN {
 					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
 
-					auto after = ObjectManager::Player->Position + (HudManager::Instance->CursorTargetLogic->CursorPosition - ObjectManager::Player->Position).Normalized() * 300;
+					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
+
+					auto after = ObjectManager::Player->Position - (ObjectManager::Player->Position - HudManager::Instance->CursorTargetLogic->CursorPosition).Normalized() * 425;
 
 					auto disafter = target->Position.DistanceSquared(after);
 
-					if ((disafter < 630 * 630) && disafter > 150 * 150)
-					{
-						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-							ObjectManager::Player->CastPredictSpell(SpellSlot_W, after, target->Position);
-					}
-
 					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
+
 				}
 			}
 

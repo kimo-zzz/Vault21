@@ -608,6 +608,12 @@
     <ClInclude Include="Riven.h">
       <Filter>Plugins\Champion Plugins\Riven</Filter>
     </ClInclude>
+    <ClInclude Include="SkillPrediction.h">
+      <Filter>SDK\SkillPrediction</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicPrediction.h">
+      <Filter>SDK\SkillPrediction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -870,6 +876,9 @@
     </ClCompile>
     <ClCompile Include="Riven.cpp">
       <Filter>Plugins\Champion Plugins\Riven</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPrediction.cpp">
+      <Filter>SDK\SkillPrediction</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

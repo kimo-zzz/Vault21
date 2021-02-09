@@ -81,7 +81,7 @@ namespace HACKUZAN {
 		Vector2 vec2Return
 		(
 			(cosTheta * (pointToRotate.X - centerPoint.X) -
-				sinTheta * (pointToRotate.Y	 - centerPoint.Y) + centerPoint.X),
+				sinTheta * (pointToRotate.Y - centerPoint.Y) + centerPoint.X),
 
 			(sinTheta * (pointToRotate.X - centerPoint.X) +
 				cosTheta * (pointToRotate.Y - centerPoint.Y) + centerPoint.Y)

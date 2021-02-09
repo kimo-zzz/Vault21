@@ -24,20 +24,15 @@ namespace HACKUZAN {
 			}
 
 			namespace LucianFarm {
-				CheckBox* UseQ;
-				CheckBox* UseE;
+				CheckBox* UseQLasthit;
+
 				Slider* QmaNa;
 				Slider* EmaNa;
+				Slider* WMana;
 			}
 
 			namespace LucianMisc {
 				CheckBox* AutoE;
-				CheckBox* AutoCatch;
-				CheckBox* switchCatch;
-				CheckBox* UseQforW;
-				CheckBox* CatchUnderTurret;
-				CheckBox* DrawAxe;
-				Slider* DravenAxePickRange;
 			}
 
 			namespace LucianDrawings {
@@ -53,9 +48,9 @@ namespace HACKUZAN {
 			auto menu = Menu::CreateMenu("Lucian", "Lucian");
 
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
-			LucianConfig::LucianCombo::UseQ = combo->AddCheckBox("Use Q", "Use SpellSlot Q", true); LucianConfig::LucianCombo::WmaNa = combo->AddSlider("QmaNa", "Minimum Q mana", 30, 0, 100, 5);
-			LucianConfig::LucianCombo::UseW = combo->AddCheckBox("Use W", "Use SpellSlot W", true);
-			LucianConfig::LucianCombo::UseE = combo->AddCheckBox("Use E", "Use SpellSlot E", true);
+			LucianConfig::LucianCombo::UseQ = combo->AddCheckBox("Use Q", "UseQ", true);
+			LucianConfig::LucianCombo::UseW = combo->AddCheckBox("Use W", "UseW", true);
+			LucianConfig::LucianCombo::UseE = combo->AddCheckBox("Use E", "UseE", true);
 			//LucianConfig::LucianCombo::UseR = combo->AddCheckBox("Use R", "Use SpellSlot R", true);
 
 			auto combo_mana = combo->AddMenu("Mana Settings Combo", "Mana Settings");
@@ -64,14 +59,16 @@ namespace HACKUZAN {
 			LucianConfig::LucianCombo::EmaNa = combo_mana->AddSlider("EmaNa", "Minimum E mana", 20, 0, 100, 5);
 
 			auto farm = menu->AddMenu("farm", "Farm Settings");
-			LucianConfig::LucianFarm::UseQ = farm->AddCheckBox("Use Q", "Use SpellSlot Q", true);
-			LucianConfig::LucianFarm::QmaNa = farm->AddSlider("QmaNa", "Minimum Q mana", 50, 0, 100, 5);
-			LucianConfig::LucianFarm::UseE = farm->AddCheckBox("Use E", "Use SpellSlot E", true);
-			LucianConfig::LucianFarm::EmaNa = farm->AddSlider("EmaNa", "Minimum E mana", 50, 0, 100, 5);
+			farm->AddCheckBox("Farm Use Spells", "Use Spells", true);
+
+			auto farm_mana = farm->AddMenu("Farm Mana", "Mana Settings");
+			LucianConfig::LucianFarm::QmaNa = farm_mana->AddSlider("QmaNa", "Minimum Q mana", 30, 0, 100, 5);
+			LucianConfig::LucianFarm::WMana = farm_mana->AddSlider("WmaNa", "Minimum W mana", 50, 0, 100, 5);
+			LucianConfig::LucianFarm::EmaNa = farm_mana->AddSlider("EmaNa", "Minimum E mana", 20, 0, 100, 5);
 
 			auto drawings = menu->AddMenu("Drawings", "Drawings");
 			LucianConfig::LucianDrawings::DrawQ = drawings->AddCheckBox("Draw Q", "Draw Q", true);
-			LucianConfig::LucianDrawings::DrawW = drawings->AddCheckBox("Draw Q", "Draw Q", true);
+			LucianConfig::LucianDrawings::DrawW = drawings->AddCheckBox("Draw W", "Draw W", true);
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -131,39 +128,50 @@ namespace HACKUZAN {
 
 			if (!Orbwalker::OrbwalkerEvading) {
 
-				if (ActiveMode & OrbwalkerMode_Combo) {
+				if (ActiveMode & OrbwalkerMode_Combo || ActiveMode & OrbwalkerMode_LaneClear || ActiveMode & OrbwalkerMode_JungleClear) {
 
-					if (ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-						Orbwalker::ResetAutoAttack();
+					float minimum_q_mana_ = LucianConfig::LucianCombo::QmaNa->Value / 100 * ObjectManager::Player->Resource;
+					float minimum_w_mana_ = LucianConfig::LucianCombo::WmaNa->Value / 100 * ObjectManager::Player->Resource;
+					float minimum_e_mana_ = LucianConfig::LucianCombo::EmaNa->Value / 100 * ObjectManager::Player->Resource;
+
+					if (ActiveMode != OrbwalkerMode_Combo)
+					{
+						minimum_q_mana_ = LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource;
+						minimum_w_mana_ = LucianConfig::LucianFarm::WMana->Value / 100 * ObjectManager::Player->Resource;
+						minimum_e_mana_ = LucianConfig::LucianFarm::EmaNa->Value / 100 * ObjectManager::Player->Resource;
+						target = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical);
+					}
+
 
 					if (target && Orbwalker::CanCastAfterAttack()) {
-						if (Distance(target, ObjectManager::Player) <= 500)
-							if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+						if (Distance(target, ObjectManager::Player) <= 500.f)
+							if (minimum_q_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 								ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
 
-						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+						if (minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("lucianpassiveshot"))
 							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
 
 						auto after = ObjectManager::Player->Position - (ObjectManager::Player->Position - HudManager::Instance->CursorTargetLogic->CursorPosition).Normalized() * 425;
 
-						auto disafter = target->Position.DistanceSquared(after);
-
-						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-							ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
+						//auto disafter = target->Position.DistanceSquared(after);
+						if (Distance(after, target->Position) <= ObjectManager::Player->AttackRange + ObjectManager::Player->GetBoundingRadius())
+						{
+							if (minimum_e_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
+						}
 
 					}
 				}
 
 				if (ActiveMode & OrbwalkerMode_LastHit) {
-					GameObject* lasthitTarget_ = GetLasthitTarget();
-					if (lasthitTarget_)
+					GameObject* lasthitTarget_ = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical);
+					if (lasthitTarget_ && LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource <= ObjectManager::Player->MaxResource)
 					{
 						if (Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(lasthitTarget_)) {
 
 							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
 						}
 					}
-
 				}
 
 				if (ActiveMode != OrbwalkerMode_None)

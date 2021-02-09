@@ -96,7 +96,7 @@ namespace HACKUZAN {
 			RivenConfig::RivenDraws::DrawE = draw->AddCheckBox("Riven Draws Draw E", "Draw E Range", true);
 			RivenConfig::RivenDraws::DrawR2 = draw->AddCheckBox("Riven Draws Draw R2", "Draw R2 Range", true);
 			RivenConfig::RivenDraws::DrawFlash = draw->AddCheckBox("Riven Draws Draw Flash", "Draw Flash Range", true);
-			RivenConfig::RivenDraws::DrawFlash = draw->AddCheckBox("Riven Draws Draw Flash", "Draw Combo Style", true);
+			RivenConfig::RivenDraws::DrawCombo = draw->AddCheckBox("Riven Draws Draw Combo Style", "Draw Combo Style", true);
 
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
@@ -184,17 +184,17 @@ namespace HACKUZAN {
 				Renderer::AddCircle(ObjectManager::Player->Position, 850);
 			if (RivenConfig::RivenDraws::DrawFlash->Value == true)
 				Renderer::AddCircle(ObjectManager::Player->Position, 450);
-			//if (RivenConfig::RivenDraws::DrawCombo->Value == true)
-			//{
-			//	std::string sCombo = ("Style: " + RivenConfig::RivenCombo::ComboStyle->Items[RivenConfig::RivenCombo::ComboStyle->Value]);
-			//	auto Combo = sCombo.c_str();
-			//	if (Combo && RivenConfig::RivenMisc::Debug->Value == true)
-			//		GameClient::PrintChat(Combo, IM_COL32(255, 255, 255, 255));
-			//	Vector2 Position;
-			//	RenderLayer::WorldToScreen(ObjectManager::Player->Position, Position);
-			//	Position.Y = Position.Y + 50;
-			//	Renderer::AddText("Style: unknown", 12, Position, IM_COL32(255, 255, 255, 133));
-			//}
+			if (RivenConfig::RivenDraws::DrawCombo->Value == true)
+			{
+				std::string sCombo = ("Style: " + RivenConfig::RivenCombo::ComboStyle->Items[RivenConfig::RivenCombo::ComboStyle->Value]);
+				auto Combo = sCombo.c_str();
+				Vector2 Position;
+				RenderLayer::WorldToScreen(ObjectManager::Player->Position, Position);
+				auto size = ImGui::CalcTextSize(Combo);
+				Position.Y = Position.Y + 50;
+				Position.X = Position.X - (size.x / 2);
+				Renderer::AddText(Combo, 15, Position, IM_COL32(255, 0, 255, 255));
+			}
 		}
 
 		bool Riven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)
@@ -206,8 +206,6 @@ namespace HACKUZAN {
 		{
 			if (unit == nullptr)
 				return;
-			if(RivenConfig::RivenMisc::Debug->Value == true)
-				GameClient::PrintChat(("[Riven Debug] Created Object: " + std::string(unit->Name)).c_str(), IM_COL32(255, 69, 255, 255));
 		}
 
 		void Riven::OnDeleteObject(GameObject* unit)
@@ -221,22 +219,41 @@ namespace HACKUZAN {
 		{
 			if (castInfo == nullptr || spellData == nullptr)
 				return;
+
+			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+
+#pragma region Debugging
 			if (RivenConfig::RivenMisc::Debug->Value == true)
 			{
+				std::string x = "Target Id: " + std::to_string(castInfo->TargetId);
+				std::string z = "Source Id: " + std::to_string(castInfo->SourceId);
+
+				auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+
 				GameClient::PrintChat(("[Riven Debug] Casted Spell: " + std::string(castInfo->GetSpellData()->SpellName)).c_str(), IM_COL32(255, 69, 255, 255));
+				GameClient::PrintChat(x.c_str(), IM_COL32(255, 69, 255, 255));
+				GameClient::PrintChat(z.c_str(), IM_COL32(255, 69, 255, 255));
+				GameClient::PrintChat(caster->Name.c_str(), IM_COL32(255, 69, 255, 255));
+			}
+#pragma endregion
+
+			if (caster->Id == ObjectManager::Player->Id)
+			{
+				GameClient::PrintChat("Cast by Me!!!", IM_COL32(255, 69, 255, 255));
+				if (strcmp(spellData->SpellName, "RivenTriCleave") == 0)
+				{
+					GameClient::PrintChat("Reset Auto Attack", IM_COL32(255, 69, 255, 255));
+					Orbwalker::ResetAutoAttack();
+				}
+
 			}
 
-			if (castInfo->SourceId == ObjectManager::Player->SourceID) // Check if it's our Spell Cast
-			{
-				if (spellData->SpellName == "RivenTriCleave")
-					Orbwalker::ResetAutoAttack();
-			}
-			else if (castInfo->TargetId == ObjectManager::Player->SourceID) // Check if we're the Target of the Spell
+			if (castInfo->TargetId == ObjectManager::Player->Id) // Check if we're the Target of the Spell
 			{
 				if (strcmp(spellData->SpellName, "ChaosTurretWormBasicAttack") == 0 || strcmp(spellData->SpellName, "OrderTurretWormBasicAttack") == 0)
 				{
 					if(RivenConfig::RivenMisc::AutoE->Value == true)
-						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, ObjectManager::Player->Position);
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
 				}
 			}
 		}

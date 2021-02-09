@@ -7,6 +7,7 @@
 #include "Activator.h"
 #include "Evade.h"
 #include "Twitch.h"
+#include "Riven.h";
 
 namespace HACKUZAN {
 	void Plugins::Initialize() {
@@ -28,6 +29,9 @@ namespace HACKUZAN {
 		case Character::Twitch:
 			Twitch::Initialize();
 			break;
+		case Character::Riven:
+			Riven::Initialize();
+		break;
 		}
 	}
 
@@ -48,6 +52,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Twitch:
 			Twitch::Dispose();
+			break;
+		case Character::Riven:
+			Riven::Dispose();
 			break;
 		}
 	}

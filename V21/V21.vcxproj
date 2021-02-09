@@ -251,6 +251,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderLayer.h" />
+    <ClInclude Include="Riven.h" />
     <ClInclude Include="Skillshot.h" />
     <ClInclude Include="SkillshotData.h" />
     <ClInclude Include="SkinChanger.h" />
@@ -361,6 +362,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ManagerTemplate.cpp" />
     <ClCompile Include="RenderLayer.cpp" />
+    <ClCompile Include="Riven.cpp" />
     <ClCompile Include="SkillshotData.cpp" />
     <ClCompile Include="SkinChanger.cpp" />
     <ClCompile Include="Slider.cpp" />

@@ -548,9 +548,6 @@
     <ClInclude Include="PathManager.h">
       <Filter>League of Legends\ObjectManager\GameObject\PathController</Filter>
     </ClInclude>
-    <ClInclude Include="MalichetePred.h">
-      <Filter>Plugins\Evade</Filter>
-    </ClInclude>
     <ClInclude Include="NavGridCell.h">
       <Filter>League of Legends\ObjectManager\GameObject\NavGrid</Filter>
     </ClInclude>

@@ -7,7 +7,7 @@ namespace HACKUZAN
 	{
 		if (this->IsBasicAttack || this->IsSpecialAttack || this->Slot >= SpellSlot_SpecialAttack)
 		{
-			return this->TargetId > 0;
+			return true;// this->TargetId > 0;
 		}
 		return false;
 	}

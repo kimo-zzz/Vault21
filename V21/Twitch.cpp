@@ -196,7 +196,7 @@ namespace HACKUZAN {
 					}
 				}
 
-				if (ActiveMode & OrbwalkerMode_Harass)
+				if (target && ActiveMode & OrbwalkerMode_Harass)
 				{
 					/*
 					if ((TwitchConfig::TwitchHarass::WMana->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && TwitchConfig::TwitchHarass::UseW)
@@ -204,6 +204,9 @@ namespace HACKUZAN {
 */
 					if (TwitchConfig::TwitchHarass::UseE)
 					{
+						if (!target->FindBuffName("TwitchDeadlyVenom"))
+							return;
+						
 						int stackAmount = target->FindBuffName("TwitchDeadlyVenom")->GetCount();
 
 

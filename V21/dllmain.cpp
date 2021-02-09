@@ -23,7 +23,7 @@ using namespace HACKUZAN::SDK;
 
 bool Ready = true;
 
-LeagueHooksHWBP LeagueHookHWBP;		
+LeagueHooksHWBP LeagueHookHWBP;
 
 DWORD WINAPI InitThread(LPVOID);
 std::atomic_bool running;
@@ -40,9 +40,9 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		//if (thisPtr != nullptr && !thisPtr->Missile()) {
+		if (thisPtr != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
-		//}
+		}
 
 		if (thisPtr != nullptr && thisPtr->Missile()) {
 			//MessageBoxA(0, ("Missile Adress " + hexify<DWORD>((DWORD)thisPtr)).c_str(), "", 0);
@@ -58,9 +58,9 @@ namespace LeagueHook {
 		//	return 0;
 		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		//if (object != nullptr && !object->Missile()) {
+		if (object != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
-		//}
+		}
 
 		if (object != nullptr && object->Missile()) {
 			EventManager::Trigger(LeagueEvents::OnDeleteMissile, object);
@@ -71,11 +71,12 @@ namespace LeagueHook {
 
 	int _fastcall hk_OnPlayAnimation(GameObject* ptr, void* edx, bool* ret, char name, int unk1, unsigned int unk2, float animationTime, int unk4) {
 
-		EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
+		if (ptr != nullptr)
+			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
 
 		return Functions::OnPlayAnimation(ptr, ret, name, unk1, unk2, animationTime, unk4);
 	}
-		
+
 	int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* CastInfo) {
 
 		if (CastInfo == nullptr)
@@ -109,7 +110,8 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnFinishCast(SpellCastInfo* castInfo, void* edx, GameObject* object) {
 
-		EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
+		if (object != nullptr && castInfo != nullptr)
+			EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
 
 		return Functions::OnFinishCast(castInfo, object);
 	}
@@ -117,6 +119,9 @@ namespace LeagueHook {
 
 	void __fastcall hk_OnStopCast(SpellCastInfo* spellCaster_Client, void* edx, bool stopAnimation, bool* executeCastFrame,
 		bool forceStop, bool destroyMissile, unsigned int missileNetworkID) {
+
+		if (spellCaster_Client == nullptr)
+			return;
 
 		auto caster = ObjectManager::Instance->ObjectsArray[spellCaster_Client->SourceId];
 		//GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
@@ -327,7 +332,7 @@ __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 
 	while (running)
 	{
-		
+
 	}
 
 	LeagueHooks::deinit();

@@ -164,11 +164,6 @@ namespace HACKUZAN {
 			Points.Add(middle);
 			Points.Add(middle2);
 		}
-		float dists = Distance(target->Position, ToVec3(Polygon.Points.back()), ToVec3(Polygon.Points[0]));
-		Vector2 middle = Extend(target->Position.To2D(), GetLineLineIntersections(target->Position.To2D(), target->Position.To2D() + Pendicular(ToVec3((Polygon.Points.front() - Polygon.Points.back()))).To2D(),
-			Polygon.Points.front(), Polygon.Points.back()), dists + 50);
-		Points.Add(middle);
-
 
 		if (Points.Any())
 			EvadePoint = Points.MinOrDefault<float>([&](Vector2 i) {return DistanceSqr(ToVec3(i), target->Position); });

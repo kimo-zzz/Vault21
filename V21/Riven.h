@@ -23,6 +23,7 @@ namespace HACKUZAN
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+			GameObject* Target();
 		}
 	}
 }

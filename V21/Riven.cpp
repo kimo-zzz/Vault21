@@ -3,6 +3,7 @@
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
+#include "RenderLayer.h"
 
 namespace HACKUZAN {
 	namespace Plugins {
@@ -15,7 +16,6 @@ namespace HACKUZAN {
 
 		namespace RivenConfig 
 		{
-
 			namespace RivenCombo 
 			{
 				CheckBox* UseQ;
@@ -32,7 +32,17 @@ namespace HACKUZAN {
 				CheckBox* Killsteal;
 
 				List* InteruptMode;
-				List* ComboType;
+				List* ComboStyle;
+			}
+
+			namespace RivenDraws
+			{
+				CheckBox* DrawQ;
+				CheckBox* DrawW;
+				CheckBox* DrawE;
+				CheckBox* DrawR2;
+				CheckBox* DrawFlash;
+				CheckBox* DrawCombo;
 			}
 
 			namespace RivenFarm
@@ -45,16 +55,18 @@ namespace HACKUZAN {
 			namespace RivenMisc 
 			{
 				CheckBox* AutoE;
+				CheckBox* Debug;
 			}
 		}
-
 
 		void Riven::Initialize()
 		{
 			auto menu = Menu::CreateMenu("riven", "Riven");
 			auto combo = menu->AddMenu("combo", "Combo Settings");
 			auto farm = menu->AddMenu("farming", "Farm Setting");
+			auto draw = menu->AddMenu("draw", "Draw Settings");
 			auto misc = menu->AddMenu("misc", "Misc Settings");
+
 
 			RivenConfig::RivenCombo::UseQ = combo->AddCheckBox("Riven Combo Q", "Use Q", true);
 			RivenConfig::RivenCombo::UseW = combo->AddCheckBox("Riven Combo W", "Use W", true);
@@ -69,12 +81,23 @@ namespace HACKUZAN {
 			combo->AddInfo("comboSpacer2", " ");
 			RivenConfig::RivenCombo::UseFlash = combo->AddCheckBox("Riven Combo Use Flash", "Use Flash", false);
 			RivenConfig::RivenCombo::UseFlash = combo->AddCheckBox("Riven Combo Killsteal", "Use R2 to Killsteal", false);
+			combo->AddInfo("comboSpacer3", " ");
+			RivenConfig::RivenCombo::ComboStyle = combo->AddList("Riven Combo Mode", "Combo Style", std::vector<std::string>{ "BoxBox", "Shy", "Adrien", "BRNA", "Vyper" }, 0u, nullptr);
 
 			RivenConfig::RivenFarm::UseQ = farm->AddCheckBox("Riven Farm Q", "Use Q", true);
 			RivenConfig::RivenFarm::UseW = farm->AddCheckBox("Riven Farm W", "Use W", false);
 			RivenConfig::RivenFarm::UseE = farm->AddCheckBox("Riven Farm E", "Use E", false);
 
 			RivenConfig::RivenMisc::AutoE = misc->AddCheckBox("Riven Misc Auto E", "Auto E", true);
+			RivenConfig::RivenMisc::Debug = misc->AddCheckBox("Riven Misc Debug", "Debug Mode", false);
+
+			RivenConfig::RivenDraws::DrawQ = draw->AddCheckBox("Riven Draws Draw Q", "Draw Q Range", true);
+			RivenConfig::RivenDraws::DrawW = draw->AddCheckBox("Riven Draws Draw W", "Draw W Range", true);
+			RivenConfig::RivenDraws::DrawE = draw->AddCheckBox("Riven Draws Draw E", "Draw E Range", true);
+			RivenConfig::RivenDraws::DrawR2 = draw->AddCheckBox("Riven Draws Draw R2", "Draw R2 Range", true);
+			RivenConfig::RivenDraws::DrawFlash = draw->AddCheckBox("Riven Draws Draw Flash", "Draw Flash Range", true);
+			RivenConfig::RivenDraws::DrawFlash = draw->AddCheckBox("Riven Draws Draw Flash", "Draw Combo Style", true);
+
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -98,25 +121,93 @@ namespace HACKUZAN {
 
 		void Riven::OnGameUpdate()
 		{
+			auto target = GetTarget();
+			if (!Orbwalker::OrbwalkerEvading)
+			{
+				switch (Orbwalker::ActiveMode)
+				{
+					case OrbwalkerMode_Combo:
+					{
+						if (target && Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(target) && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == kSpellState::SpellState_Ready)
+						{
+							if (Distance(target, ObjectManager::Player) <= 260)
+							{
+								ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
+								return;
+							}
+						}
+						if (target && Orbwalker::CanCastAfterAttack() && !target->IsImmovable() && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == kSpellState::SpellState_Ready)
+						{
+							ObjectManager::Player->CastSpell(SpellSlot_W, (DWORD)ObjectManager::Player);
+							return;
+						}
+					}
+					break;
+					case OrbwalkerMode_LastHit:
+					{
 
+					}
+					break;
+					case OrbwalkerMode_LaneClear:
+					case OrbwalkerMode_JungleClear:
+					{
+
+					}
+					break;
+					case OrbwalkerMode_Flee:
+					{
+						if (ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == kSpellState::SpellState_Ready)
+							ObjectManager::Player->CastSpellPos(SpellSlot_Q, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
+						else if (ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) == kSpellState::SpellState_Ready)
+							ObjectManager::Player->CastSpellPos(SpellSlot_Q, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
+	
+					}
+					break;
+					default:
+					{
+
+					}
+					break;
+				}
+			}
 		}
 
 		void Riven::OnDraw()
 		{
-
-
+			if (RivenConfig::RivenDraws::DrawQ->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 275);
+			if (RivenConfig::RivenDraws::DrawW->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 260);
+			if (RivenConfig::RivenDraws::DrawE->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 310);
+			if (RivenConfig::RivenDraws::DrawR2->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 850);
+			if (RivenConfig::RivenDraws::DrawFlash->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 450);
+			//if (RivenConfig::RivenDraws::DrawCombo->Value == true)
+			//{
+			//	std::string sCombo = ("Style: " + RivenConfig::RivenCombo::ComboStyle->Items[RivenConfig::RivenCombo::ComboStyle->Value]);
+			//	auto Combo = sCombo.c_str();
+			//	if (Combo && RivenConfig::RivenMisc::Debug->Value == true)
+			//		GameClient::PrintChat(Combo, IM_COL32(255, 255, 255, 255));
+			//	Vector2 Position;
+			//	RenderLayer::WorldToScreen(ObjectManager::Player->Position, Position);
+			//	Position.Y = Position.Y + 50;
+			//	Renderer::AddText("Style: unknown", 12, Position, IM_COL32(255, 255, 255, 133));
+			//}
 		}
 
 		bool Riven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)
 		{
-			return false;
+			return true;
 		}
 
 		void Riven::OnCreateObject(GameObject* unit)
 		{
 			if (unit == nullptr)
 				return;
-			GameClient::PrintChat(("[Riven Debug] Created Object: " + std::string(unit->Name)).c_str(), IM_COL32(255, 69, 255, 255));
+			if(RivenConfig::RivenMisc::Debug->Value == true)
+				GameClient::PrintChat(("[Riven Debug] Created Object: " + std::string(unit->Name)).c_str(), IM_COL32(255, 69, 255, 255));
 		}
 
 		void Riven::OnDeleteObject(GameObject* unit)
@@ -130,15 +221,39 @@ namespace HACKUZAN {
 		{
 			if (castInfo == nullptr || spellData == nullptr)
 				return;
+			if (RivenConfig::RivenMisc::Debug->Value == true)
+			{
+				GameClient::PrintChat(("[Riven Debug] Casted Spell: " + std::string(castInfo->GetSpellData()->SpellName)).c_str(), IM_COL32(255, 69, 255, 255));
+			}
 
 			if (castInfo->SourceId == ObjectManager::Player->SourceID) // Check if it's our Spell Cast
 			{
-
+				if (spellData->SpellName == "RivenTriCleave")
+					Orbwalker::ResetAutoAttack();
 			}
 			else if (castInfo->TargetId == ObjectManager::Player->SourceID) // Check if we're the Target of the Spell
 			{
-
+				if (strcmp(spellData->SpellName, "ChaosTurretWormBasicAttack") == 0 || strcmp(spellData->SpellName, "OrderTurretWormBasicAttack") == 0)
+				{
+					if(RivenConfig::RivenMisc::AutoE->Value == true)
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, ObjectManager::Player->Position);
+				}
 			}
+		}
+
+		GameObject* Riven::Target()
+		{
+			std::vector<GameObject*> heroes;
+			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			for (size_t i = 0; i < hero_list->size; i++)
+			{
+				auto hero = hero_list->entities[i];
+
+				if (hero && hero->IsEnemy() && hero->IsValidTarget(900)) {
+					heroes.push_back(hero);
+				}
+			}
+			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 	}
 }

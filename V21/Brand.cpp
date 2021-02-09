@@ -129,69 +129,34 @@ namespace HACKUZAN {
 
 		void Brand::BrandCombo()
 		{
-			auto Wtarget = GetTarget(850);
-			auto Etarget = GetTarget(625);
-
-			if (Etarget && Orbwalker::CanCastAfterAttack())
-			{
-				if (BrandConfig::BrandCombo::UseE->Value)
-				{
-					ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)Etarget, ObjectManager::Player->Position, Etarget->Position, Etarget->NetworkId);
-				}
-
-				if (BrandConfig::BrandCombo::UseQ->Value && BrandConfig::BrandCombo::UseQ2->Value && HasBrandPassive(Etarget))
-				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_Q, ObjectManager::Player->Position, Etarget->Position);
-				}
-
-				else if (BrandConfig::BrandCombo::UseQ->Value && !BrandConfig::BrandCombo::UseQ2->Value)
-				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_Q, ObjectManager::Player->Position, Etarget->Position);
-				}
-
-				if (BrandConfig::BrandCombo::UseW->Value && HasBrandPassive(Etarget))
-				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_W, ObjectManager::Player->Position, Etarget->Position);
-				}
-
-				if (BrandConfig::BrandCombo::UseR->Value && HasBrandPassive(Etarget))
-				{
-					if (Wtarget->CountEnemiesInRange(550) >= BrandConfig::BrandCombo::RCount->Value)
-					{
-						ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_R, (DWORD)ObjectManager::Player, (DWORD)Etarget, ObjectManager::Player->Position, Etarget->Position, Etarget->NetworkId);
-					}
-				}
-			}
+			auto Wtarget = GetTarget(900.f);
+			auto Etarget = GetTarget(1100.f);
 
 			if (Wtarget && Orbwalker::CanCastAfterAttack())
 			{
+
+
 				if (BrandConfig::BrandCombo::UseW->Value)
 				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_W, ObjectManager::Player->Position, Wtarget->Position);
-				}
+					//	auto predict = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 999999999.f, 0.25f);
+						//ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player, predict);
 
-				if (BrandConfig::BrandCombo::UseE->Value && Wtarget->Position.Distance(ObjectManager::Player->Position) <= 625)
-				{
-					ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)Wtarget, ObjectManager::Player->Position, Wtarget->Position, Etarget->NetworkId);
-				}
 
-				if (BrandConfig::BrandCombo::UseQ->Value && BrandConfig::BrandCombo::UseQ2->Value && HasBrandPassive(Wtarget))
-				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_Q, ObjectManager::Player->Position, Wtarget->Position);
-				}
 
-				else if (BrandConfig::BrandCombo::UseQ->Value && !BrandConfig::BrandCombo::UseQ2->Value)
-				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_Q, ObjectManager::Player->Position, Wtarget->Position);
-				}
-
-				if (BrandConfig::BrandCombo::UseR->Value && HasBrandPassive(Wtarget) && Wtarget->Position.Distance(ObjectManager::Player->Position) <= 750)
-				{
-					if (Wtarget->CountEnemiesInRange(550) >= BrandConfig::BrandCombo::RCount->Value)
+					//auto test = Prediction::GetPositionOnPath(input);
+					if (ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == SpellState_Ready)
 					{
-						ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_R, (DWORD)ObjectManager::Player, (DWORD)Wtarget, ObjectManager::Player->Position, Wtarget->Position, Wtarget->NetworkId);
+						auto prediction = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 0, 0.25f);
+						if (prediction != Vector3{ 0,0,0 } && prediction.IsValid())
+						{
+							ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player, prediction);
+							GameClient::PrintChat(std::to_string(prediction.X).c_str(), 255);
+						}
+						
 					}
+
 				}
+
 			}
 		}
 

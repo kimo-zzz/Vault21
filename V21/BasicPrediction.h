@@ -2,6 +2,7 @@
 #include "ObjectManager.h"
 #include "stdafx.h"
 
+
 enum ESpellCastType
 {
 	Cone = 1,
@@ -39,6 +40,7 @@ namespace HACKUZAN
 	{
 	public:
 		static PredictionOutput GetPositionOnPath(PredictionInput input);
+		static std::tuple<float, Vector2> VectorMovementCollision(Vector2 startPoint1, Vector2 endPoint1, float v1, Vector2 startPoint2, float v2, float delay);
 
 		static Vector3 BasicPrediction(GameObject* target, float spellRadius, float spellRange, float missileSpeed, float castDelay);
 	};

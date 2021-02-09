@@ -1,7 +1,6 @@
 #pragma once
 #include "Vector2.h"
 #include "NavGrid.h"
-
 namespace HACKUZAN {
 
 	class Vector2;
@@ -177,7 +176,7 @@ namespace HACKUZAN {
 		{
 			return Vector2(X, Z);
 		}
-
+		
 		Vector3 Rotated(float Angle)
 		{
 			float c = cosf(Angle);

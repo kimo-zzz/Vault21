@@ -42,6 +42,88 @@ namespace HACKUZAN {
 		return ToVec3(X2);
 	}
 
+	inline std::tuple<float, Vector2> VectorMovementCollision(Vector2 startPoint1, Vector2 endPoint1, float v1, Vector2 startPoint2, float v2, float delay)
+	{
+		float sP1x = startPoint1.X,
+			sP1y = startPoint1.Y,
+			eP1x = endPoint1.X,
+			eP1y = endPoint1.Y,
+			sP2x = startPoint2.X,
+			sP2y = startPoint2.Y;
+
+		float FLOAT_EPSILON = 1.401298E-45f;
+		float FLOAT_NAN = std::numeric_limits<float>::quiet_NaN();
+		float FLOAT_MAX_VALUE = std::numeric_limits<float>::max();
+
+		float	d = eP1x - sP1x, e = eP1y - sP1y;
+		float	dist = (float)std::sqrt(d * d + e * e), t1 = FLOAT_NAN;
+		float	S = std::abs(dist) > FLOAT_EPSILON ? v1 * d / dist : 0,
+			K = (std::abs(dist) > FLOAT_EPSILON) ? v1 * e / dist : 0;
+
+		float r = sP2x - sP1x, j = sP2y - sP1y;
+		auto c = r * r + j * j;
+
+		if (dist > 0)
+		{
+			if (std::abs(v1 - FLOAT_MAX_VALUE) < FLOAT_EPSILON)
+			{
+				auto t = dist / v1;
+				t1 = v2 * t >= 0 ? t : FLOAT_NAN;
+			}
+			else if (std::abs(v2 - FLOAT_MAX_VALUE) < FLOAT_EPSILON)
+			{
+				t1 = 0;
+			}
+			else
+			{
+				float a = S * S + K * K - v2 * v2, b = -r * S - j * K;
+
+				if (std::abs(a) < FLOAT_EPSILON)
+				{
+					if (std::abs(b) < FLOAT_EPSILON)
+					{
+						t1 = (std::abs(c) < FLOAT_EPSILON) ? 0 : FLOAT_NAN;
+					}
+					else
+					{
+						auto t = -c / (2 * b);
+						t1 = (v2 * t >= 0) ? t : FLOAT_NAN;
+					}
+				}
+				else
+				{
+					auto sqr = b * b - a * c;
+					if (sqr >= 0)
+					{
+						auto nom = (float)std::sqrt(sqr);
+						auto t = (-nom - b) / a;
+						t1 = v2 * t >= 0 ? t : FLOAT_NAN;
+						t = (nom - b) / a;
+						auto t2 = (v2 * t >= 0) ? t : FLOAT_NAN;
+
+						if (!std::isnan(t2) && !std::isnan(t1))
+						{
+							if (t1 >= delay && t2 >= delay)
+							{
+								t1 = std::min(t1, t2);
+							}
+							else if (t2 >= delay)
+							{
+								t1 = t2;
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (std::abs(dist) < FLOAT_EPSILON)
+		{
+			t1 = 0;
+		}
+
+		return std::make_tuple(t1, std::isnan(t1) == false ? Vector2(sP1x + S * t1, sP1y + K * t1) : Vector2());
+	}
+	
 	inline float DistanceSqr(Vector3 from, Vector3 to)
 	{
 		float distance = (from.To2D() - to.To2D()).LengthSquared();

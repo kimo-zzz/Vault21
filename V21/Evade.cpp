@@ -161,7 +161,7 @@ namespace HACKUZAN {
 					return;
 
 				auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
-				if (caster && caster->Hero() && caster != ObjectManager::Player && caster->IsEnemy()) {
+				if (caster != nullptr && caster->Hero() && caster != ObjectManager::Player && caster->IsEnemy()) {
 					if (!castInfo->IsAutoAttack()) {
 						for (auto skillshot_data : SpellDb::spells) {
 							if (skillshot_data->champion_name == caster->BaseCharacterData->SkinName) {

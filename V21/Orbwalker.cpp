@@ -557,7 +557,7 @@ namespace HACKUZAN {
 
 					auto minion = minion_list->entities[i];
 
-					if (minion && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
+					if (minion != nullptr && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
 						continue;
 					}
 
@@ -598,7 +598,7 @@ namespace HACKUZAN {
 						for (size_t i = 0; i < turret_list->size; i++)
 						{
 							auto turret = turret_list->entities[i];
-							if (turret->IsAlly() && turret->IsValidTarget() && turret->Position.Distance(minion->Position) <= 900) {
+							if (turret != nullptr && turret->IsAlly() && turret->IsValidTarget() && turret->Position.Distance(minion->Position) <= 900) {
 								if (laneClearHealth == minion->Health) {
 									auto turretDamage = Damage::CalculateAutoAttackDamage(turret, minion);
 									for (auto minionHealth = minion->Health; minionHealth > 0.0f && turretDamage > 0.0f; minionHealth -= turretDamage) {

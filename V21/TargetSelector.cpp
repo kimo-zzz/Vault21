@@ -178,7 +178,7 @@ namespace HACKUZAN {
 			for (size_t i = 0; i < hero_list->size; ++i)
 			{
 				auto hero = hero_list->entities[i];
-				if (hero->IsEnemy()) {
+				if (hero !=nullptr && hero->IsEnemy()) {
 					Enemies.push_back(hero);
 				}
 			}
@@ -298,7 +298,7 @@ namespace HACKUZAN {
 				for (size_t i = 0; i < hero_list->size; ++i)
 				{
 					auto hero = hero_list->entities[i];
-					if (hero->IsEnemy() && hero->IsValidTarget() && sourcePosition.IsInRange(hero->Position, range + (addBoundingRadius ? hero->GetBoundingRadius() : 0.0f))) {
+					if (hero != nullptr && hero->IsEnemy() && hero->IsValidTarget() && sourcePosition.IsInRange(hero->Position, range + (addBoundingRadius ? hero->GetBoundingRadius() : 0.0f))) {
 						validTargets.push_back(hero);
 					}
 				}
@@ -312,7 +312,7 @@ namespace HACKUZAN {
 				for (size_t i = 0; i < minion_list->size; ++i)
 				{
 					auto minion = minion_list->entities[i];
-					if (minion->IsEnemy() && minion->IsValidTarget() && sourcePosition.IsInRange(minion->Position, range + (addBoundingRadius ? minion->GetBoundingRadius() : 0.0f))) {
+					if (minion != nullptr && minion->IsEnemy() && minion->IsValidTarget() && sourcePosition.IsInRange(minion->Position, range + (addBoundingRadius ? minion->GetBoundingRadius() : 0.0f))) {
 						validTargets.push_back(minion);
 					}
 				}

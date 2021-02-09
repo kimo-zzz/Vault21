@@ -66,9 +66,9 @@ namespace HACKUZAN {
 			TwitchConfig::TwitchCombo::enemiesInRange = combo->AddSlider("Twitch R Slider", "Minimum Enemies", 2, 1, 5);
 
 			auto combo_mana = combo->AddMenu("Mana Settings", "Mana Settings");
-			TwitchConfig::TwitchCombo::QmaNa = combo_mana->AddSlider("combo_mana QmaNa", "QMana", 50, 1, 100);
-			TwitchConfig::TwitchCombo::WmaNa = combo_mana->AddSlider("combo_mana WmaNa", "WMana", 50, 1, 100);
-			TwitchConfig::TwitchCombo::EmaNa = combo_mana->AddSlider("combo_mana EmaNa", "EMana", 30, 1, 100);
+			TwitchConfig::TwitchCombo::QmaNa = combo_mana->AddSlider("combo_mana QMana", "QMana", 50, 1, 100);
+			TwitchConfig::TwitchCombo::WmaNa = combo_mana->AddSlider("combo_mana Wmana", "WMana", 50, 1, 100);
+			TwitchConfig::TwitchCombo::EmaNa = combo_mana->AddSlider("combo_mana EMana", "EMana", 30, 1, 100);
 			TwitchConfig::TwitchCombo::RmaNa = combo_mana->AddSlider("combo_mana RmaNa", "RMana", 20, 1, 100);
 
 
@@ -188,7 +188,7 @@ namespace HACKUZAN {
 							ObjectManager::Player->CastSpell(SpellSlot_Q, (DWORD)ObjectManager::Player);
 
 						/*
-						if ((Distance(target, ObjectManager::Player) <= 450.f && TwitchConfig::TwitchCombo::WmaNa->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && TwitchConfig::TwitchCombo::UseW && !ObjectManager::Player->FindBuffName("TwitchHideInShadows"))
+						if ((Distance(target, ObjectManager::Player) <= 450.f && TwitchConfig::TwitchCombo::Wmana->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && TwitchConfig::TwitchCombo::UseW && !ObjectManager::Player->FindBuffName("TwitchHideInShadows"))
 							ObjectManager::Player->CastSpellPos(SpellSlot_W, (DWORD)ObjectManager::Player, target->Position);
 							*/
 						if ((TwitchConfig::TwitchCombo::RmaNa->Value / 100) * ObjectManager::Player->MaxResource <= ObjectManager::Player->Resource && CountEnemiesInRange(ObjectManager::Player->AttackRange + ObjectManager::Player->GetBoundingRadius()) >= TwitchConfig::TwitchCombo::enemiesInRange->Value)

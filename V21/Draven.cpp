@@ -62,16 +62,16 @@ namespace HACKUZAN {
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
 			DravenConfig::DravenCombo::UseQ = combo->AddCheckBox("Use Q", "Use SpellSlot Q", true);
 			DravenConfig::DravenCombo::UseW = combo->AddCheckBox("Use W", "Use SpellSlot W", true);
-			DravenConfig::DravenCombo::WmaNa = combo->AddSlider("WmaNa", "Minimum W mana", 10, 0, 100, 5);
+			DravenConfig::DravenCombo::WmaNa = combo->AddSlider("Wmana", "Minimum W mana", 10, 0, 100, 5);
 			DravenConfig::DravenCombo::UseE = combo->AddCheckBox("Use E", "Use SpellSlot E", true);
-			DravenConfig::DravenCombo::EmaNa = combo->AddSlider("EmaNa", "Minimum E mana", 50, 0, 100, 5);
+			DravenConfig::DravenCombo::EmaNa = combo->AddSlider("EMana", "Minimum E mana", 50, 0, 100, 5);
 			DravenConfig::DravenCombo::UseR = combo->AddCheckBox("Use R", "Use SpellSlot R", true);
 
 			auto farm = menu->AddMenu("farm", "Farm Settings");
 			DravenConfig::DravenFarm::UseQ = farm->AddCheckBox("Use Q", "Use SpellSlot Q", true);
-			DravenConfig::DravenFarm::QmaNa = farm->AddSlider("QmaNa", "Minimum Q mana", 50, 0, 100, 5);
+			DravenConfig::DravenFarm::QmaNa = farm->AddSlider("QMana", "Minimum Q mana", 50, 0, 100, 5);
 			DravenConfig::DravenFarm::UseE = farm->AddCheckBox("Use E", "Use SpellSlot E", true);
-			DravenConfig::DravenFarm::EmaNa = farm->AddSlider("EmaNa", "Minimum E mana", 50, 0, 100, 5);
+			DravenConfig::DravenFarm::EmaNa = farm->AddSlider("EMana", "Minimum E mana", 50, 0, 100, 5);
 
 			auto misc = menu->AddMenu("misc", "Misc");
 

@@ -14,7 +14,6 @@
 #include "Evade.h"
 #include "Utils.h"
 
-
 namespace HACKUZAN {
 
 
@@ -448,6 +447,12 @@ namespace HACKUZAN {
 		void Orbwalker::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+
+			if (caster != nullptr && caster->IsEnemy() && Contains(spellData->SpellName, "YasuoWMovingWall", false))
+			{
+				HACKUZAN::PredLastYasuoWallCastPos = caster->Position;
+			}
+
 			if (caster == ObjectManager::Player) {
 
 				LastOrder = GameObjectOrder::None;
@@ -507,9 +512,18 @@ namespace HACKUZAN {
 			}
 		}
 
-		void Orbwalker::OnNewPath(GameObject* unit, NavigationPath* navigationPath) {
+		void Orbwalker::OnNewPath(GameObject* unit, NewPath* args) {
+			if (args->sender == nullptr || args == nullptr)
+				return;
+			
+			PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
+
+			if (args->dashSpeed != 0) {
+				PredAllDashData[args->sender->NetworkId] = args;
+			}
+
 			if (unit == ObjectManager::Player) {
-				if (IsRengar && LastTarget && navigationPath->DashSpeed == 1450.0f) {
+				if (IsRengar && LastTarget && args->dashSpeed == 1450.0f) {
 					LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
 				}
 			}
@@ -557,7 +571,7 @@ namespace HACKUZAN {
 
 					auto minion = minion_list->entities[i];
 
-					if (minion != nullptr && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
+					if (minion && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
 						continue;
 					}
 
@@ -598,7 +612,7 @@ namespace HACKUZAN {
 						for (size_t i = 0; i < turret_list->size; i++)
 						{
 							auto turret = turret_list->entities[i];
-							if (turret != nullptr && turret->IsAlly() && turret->IsValidTarget() && turret->Position.Distance(minion->Position) <= 900) {
+							if (turret->IsAlly() && turret->IsValidTarget() && turret->Position.Distance(minion->Position) <= 900) {
 								if (laneClearHealth == minion->Health) {
 									auto turretDamage = Damage::CalculateAutoAttackDamage(turret, minion);
 									for (auto minionHealth = minion->Health; minionHealth > 0.0f && turretDamage > 0.0f; minionHealth -= turretDamage) {

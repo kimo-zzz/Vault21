@@ -7,7 +7,6 @@
 namespace HACKUZAN
 {
 
-
 	struct StopCast
 	{
 		GameObject* sender;
@@ -19,6 +18,19 @@ namespace HACKUZAN
 		unsigned int counter;
 	};
 
+	struct NewPath
+	{
+		GameObject* sender;
+		Vector3 start;
+		Vector3 end;
+		Vector3 tail;
+		float dashSpeed;
+		unsigned dash;
+	};
+
+	extern Vector3 PredLastYasuoWallCastPos;
+	extern std::map<int, NewPath*> PredAllDashData;
+	extern std::map <int, int> PredAllNewPathTicks;
 
 #pragma  region  Delayaction
 	struct Action

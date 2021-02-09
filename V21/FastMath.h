@@ -7,7 +7,6 @@
 
 namespace HACKUZAN {
 
-	Vector3 PredLastYasuoWallCastPos;
 	inline Vector3 PredGetUnitPosition(GameObject* target, float delay)
 	{
 		delay = delay + NetClient::Instance->GetPing() / 1000;

@@ -249,6 +249,7 @@
     <ClInclude Include="Plugins.h" />
     <ClInclude Include="PluginTemplate.h" />
     <ClInclude Include="Polygons.h" />
+    <ClInclude Include="Prediction.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderLayer.h" />

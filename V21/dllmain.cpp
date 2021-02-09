@@ -17,7 +17,6 @@
 #include "HeavensGateHook.h"
 #include "hideModule.h"
 #include "LeagueFunctions.h"
-#include "MenuSettings.h"
 
 CConsole Console;
 using namespace HACKUZAN;
@@ -90,8 +89,7 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
+		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
 		if (thisPtr != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
@@ -107,8 +105,7 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, GameObject* object) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
+		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
 		if (object != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
@@ -123,19 +120,15 @@ namespace LeagueHook {
 
 	int _fastcall hk_OnPlayAnimation(GameObject* ptr, void* edx, bool* ret, char name, int unk1, unsigned int unk2, float animationTime, int unk4) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnPlayAnimation hooked!", IM_COL32(255, 69, 0, 255));
-
 		if (ptr != nullptr)
-			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr, name, animationTime);
+			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
 
 		return Functions::OnPlayAnimation(ptr, ret, name, unk1, unk2, animationTime, unk4);
 	}
 
 	int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* CastInfo) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnProcessSpell running~!", IM_COL32(255, 69, 0, 255));
+		//GameClient::PrintChat("hk_OnProcessSpell running~!", IM_COL32(255, 69, 0, 255));
 
 		if (CastInfo == nullptr)
 			return 0;
@@ -146,10 +139,10 @@ namespace LeagueHook {
 
 		EventManager::Trigger(LeagueEvents::OnProcessSpell, CastInfo, spelldata);
 
-		if (caster != nullptr && caster->Hero()) {
+		if (caster->Hero()) {
 			EventManager::Trigger(LeagueEvents::OnDoCast, CastInfo, spelldata);
 		}
-		if (caster != nullptr && !caster->Hero() && CastInfo->IsAutoAttack()) {
+		if (!caster->Hero() && CastInfo->IsAutoAttack()) {
 			EventManager::Trigger(LeagueEvents::OnDoCast, CastInfo, spelldata);
 		}
 
@@ -170,8 +163,7 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnFinishCast(SpellCastInfo* castInfo, void* edx, GameObject* object) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnFinishCast running~!", IM_COL32(255, 69, 0, 255));
+		//GameClient::PrintChat("hk_OnFinishCast running~!", IM_COL32(255, 69, 0, 255));
 
 		if (object != nullptr && castInfo != nullptr)
 			EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
@@ -183,8 +175,7 @@ namespace LeagueHook {
 	void __fastcall hk_OnStopCast(SpellCastInfo* spellCaster_Client, void* edx, bool stopAnimation, bool* executeCastFrame,
 		bool forceStop, bool destroyMissile, unsigned int missileNetworkID) {
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnStopCast running~!", IM_COL32(255, 69, 0, 255));
+		//GameClient::PrintChat("hk_OnStopCast running~!", IM_COL32(255, 69, 0, 255));
 
 		if (spellCaster_Client == nullptr)
 			return;
@@ -210,13 +201,20 @@ namespace LeagueHook {
 
 	int hk_OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, int unk1, float* dashSpeed, unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
 	{
+
 		if (obj == nullptr)
 			return 0;
 
-		if (MenuSettings::DeveloperMode == true)
-			GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
+		auto path = new NewPath;
+		path->sender = obj;
+		path->start = *start;
+		path->end = *end;
+		path->tail = *tail;
+		path->dash = dash;
+		path->dashSpeed = *dashSpeed;
 
-		EventManager::Trigger(LeagueEvents::OnNewPath, obj, start, end, tail, dashSpeed, dash);
+		//GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
+		EventManager::Trigger(LeagueEvents::OnNewPath, obj, path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 	}

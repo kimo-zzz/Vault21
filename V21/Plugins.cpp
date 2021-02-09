@@ -35,6 +35,7 @@ namespace HACKUZAN {
 			break;
 		case Character::Riven:
 			Riven::Initialize();
+			break;
 		}
 	}
 

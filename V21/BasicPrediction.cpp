@@ -4,6 +4,8 @@
 #include "NetClient.h"
 #include "Draw.h"
 
+
+
 namespace HACKUZAN
 {
 
@@ -61,63 +63,146 @@ namespace HACKUZAN
 		result.predictedPosition = Vector3(0, 0, 0);
 		return result;
 
-		/*
-		//Skillshot with a delay and speed.
-		float pathLength = pathManager.GetPathLength();
-		if (pathLength >= input.delay * speed - input.radius && std::abs(input.speed - FLT_MAX) > FLT_EPSILON)
+		
+		////Skillshot with a delay and speed.
+		//float pathLength = pathManager.GetPathLength();
+		//if (pathLength >= input.delay * speed - input.radius && std::abs(input.speed - FLT_MAX) > FLT_EPSILON)
+		//{
+		//	float d = input.delay * speed - input.radius;
+		//	if (input.castType == ESpellCastType::Line || input.castType == ESpellCastType::Cone || input.castType == ESpellCastType::MissileLine)
+		//	{
+
+		//		if (DistanceSqr(input.from, input.target->Position) < 200 * 200)
+		//		{
+		//			d = input.delay * speed;
+		//		}
+		//	}
+
+		//	auto path = pathManager.CutPath(d);
+		//	float tT = 0.f;
+		//	for (int i = 0; i < path.size() - 1; i++)
+		//	{
+		//		Vector3 a = path[i];
+		//		Vector3 b = path[i + 1];
+		//		float tB = Distance(a, b) / speed;
+		//		Vector3 direction = (b - a).Normalized();
+		//		a = a - speed * tT * direction;
+
+		//		auto sol = VectorMovementCollision(a, b, speed, input.from.To2D(), input.speed, tT); //add this func.
+		//		auto t = (float)sol[0];
+		//		auto pos = (Vector2)sol[1];
+
+		//		if (pos.IsValid() && t >= tT && t <= tT + tB)
+		//		{
+		//			if (pos.Distance(b, true) < 20)
+		//				break;
+		//			auto p = pos + input.radius * direction;
+
+		//			if (input.castType == ESpellCastType::MissileLine)
+		//			{
+		//				auto alpha = (input.from.To2D() - p).AngleBetween(a - b);
+		//				if (alpha > 30 && alpha < 180 - 30)
+		//				{
+
+		//					auto beta = (float)std::asin(input.radius / Distance(p, input.from));
+		//					auto cp1 = input.from.To2D() + (p - input.from.To2D()).Rotated(beta);
+		//					auto cp2 = input.from.To2D() + (p - input.from.To2D()).Rotated(-beta);
+
+		//					pos = cp1.Distance(pos, true) < cp2.Distance(pos, true) ? cp1 : cp2;
+		//				}
+		//			}
+
+		//			return PredictionOutput{ Input = input, CastPosition = pos.To3D(), UnitPosition = p.To3D(), Hitchance = HitChanceEx.High };
+		//		}
+		//		tT += tB;
+		//	}
+
+		//}
+		
+	}
+
+	std::tuple<float, Vector2> Prediction::VectorMovementCollision(Vector2 startPoint1, Vector2 endPoint1, float v1, Vector2 startPoint2, float v2, float delay)
+	{
+		float sP1x = startPoint1.X,
+			sP1y = startPoint1.Y,
+			eP1x = endPoint1.X,
+			eP1y = endPoint1.Y,
+			sP2x = startPoint2.X,
+			sP2y = startPoint2.Y;
+
+		float FLOAT_EPSILON = 1.401298E-45f;
+		float FLOAT_NAN = std::numeric_limits<float>::quiet_NaN();
+		float FLOAT_MAX_VALUE = std::numeric_limits<float>::max();
+
+		float	d = eP1x - sP1x, e = eP1y - sP1y;
+		float	dist = (float)std::sqrt(d * d + e * e), t1 = FLOAT_NAN;
+		float	S = std::abs(dist) > FLOAT_EPSILON ? v1 * d / dist : 0,
+				K = (std::abs(dist) > FLOAT_EPSILON) ? v1 * e / dist : 0;
+
+		float r = sP2x - sP1x, j = sP2y - sP1y;
+		auto c = r * r + j * j;
+
+		if (dist > 0)
 		{
-			float d = input.delay * speed - input.radius;
-			if (input.castType == ESpellCastType::Line || input.castType == ESpellCastType::Cone || input.castType == ESpellCastType::MissileLine)
+			if (std::abs(v1 - FLOAT_MAX_VALUE) < FLOAT_EPSILON)
 			{
-
-				if (DistanceSqr(input.from, input.target->Position) < 200 * 200)
-				{
-					d = input.delay * speed;
-				}
+				auto t = dist / v1;
+				t1 = v2 * t >= 0 ? t : FLOAT_NAN;
 			}
-
-			auto path = pathManager.CutPath(d);
-			float tT = 0.f;
-			for (int i = 0; i < path.size() - 1; i++)
+			else if (std::abs(v2 - FLOAT_MAX_VALUE) < FLOAT_EPSILON)
 			{
-				Vector3 a = path[i];
-				Vector3 b = path[i + 1];
-				float tB = Distance(a, b) / speed;
-				Vector3 direction = (b - a).Normalized();
-				a = a - speed * tT * direction;
+				t1 = 0;
+			}
+			else
+			{
+				float a = S * S + K * K - v2 * v2, b = -r * S - j * K;
 
-				auto sol = VectorMovementCollision(a, b, speed, input.from.To2D(), input.speed, tT); //add this func.
-				auto t = (float)sol[0];
-				auto pos = (Vector2)sol[1];
-
-				if (pos.IsValid() && t >= tT && t <= tT + tB)
+				if (std::abs(a) < FLOAT_EPSILON)
 				{
-					if (pos.Distance(b, true) < 20)
-						break;
-					auto p = pos + input.radius * direction;
-
-					if (input.castType == ESpellCastType::MissileLine)
+					if (std::abs(b) < FLOAT_EPSILON)
 					{
-						auto alpha = (input.from.To2D() - p).AngleBetween(a - b);
-						if (alpha > 30 && alpha < 180 - 30)
+						t1 = (std::abs(c) < FLOAT_EPSILON) ? 0 : FLOAT_NAN;
+					}
+					else
+					{
+						auto t = -c / (2 * b);
+						t1 = (v2 * t >= 0) ? t : FLOAT_NAN;
+					}
+				}
+				else
+				{
+					auto sqr = b * b - a * c;
+					if (sqr >= 0)
+					{
+						auto nom = (float)std::sqrt(sqr);
+						auto t = (-nom - b) / a;
+						t1 = v2 * t >= 0 ? t : FLOAT_NAN;
+						t = (nom - b) / a;
+						auto t2 = (v2 * t >= 0) ? t : FLOAT_NAN;
+
+						if (!std::isnan(t2) && !std::isnan(t1))
 						{
-
-							auto beta = (float)std::asin(input.radius / Distance(p, input.from));
-							auto cp1 = input.from.To2D() + (p - input.from.To2D()).Rotated(beta);
-							auto cp2 = input.from.To2D() + (p - input.from.To2D()).Rotated(-beta);
-
-							pos = cp1.Distance(pos, true) < cp2.Distance(pos, true) ? cp1 : cp2;
+							if (t1 >= delay && t2 >= delay)
+							{
+								t1 = std::min(t1, t2);
+							}
+							else if (t2 >= delay)
+							{
+								t1 = t2;
+							}
 						}
 					}
-
-					return PredictionOutput{ Input = input, CastPosition = pos.To3D(), UnitPosition = p.To3D(), Hitchance = HitChanceEx.High };
 				}
-				tT += tB;
 			}
-
 		}
-		*/
+		else if (std::abs(dist) < FLOAT_EPSILON)
+		{
+			t1 = 0;
+		}
+
+		return std::make_tuple(t1, std::isnan(t1) == false ? Vector2(sP1x + S * t1, sP1y + K * t1) : Vector2());
 	}
+
 
 	/*
 	Vector3 Prediction::BasicPrediction(GameObject* target, float spellRadius, float spellRange, float missileSpeed, float castDelay)

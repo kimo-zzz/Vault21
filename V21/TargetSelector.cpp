@@ -280,7 +280,7 @@ namespace HACKUZAN {
 			return 1;
 		}
 
-		GameObject* TargetSelector::GetTarget(TargetType tsType, float range, kDamageType damageType, Vector3 source, bool addBoundingRadius) {
+		GameObject* TargetSelector::GetTarget(float range, kDamageType damageType, Vector3 source, bool addBoundingRadius) {
 			auto sourcePosition = source.IsValid() ? source : ObjectManager::Player->Position;
 
 			if (Config::Advanced::AttackSelectedTarget->Value && SelectedTarget && SelectedTarget->IsValidTarget()) {
@@ -289,37 +289,18 @@ namespace HACKUZAN {
 				}
 			}
 
-			switch (tsType)
+			std::vector<GameObject*> validTargets;
+
+			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			for (size_t i = 0; i < hero_list->size; ++i)
 			{
-			case TargetType::TSTARGET_HEROES: {
-				std::vector<GameObject*> validTargets;
-
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
-				for (size_t i = 0; i < hero_list->size; ++i)
-				{
-					auto hero = hero_list->entities[i];
-					if (hero->IsEnemy() && hero->IsValidTarget() && sourcePosition.IsInRange(hero->Position, range + (addBoundingRadius ? hero->GetBoundingRadius() : 0.0f))) {
-						validTargets.push_back(hero);
-					}
+				auto hero = hero_list->entities[i];
+				if (hero->IsEnemy() && hero->IsValidTarget() && sourcePosition.IsInRange(hero->Position, range + (addBoundingRadius ? hero->GetBoundingRadius() : 0.0f))) {
+					validTargets.push_back(hero);
 				}
-
-				return GetTarget(validTargets, damageType);
 			}
-			case TargetType::TSTARGET_MINION: {
-				std::vector<GameObject*> validTargets;
 
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
-				for (size_t i = 0; i < minion_list->size; ++i)
-				{
-					auto minion = minion_list->entities[i];
-					if (minion->IsEnemy() && minion->IsValidTarget() && sourcePosition.IsInRange(minion->Position, range + (addBoundingRadius ? minion->GetBoundingRadius() : 0.0f))) {
-						validTargets.push_back(minion);
-					}
-				}
-
-				return GetTarget(validTargets, damageType);
-			}
-			}
+			return GetTarget(validTargets, damageType);
 		}
 
 		GameObject* TargetSelector::GetTarget(std::vector<GameObject*> targets, kDamageType damageType) {

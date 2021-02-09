@@ -18,6 +18,9 @@ namespace HACKUZAN {
 			void Dispose();
 			void OnGameUpdate();
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+			int CountEnemiesInRange(float range);
+			GameObject* GetTarget();
+			inline Vector3 PredGetUnitPosition(GameObject* target, float delay);
 			bool IsCondemnable(GameObject* target);
 
 			extern bool LastAttackCastSpell;

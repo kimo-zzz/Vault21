@@ -195,7 +195,7 @@ namespace HACKUZAN {
 
 		void Draven::OnGameUpdate()
 		{
-			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
+			auto target = GetTarget();
 
 			if (!Orbwalker::OrbwalkerEvading) {
 
@@ -212,17 +212,17 @@ namespace HACKUZAN {
 					if (DravenConfig::DravenCombo::UseW->Value)
 					{
 						if (ObjectManager::Player->Resource >= (DravenConfig::DravenCombo::WmaNa->Value / 100.0) * ObjectManager::Player->MaxResource) {
-							if (!DravenHasWAttackSpeed() && ObjectManager::Player->CountEnemiesInRange(ObjectManager::Player->GetAutoAttackRange()) > 0)
+							if (!DravenHasWAttackSpeed() && CountEnemiesInRange(ObjectManager::Player->GetAutoAttackRange()) > 0)
 							{
 								ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player);
 							}
-							if (!DravenHasWMoveSpeed() && ObjectManager::Player->CountEnemiesInRange(ObjectManager::Player->GetAutoAttackRange()) == 0
-								&& ObjectManager::Player->CountEnemiesInRange(900) > 0)
+							if (!DravenHasWMoveSpeed() && CountEnemiesInRange(ObjectManager::Player->GetAutoAttackRange()) == 0
+								&& CountEnemiesInRange(900) > 0)
 							{
 								ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player);
 							}
 
-							if (!DravenHasWAttackSpeed() && ObjectManager::Player->CountEnemiesInRange(900) > 0 && ObjectManager::Player->FindBuffType(BuffType::Slow)) {
+							if (!DravenHasWAttackSpeed() && CountEnemiesInRange(900) > 0 && ObjectManager::Player->FindBuffType(BuffType::Slow)) {
 								ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player);
 							}
 						}
@@ -255,7 +255,7 @@ namespace HACKUZAN {
 					else
 					{
 						if (DravenConfig::DravenCombo::UseQ->Value && DravenAxesCount() < 2) {
-							if (ObjectManager::Player->CountEnemiesInRange(900) > 0)
+							if (CountEnemiesInRange(900) > 0)
 							{
 								//GameClient::PrintChat(("Axe Count: " + to_string(DravenAxesCount())).c_str(), IM_COL32(255, 69, 0, 255));
 								ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_Q, (DWORD)ObjectManager::Player);
@@ -326,6 +326,38 @@ namespace HACKUZAN {
 					}
 				}
 			}
+		}
+
+		int Draven::CountEnemiesInRange(float range)
+		{
+			auto count = 0;
+			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			for (size_t i = 0; i < hero_list->size; i++)
+			{
+				auto hero = hero_list->entities[i];
+				if (hero && hero->IsValidTarget() && hero->IsEnemy()) {
+					if (hero->Position.Distance(ObjectManager::Player->Position) <= range)
+					{
+						count++;
+					}
+				}
+			}
+			return count;
+		}
+
+		GameObject* Draven::GetTarget()
+		{
+			std::vector<GameObject*> heroes;
+			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			for (size_t i = 0; i < hero_list->size; i++)
+			{
+				auto hero = hero_list->entities[i];
+
+				if (hero && hero->IsEnemy() && hero->IsValidTarget(1000)) {
+					heroes.push_back(hero);
+				}
+			}
+			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
 		inline int  Draven::DravenAxesOnHand()

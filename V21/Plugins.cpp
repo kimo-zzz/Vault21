@@ -7,7 +7,6 @@
 #include "Activator.h"
 #include "Evade.h"
 #include "Twitch.h"
-#include "Brand.h"
 #include "Riven.h";
 
 namespace HACKUZAN {
@@ -29,9 +28,6 @@ namespace HACKUZAN {
 			break;
 		case Character::Twitch:
 			Twitch::Initialize();
-			break;
-		case Character::Brand:
-			Brand::Initialize();
 			break;
 		case Character::Riven:
 			Riven::Initialize();
@@ -59,9 +55,6 @@ namespace HACKUZAN {
 			break;
 		case Character::Riven:
 			Riven::Dispose();
-			break;
-		case Character::Brand:
-			Brand::Dispose();
 			break;
 		}
 	}

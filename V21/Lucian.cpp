@@ -14,7 +14,6 @@ namespace HACKUZAN {
 
 			namespace LucianCombo {
 				CheckBox* UseQ;
-				Slider* QmaNa;
 				CheckBox* UseW;
 				Slider* WmaNa;
 				CheckBox* UseE;
@@ -53,15 +52,13 @@ namespace HACKUZAN {
 			auto menu = Menu::CreateMenu("Lucian", "Lucian");
 
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
-			LucianConfig::LucianCombo::UseQ = combo->AddCheckBox("Use Q", "Use SpellSlot Q", true); LucianConfig::LucianCombo::WmaNa = combo->AddSlider("QmaNa", "Minimum Q mana", 30, 0, 100, 5);
+			LucianConfig::LucianCombo::UseQ = combo->AddCheckBox("Use Q", "Use SpellSlot Q", true);
+			LucianConfig::LucianCombo::WmaNa = combo->AddSlider("QmaNa", "Minimum Q mana", 30, 0, 100, 5);
 			LucianConfig::LucianCombo::UseW = combo->AddCheckBox("Use W", "Use SpellSlot W", true);
+			LucianConfig::LucianCombo::WmaNa = combo->AddSlider("WmaNa", "Minimum W mana", 50, 0, 100, 5);
 			LucianConfig::LucianCombo::UseE = combo->AddCheckBox("Use E", "Use SpellSlot E", true);
-			//LucianConfig::LucianCombo::UseR = combo->AddCheckBox("Use R", "Use SpellSlot R", true);
-
-			auto combo_mana = combo->AddMenu("Mana Settings Combo", "Mana Settings");
-			LucianConfig::LucianCombo::QmaNa = combo_mana->AddSlider("QmaNa", "Minimum Q mana", 30, 0, 100, 5);
-			LucianConfig::LucianCombo::WmaNa = combo_mana->AddSlider("WmaNa", "Minimum W mana", 50, 0, 100, 5);
-			LucianConfig::LucianCombo::EmaNa = combo_mana->AddSlider("EmaNa", "Minimum E mana", 20, 0, 100, 5);
+			LucianConfig::LucianCombo::EmaNa = combo->AddSlider("EmaNa", "Minimum E mana", 20, 0, 100, 5);
+			LucianConfig::LucianCombo::UseR = combo->AddCheckBox("Use R", "Use SpellSlot R", true);
 
 			auto farm = menu->AddMenu("farm", "Farm Settings");
 			LucianConfig::LucianFarm::UseQ = farm->AddCheckBox("Use Q", "Use SpellSlot Q", true);
@@ -131,47 +128,46 @@ namespace HACKUZAN {
 
 			if (!Orbwalker::OrbwalkerEvading) {
 
-				if (ActiveMode & OrbwalkerMode_Combo) {
-
-					if (ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-						Orbwalker::ResetAutoAttack();
-
-					if (target && Orbwalker::CanCastAfterAttack()) {
-						if (Distance(target, ObjectManager::Player) <= 500)
-							if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-								ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
-
-						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
-
-						auto after = ObjectManager::Player->Position - (ObjectManager::Player->Position - HudManager::Instance->CursorTargetLogic->CursorPosition).Normalized() * 425;
-
-						auto disafter = target->Position.DistanceSquared(after);
-
-						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
-							ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
-
-					}
-				}
-
-				if (ActiveMode & OrbwalkerMode_LastHit) {
-					GameObject* lasthitTarget_ = GetLasthitTarget();
-					if (lasthitTarget_)
-					{
-						if (Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(lasthitTarget_)) {
-
-							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
-						}
-					}
-
-				}
-
 				if (ActiveMode != OrbwalkerMode_None)
 				{
 
 				}
 			}
 
+			if (ActiveMode & OrbwalkerMode_Combo) {
+
+				if (ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+					Orbwalker::ResetAutoAttack();
+
+				if (target && Orbwalker::CanCastAfterAttack()) {
+					if (Distance(target, ObjectManager::Player) <= 500)
+						if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->Position, target->Position, target->NetworkId);
+
+					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, target->Position);
+
+					auto after = ObjectManager::Player->Position - (ObjectManager::Player->Position - HudManager::Instance->CursorTargetLogic->CursorPosition).Normalized() * 425;
+
+					auto disafter = target->Position.DistanceSquared(after);
+
+					if (!ObjectManager::Player->FindBuffName("lucianpassiveshot"))
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
+
+				}
+			}
+
+			if (ActiveMode & OrbwalkerMode_LastHit) {
+				GameObject* lasthitTarget_ = GetLasthitTarget();
+				if (lasthitTarget_)
+				{
+					if (Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(lasthitTarget_)) {
+
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
+					}
+				}
+
+			}
 		}
 
 

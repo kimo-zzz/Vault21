@@ -16,7 +16,11 @@ namespace HACKUZAN {
 		namespace Activator {
 			void Initialize();
 			void Dispose();
+			void OnCreateMissile(GameObject* unit);
+			void OnDeleteMissile(GameObject* unit);
+			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 			void OnGameUpdate();
+			int CountEnemiesInRange(float range);
 
 		}
 	}

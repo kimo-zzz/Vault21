@@ -53,7 +53,7 @@ namespace HACKUZAN {
 
 			auto misc = menu->AddMenu("misc", "Misc");
 
-
+			
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
 			EventManager::AddEventHandler(LeagueEvents::OnCreateObject, OnCreateObject);

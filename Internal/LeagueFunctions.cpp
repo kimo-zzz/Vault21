@@ -8,15 +8,17 @@
 #include "include/Zydis/Zydis.h"
 
 
-//extern ExampleAppLog AppLog;
+extern ExampleAppLog AppLog;
 
 PVOID LeagueFunctions::NewIssueOrder = nullptr;
+PVOID LeagueFunctions::NewIssueOrderCheck = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
-
+DWORD LeagueFunctions::NewIssueOrderCheckAddr = 0;
+DWORD LeagueFunctions::NewCastSpellAddr = 0;
+DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(baseAddr + oIssueOrderTrueReturn);
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 
-DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(baseAddr + oIssueOrderTrueReturn);
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
@@ -36,14 +38,12 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 	memset(&mbi, 0, sizeof(mbi));
 	if (!VirtualQuery((PVOID)OrigAddress, &mbi, sizeof(mbi))) {
 		//AppLog.AddLog("VirtualQuery failed\n");
-		size = 0;
 		return 0;
 	}
 
 	if (!(mbi.State == MEM_COMMIT && mbi.Protect != PAGE_NOACCESS))
 	{
 		//AppLog.AddLog("Address is not Readable\n");
-		size = 0;
 		return 0;
 	}
 
@@ -54,14 +54,12 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 		for (int i = 0; i < retSig.returnSig.size(); i++) {
 			if (!VirtualQuery((PVOID)(OrigAddress + size + i), &mbi, sizeof(mbi))) {
 				//AppLog.AddLog("VirtualQuery failed\n");
-				size = 0;
 				return 0;
 			}
 
 			if (!(mbi.State == MEM_COMMIT && mbi.Protect != PAGE_NOACCESS))
 			{
 				//AppLog.AddLog("Address is not Readable\n");
-				size = 0;
 				return 0;
 			}
 
@@ -401,24 +399,123 @@ void LeagueFunctions::HookStartAndEndFunction(DWORD fnAddress, size_t size, int 
 	/////////////////////////////////////////////
 }
 
-void testValueIssueOrder(DWORD *val, DWORD *val1) {
-	/*AppLog.AddLog(("-----------\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val) + "\n"
+void LeagueFunctions::ApplyIssueOrderPatches(DWORD Address, size_t size) {
+	///////////////////////////////////////////////////////////////////////////////
+	// PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
+	///////////////////////////////////////////////////////////////////////////////
+	
+	DWORD toBePatchStart = Address + 0x4E0;
+	DWORD toBePatchEnd = Address + 0x4F6 + 1;
+
+	//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart)+"\n").c_str());
+	//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+	size_t currSize = 0;
+	size_t targetSize = toBePatchEnd - toBePatchStart;
+	while (currSize != targetSize) {
+
+		*(BYTE*)(toBePatchStart + currSize) = 0x90;
+		//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+		currSize++;
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////
+	// END PATCH RET ADDR BITSHIFTING (CAN BE LEFT UNDONE BUT JUST TO BE SAFE)
+	///////////////////////////////////////////////////////////////////////////////
+
+	//AppLog.AddLog("Done Patching\n");
+}
+
+void LeagueFunctions::ApplyCastSpellPatches(DWORD Address, size_t size) {
+	{
+		///////////////////////////////////////////////////////////////////////////////
+		// DO NOT SET BAN FLAGS!
+		///////////////////////////////////////////////////////////////////////////////
+
+		DWORD toBePatchStart = Address + 0x1C2;
+		DWORD toBePatchEnd = Address + 0x1F1 + 1;
+
+		//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
+		//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+		size_t currSize = 0;
+		size_t targetSize = toBePatchEnd - toBePatchStart;
+		while (currSize != targetSize) {
+
+			*(BYTE*)(toBePatchStart + currSize) = 0x90;
+			//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+			currSize++;
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		// END DO NOT SET BAN FLAGS!
+		///////////////////////////////////////////////////////////////////////////////
+	}
+
+	{
+		///////////////////////////////////////////////////////////////////////////////
+		// DO NOT SET AL (unknown effect but just check in IDA XD)
+		///////////////////////////////////////////////////////////////////////////////
+
+		DWORD toBePatchStart = Address + 0x1F6;
+		DWORD toBePatchEnd = Address + 0x1F9 + 1;
+
+		//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
+		//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+		size_t currSize = 0;
+		size_t targetSize = toBePatchEnd - toBePatchStart;
+		while (currSize != targetSize) {
+
+			*(BYTE*)(toBePatchStart + currSize) = 0x90;
+			//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+			currSize++;
+		}
+		///////////////////////////////////////////////////////////////////////////////
+		// END DO NOT SET AL (unknown effect but just check in IDA XD)
+		///////////////////////////////////////////////////////////////////////////////
+	}
+
+	//AppLog.AddLog("Done Patching\n");
+}
+
+void LeagueFunctions::ApplyIssueOrderCheckPatches(DWORD Address, size_t size) {
+	///////////////////////////////////////////////////////////////////////////////
+	// DO NOT SET PEB FLAGS!
+	///////////////////////////////////////////////////////////////////////////////
+
+	DWORD toBePatchStart = Address + 0x43;
+	DWORD toBePatchEnd = Address + 0x7C + 1;
+
+	//AppLog.AddLog(("toBePatchStart: " + hexify<DWORD>(toBePatchStart) + "\n").c_str());
+	//AppLog.AddLog(("toBePatchEnd: " + hexify<DWORD>(toBePatchEnd) + "\n").c_str());
+
+	size_t currSize = 0;
+	size_t targetSize = toBePatchEnd - toBePatchStart;
+	while (currSize != targetSize) {
+
+		*(BYTE*)(toBePatchStart + currSize) = 0x90;
+		//AppLog.AddLog(("Patching: " + hexify<DWORD>(toBePatchStart + currSize) + "\n").c_str());
+		currSize++;
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	// END DO NOT SET PEB FLAGS!
+	///////////////////////////////////////////////////////////////////////////////
+
+	//AppLog.AddLog("Done Patching\n");
+}
+
+void testValueIssueOrder(DWORD val, DWORD val1) {
+	AppLog.AddLog(("-----------\nbackup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\n"
+		"backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1)
+		).c_str());
+}
+
+void testValueIssueOrder(DWORD* val, DWORD* val1) {
+	AppLog.AddLog(("-----------\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val) + "\n"
 		"*backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)*val1) + "\n"
 		"backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val) + "\n"
 		"backup_TrueIssueOrderReturnAddress=" + hexify<DWORD>((DWORD)val1)
-		).c_str());*/
-}
-
-void testValueIssueOrderParams(DWORD* val1, DWORD val2, DWORD val3, DWORD val4, DWORD val5, DWORD val6, DWORD val7) {
-	/*AppLog.AddLog(("-----------\nbackup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)val1) + 
-		"\n*backup_returnAddrNewIssueOrder=" + hexify<DWORD>((DWORD)*val1) +
-		"\nval2=" + hexify<DWORD>((DWORD)val2)  + 
-		"\nval3=" + hexify<DWORD>((DWORD)val3)  +
-		"\nval4=" + hexify<DWORD>((DWORD)val4)  +
-		"\nval5=" + hexify<DWORD>((DWORD)val5)  +
-		"\nval6=" + hexify<DWORD>((DWORD)val6)  +
-		"\nval7" + hexify<DWORD>((DWORD)val7) + "\n"
-		).c_str());*/
+		).c_str());
 }
 
 std::vector<DWORD*> backup_returnAddrStackNewIssueOrder;
@@ -427,6 +524,7 @@ DWORD backup_eax_NewIssueOrderStartHook;
 
 DWORD* _ret;
 DWORD param2, param3, param4, param5, param6, param7;
+
 
 void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
 {
@@ -452,9 +550,9 @@ void __declspec(naked) LeagueFunctions::NewIssueOrderStartHook()
 		mov param7, eax
 		*/
 
-		mov eax, TrueIssueOrderReturnAddress
-		mov [esp], eax
 		mov eax, backup_eax_NewIssueOrderStartHook
+		add esp, 4
+		push TrueIssueOrderReturnAddress
 	}
 
 	/*
@@ -492,13 +590,14 @@ void __declspec(naked) LeagueFunctions::NewIssueOrderEndHook()
 		mov backup_eax_NewIssueOrderEndHook, eax
 		mov eax, [esp]
 		mov backup_TrueIssueOrderReturnAddress, eax
-		mov eax, backup_returnAddrFromStackNewIssueOrder
-		mov [esp], eax
 		mov eax, backup_eax_NewIssueOrderEndHook
+
+		add esp, 4
+		push backup_returnAddrFromStackNewIssueOrder
 	}
 
 	__asm pushad
-	//testValueIssueOrder(backup_returnAddrFromStackNewIssueOrder, backup_TrueIssueOrderReturnAddress);
+	testValueIssueOrder(backup_returnAddrFromStackNewIssueOrder, backup_TrueIssueOrderReturnAddress);
 	__asm popad
 
 	__asm ret 0x18
@@ -517,9 +616,10 @@ void __declspec(naked) LeagueFunctions::NewCastSpellStartHook()
 		mov backup_eax_NewCastSpellStartHook, eax
 		mov eax, [esp]
 		mov backup_returnAddrNewCastSpell, eax
-		mov eax, TrueCastSpellReturnAddress
-		mov [esp], eax
 		mov eax, backup_eax_NewCastSpellStartHook
+
+		add esp, 4
+		push TrueCastSpellReturnAddress
 	}
 
 	__asm pushad
@@ -540,7 +640,7 @@ void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
 	__asm {
 		pop     edi
 		pop     esi
-		add esp, 0x34
+		add esp, 0x30
 	}
 
 	__asm pushad
@@ -555,9 +655,10 @@ void __declspec(naked) LeagueFunctions::NewCastSpellEndHook()
 		mov backup_eax_NewCastSpellEndHook, eax
 		mov eax, [esp]
 		mov backup_TrueCastSpellReturnAddress, eax
-		mov eax, backup_returnAddrFromStackNewCastSpell
-		mov [esp], eax
 		mov eax, backup_eax_NewCastSpellEndHook
+
+		add esp, 4
+		push backup_returnAddrFromStackNewCastSpell
 	}
 
 	__asm pushad

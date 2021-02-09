@@ -71,7 +71,7 @@ namespace HACKUZAN {
 		{
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 			auto target = ObjectManager::Instance->ObjectsArray[castInfo->TargetId];
-			if (caster && caster != ObjectManager::Player && caster->IsAlly() && target && target->Minion() && castInfo->IsBasicAttack && ObjectManager::Player->Position.IsInRange(caster->Position, 2000.0f)) {
+			if (caster && caster != ObjectManager::Player && caster->IsAlly() && target && target->Minion() && castInfo->IsAutoAttack() && ObjectManager::Player->Position.IsInRange(caster->Position, 2000.0f)) {
 				for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end();) {
 					if (caster->Id == it->Source->Id) {
 						IncomingAttacks.erase(it);

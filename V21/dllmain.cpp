@@ -99,7 +99,7 @@ namespace LeagueHook {
 		if (caster->Hero()) {
 			EventManager::Trigger(LeagueEvents::OnDoCast, CastInfo, spelldata);
 		}
-		if (!caster->Hero() && CastInfo->IsBasicAttack) {
+		if (!caster->Hero() && CastInfo->IsAutoAttack()) {
 			EventManager::Trigger(LeagueEvents::OnDoCast, CastInfo, spelldata);
 		}
 

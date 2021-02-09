@@ -69,7 +69,7 @@ namespace HACKUZAN {
 			}*/
 
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-			EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			//EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
 
 			GameClient::PrintChat("Vayne Script Loaded~!", IM_COL32(255, 69, 255, 255));
 		}
@@ -77,7 +77,7 @@ namespace HACKUZAN {
 		void Vayne::Dispose()
 		{
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-			EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			//EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
 		}
 
 

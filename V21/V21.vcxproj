@@ -200,7 +200,6 @@
     <ClInclude Include="LeagueHooks.h" />
     <ClInclude Include="Lucian.h" />
     <ClInclude Include="makesyscall.h" />
-    <ClInclude Include="MalichetePred.h" />
     <ClInclude Include="ManagerTemplate.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Events.h" />

@@ -110,7 +110,7 @@ namespace HACKUZAN {
 			OnCreateObject = 0x2794E0,								// 11.3
 			OnDeleteObject = 0x26A4F0,								// 11.3
 
-			OnNewPath = 0x2882d0,									// 11.3
+			OnNewPath = 0x2882D0,									// 11.3
 
 			GetAttackCastDelay = 0x2846C0,							// 11.3
 			GetAttackDelay = 0x2847C0,								// 11.3

@@ -80,7 +80,7 @@ extern HMODULE g_hModule;
 // json
 #include "json.hpp"
 using json = nlohmann::json;
-#define baseAddr (DWORD)GetModuleHandle("League of Legends.exe") //GetModuleHandle
+#define baseAddr (DWORD)GetModuleHandleA(NULL) //GetModuleHandle
 
 #include "GameClient.h"
 //Debugger

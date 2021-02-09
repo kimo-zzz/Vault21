@@ -28,6 +28,7 @@ namespace HACKUZAN {
 	fnDeleteObject Functions::OnDeleteObject;
 
 	fnCreatePath Functions::CreatePath;
+	fnOnNewPath Functions::OnNewPath;
 
 	fnIsTurret Functions::IsTurret;
 	fnIsMinion Functions::IsMinion;
@@ -65,7 +66,7 @@ namespace HACKUZAN {
 		//OnPlayAnimation = (fnOnPlayAnimation)DEFINE_RVA_STUB(Offsets::Functions::OnPlayAnimation);
 		OnCreateObject = (fnCreateObject)DEFINE_RVA_STUB(Offsets::Functions::OnCreateObject);
 		OnDeleteObject = (fnDeleteObject)DEFINE_RVA_STUB(Offsets::Functions::OnDeleteObject);
-
+		OnNewPath = (fnOnNewPath)DEFINE_RVA_STUB(Offsets::Functions::OnNewPath);
 		IsTargetable = (fnIsTargetable)DEFINE_RVA(Offsets::ManagerTemplate::oIsTargetable);
 		IsAlive = (fnIsAlive)DEFINE_RVA(Offsets::ManagerTemplate::oIsAlive);
 		IsMinion = (fnIsMinion)DEFINE_RVA(Offsets::ManagerTemplate::oIsMinion);

@@ -31,6 +31,9 @@ namespace HACKUZAN {
 	typedef int(__thiscall* fnDeleteObject)(void* thisPtr, GameObject* pObject);
 
 	typedef int(__thiscall* fnCreatePath)(PathControllerCommon* thisPtr, NavigationPath* navpath, Vector3 from, Vector3 to);
+	typedef int(__cdecl* fnOnNewPath)(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, int unk1,
+		float* dashSpeed, unsigned dash, int unk3, char unk4, int unk5, int unk6,
+		int unk7);
 
 	typedef bool(__cdecl* fnIsHero)(GameObject* pObj);
 	typedef bool(__cdecl* fnIsMissile)(GameObject* pObj);
@@ -68,6 +71,7 @@ namespace HACKUZAN {
 		extern fnDeleteObject OnDeleteObject;
 
 		extern fnCreatePath CreatePath;
+		extern fnOnNewPath OnNewPath;
 
 		extern fnIsTurret IsTurret;
 		extern fnIsMinion IsMinion;

@@ -297,6 +297,40 @@ inline DWORD RestoreZwQueryInformationProcess() {
 	return ZwQueryInformationProcessAddr;
 }
 
+inline DWORD RestoreRtlAddVectoredExceptionHandler() {
+	HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+	//AppLog.AddLog(("ntdll:" + hexify<DWORD>(DWORD(ntdll))+ "\n").c_str());
+
+	DWORD RtlAddVectoredExceptionHandlerAddr = reinterpret_cast<DWORD>(
+		GetProcAddress(ntdll, "RtlAddVectoredExceptionHandler"));
+
+	BYTE RtlAVE[] = {
+		0x8B, 0xFF, 0x55, 0x8B, 0xEC
+	};
+
+	DWORD oldProt;
+
+	auto addr = (PVOID)RtlAddVectoredExceptionHandlerAddr;
+	auto size = static_cast<SIZE_T>(5);
+
+	if (NT_SUCCESS(
+		makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+			GetCurrentProcess(), &addr, &size, PAGE_EXECUTE_READWRITE, &oldProt)))
+	{
+		int i = 0;
+		for (BYTE _byte : RtlAVE) {
+			*(BYTE*)(RtlAddVectoredExceptionHandlerAddr + i) = _byte;
+			i++;
+		}
+
+		NT_SUCCESS(
+			makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14, 0x00)(
+				GetCurrentProcess(), &addr, &size, oldProt, &oldProt));
+	}
+
+	return RtlAddVectoredExceptionHandlerAddr;
+}
+
 inline bool Hook(char* src, char* dst, int len)
 {
 	if (len < 5) return false;

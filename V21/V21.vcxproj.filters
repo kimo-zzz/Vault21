@@ -611,6 +611,9 @@
     <ClInclude Include="BasicPrediction.h">
       <Filter>SDK\SkillPrediction</Filter>
     </ClInclude>
+    <ClInclude Include="UltimateHooks.h">
+      <Filter>Core\Hook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -876,6 +879,9 @@
     </ClCompile>
     <ClCompile Include="BasicPrediction.cpp">
       <Filter>SDK\SkillPrediction</Filter>
+    </ClCompile>
+    <ClCompile Include="UltimateHooks.cpp">
+      <Filter>Core\Hook</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

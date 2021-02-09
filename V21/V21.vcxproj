@@ -273,6 +273,7 @@
     <ClInclude Include="TeleportEventArgs.h" />
     <ClInclude Include="Template.h" />
     <ClInclude Include="Twitch.h" />
+    <ClInclude Include="UltimateHooks.h" />
     <ClInclude Include="UnitInfoComponent.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vayne.h" />
@@ -384,6 +385,7 @@
     </ClCompile>
     <ClCompile Include="TargetSelector.cpp" />
     <ClCompile Include="Twitch.cpp" />
+    <ClCompile Include="UltimateHooks.cpp" />
     <ClCompile Include="Vayne.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />

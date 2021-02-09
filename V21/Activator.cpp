@@ -57,7 +57,7 @@ namespace HACKUZAN {
 
 		void Activator::OnGameUpdate()
 		{
-			if (Config::Auto::EnableActivator->Value && ObjectManager::Player->Alive() && !ObjectManager::Player->InFountain() && CountEnemiesInRange(1000) > 0) {
+			if (Config::Auto::EnableActivator->Value && ObjectManager::Player->Alive() && !ObjectManager::Player->InFountain() && ObjectManager::Player->CountEnemiesInRange(1000) > 0) {
 
 				//ANTI-CC
 				if (Config::Auto::UseQSS->Value) {
@@ -132,23 +132,6 @@ namespace HACKUZAN {
 					}
 				}
 			}
-		}
-
-		int Activator::CountEnemiesInRange(float range)
-		{
-			auto count = 0;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
-			for (size_t i = 0; i < hero_list->size; i++)
-			{
-				auto hero = hero_list->entities[i];
-				if (hero && hero->IsValidTarget() && hero->IsEnemy()) {
-					if (ObjectManager::Player->Position.Distance(hero->Position) <= range)
-					{
-						count++;
-					}
-				}
-			}
-			return count;
 		}
 	}
 }

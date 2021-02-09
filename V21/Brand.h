@@ -13,18 +13,16 @@
 
 namespace HACKUZAN {
 	namespace Plugins {
-		
-		namespace ChampionName { //change champ name
+		namespace Brand { //change champ name
 
 			void Initialize();
 			void Dispose();
 			void OnGameUpdate();
 			void OnDraw();
-			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
-			void OnCreateObject(GameObject* unit);
-			void OnDeleteObject(GameObject* unit);
-			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			GameObject* GetTarget();
+			void BrandCombo();
+			void BrandHarass();
+			GameObject* GetTarget(float range);
+			bool HasBrandPassive(GameObject* unit);
 		}
 	}
 }

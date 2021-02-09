@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="Activator.h" />
     <ClInclude Include="AiManager.h" />
+    <ClInclude Include="Brand.h" />
     <ClInclude Include="BuffInstance.h" />
     <ClInclude Include="BuffManager.h" />
     <ClInclude Include="BuffScript.h" />
@@ -251,6 +252,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderLayer.h" />
+    <ClInclude Include="Riven.h" />
     <ClInclude Include="Skillshot.h" />
     <ClInclude Include="SkillshotData.h" />
     <ClInclude Include="SkinChanger.h" />
@@ -280,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Activator.cpp" />
+    <ClCompile Include="Brand.cpp" />
     <ClCompile Include="BuffInstance.cpp" />
     <ClCompile Include="BuffScript.cpp" />
     <ClCompile Include="Capture.cpp" />
@@ -361,6 +364,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ManagerTemplate.cpp" />
     <ClCompile Include="RenderLayer.cpp" />
+    <ClCompile Include="Riven.cpp" />
     <ClCompile Include="SkillshotData.cpp" />
     <ClCompile Include="SkinChanger.cpp" />
     <ClCompile Include="Slider.cpp" />

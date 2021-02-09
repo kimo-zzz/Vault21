@@ -9,24 +9,12 @@
 #include "Functions.h"
 #include "Menu.h"
 
-#define PI 3.14159265f
-
-namespace HACKUZAN {
-	namespace Plugins {
-
-		class QRecticle
+namespace HACKUZAN
+{
+	namespace Plugins
+	{
+		namespace Riven
 		{
-		public:
-
-			GameObject* Object = nullptr;
-			float ExpireTime;
-			Vector3 Position;
-
-			QRecticle(GameObject* rectice, int expireTime);
-		};
-
-		namespace Draven {
-
 			void Initialize();
 			void Dispose();
 			void OnGameUpdate();
@@ -34,14 +22,7 @@ namespace HACKUZAN {
 			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
-			
-			inline int DravenAxesOnHand();
-			inline int DravenAxesCount();
-			inline bool DravenHasWMoveSpeed();
-			inline bool DravenHasWAttackSpeed();
-
-			void CatchAxe();
-			void addReticles(GameObject* rectice);
+			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 		}
 	}
 }

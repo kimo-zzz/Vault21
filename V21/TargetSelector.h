@@ -17,6 +17,11 @@ namespace HACKUZAN {
 			NearMouse
 		};
 
+		enum class TargetType {
+			TSTARGET_HEROES,
+			TSTARGET_MINION
+		};
+
 		namespace TargetSelector {
 			extern std::vector<GameObject*> Enemies;
 			extern std::unordered_map<Character, unsigned int> Priorities;
@@ -33,7 +38,7 @@ namespace HACKUZAN {
 			float GetReducedPriority(GameObject* hero);
 			int GetPriority(GameObject* hero);
 
-			GameObject* GetTarget(float range, kDamageType damageType, Vector3 source = Vector3(0, 0, 0), bool addBoundingRadius = false);
+			GameObject* GetTarget(TargetType tsType, float range, kDamageType damageType, Vector3 source = Vector3(0, 0, 0), bool addBoundingRadius = false);
 			GameObject* GetTarget(std::vector<GameObject*> targets, kDamageType damageType);
 		};
 	}

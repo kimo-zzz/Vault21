@@ -404,13 +404,11 @@ namespace HACKUZAN {
 				switch (order) {
 				case GameObjectOrder::MoveTo:
 					LastOrder = GameObjectOrder::MoveTo;
-					//LastMoveCommandT = ClockFacade::GameTickCount();
 					LastMovePosition = position;
 					LastTarget = nullptr;
 					break;
 				case GameObjectOrder::AttackUnit:
 					LastOrder = GameObjectOrder::AttackUnit;
-					//LastAATick = ClockFacade::GameTickCount();
 					LastTarget = target;
 					break;
 				case GameObjectOrder::Stop:
@@ -424,7 +422,7 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnSpellCast(kSpellSlot slot) {
-			if (slot == AttackResetSlot /*&& !IsDashAttackReset*/) {
+			if (slot == AttackResetSlot && !IsDashAttackReset) {
 				if (IsAshe) {
 					LastAATick -= ObjectManager::Player->GetAttackDelay() * 0.4f;
 				}
@@ -455,8 +453,8 @@ namespace HACKUZAN {
 				LastOrder = GameObjectOrder::None;
 				LastMovePosition = Vector3(0, 0, 0);
 
-				if (IsAutoAttackReset(spellData->SpellName) && spellData->CastTime == 0) {
-					//ResetAutoAttack();
+				if (IsAutoAttackReset(spellData->SpellName) && spellData->CastDelay == 0) {
+					ResetAutoAttack();
 				}
 
 				if (!IsAutoAttack(spellData->SpellName))
@@ -499,7 +497,7 @@ namespace HACKUZAN {
 			}
 			if (IsAutoAttack(spellData->SpellName))
 			{
-				Delay->Add(600 - NetClient::Instance->GetPing(), []() { _missileLaunched = true; });
+				Delay->Add(350 - NetClient::Instance->GetPing(), []() { _missileLaunched = true; });
 			}
 		}
 
@@ -518,12 +516,9 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {
-			//if (IsAzir && unit->Flags() & GameObjectFlags_AIMinionClient && unit->BaseCharacterData->SkinHash == Character::AzirSoldier) {
 			if (IsAzir && unit->Minion() && unit->BaseCharacterData->SkinHash == Character::AzirSoldier) {
 				AzirSoldiers.push_back(unit);
 			}
-
-			//GameClient::PrintChat(unit->Name.c_str(), IM_COL32(255, 69, 0, 255));
 		}
 
 		void Orbwalker::OnDeleteObject(GameObject* unit) {
@@ -576,12 +571,6 @@ namespace HACKUZAN {
 					auto AlmostLastHitMinion_laneClearHealth = FLT_MAX;
 					auto LaneClearMinion_laneClearHealth = 0;
 
-					//for (auto attack : HealthPrediction::IncomingAttacks) {
-					//	if (attack.Source != nullptr && attack.Target == minion) {
-					//		lastHitHealth -= attack.GetDamage(attackCastDelay + (attackMissileSpeed != FLT_MAX ? std::max(0.0f, minion->Position.Distance(ObjectManager::Player->Position) - ObjectManager::Player->GetBoundingRadius()) / attackMissileSpeed : 0.0f) + std::max(0.0f, LastAttack + GetAttackDelay(minion) - ClockFacade::GetGameTime()) + Config::Farming::ExtraFarmDelay->Value * 0.001f);
-					//		laneClearHealth -= attack.GetDamage(attackCastDelay + GetAttackDelay(minion) + (attackMissileSpeed != FLT_MAX ? ObjectManager::Player->GetAutoAttackRange(minion) / attackMissileSpeed : 0.0f) + Config::Farming::ExtraFarmDelay->Value * 0.001f);
-					//	}
-					//}
 					auto t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2
 						+ 1000 * (int)std::max(0.0f, ObjectManager::Player->Position.Distance(minion->Position) - ObjectManager::Player->GetBoundingRadius())
 						/ (int)attackMissileSpeed;
@@ -1101,13 +1090,6 @@ namespace HACKUZAN {
 
 		bool Orbwalker::CanAttack(GameObject* target) {
 
-			//if (ObjectManager::Player->Spellbook.ActiveSpellInstance) {
-			//	auto castInfo = ObjectManager::Player->Spellbook.ActiveSpellInstance;
-			//	if (castInfo->SpellData->Resource->ChannelIsInterruptedByAttacking && (!castInfo->IsInstantCast || !castInfo->SpellWasCast)) {
-			//		return false;
-			//	}
-			//}
-
 			if ((ObjectManager::Player->IsRanged() && target->Hero() && target->IsMelee() && ObjectManager::Player->Position.Distance(target->Position) <= target->AttackRange + 75 &&
 				ObjectManager::Player->Health <= (30 / 100.0) * ObjectManager::Player->MaxHealth) && target->Health >= ObjectManager::Player->Health) {
 				return false;
@@ -1146,13 +1128,6 @@ namespace HACKUZAN {
 		}
 
 		bool Orbwalker::CanMove() {
-
-			//if (ObjectManager::Player->Spellbook.ActiveSpellInstance) {
-			//	auto castInfo = ObjectManager::Player->Spellbook.ActiveSpellInstance;
-			//	if (!castInfo->SpellData->Resource->CanMoveWhileChanneling && (!castInfo->IsInstantCast || !castInfo->SpellWasCast)) {
-			//		return false;
-			//	}
-			//}
 
 			std::string _championName = ObjectManager::Player->BaseCharacterData->SkinName;
 

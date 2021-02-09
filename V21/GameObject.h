@@ -242,6 +242,8 @@ namespace HACKUZAN
 		GameObject* GetFirstObject();
 		GameObject* GetNextObject(GameObject* object);
 
+		int CountEnemiesInRange(float range);
+
 		bool InFountain();
 		bool IsUnderEnemyTurret(float range);
 

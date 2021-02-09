@@ -225,6 +225,12 @@
     <Filter Include="Plugins\Champion Plugins\Twitch\Source Files">
       <UniqueIdentifier>{7c88bca3-685f-4e4b-9093-cf8fa17c639e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Champion Plugins\Brand">
+      <UniqueIdentifier>{03b6d1fb-011b-469f-ad73-b7e64da6e854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Champion Plugins\Riven">
+      <UniqueIdentifier>{369d6ac6-bde5-40b4-b8de-b0279676546e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -596,6 +602,12 @@
     <ClInclude Include="Twitch.h">
       <Filter>Plugins\Champion Plugins\Twitch\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Brand.h">
+      <Filter>Plugins\Champion Plugins\Brand</Filter>
+    </ClInclude>
+    <ClInclude Include="Riven.h">
+      <Filter>Plugins\Champion Plugins\Riven</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -852,6 +864,12 @@
     </ClCompile>
     <ClCompile Include="Twitch.cpp">
       <Filter>Plugins\Champion Plugins\Twitch\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Brand.cpp">
+      <Filter>Plugins\Champion Plugins\Brand</Filter>
+    </ClCompile>
+    <ClCompile Include="Riven.cpp">
+      <Filter>Plugins\Champion Plugins\Riven</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

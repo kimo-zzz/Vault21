@@ -1,4 +1,8 @@
+#include "stdafx.h"
 #include "Riven.h"
+#include "NavGrid.h"
+#include "Draw.h"
+#include "Geometry.h"
 
 namespace HACKUZAN {
 	namespace Plugins {

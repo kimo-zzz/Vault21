@@ -3,7 +3,7 @@
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
-
+#include "BasicPrediction.h"
 namespace HACKUZAN {
 	namespace Plugins {
 
@@ -200,7 +200,7 @@ namespace HACKUZAN {
 			if ((ObjectManager::Player->Resource / ObjectManager::Player->MaxResource) < (BrandConfig::BrandHarass::HMana->Value / 100.0))
 				return;
 
-			auto Wtarget = GetTarget(850);
+			auto Wtarget = GetTarget(1100.f);
 			auto Etarget = GetTarget(625);
 
 			if (Etarget && Orbwalker::CanCastAfterAttack())
@@ -225,7 +225,11 @@ namespace HACKUZAN {
 			{
 				if (BrandConfig::BrandHarass::UseW->Value)
 				{
-					ObjectManager::Player->CastPredictSpell(kSpellSlot::SpellSlot_W, ObjectManager::Player->Position, Wtarget->Position);
+					//auto prediction = Predict(Wtarget, 1100.f, 1600.f, 120.f, 0.25f);
+					//ObjectManager::Player->CastSpellPos(SpellSlot_W, (DWORD)ObjectManager::Player, prediction);
+
+					auto prediction = Prediction::BasicPrediction(Wtarget, 120.f, 900.f, 999999.f, 0.627f);
+					ObjectManager::Player->CastSpellPos(SpellSlot_W, (DWORD)ObjectManager::Player, prediction);
 				}
 
 				if (BrandConfig::BrandHarass::UseE->Value && Wtarget->Position.Distance(ObjectManager::Player->Position) <= 625)

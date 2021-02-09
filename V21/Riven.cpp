@@ -222,14 +222,15 @@ namespace HACKUZAN {
 			if (castInfo == nullptr || spellData == nullptr)
 				return;
 			if (RivenConfig::RivenMisc::Debug->Value == true)
-			{
 				GameClient::PrintChat(("[Riven Debug] Casted Spell: " + std::string(castInfo->GetSpellData()->SpellName)).c_str(), IM_COL32(255, 69, 255, 255));
-			}
 
 			if (castInfo->SourceId == ObjectManager::Player->SourceID) // Check if it's our Spell Cast
 			{
 				if (spellData->SpellName == "RivenTriCleave")
+				{
+					GameClient::PrintChat("Reset Auto Attack", IM_COL32(255, 69, 255, 255));
 					Orbwalker::ResetAutoAttack();
+				}
 			}
 			else if (castInfo->TargetId == ObjectManager::Player->SourceID) // Check if we're the Target of the Spell
 			{

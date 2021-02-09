@@ -34,11 +34,60 @@ void OnExit() noexcept;
 
 DWORD oOnProcessSpell_addr, oOnCreateObject_addr, oOnDeleteObject_addr, oOnFinishCast_addr;
 
+std::vector<string> gapcloser_targeted =
+{
+	"AkaliShadowDance", "Headbutt", "DianaTeleport", "IreliaGatotsu", "JaxLeapStrike", "JayceToTheSkies",
+	"MaokaiUnstableGrowth", "MonkeyKingNimbus", "Pantheon_LeapBash", "PoppyHeroicCharge", "QuinnE",
+	"XenZhaoSweep", "blindmonkqtwo", "FizzPiercingStrike", "RengarLeap"
+};
+
+std::vector<string> gapcloser_no_target =
+{
+	"AatroxQ", "GragasE", "GravesMove", "HecarimUlt", "JarvanIVDragonStrike", "JarvanIVCataclysm", "KhazixE",
+	"khazixelong", "LeblancSlide", "LeblancSlideM", "LeonaZenithBlade", "UFSlash", "RenektonSliceAndDice",
+	"SejuaniArcticAssault", "ShenShadowDash", "RocketJump", "slashCast"
+};
+
+
+std::vector<string> interruptible =
+{
+	"KatarinaR", "GalioIdolOfDurand", "Crowstorm", "Drain", "AbsoluteZero", "ShenStandUnited", "UrgotSwap2",
+	"AlZaharNetherGrasp", "FallenOne", "Pantheon_GrandSkyfall_Jump", "VarusQ", "CaitlynAceintheHole",
+	"MissFortuneBulletTime", "InfiniteDuress", "LucianR"
+};
+
+bool IsOnGapCloserSpell(string name) {
+
+	for (auto targeted : gapcloser_targeted) {
+		if (GameClient::StringEquals(targeted.c_str(), name.c_str(), TRUE)) {
+			return true;
+		}
+	}
+
+	for (auto nontargeted : gapcloser_no_target) {
+		if (GameClient::StringEquals(nontargeted.c_str(), name.c_str(), TRUE)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool IsOnInterruptibleSpell(string name) {
+
+	for (auto interrupt : interruptible) {
+		if (GameClient::StringEquals(interrupt.c_str(), name.c_str(), TRUE)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
-		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
 		if (thisPtr != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
@@ -54,9 +103,7 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnDeleteObject(void* thisPtr, void* edx, GameObject* object) {
 
-		//if (object == nullptr)
-		//	return 0;
-		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
+
 
 		if (object != nullptr) {
 			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
@@ -82,17 +129,9 @@ namespace LeagueHook {
 		if (CastInfo == nullptr)
 			return 0;
 
-		//auto casterIndex = *(short*)((DWORD)spellBook + 0x1C);
 		auto caster = ObjectManager::Instance->ObjectsArray[CastInfo->SourceId];
 
 		auto spelldata = (SpellDataResource*)*(DWORD*)(*(DWORD*)CastInfo + (DWORD)Offsets::SpellData::Resource);
-
-		//GameClient::PrintChat(("IsWindingUp" + to_string(CastInfo->IsWindingUp)).c_str(), IM_COL32(255, 69, 0, 255));
-		//GameClient::PrintChat(("IsBasicAttack" + to_string(CastInfo->IsBasicAttack)).c_str(), IM_COL32(255, 69, 0, 255));
-		//GameClient::PrintChat(("IsSpecialAttack" + to_string(CastInfo->IsSpecialAttack)).c_str(), IM_COL32(255, 69, 0, 255));
-		//GameClient::PrintChat(("IsSpecialAttack" + to_string(CastInfo->IsInstantCast)).c_str(), IM_COL32(255, 69, 0, 255));
-		//GameClient::PrintChat(("CantCancelWhileChanneling" + to_string(spelldata->CantCancelWhileChanneling)).c_str(), IM_COL32(255, 69, 0, 255));
-		//GameClient::PrintChat(("ChannelIsInterruptedByAttacking" + to_string(spelldata->ChannelIsInterruptedByAttacking)).c_str(), IM_COL32(255, 69, 0, 255));
 
 		EventManager::Trigger(LeagueEvents::OnProcessSpell, CastInfo, spelldata);
 
@@ -103,7 +142,17 @@ namespace LeagueHook {
 			EventManager::Trigger(LeagueEvents::OnDoCast, CastInfo, spelldata);
 		}
 
-		//GameClient::PrintChat("hk_OnProcessSpell running~!", IM_COL32(255, 69, 0, 255));
+		if (CastInfo && caster && caster->IsEnemy()) {
+			if (IsOnGapCloserSpell(spelldata->SpellName)) {
+				if (CastInfo->TargetId == ObjectManager::Player->Id || Distance(CastInfo->EndPosition, ObjectManager::Player->Position) <= 300) {
+					EventManager::Trigger(LeagueEvents::OnGapCloserSpell, CastInfo, spelldata);
+				}
+			}
+
+			if (IsOnInterruptibleSpell(spelldata->SpellName)) {
+				EventManager::Trigger(LeagueEvents::OnInterruptibleSpell, CastInfo, spelldata);
+			}
+		}
 
 		return Functions::OnProcessSpellW(spellBook, CastInfo);;
 	}

@@ -82,6 +82,8 @@ namespace HACKUZAN {
 
 		void Vayne::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
+			if (!castInfo)
+				return;
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 			
 			/*for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
@@ -104,7 +106,7 @@ namespace HACKUZAN {
 
 		void Vayne::OnGameUpdate()
 		{
-			auto target = GetTarget();
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
 
 			if (ActiveMode & OrbwalkerMode_Combo) {
 
@@ -150,7 +152,7 @@ namespace HACKUZAN {
 						}
 					}
 					if (VayneConfig::VayneCombo::UseR->Value) {
-						if (CountEnemiesInRange(600) >= VayneConfig::VayneCombo::enemiesInRange->Value) {
+						if (ObjectManager::Player->CountEnemiesInRange(600) >= VayneConfig::VayneCombo::enemiesInRange->Value) {
 							ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_R, (DWORD)ObjectManager::Player);
 						}
 						if (ObjectManager::Player->Health <= (VayneConfig::VayneCombo::lowHPUlt->Value / 100.0) * ObjectManager::Player->MaxHealth) {
@@ -175,70 +177,10 @@ namespace HACKUZAN {
 			}
 		}
 
-
-		int Vayne::CountEnemiesInRange(float range)
-		{
-			auto count = 0;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
-			for (size_t i = 0; i < hero_list->size; i++)
-			{
-				auto hero = hero_list->entities[i];
-				if (hero && hero->IsValidTarget() && hero->IsEnemy()) {
-					if (hero->Position.Distance(ObjectManager::Player->Position) <= range)
-					{
-						count++;
-					}
-				}
-			}
-			return count;
-		}
-
-		GameObject* Vayne::GetTarget()
-		{
-			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
-			for (size_t i = 0; i < hero_list->size; i++)
-			{
-				auto hero = hero_list->entities[i];
-
-				if (hero && hero->IsEnemy() && hero->IsValidTarget(650)) {
-					heroes.push_back(hero);
-				}
-			}
-			return TargetSelector::GetTarget(heroes, DamageType_Physical);
-		}
-
-		inline Vector3 Vayne::PredGetUnitPosition(GameObject* target, float delay)
-		{
-			delay = delay + NetClient::Instance->GetPing() / 1000;
-			auto waypoint = target->AIManager()->mPathManager.GetPathList();
-			if (waypoint.size() == 1)
-				return waypoint.front();
-
-			if (target->AIManager()->mIsDashing)
-			{
-				auto data = target->AIManager();
-				float dashdistance = delay * data->mDashingSpeed;
-				return dashdistance >= Distance(target, data->mDashEndPosition) ? data->mDashEndPosition
-					: Extend(data->mCurrPosition, data->mDashEndPosition, dashdistance);
-			}
-			float distance = target->MoveSpeed * delay;
-			for (int i = 1; i < waypoint.size(); i = i + 1)
-			{
-				float waydistance = Distance(waypoint[i - 1], waypoint[i]);
-				if (waydistance >= distance)
-				{
-					return  Extend(waypoint[i - 1], waypoint[i], distance);
-				}
-				if (i = waypoint.size() - 1)
-					return waypoint[i];
-				distance = distance - waydistance;
-			}
-			return target->Position;
-		}
-
 		bool HACKUZAN::Plugins::Vayne::IsCondemnable(GameObject* target)
 		{
+			if (!target)
+				return false;
 			auto  pushDistance = VayneConfig::VayneMisc::PushDistance->Value;
 			auto targetPosition = target->Position;
 			float checkDistance = pushDistance / 40.0f;

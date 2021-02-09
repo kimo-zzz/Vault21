@@ -146,11 +146,11 @@ namespace HACKUZAN {
 					//auto test = Prediction::GetPositionOnPath(input);
 					if (ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == SpellState_Ready)
 					{
-						auto prediction = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 0, 0.25f);
+						auto prediction = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 0, 0.625f);
 						if (prediction != Vector3{ 0,0,0 } && prediction.IsValid())
 						{
 							ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player, prediction);
-							GameClient::PrintChat(std::to_string(prediction.X).c_str(), 255);
+						//	GameClient::PrintChat(std::to_string(prediction.X).c_str(), 255);
 						}
 						
 					}

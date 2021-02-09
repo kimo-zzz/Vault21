@@ -63,7 +63,7 @@ namespace HACKUZAN
 		result.predictedPosition = Vector3(0, 0, 0);
 		return result;
 
-		
+
 		////Skillshot with a delay and speed.
 		//float pathLength = pathManager.GetPathLength();
 		//if (pathLength >= input.delay * speed - input.radius && std::abs(input.speed - FLT_MAX) > FLT_EPSILON)
@@ -118,7 +118,7 @@ namespace HACKUZAN
 		//	}
 
 		//}
-		
+
 	}
 
 	std::tuple<float, Vector2> Prediction::VectorMovementCollision(Vector2 startPoint1, Vector2 endPoint1, float v1, Vector2 startPoint2, float v2, float delay)
@@ -137,7 +137,7 @@ namespace HACKUZAN
 		float	d = eP1x - sP1x, e = eP1y - sP1y;
 		float	dist = (float)std::sqrt(d * d + e * e), t1 = FLOAT_NAN;
 		float	S = std::abs(dist) > FLOAT_EPSILON ? v1 * d / dist : 0,
-				K = (std::abs(dist) > FLOAT_EPSILON) ? v1 * e / dist : 0;
+			K = (std::abs(dist) > FLOAT_EPSILON) ? v1 * e / dist : 0;
 
 		float r = sP2x - sP1x, j = sP2y - sP1y;
 		auto c = r * r + j * j;
@@ -245,6 +245,7 @@ namespace HACKUZAN
 		int pathSize = pathManager.GetSize();
 		for (int i = 0; i < pathSize; ++i)
 		{
+			GameClient::PrintChat("ADDWA", 255);
 			Vector3 cur = pathManager.mPath[i].toGround();			//skills hit calculating in 2d space
 			Vector3 next = pathManager.mPath[i + 1].toGround();		//because height is not neccessary but when calculating the distance in 3d
 			float t = next.Distance(cur);								//that causes a little difference in calculating so it will likely miss the target
@@ -299,10 +300,10 @@ namespace HACKUZAN
 							//printf("arrive_time_b : %.3f \n", arrive_time_b);
 							//printf("t : %.3f \n", t);
 						}
-
 						//Draw.Line(me->GetPos(), predicted_pos, 3, YELLOW_A(50));
 						if (min(arrive_time_a, arrive_time_b) <= t && max(arrive_time_a, arrive_time_b) >= t)
 						{
+							GameClient::PrintChat(std::to_string(target->MoveSpeed).c_str(), 255);
 							return center;
 						}
 					}

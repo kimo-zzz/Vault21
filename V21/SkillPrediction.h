@@ -7,6 +7,8 @@ namespace HACKUZAN
 {
 	namespace SkillPrediction
 	{
+		
+		
 		enum HitChance
 		{
 			/// <summary>

@@ -168,7 +168,8 @@ namespace HACKUZAN {
 
 		Vector3& toGround()
 		{
-			//this->Z = NavGrid::Instance->GetPositionHeight(this);
+			//this->Z = NavGrid::Instance->GetHeightForPosition(this->X, this->Y);
+			return Vector3(this->X, this->Z, 0);
 			return *this;
 		}
 
@@ -176,7 +177,7 @@ namespace HACKUZAN {
 		{
 			return Vector2(X, Z);
 		}
-		
+
 		Vector3 Rotated(float Angle)
 		{
 			float c = cosf(Angle);

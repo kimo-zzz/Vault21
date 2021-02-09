@@ -57,9 +57,11 @@ namespace HACKUZAN {
 		}
 
 		void HealthPrediction::OnDoCast(SpellInfo* castInfo, SpellDataResource* spellData) {
+			if (castInfo == nullptr)
+				return;
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 			for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end(); it++) {
-				if (caster->Id == it->Source->Id && caster->IsMelee()) {
+				if (caster && caster->Id == it->Source->Id && caster->IsMelee()) {
 					it->Processed = true;
 				}
 			}
@@ -105,7 +107,7 @@ namespace HACKUZAN {
 			for (auto attack : IncomingAttacks)
 			{
 				auto attackDamage = 0.0f;
-				if (!attack.Processed && unit != nullptr && unit->NetworkId == attack.Target->NetworkId) {
+				if (!attack.Processed && unit != nullptr && unit->Id == attack.Target->Id) {
 
 					auto landTime = attack.StartTime + attack.Delay
 						+ 1000 * std::max(0.f, unit->Position.Distance(attack.Source->Position) - attack.Source->GetBoundingRadius())

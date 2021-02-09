@@ -2,6 +2,7 @@
 #include "Vayne.h"
 #include "NavGrid.h"
 #include "Draw.h"
+#include "GapCloserDB.h"
 #include "Geometry.h"
 
 namespace HACKUZAN {
@@ -82,18 +83,18 @@ namespace HACKUZAN {
 
 		void Vayne::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
-			if (!castInfo)
+			if (castInfo == nullptr)
 				return;
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
-			
-			/*for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
+
+			for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
 				if (caster && caster->IsEnemy()) {
 					if (gapcloser->ChampionName == caster->BaseCharacterData->SkinName) {
 						if (gapcloser->Slot == castInfo->Slot) {
 							if (VayneConfig::VayneMisc::AutoE->Value) {
 								if (caster && ObjectManager::Player->Position.Distance(caster->Position) <= 1000) {
 									if (ObjectManager::Player->Position.Distance(castInfo->EndPosition) <= 350 || castInfo->TargetId == ObjectManager::Player->Id) {
-										GameClient::PrintChat("OnGapCloserSpells detected!", IM_COL32(255, 69, 255, 255));
+										//GameClient::PrintChat("OnGapCloserSpells detected!", IM_COL32(255, 69, 255, 255));
 										ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)caster, ObjectManager::Player->Position, caster->Position, caster->NetworkId);
 									}
 								}
@@ -101,7 +102,7 @@ namespace HACKUZAN {
 						}
 					}
 				}
-			}*/
+			}
 		}
 
 		void Vayne::OnGameUpdate()
@@ -123,10 +124,10 @@ namespace HACKUZAN {
 					}
 				}
 			}
-	
-			if (target && Orbwalker::CanCastAfterAttack() && ObjectManager::Player->Position.Distance(target->Position) <= 550
-				|| target && Orbwalker::CanCastAfterAttack() && ObjectManager::Player->Position.Distance(target->Position) <= 650 && ObjectManager::Player->Position.Distance(target->Position) >= ObjectManager::Player->GetAutoAttackRange()) {
-				
+
+			if (target != nullptr && Orbwalker::CanCastAfterAttack() && ObjectManager::Player->Position.Distance(target->Position) <= 550
+				|| target != nullptr && Orbwalker::CanCastAfterAttack() && ObjectManager::Player->Position.Distance(target->Position) <= 650 && ObjectManager::Player->Position.Distance(target->Position) >= ObjectManager::Player->GetAutoAttackRange()) {
+
 				if (ActiveMode & OrbwalkerMode_Combo) {
 
 					if (VayneConfig::VayneCombo::UseQ->Value) {
@@ -179,7 +180,7 @@ namespace HACKUZAN {
 
 		bool HACKUZAN::Plugins::Vayne::IsCondemnable(GameObject* target)
 		{
-			if (!target)
+			if (target == nullptr)
 				return false;
 			auto  pushDistance = VayneConfig::VayneMisc::PushDistance->Value;
 			auto targetPosition = target->Position;

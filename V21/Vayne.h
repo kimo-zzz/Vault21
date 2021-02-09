@@ -17,7 +17,8 @@ namespace HACKUZAN {
 			void Initialize();
 			void Dispose();
 			void OnGameUpdate();
-			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+			void OnGapCloserSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+			void OnInterruptibleSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 			bool IsCondemnable(GameObject* target);
 
 			extern bool LastAttackCastSpell;

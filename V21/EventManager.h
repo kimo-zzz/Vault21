@@ -24,6 +24,7 @@ namespace HACKUZAN {
 		OnFinishCast,
 		OnStopCast,
 		OnGapCloserSpell,
+		OnInterruptibleSpell,
 		OnNewPath,
 
 		Size

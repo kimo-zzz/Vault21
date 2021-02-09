@@ -69,7 +69,8 @@ namespace HACKUZAN {
 			}*/
 
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-			//EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			EventManager::AddEventHandler(LeagueEvents::OnGapCloserSpell, OnGapCloserSpell);
+			EventManager::AddEventHandler(LeagueEvents::OnGapCloserSpell, OnInterruptibleSpell);
 
 			GameClient::PrintChat("Vayne Script Loaded~!", IM_COL32(255, 69, 255, 255));
 		}
@@ -77,31 +78,31 @@ namespace HACKUZAN {
 		void Vayne::Dispose()
 		{
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-			//EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			EventManager::RemoveEventHandler(LeagueEvents::OnGapCloserSpell, OnGapCloserSpell);
+			EventManager::RemoveEventHandler(LeagueEvents::OnGapCloserSpell, OnInterruptibleSpell);
 		}
 
-
-		void Vayne::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		void Vayne::OnGapCloserSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
 			if (castInfo == nullptr)
 				return;
+
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 
-			for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
-				if (caster && caster->IsEnemy()) {
-					if (gapcloser->ChampionName == caster->BaseCharacterData->SkinName) {
-						if (gapcloser->Slot == castInfo->Slot) {
-							if (VayneConfig::VayneMisc::AutoE->Value) {
-								if (caster && ObjectManager::Player->Position.Distance(caster->Position) <= 1000) {
-									if (ObjectManager::Player->Position.Distance(castInfo->EndPosition) <= 350 || castInfo->TargetId == ObjectManager::Player->Id) {
-										//GameClient::PrintChat("OnGapCloserSpells detected!", IM_COL32(255, 69, 255, 255));
-										ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)caster, ObjectManager::Player->Position, caster->Position, caster->NetworkId);
-									}
-								}
-							}
-						}
-					}
-				}
+			if (VayneConfig::VayneMisc::AutoE->Value && caster->IsValidTarget(550, true)) {
+				ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)caster, ObjectManager::Player->Position, caster->Position, caster->NetworkId);
+			}
+		}
+
+		void Vayne::OnInterruptibleSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		{
+			if (castInfo == nullptr)
+				return;
+
+			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+
+			if (VayneConfig::VayneMisc::AutoE->Value && caster->IsValidTarget(550, true)) {
+				ObjectManager::Player->CastTargetSpell(kSpellSlot::SpellSlot_E, (DWORD)ObjectManager::Player, (DWORD)caster, ObjectManager::Player->Position, caster->Position, caster->NetworkId);
 			}
 		}
 

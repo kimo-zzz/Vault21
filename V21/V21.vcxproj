@@ -191,7 +191,6 @@
     <ClInclude Include="FloatingInfoBar.h" />
     <ClInclude Include="fnv_hash.hpp" />
     <ClInclude Include="FuncHook.h" />
-    <ClInclude Include="GapCloserDB.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="HeavensGateHook.h" />
     <ClInclude Include="hideModule.h" />
@@ -232,6 +231,7 @@
     <ClInclude Include="List.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuComponent.h" />
+    <ClInclude Include="MissFortune.h" />
     <ClInclude Include="MissileClient.h" />
     <ClInclude Include="NavGrid.h" />
     <ClInclude Include="NavGridCell.h" />
@@ -358,6 +358,7 @@
     <ClCompile Include="List.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuComponent.cpp" />
+    <ClCompile Include="MissFortune.cpp" />
     <ClCompile Include="NavGrid.cpp" />
     <ClCompile Include="NetClient.cpp" />
     <ClCompile Include="ObjectManager.cpp" />

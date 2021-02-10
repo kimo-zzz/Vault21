@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Plugins.h"
 #include "Draven.h"
+#include "MissFortune.h"
 #include "Vayne.h"
 #include "Lucian.h"
 #include "SkinChanger.h"
@@ -27,6 +28,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Lucian:
 			Lucian::Initialize();
+			break;
+		case Character::MissFortune:
+			MissFortune::Initialize();
 			break;
 		case Character::Twitch:
 			Twitch::Initialize();
@@ -57,6 +61,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Lucian:
 			Lucian::Dispose();
+			break;
+		case Character::MissFortune:
+			MissFortune::Dispose();
 			break;
 		case Character::Twitch:
 			Twitch::Dispose();

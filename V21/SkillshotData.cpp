@@ -8,7 +8,7 @@ namespace HACKUZAN {
 		this->skillshot_type = kMissileLine;
 		this->danger_level = kLow;
 		this->delay = 250;
-		this->missile_speed = INT_MAX;
+		this->missile_speed = 2147483647;
 		this->can_be_deleted = true;
 	}
 

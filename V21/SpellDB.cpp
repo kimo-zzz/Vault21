@@ -482,7 +482,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Irelia")->_spell_name("IreliaW2")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(825)->_delay(250)->_raw_radius(120)->_missile_speed(INT_MAX)->_is_fixed_range(TRUE)->_skillshot_type(kLine)
+				InitializeSpell("Irelia")->_spell_name("IreliaW2")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(825)->_delay(250)->_raw_radius(120)->_missile_speed(2147483647)->_is_fixed_range(TRUE)->_skillshot_type(kLine)
 			);
 
 			spells.push_back
@@ -627,12 +627,12 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Kayn")->_spell_name("KaynW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(700)->_delay(500)->_raw_radius(80)->_missile_speed(INT_MAX)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_is_dangerous(TRUE)
+				InitializeSpell("Kayn")->_spell_name("KaynW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(700)->_delay(500)->_raw_radius(80)->_missile_speed(2147483647)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_is_dangerous(TRUE)
 			);
 
 			spells.push_back
 			(
-				InitializeSpell("Kayn")->_spell_name("KaynAssW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(875)->_delay(600)->_raw_radius(80)->_missile_speed(INT_MAX)->_skillshot_type(kLine)->_is_fixed_range(TRUE)
+				InitializeSpell("Kayn")->_spell_name("KaynAssW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(875)->_delay(600)->_raw_radius(80)->_missile_speed(2147483647)->_skillshot_type(kLine)->_is_fixed_range(TRUE)
 			);
 
 			spells.push_back
@@ -737,11 +737,11 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Mordekaiser")->_spell_name("MordekaiserQ")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_Q)->_raw_range(675)->_raw_radius(200)->_delay(400)->_missile_speed(INT_MAX)->_skillshot_type(kBox)->_dont_cross(TRUE)->_is_disabled_by_default(FALSE)
+				InitializeSpell("Mordekaiser")->_spell_name("MordekaiserQ")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_Q)->_raw_range(675)->_raw_radius(200)->_delay(400)->_missile_speed(2147483647)->_skillshot_type(kBox)->_dont_cross(TRUE)->_is_disabled_by_default(FALSE)
 			);
 			spells.push_back
 			(
-				InitializeSpell("Mordekaiser")->_spell_name("MordekaiserE")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_E)->_raw_range(900)->_raw_radius(140)->_delay(400)->_missile_speed(INT_MAX)->_skillshot_type(kBox)->_collision_flags(kYasuoWall)->_dont_cross(TRUE)->_is_disabled_by_default(FALSE)
+				InitializeSpell("Mordekaiser")->_spell_name("MordekaiserE")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_E)->_raw_range(900)->_raw_radius(140)->_delay(400)->_missile_speed(2147483647)->_skillshot_type(kBox)->_collision_flags(kYasuoWall)->_dont_cross(TRUE)->_is_disabled_by_default(FALSE)
 			);
 
 			spells.push_back
@@ -896,7 +896,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Senna")->_spell_name("SennaQCast")->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_raw_range(1400)->_extra_range(150)->_delay(400)->_raw_radius(80)->_missile_speed(INT_MAX)->_is_dangerous(TRUE)->_skillshot_type(kLine)
+				InitializeSpell("Senna")->_spell_name("SennaQCast")->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_raw_range(1400)->_extra_range(150)->_delay(400)->_raw_radius(80)->_missile_speed(2147483647)->_is_dangerous(TRUE)->_skillshot_type(kLine)
 			);
 
 			spells.push_back
@@ -921,12 +921,12 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Sett")->_spell_name("SettW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(790)->_raw_radius(160)->_delay(750)->_missile_speed(INT_MAX)->_is_fixed_range(TRUE)->_skillshot_type(kBox)
+				InitializeSpell("Sett")->_spell_name("SettW")->_danger_level(kMedium)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(790)->_raw_radius(160)->_delay(750)->_missile_speed(2147483647)->_is_fixed_range(TRUE)->_skillshot_type(kBox)
 			);
 
 			spells.push_back
 			(
-				InitializeSpell("Sett")->_spell_name("SettE")->_danger_level(kHigh)->_spell_slot(kSpellSlot::SpellSlot_E)->_raw_range(490)->_raw_radius(200)->_delay(250)->_missile_speed(INT_MAX)->_is_fixed_range(TRUE)->_skillshot_type(kBox)
+				InitializeSpell("Sett")->_spell_name("SettE")->_danger_level(kHigh)->_spell_slot(kSpellSlot::SpellSlot_E)->_raw_range(490)->_raw_radius(200)->_delay(250)->_missile_speed(2147483647)->_is_fixed_range(TRUE)->_skillshot_type(kBox)
 			);
 
 			spells.push_back
@@ -997,7 +997,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Swain")->_spell_name("SwainW")->_danger_level(kHigh)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(3500)->_delay(1500)->_raw_radius(240)->_missile_speed(INT_MAX)->_skillshot_type(kCircle)->_is_dangerous(TRUE)
+				InitializeSpell("Swain")->_spell_name("SwainW")->_danger_level(kHigh)->_spell_slot(kSpellSlot::SpellSlot_W)->_raw_range(3500)->_delay(1500)->_raw_radius(240)->_missile_speed(2147483647)->_skillshot_type(kCircle)->_is_dangerous(TRUE)
 			);
 
 			spells.push_back
@@ -1007,7 +1007,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Sylas")->_spell_name("SylasQ")->_missile_name( "SyndraQSpell" )->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_missile_speed(INT_MAX)->_raw_range(775)->_delay(400)->_raw_radius(45)->_skillshot_type(kBox)
+				InitializeSpell("Sylas")->_spell_name("SylasQ")->_missile_name( "SyndraQSpell" )->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_missile_speed(2147483647)->_raw_range(775)->_delay(400)->_raw_radius(45)->_skillshot_type(kBox)
 			);
 
 			spells.push_back
@@ -1217,12 +1217,12 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Yasuo")->_spell_name("YasuoQ1Wrapper")->_extra_spell_names({ "YasuoQ" })->_danger_level(kHigh)->_missile_speed(INT_MAX)->_raw_range(520)->_delay(250)->_raw_radius(40)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_invert(TRUE)->_is_dangerous(TRUE)
+				InitializeSpell("Yasuo")->_spell_name("YasuoQ1Wrapper")->_extra_spell_names({ "YasuoQ" })->_danger_level(kHigh)->_missile_speed(2147483647)->_raw_range(520)->_delay(250)->_raw_radius(40)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_invert(TRUE)->_is_dangerous(TRUE)
 			);
 
 			spells.push_back
 			(
-				InitializeSpell("Yasuo")->_spell_name("YasuoQ2Wrapper")->_extra_spell_names({ "YasuoQ2" })->_danger_level(kHigh)->_missile_speed(INT_MAX)->_raw_range(520)->_delay(250)->_raw_radius(40)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_invert(TRUE)->_is_dangerous(TRUE)
+				InitializeSpell("Yasuo")->_spell_name("YasuoQ2Wrapper")->_extra_spell_names({ "YasuoQ2" })->_danger_level(kHigh)->_missile_speed(2147483647)->_raw_range(520)->_delay(250)->_raw_radius(40)->_skillshot_type(kLine)->_is_fixed_range(TRUE)->_invert(TRUE)->_is_dangerous(TRUE)
 			);
 
 			spells.push_back
@@ -1237,7 +1237,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Yone")->_spell_name("YoneQ")->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_missile_speed(INT_MAX)->_raw_range(450)->_delay(250)->_raw_radius(40)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kLine)
+				InitializeSpell("Yone")->_spell_name("YoneQ")->_spell_slot(kSpellSlot::SpellSlot_Q)->_danger_level(kMedium)->_missile_speed(2147483647)->_raw_range(450)->_delay(250)->_raw_radius(40)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kLine)
 			);
 
 			spells.push_back
@@ -1247,12 +1247,12 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Yone")->_spell_name("YoneW")->_spell_slot(kSpellSlot::SpellSlot_W)->_danger_level(kMedium)->_missile_speed(INT_MAX)->_raw_range(600)->_delay(375)->_raw_radius(80)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kCone)
+				InitializeSpell("Yone")->_spell_name("YoneW")->_spell_slot(kSpellSlot::SpellSlot_W)->_danger_level(kMedium)->_missile_speed(2147483647)->_raw_range(600)->_delay(375)->_raw_radius(80)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kCone)
 			);
 
 			spells.push_back
 			(
-				InitializeSpell("Yone")->_spell_name("YoneR")->_spell_slot(kSpellSlot::SpellSlot_R)->_danger_level(kHigh)->_missile_speed(INT_MAX)->_raw_range(1000)->_delay(750)->_raw_radius(113)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kLine)
+				InitializeSpell("Yone")->_spell_name("YoneR")->_spell_slot(kSpellSlot::SpellSlot_R)->_danger_level(kHigh)->_missile_speed(2147483647)->_raw_range(1000)->_delay(750)->_raw_radius(113)->_is_fixed_range(TRUE)->_invert(TRUE)->_skillshot_type(kLine)
 			);
 
 			spells.push_back
@@ -1327,7 +1327,7 @@ namespace HACKUZAN {
 
 			spells.push_back
 			(
-				InitializeSpell("Zyra")->_spell_name("ZyraQ")->_danger_level(kMedium)->_missile_speed(INT_MAX)->_raw_range(800)->_delay(825)->_raw_radius(200)->_skillshot_type(kBox)->_perpendicular(TRUE)->_radius_ex(450)
+				InitializeSpell("Zyra")->_spell_name("ZyraQ")->_danger_level(kMedium)->_missile_speed(2147483647)->_raw_range(800)->_delay(825)->_raw_radius(200)->_skillshot_type(kBox)->_perpendicular(TRUE)->_radius_ex(450)
 			);
 
 			spells.push_back

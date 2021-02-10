@@ -90,9 +90,10 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
+
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (thisPtr != nullptr) {
+		if (thisPtr != nullptr && thisPtr->IsNotWall()) {
 			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
 		}
 
@@ -108,7 +109,7 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (object != nullptr) {
+		if (object != nullptr && object->IsNotWall()) {
 			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
 		}
 
@@ -125,6 +126,7 @@ namespace LeagueHook {
 			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
 
 		return Functions::OnPlayAnimation(ptr, ret, name, unk1, unk2, animationTime, unk4);
+
 	}
 
 	int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* CastInfo) {
@@ -183,15 +185,14 @@ namespace LeagueHook {
 				forceStop, destroyMissile, missileNetworkID);
 
 		auto caster = ObjectManager::Instance->ObjectsArray[spellCaster_Client->SourceId];
-		//GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
+		//	GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
 
-		auto sInfo = new StopCast();
-		sInfo->stopAnimation = stopAnimation;
-		sInfo->forceStop = forceStop;
-		sInfo->executeCastFrame = executeCastFrame;
-		sInfo->destroyMissile = destroyMissile;
-		sInfo->missileNetworkID = missileNetworkID;
-		delete sInfo;
+		StopCast sInfo;
+		sInfo.stopAnimation = stopAnimation;
+		sInfo.forceStop = forceStop;
+		sInfo.executeCastFrame = executeCastFrame;
+		sInfo.destroyMissile = destroyMissile;
+		sInfo.missileNetworkID = missileNetworkID;
 		//MessageBoxA(0, ("spellCaster_Client " + hexify<DWORD>((DWORD)spellCaster_Client)).c_str(), "", 0);
 		//GameClient::PrintChat(caster->BaseCharacterData->SkinName, IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnStopCast, caster, sInfo);
@@ -206,16 +207,15 @@ namespace LeagueHook {
 	{
 		if (obj == nullptr)
 			return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
-		auto path = new NewPath();
-		path->sender = obj;
-		path->start = *start;
-		path->end = *end;
-		path->tail = *tail;
-		path->dash = dash;
-		path->dashSpeed = *dashSpeed;
-		delete path;
+		NewPath path;
+		path.sender = obj;
+		path.start = *start;
+		path.end = *end;
+		path.tail = *tail;
+		path.dash = dash;
+		path.dashSpeed = *dashSpeed;
 
-		//GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
+		//	GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnNewPath, path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);

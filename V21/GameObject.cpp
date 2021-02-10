@@ -602,6 +602,11 @@ namespace HACKUZAN
 		return Hero();
 	}
 
+	bool GameObject::IsNotWall()
+	{
+		return NotWall();
+	}
+
 	bool GameObject::IsTurret()
 	{
 		//return this->Flags() & GameObjectFlags_AITurretClient;
@@ -1150,6 +1155,10 @@ namespace HACKUZAN
 
 	bool GameObject::Hero() {
 		return Functions::IsHero(this);
+	}
+
+	bool GameObject::NotWall() {
+		return Functions::IsNotWall(this);
 	}
 
 	bool GameObject::Missile() {

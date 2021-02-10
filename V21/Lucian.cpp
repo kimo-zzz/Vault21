@@ -2,6 +2,7 @@
 #include "Lucian.h"
 #include "NavGrid.h"
 #include "Draw.h"
+#include "GapCloserDB.h"
 #include "Geometry.h"
 #include "HealthPrediction.h"
 namespace HACKUZAN {
@@ -33,6 +34,7 @@ namespace HACKUZAN {
 
 			namespace LucianMisc {
 				CheckBox* AutoE;
+				CheckBox* KillSteal;
 			}
 
 			namespace LucianDrawings {
@@ -65,6 +67,9 @@ namespace HACKUZAN {
 			LucianConfig::LucianFarm::QmaNa = farm_mana->AddSlider("QMana", "Minimum Q mana", 30, 0, 100, 5);
 			LucianConfig::LucianFarm::WMana = farm_mana->AddSlider("Wmana", "Minimum W mana", 50, 0, 100, 5);
 			LucianConfig::LucianFarm::EmaNa = farm_mana->AddSlider("EMana", "Minimum E mana", 20, 0, 100, 5);
+
+			auto misc = menu->AddMenu("Misc", "Misc");
+			misc->AddCheckBox("Killsteal", "Killsteal", true);
 
 			auto drawings = menu->AddMenu("Drawings", "Drawings");
 			LucianConfig::LucianDrawings::DrawQ = drawings->AddCheckBox("Draw Q", "Draw Q", true);
@@ -113,71 +118,120 @@ namespace HACKUZAN {
 
 		}
 
+		void Lucian::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		{
+			if (castInfo == nullptr || spellData == nullptr)
+				return;
+
+			if (castInfo->IsBasicAttack)
+				return;
+			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+			if (caster == nullptr || !caster->IsHero() || !caster->IsEnemy())
+				return;
+
+			/*
+			auto hero = caster;
+			if (hero != nullptr && hero->IsEnemy()) {
+				for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
+					if (gapcloser->ChampionName.c_str() == hero->BaseCharacterData->SkinName) {
+						auto endpos = gapcloser->Type == GapCloserType::targeted ? castInfo->StartPosition : castInfo->EndPosition;
+						auto targetPos = ObjectManager::Player->Position.Extended(endpos, 425.f);
+
+						//add check if targetPos would be under enemy turret
+
+						switch (gapcloser->Type)
+						{
+						case GapCloserType::targeted:
+							if (castInfo->TargetId == ObjectManager::Player->Id)
+								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, targetPos);
+							break;
+
+						case GapCloserType::skillshot:
+							if (Distance(castInfo->EndPosition, ObjectManager::Player->Position) <= ObjectManager::Player->GetAutoAttackRange())
+								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, targetPos);
+							break;
+						}
+					}
+				}
+			}
+			*/
+
+		}
+
 		void Lucian::OnDraw()
 		{
-			if (LucianConfig::LucianDrawings::DrawQ)
+			if (LucianConfig::LucianDrawings::DrawQ->Value)
 				Renderer::AddCircle(ObjectManager::Player->Position, 500.f, 1, IM_COL32(255, 0, 255, 155));
 
-			if (LucianConfig::LucianDrawings::DrawW)
+			if (LucianConfig::LucianDrawings::DrawW->Value)
 				Renderer::AddCircle(ObjectManager::Player->Position, 900.f, 1, IM_COL32(255, 255, 0, 155));
 		}
 
 		void Lucian::OnGameUpdate()
 		{
-			auto Qtarget = GetTarget(500.f);
-			auto Wtarget = GetTarget(900.f);
 
 			if (!Orbwalker::OrbwalkerEvading) {
 
+				auto Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 500.f, DamageType_Physical);
+				auto Wtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 900.f, DamageType_Physical);
+				auto Etarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 425.f + ObjectManager::Player->GetAutoAttackRange(), DamageType_Physical);
+
+				if (LucianConfig::LucianMisc::KillSteal)
+				{
+					if (Qtarget != nullptr && Qtarget->Health <= Damage::CalculatePhysicalDamage(ObjectManager::Player, Qtarget, 95 + ((60 * ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->Level) / ObjectManager::Player->TotalBonusAttackDamage())))
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->Position, Qtarget->Position, Qtarget->NetworkId);
+				}
+
 				if (ActiveMode & OrbwalkerMode_Combo || ActiveMode & OrbwalkerMode_LaneClear || ActiveMode & OrbwalkerMode_JungleClear) {
+
 
 					float minimum_q_mana_ = LucianConfig::LucianCombo::QmaNa->Value / 100 * ObjectManager::Player->Resource;
 					float minimum_w_mana_ = LucianConfig::LucianCombo::WmaNa->Value / 100 * ObjectManager::Player->Resource;
 					float minimum_e_mana_ = LucianConfig::LucianCombo::EmaNa->Value / 100 * ObjectManager::Player->Resource;
 
-					if (ActiveMode != OrbwalkerMode_Combo)
+					if (ActiveMode & OrbwalkerMode_LaneClear || ActiveMode & OrbwalkerMode_JungleClear)
 					{
 						minimum_q_mana_ = LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource;
 						minimum_w_mana_ = LucianConfig::LucianFarm::WMana->Value / 100 * ObjectManager::Player->Resource;
 						minimum_e_mana_ = LucianConfig::LucianFarm::EmaNa->Value / 100 * ObjectManager::Player->Resource;
 						Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical);
+						Wtarget = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 900.f, DamageType_Physical);
 					}
 
 
-					if (Qtarget != nullptr && Orbwalker::CanCastAfterAttack()) {
-						if (minimum_q_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
+					if (Orbwalker::CanCastAfterAttack()) {
+						if (Qtarget != nullptr && minimum_q_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
 							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->Position, Qtarget->Position, Qtarget->NetworkId);
 
-						if (minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
+						if (Wtarget != nullptr && minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
 							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Wtarget->Position);
 
-						auto after = ObjectManager::Player->Position - (ObjectManager::Player->Position - HudManager::Instance->CursorTargetLogic->CursorPosition).Normalized() * 425;
-
-						//auto disafter = target->Position.DistanceSquared(after);
-						if (Distance(after, Qtarget->Position) <= ObjectManager::Player->AttackRange + ObjectManager::Player->GetBoundingRadius())
+						if (Etarget != nullptr && Etarget->IsValidTarget())
 						{
+							auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
+
+							if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) >= ObjectManager::Player->GetAutoAttackRange())
+								return;
 							if (minimum_e_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
-								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, after);
+								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
 						}
+
+
+						if (ActiveMode & OrbwalkerMode_LastHit) {
+							GameObject* lasthitTarget_ = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical, ObjectManager::Player->Position, true);
+							if (lasthitTarget_ != nullptr && LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource <= ObjectManager::Player->MaxResource)
+							{
+								if (Orbwalker::CanCastAfterAttack() && !ObjectManager::Player->CanAttack()) {
+
+									ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
+								}
+							}
+						}
+
 
 					}
 				}
 
-				if (ActiveMode & OrbwalkerMode_LastHit) {
-					GameObject* lasthitTarget_ = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical);
-					if (lasthitTarget_ && LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource <= ObjectManager::Player->MaxResource)
-					{
-						if (Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(lasthitTarget_)) {
-
-							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
-						}
-					}
-				}
-
-				if (ActiveMode != OrbwalkerMode_None)
-				{
-
-				}
 			}
 
 		}

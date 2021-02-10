@@ -2,7 +2,6 @@
 #include "Lucian.h"
 #include "NavGrid.h"
 #include "Draw.h"
-#include "GapCloserDB.h"
 #include "Geometry.h"
 #include "HealthPrediction.h"
 namespace HACKUZAN {

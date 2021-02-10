@@ -12,6 +12,8 @@ namespace HACKUZAN {
 		using namespace HACKUZAN::SDK;
 		using namespace HACKUZAN::SDK::Orbwalker;
 
+		float QRange = 0;
+
 		namespace XerathConfig {
 
 			namespace ChampionConfig {
@@ -95,7 +97,22 @@ namespace HACKUZAN {
 			if (!castInfo)
 				return;
 
+			if (castInfo->IsAutoAttack() || !castInfo->IsChanneling())
+				return;
+
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+
+			if (!caster->IsHero())
+				return;
+
+			if (caster->Id != ObjectManager::Player->Id)
+				return;
+			float castTime = spellData->CastTime;
+
+			QRange = 750.f + (ClockFacade::GetGameTime() - castTime) * 500;
+			if (QRange >= 1400.f)
+				QRange = 1400.f;
+
 		}
 
 		void Xerath::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
@@ -160,6 +177,12 @@ namespace HACKUZAN {
 
 		void Xerath::Logics::ComboLogic()
 		{
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, QRange, DamageType_Magical);
+
+			if (!target)
+				return;
+
+
 		}
 
 		void Xerath::Logics::FarmLogic()
@@ -177,6 +200,18 @@ namespace HACKUZAN {
 
 			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
 
-			
+			switch (ActiveMode)
+			{
+			case OrbwalkerMode_Combo:
+				Logics::ComboLogic();
+				break;
+			case OrbwalkerMode_LaneClear:
+				Logics::FarmLogic();
+				break;
+			case OrbwalkerMode_JungleClear:
+				Logics::JungleLogic();
+				break;
+			}
 		}
 	}
+}

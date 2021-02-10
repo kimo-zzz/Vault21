@@ -507,18 +507,20 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnStopCast(GameObject* unit, StopCast* args) {
+			if (unit == nullptr || args == nullptr)
+				return;
 			if (unit == ObjectManager::Player && args->destroyMissile && args->stopAnimation) {
 				ResetAutoAttack();
 			}
 		}
 
 		void Orbwalker::OnNewPath(GameObject* unit, NewPath* args) {
-			if (args->sender == nullptr || args == nullptr)
-				return;
 			
-			PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
-
-			if (args->dashSpeed != 0) {
+		//	PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
+			//std::string name = args->sender->Name;
+			//GameClient::PrintChat(name.c_str(), 255);
+			/*
+			 if (args->dashSpeed != 0) {
 				PredAllDashData[args->sender->NetworkId] = args;
 			}
 
@@ -527,6 +529,7 @@ namespace HACKUZAN {
 					LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
 				}
 			}
+			*/
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {

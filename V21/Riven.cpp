@@ -128,7 +128,7 @@ namespace HACKUZAN {
 				{
 					case OrbwalkerMode_Combo:
 					{
-						if (target && Orbwalker::CanCastAfterAttack() && !Orbwalker::CanAttack(target) && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == kSpellState::SpellState_Ready)
+						if (target && Orbwalker::CanCastAfterAttack() && !ObjectManager::Player->CanAttack() && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == kSpellState::SpellState_Ready)
 						{
 							if (Distance(target, ObjectManager::Player) <= 260)
 							{

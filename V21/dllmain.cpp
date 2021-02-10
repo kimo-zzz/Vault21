@@ -17,6 +17,7 @@
 #include "HeavensGateHook.h"
 #include "hideModule.h"
 #include "LeagueFunctions.h"
+#include "Orbwalker.h"
 
 CConsole Console;
 using namespace HACKUZAN;
@@ -212,6 +213,19 @@ namespace LeagueHook {
 		path->tail = *tail;
 		path->dash = dash;
 		path->dashSpeed = *dashSpeed;
+
+		PredAllNewPathTicks[path->sender->NetworkId] = ClockFacade::GameTickCount();
+
+		if (path->dashSpeed != 0) {
+			PredAllDashData[path->sender->NetworkId] = path;
+		}
+
+		if (obj == ObjectManager::Player) {
+			if (Orbwalker::IsRengar && Orbwalker::LastTarget && path->dashSpeed == 1450.0f) {
+				Orbwalker::LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
+			}
+		}
+
 
 		//GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnNewPath, obj, path);

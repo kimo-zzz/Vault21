@@ -4,6 +4,8 @@
 #include "Draw.h"
 #include "Geometry.h"
 #include "BasicPrediction.h"
+#include "Prediction.h"
+
 namespace HACKUZAN {
 	namespace Plugins {
 
@@ -118,7 +120,7 @@ namespace HACKUZAN {
 			}
 			else if (ActiveMode & OrbwalkerMode_Harass)   // OrbwalkerMode_Harass is ok ???
 			{
-				BrandHarass();
+			//	BrandHarass();
 			}
 			else if (ActiveMode != OrbwalkerMode_None)  // Mode Farm??????????? Lane and Jungle minions???? --- What is _None ???
 			{
@@ -132,7 +134,7 @@ namespace HACKUZAN {
 			auto Wtarget = GetTarget(900.f);
 			auto Etarget = GetTarget(1100.f);
 
-			if (Wtarget && Orbwalker::CanCastAfterAttack())
+			if (Orbwalker::CanCastAfterAttack())
 			{
 
 
@@ -142,17 +144,17 @@ namespace HACKUZAN {
 						//ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player, predict);
 
 
-
-					//auto test = Prediction::GetPositionOnPath(input);
-					if (ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == SpellState_Ready)
+					if (Etarget && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == SpellState_Ready)
 					{
-						auto prediction = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 0, 0.625f);
-						if (prediction != Vector3{ 0,0,0 } && prediction.IsValid())
-						{
-							ObjectManager::Player->CastSpellPos(kSpellSlot::SpellSlot_W, (DWORD)ObjectManager::Player, prediction);
-						//	GameClient::PrintChat(std::to_string(prediction.X).c_str(), 255);
-						}
-						
+						//	auto prediction = Prediction::BasicPrediction(Wtarget, 260.f, 900.f, 0, 0.625f);
+						CastPrediction(SpellSlot_Q, ObjectManager::Player->ServerPosition(), 1600.f, 1100.f, 120.f, 0.25f, Etarget, kCollidesWithNothing, HitChance::High);
+
+					}
+					//auto test = Prediction::GetPositionOnPath(input);
+					if (Wtarget && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == SpellState_Ready)
+					{
+						CastPrediction(SpellSlot_W, ObjectManager::Player->ServerPosition(), FLT_MAX, 900.f, 260.f, 0.627f, Wtarget, kCollidesWithNothing, HitChance::High);
+
 					}
 
 				}

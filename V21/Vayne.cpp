@@ -2,7 +2,6 @@
 #include "Vayne.h"
 #include "NavGrid.h"
 #include "Draw.h"
-#include "GapCloserDB.h"
 #include "Geometry.h"
 
 namespace HACKUZAN {

@@ -231,6 +231,9 @@
     <Filter Include="Plugins\Champion Plugins\Riven">
       <UniqueIdentifier>{369d6ac6-bde5-40b4-b8de-b0279676546e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Champion Plugins\Jax">
+      <UniqueIdentifier>{12cec5ca-cb7b-41bf-b202-e2c7ded5dc5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -617,6 +620,9 @@
     <ClInclude Include="Prediction.h">
       <Filter>SDK\SkillPrediction</Filter>
     </ClInclude>
+    <ClInclude Include="Jax.h">
+      <Filter>Plugins\Champion Plugins\Jax</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -885,6 +891,9 @@
     </ClCompile>
     <ClCompile Include="UltimateHooks.cpp">
       <Filter>Core\Hook</Filter>
+    </ClCompile>
+    <ClCompile Include="Jax.cpp">
+      <Filter>Plugins\Champion Plugins\Jax</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

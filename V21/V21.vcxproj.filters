@@ -234,6 +234,9 @@
     <Filter Include="Plugins\Champion Plugins\Jax">
       <UniqueIdentifier>{12cec5ca-cb7b-41bf-b202-e2c7ded5dc5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Champion Plugins\MissFortune">
+      <UniqueIdentifier>{2c9eec8c-b148-42f1-bacc-baad308c67d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -560,9 +563,6 @@
     <ClInclude Include="Activator.h">
       <Filter>Plugins\Activator</Filter>
     </ClInclude>
-    <ClInclude Include="GapCloserDB.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HeavensGateHook.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -622,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="Jax.h">
       <Filter>Plugins\Champion Plugins\Jax</Filter>
+    </ClInclude>
+    <ClInclude Include="MissFortune.h">
+      <Filter>Plugins\Champion Plugins\MissFortune</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -894,6 +897,9 @@
     </ClCompile>
     <ClCompile Include="Jax.cpp">
       <Filter>Plugins\Champion Plugins\Jax</Filter>
+    </ClCompile>
+    <ClCompile Include="MissFortune.cpp">
+      <Filter>Plugins\Champion Plugins\MissFortune</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

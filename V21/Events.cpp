@@ -39,10 +39,8 @@ namespace HACKUZAN {
 
 						Instances::Initialize();
 
-						Objects::Initialize();
 						GameTick::Initialize();
 						SpellCast::Initialize();
-						NewPath::Initialize();
 
 						Menu::Initialize();
 						HealthPrediction::Initialize();
@@ -58,18 +56,7 @@ namespace HACKUZAN {
 			}
 
 			namespace Objects {
-				GameObject* CachedGameObjects[10000];
 
-				void Initialize() {
-
-					EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-				}
-
-
-				void OnGameUpdate() {
-
-					
-				}
 			}
 
 			namespace GameTick {
@@ -81,7 +68,7 @@ namespace HACKUZAN {
 				}
 
 				void OnGameUpdate() {
-					auto time = ClockFacade::GetGameTime();
+					/*auto time = ClockFacade::GetGameTime();
 
 					if (time - LastTick > 1.0f / MenuSettings::TicksPerSecond) {
 						EventManager::Trigger(LeagueEvents::OnGameTick);
@@ -98,7 +85,7 @@ namespace HACKUZAN {
 								}
 							}
 						}
-					}
+					}*/
 
 					if (MenuSettings::DeveloperMode) {
 
@@ -182,43 +169,6 @@ namespace HACKUZAN {
 								}
 							}
 							cachedSpellState = spellState;
-						}
-					}
-				}
-			}
-
-			namespace NewPath {
-				Vector3 CachedEndPositions[10000];
-
-				void Initialize() {
-
-					auto aibase_list = HACKUZAN::GameObject::GetAIBases();
-					for (size_t i = 0; i < aibase_list->size; i++)
-					{
-						auto unit = aibase_list->entities[i];
-						if (unit->Hero() || unit->Minion()) {
-							 CachedEndPositions[unit->Id] = unit->GetPathController()->GetNavigationPath()->EndPosition;
-						}
-					}
-
-					EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
-				}
-
-				
-				void OnGameUpdate() {
-
-					auto aibase_list = HACKUZAN::GameObject::GetAIBases();
-					for (size_t i = 0; i < aibase_list->size; i++)
-					{
-						auto unit = aibase_list->entities[i];
-						if (unit->Hero() || unit->Minion()) {
-							auto navigationPath = unit->GetPathController()->GetNavigationPath();
-							auto endPosition = navigationPath->EndPosition;
-							auto& cachedEndPosition = CachedEndPositions[unit->Id];
-							if (endPosition != cachedEndPosition) {
-								cachedEndPosition = endPosition;
-								EventManager::Trigger(LeagueEvents::OnNewPath, unit, navigationPath);
-							}
 						}
 					}
 				}

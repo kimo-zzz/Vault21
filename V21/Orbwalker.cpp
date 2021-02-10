@@ -514,22 +514,22 @@ namespace HACKUZAN {
 			}
 		}
 
-		void Orbwalker::OnNewPath(GameObject* unit, NewPath* args) {
-			
-		//	PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
-			//std::string name = args->sender->Name;
-			//GameClient::PrintChat(name.c_str(), 255);
-			/*
-			 if (args->dashSpeed != 0) {
-				PredAllDashData[args->sender->NetworkId] = args;
-			}
+		void Orbwalker::OnNewPath(NewPath* args) {
 
-			if (unit == ObjectManager::Player) {
-				if (IsRengar && LastTarget && args->dashSpeed == 1450.0f) {
-					LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
+			if (args != nullptr) {
+
+				PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
+
+				if (args->dashSpeed != 0) {
+					PredAllDashData[args->sender->NetworkId] = args;
+				}
+
+				if (args->sender == ObjectManager::Player) {
+					if (Orbwalker::IsRengar && Orbwalker::LastTarget && args->dashSpeed == 1450.0f) {
+						Orbwalker::LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
+					}
 				}
 			}
-			*/
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {

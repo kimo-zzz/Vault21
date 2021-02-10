@@ -184,12 +184,13 @@ namespace LeagueHook {
 		auto caster = ObjectManager::Instance->ObjectsArray[spellCaster_Client->SourceId];
 		//GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
 
-		auto sInfo = new StopCast;
+		auto sInfo = new StopCast();
 		sInfo->stopAnimation = stopAnimation;
 		sInfo->forceStop = forceStop;
 		sInfo->executeCastFrame = executeCastFrame;
 		sInfo->destroyMissile = destroyMissile;
 		sInfo->missileNetworkID = missileNetworkID;
+		delete sInfo;
 		//MessageBoxA(0, ("spellCaster_Client " + hexify<DWORD>((DWORD)spellCaster_Client)).c_str(), "", 0);
 		//GameClient::PrintChat(caster->BaseCharacterData->SkinName, IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnStopCast, caster, sInfo);
@@ -202,33 +203,17 @@ namespace LeagueHook {
 
 	int hk_OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, int unk1, float* dashSpeed, unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
 	{
-
-		if (obj == nullptr)
-			return 0;
-
-		auto path = new NewPath;
+		auto path = new NewPath();
 		path->sender = obj;
 		path->start = *start;
 		path->end = *end;
 		path->tail = *tail;
 		path->dash = dash;
 		path->dashSpeed = *dashSpeed;
-
-		PredAllNewPathTicks[path->sender->NetworkId] = ClockFacade::GameTickCount();
-
-		if (path->dashSpeed != 0) {
-			PredAllDashData[path->sender->NetworkId] = path;
-		}
-
-		if (obj == ObjectManager::Player) {
-			if (Orbwalker::IsRengar && Orbwalker::LastTarget && path->dashSpeed == 1450.0f) {
-				Orbwalker::LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
-			}
-		}
-
+		delete path;
 
 		//GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
-		EventManager::Trigger(LeagueEvents::OnNewPath, obj, path);
+		EventManager::Trigger(LeagueEvents::OnNewPath, path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 	}

@@ -9,6 +9,7 @@
 #include "Twitch.h"
 #include "Brand.h"
 #include "Riven.h"
+#include "Jax.h"
 
 namespace HACKUZAN {
 	void Plugins::Initialize() {
@@ -36,6 +37,9 @@ namespace HACKUZAN {
 		case Character::Riven:
 			Riven::Initialize();
 			break;
+		case Character::Jax:
+			Jax::Initialize();
+			break;
 		}
 	}
 
@@ -59,6 +63,12 @@ namespace HACKUZAN {
 			break;
 		case Character::Brand:
 			Brand::Dispose();
+			break;
+		case Character::Riven:
+			Riven::Dispose();
+			break;
+		case Character::Jax:
+			Jax::Dispose();
 			break;
 		}
 	}

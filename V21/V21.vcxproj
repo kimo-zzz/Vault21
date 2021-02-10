@@ -283,6 +283,7 @@
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="VirtualTableManager.h" />
     <ClInclude Include="Win32Exception.h" />
+    <ClInclude Include="Xerath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Activator.cpp" />
@@ -395,6 +396,7 @@
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="VirtualTableManager.cpp" />
     <ClCompile Include="Win32Exception.cpp" />
+    <ClCompile Include="Xerath.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

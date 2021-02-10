@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "PluginTemplate.h"
+﻿#include "stdafx.h"
+#include "Xerath.h"
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
@@ -12,33 +12,35 @@ namespace HACKUZAN {
 		using namespace HACKUZAN::SDK;
 		using namespace HACKUZAN::SDK::Orbwalker;
 
-		namespace ChampionConfig {
+		namespace XerathConfig {
 
 			namespace ChampionConfig {
 				CheckBox* UseQ;
 				CheckBox* UseW;
-				Slider* Wmana;
 				CheckBox* UseE;
-				Slider* EMana;
 				CheckBox* UseR;
-				Slider* enemiesInRange;
+
+				Slider* QMana;
+				Slider* WMana;
+				Slider* EMana;
+				Slider* RMana;
 			}
 
-			namespace ChampionFarm {
+			namespace XerathFarm {
 				CheckBox* UseQ;
-				CheckBox* UseE;
+				CheckBox* UseW;
 				Slider* QMana;
 				Slider* EMana;
 			}
 
-			namespace ChampionMisc {
+			namespace XerathMisc {
 				CheckBox* AutoE;
 			}
 		}
 
-		void HACKUZAN::Plugins::ChampionName::Initialize()
+		void HACKUZAN::Plugins::Xerath::Initialize()
 		{
-			auto menu = Menu::CreateMenu("Template", "Template");
+			auto menu = Menu::CreateMenu("Xerath", "Xerath");
 
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
 
@@ -60,10 +62,10 @@ namespace HACKUZAN {
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnDraw);
 
 
-			GameClient::PrintChat("Template Script Loaded~!", IM_COL32(255, 69, 255, 255));
+			GameClient::PrintChat("Xerath Script Loaded~!", IM_COL32(255, 69, 255, 255));
 		}
 
-		void ChampionName::Dispose()
+		void Xerath::Dispose()
 		{
 			EventManager::RemoveEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -77,7 +79,7 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool ChampionName::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		bool Xerath::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
@@ -88,7 +90,7 @@ namespace HACKUZAN {
 			return  true;
 		}
 
-		void ChampionName::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		void Xerath::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
 			if (!castInfo)
 				return;
@@ -96,39 +98,39 @@ namespace HACKUZAN {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void ChampionName::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
+		void Xerath::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 			if (ptr == nullptr)
 				return;
 		}
 
-		void ChampionName::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
+		void Xerath::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
 			if (castInfo == nullptr || object == nullptr)
 				return;
 		}
 
-		void ChampionName::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
+		void Xerath::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
 			bool forceStop, bool destroyMissile, unsigned missileNetworkID)
 		{
 			if (spellCaster_Client == nullptr)
 				return;
 		}
 
-		void ChampionName::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
+		void Xerath::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
 			unsigned dash)
 		{
 			if (obj == nullptr)
 				return;
 		}
 
-		void ChampionName::OnCreateObject(GameObject* unit)
+		void Xerath::OnCreateObject(GameObject* unit)
 		{
 			if (unit == nullptr)
 				return;
 		}
 
-		void ChampionName::OnDeleteObject(GameObject* unit)
+		void Xerath::OnDeleteObject(GameObject* unit)
 		{
 			if (unit == nullptr)
 				return;
@@ -136,12 +138,12 @@ namespace HACKUZAN {
 
 		}
 
-		void ChampionName::OnDraw()
+		void Xerath::OnDraw()
 		{
 
 		}
 
-		GameObject* ChampionName::GetTarget(float radius)
+		GameObject* Xerath::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
 			auto hero_list = HACKUZAN::GameObject::GetHeroes();
@@ -156,20 +158,25 @@ namespace HACKUZAN {
 			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
-		void ChampionName::OnGameUpdate()
+		void Xerath::Logics::ComboLogic()
+		{
+		}
+
+		void Xerath::Logics::FarmLogic()
+		{
+		}
+
+		void Xerath::Logics::JungleLogic()
+		{
+		}
+
+		void Xerath::OnGameUpdate()
 		{
 			if (Orbwalker::OrbwalkerEvading || !Orbwalker::CanCastAfterAttack())
 				return;
 
 			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
 
-			switch (ActiveMode)
-			{
-			case OrbwalkerMode_Combo:
-
-				break;
-			}
+			
 		}
-
 	}
-}

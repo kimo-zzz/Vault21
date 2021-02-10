@@ -237,6 +237,9 @@
     <Filter Include="Plugins\Champion Plugins\MissFortune">
       <UniqueIdentifier>{2c9eec8c-b148-42f1-bacc-baad308c67d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Champion Plugins\Xerath">
+      <UniqueIdentifier>{c666c512-f249-4982-9654-c56b703901e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -626,6 +629,9 @@
     <ClInclude Include="MissFortune.h">
       <Filter>Plugins\Champion Plugins\MissFortune</Filter>
     </ClInclude>
+    <ClInclude Include="Xerath.h">
+      <Filter>Plugins\Champion Plugins\Xerath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -900,6 +906,9 @@
     </ClCompile>
     <ClCompile Include="MissFortune.cpp">
       <Filter>Plugins\Champion Plugins\MissFortune</Filter>
+    </ClCompile>
+    <ClCompile Include="Xerath.cpp">
+      <Filter>Plugins\Champion Plugins\Xerath</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

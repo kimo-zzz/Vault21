@@ -24,6 +24,7 @@ namespace HACKUZAN {
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+			void OnGapCloserSpell(SpellInfo* castInfo);
 			int CountEnemiesInRange(float range);
 			GameObject* GetTarget(float radius);
 			GameObject* GetLasthitTarget();

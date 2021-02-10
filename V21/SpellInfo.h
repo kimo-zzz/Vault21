@@ -44,7 +44,7 @@ namespace HACKUZAN
 				DEFINE_MEMBER_N(float CastDelay, Offsets::SpellInfo::CastDelay)
 				DEFINE_MEMBER_N(float Delay, Offsets::SpellInfo::Delay)
 				DEFINE_MEMBER_N(bool IsWindingUp, Offsets::SpellInfo::IsWindingUp)
-				DEFINE_MEMBER_N(bool IsBasicAttack, Offsets::SpellInfo::IsBasicAttack)
+				DEFINE_MEMBER_N(DWORD IsBasicAttack, Offsets::SpellInfo::IsBasicAttack)
 				DEFINE_MEMBER_N(bool IsSpecialAttack, Offsets::SpellInfo::IsSpecialAttack)
 				DEFINE_MEMBER_N(kSpellSlot Slot, Offsets::SpellInfo::Slot)
 				DEFINE_MEMBER_N(float StartTime, Offsets::SpellInfo::StartTime)

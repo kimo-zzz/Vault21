@@ -157,6 +157,11 @@ namespace HACKUZAN {
 
 		}
 
+		void Lucian::OnGapCloserSpell(SpellInfo* castInfo)
+		{
+			
+		}
+
 		void Lucian::OnDraw()
 		{
 			if (LucianConfig::LucianDrawings::DrawQ->Value)
@@ -202,8 +207,8 @@ namespace HACKUZAN {
 						if (Qtarget != nullptr && minimum_q_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
 							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->Position, Qtarget->Position, Qtarget->NetworkId);
 
-						if (Wtarget != nullptr && minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
-							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Wtarget->Position);
+						if (Etarget != nullptr && minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
+							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Etarget->Position);
 
 						if (Etarget != nullptr && Etarget->IsValidTarget())
 						{

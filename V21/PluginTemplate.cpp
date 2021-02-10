@@ -96,7 +96,7 @@ namespace HACKUZAN {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void ChampionName::OnPlayAnimation(GameObject* ptr, char name, float animationTime)
+		void ChampionName::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 			if (ptr == nullptr)
 				return;

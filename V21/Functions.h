@@ -25,7 +25,7 @@ namespace HACKUZAN {
 	typedef int(__thiscall* fnOnFinishCast)(SpellCastInfo* ptr, GameObject* obj);
 	typedef void(__thiscall* fnOnStopCast)(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame, bool forceStop, bool destroyMissile, unsigned int missileNetworkID);
 
-	typedef int(__thiscall* fnOnPlayAnimation)(GameObject* ptr, bool* ret, char name, int unk1, unsigned int unk2, float animationTime, int unk4);
+	typedef int(__thiscall* fnOnPlayAnimation)(GameObject* ptr, bool* ret, char* name, int unk1, unsigned int unk2, float animationTime, int unk4);
 
 	typedef int(__thiscall* fnCreateObject)(GameObject* obj, unsigned int NetworkID);
 	typedef int(__thiscall* fnDeleteObject)(void* thisPtr, GameObject* pObject);

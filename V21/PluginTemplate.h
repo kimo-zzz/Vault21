@@ -24,7 +24,7 @@ namespace HACKUZAN {
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			void OnPlayAnimation(GameObject* ptr, char name, float animationTime);
+			void OnPlayAnimation(GameObject* ptr, char* name, float animationTime);
 			void OnFinishCast(SpellCastInfo* castInfo, GameObject* object);
 			void OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
 				bool forceStop, bool destroyMissile, unsigned int missileNetworkID);

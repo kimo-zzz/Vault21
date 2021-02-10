@@ -5,9 +5,10 @@ namespace HACKUZAN
 {
 	bool SpellInfo::IsAutoAttack()
 	{
-		if (this->IsBasicAttack || this->IsSpecialAttack || this->Slot >= SpellSlot_SpecialAttack)
+		auto slot = this->Slot;
+		if (this->IsBasicAttack || (slot && slot == SpellSlot_SpecialAttack))
 		{
-			return true;// this->TargetId > 0;
+			return true;
 		}
 		return false;
 	}

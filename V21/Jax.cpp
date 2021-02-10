@@ -121,14 +121,14 @@ namespace HACKUZAN
 			Config::Combo::UseE = combo->AddCheckBox("Jax Use E Combo", "Use E", true);
 			Config::Combo::UseR = combo->AddCheckBox("Jax Use R Combo", "Use R", true);
 
-			Config::Farming::UseQ = combo->AddCheckBox("Jax Use Q Farming", "Use Q", true);
-			Config::Farming::UseW = combo->AddCheckBox("Jax Use W Farming", "Use W", true);
-			Config::Farming::UseE = combo->AddCheckBox("Jax Use E Farming", "Use E", false);
+			Config::Farming::UseQ = farming->AddCheckBox("Jax Use Q Farming", "Use Q", true);
+			Config::Farming::UseW = farming->AddCheckBox("Jax Use W Farming", "Use W", true);
+			Config::Farming::UseE = farming->AddCheckBox("Jax Use E Farming", "Use E", false);
 
-			Config::Drawings::DrawQ = combo->AddCheckBox("Jax Draw Q", "Draw Q Range", true);
-			Config::Drawings::DrawE = combo->AddCheckBox("Jax Draw E", "Draw E Range", true);
-			Config::Drawings::DrawFlash = combo->AddCheckBox("Jax Draw Flash", "Draw Flash Range", false);
-			Config::Drawings::DrawTrinket = combo->AddCheckBox("Jax Draw Trinket", "Draw Trinket Range", true);
+			Config::Drawings::DrawQ = drawing->AddCheckBox("Jax Draw Q", "Draw Q Range", true);
+			Config::Drawings::DrawE = drawing->AddCheckBox("Jax Draw E", "Draw E Range", true);
+			Config::Drawings::DrawFlash = drawing->AddCheckBox("Jax Draw Flash", "Draw Flash Range", false);
+			Config::Drawings::DrawTrinket = drawing->AddCheckBox("Jax Draw Trinket", "Draw Trinket Range", true);
 
 			Config::Misc::FleeJump = misc->AddCheckBox("Jax Flee Jump", "Flee Jump", false);
 			Config::Misc::FleeJump->AddTooltip("Allows the usage of Ward Jumps during Orbwalker Flee mode.");
@@ -181,8 +181,9 @@ namespace HACKUZAN
 		{
 		}
 
-		void Jax::OnPlayAnimation(GameObject* ptr, char name, float animationTime)
+		void Jax::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
+			GameClient::PrintChat(name, IM_COL32(255, 255, 255, 255));
 		}
 
 		void Jax::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
@@ -195,6 +196,7 @@ namespace HACKUZAN
 
 		void Jax::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash)
 		{
+
 		}
 
 		bool Jax::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)

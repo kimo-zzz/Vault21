@@ -119,7 +119,7 @@ namespace LeagueHook {
 		return Functions::OnDeleteObject(thisPtr, object);
 	}
 
-	int _fastcall hk_OnPlayAnimation(GameObject* ptr, void* edx, bool* ret, char name, int unk1, unsigned int unk2, float animationTime, int unk4) {
+	int _fastcall hk_OnPlayAnimation(GameObject* ptr, void* edx, bool* ret, char* name, int unk1, unsigned int unk2, float animationTime, int unk4) {
 
 		if (ptr != nullptr)
 			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
@@ -132,7 +132,7 @@ namespace LeagueHook {
 		//GameClient::PrintChat("hk_OnProcessSpell running~!", IM_COL32(255, 69, 0, 255));
 
 		if (CastInfo == nullptr)
-			return 0;
+			return Functions::OnProcessSpellW(spellBook, CastInfo);
 
 		auto caster = ObjectManager::Instance->ObjectsArray[CastInfo->SourceId];
 
@@ -179,7 +179,8 @@ namespace LeagueHook {
 		//GameClient::PrintChat("hk_OnStopCast running~!", IM_COL32(255, 69, 0, 255));
 
 		if (spellCaster_Client == nullptr)
-			return;
+			return Functions::OnStopCast(spellCaster_Client, stopAnimation, executeCastFrame,
+				forceStop, destroyMissile, missileNetworkID);
 
 		auto caster = ObjectManager::Instance->ObjectsArray[spellCaster_Client->SourceId];
 		//GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
@@ -203,6 +204,8 @@ namespace LeagueHook {
 
 	int hk_OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, int unk1, float* dashSpeed, unsigned dash, int unk3, char unk4, int unk5, int unk6, int unk7)
 	{
+		if (obj == nullptr)
+			return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 		auto path = new NewPath();
 		path->sender = obj;
 		path->start = *start;

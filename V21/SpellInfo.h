@@ -24,7 +24,8 @@ namespace HACKUZAN
 		SpellSlot_Trinket,
 		SpellSlot_Recall,
 		SpellSlot_SpecialAttack = 45,
-		SpellSlot_BasicAttack = 65,
+		SpellSlot_BasicAttack1 = 64,
+		SpellSlot_BasicAttack2 = 65,
 	};
 
 	class SpellInfo

@@ -59,7 +59,7 @@ namespace HACKUZAN
 
 	float GameObject::GetAttackCastDelay()
 	{
-		return Functions::GetAttackCastDelay(this, kSpellSlot::SpellSlot_BasicAttack);
+		return Functions::GetAttackCastDelay(this, kSpellSlot::SpellSlot_BasicAttack2);
 	}
 
 	float GameObject::GetAttackDelay()

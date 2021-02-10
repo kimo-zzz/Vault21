@@ -195,6 +195,7 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="HeavensGateHook.h" />
     <ClInclude Include="hideModule.h" />
+    <ClInclude Include="Jax.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="LeagueFunctions.h" />
     <ClInclude Include="LeagueHooks.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="Include\Zydis\src\String.c" />
     <ClCompile Include="Include\Zydis\src\Utils.c" />
     <ClCompile Include="Include\Zydis\src\Zydis.c" />
+    <ClCompile Include="Jax.cpp" />
     <ClCompile Include="LeagueFunctions.cpp" />
     <ClCompile Include="LeagueHooks.cpp" />
     <ClCompile Include="Lucian.cpp" />

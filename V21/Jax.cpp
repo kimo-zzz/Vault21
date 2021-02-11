@@ -46,6 +46,8 @@ namespace HACKUZAN
 
 		namespace Logics
 		{
+			bool ExecutedFirstCounterStrike = false;
+
 			void executeSpell(kSpellSlot slot, Vector3 pos = Vector3(-1, -1, -1), GameObject* target = nullptr)
 			{
 				if (target)
@@ -71,13 +73,54 @@ namespace HACKUZAN
 				return TargetSelector::GetTarget(heroes, DamageType_Physical);
 			}
 
-			namespace Combo
+			GameObject* GetMinionTarget(float radius)
 			{
-				bool ExecutedFirstCounterStrike = false;
+				std::vector<GameObject*> minions;
+				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				for (size_t i = 0; i < minion_list->size; i++)
+				{
+					auto hero = minion_list->entities[i];
 
+					if (hero != nullptr && hero->IsEnemy() && hero->IsValidTarget(radius)) {
+						minions.push_back(hero);
+					}
+				}
+				return TargetSelector::GetTarget(minions, DamageType_Physical);
+			}
+
+			namespace LaneClear
+			{
 				void ExecuteQ()
 				{
-					if (!Config::Combo::UseQ->Value && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == kSpellState::SpellState_Ready)
+					if (!Config::Farming::UseQ->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) != kSpellState::SpellState_Ready)
+						return;
+					float range = ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->SpellData->Resource->Range;
+					auto target = GetMinionTarget(range);
+					if (target && Distance(target, ObjectManager::Player) <= range)
+						executeSpell(SpellSlot_Q, Vector3(0, 0, 0), target);
+				}
+
+				void ExecuteW()
+				{
+					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) != kSpellState::SpellState_Ready)
+						return;
+					float range = ObjectManager::Player->Spellbook.GetSpell(SpellSlot_W)->SpellData->Resource->Range;
+					auto target = GetMinionTarget(range);
+					if (target && Distance(target, ObjectManager::Player) <= range)
+						executeSpell(SpellSlot_W);
+				}
+
+				void ExecuteE() 
+				{
+
+				}
+			}
+
+			namespace Combo
+			{
+				void ExecuteQ()
+				{
+					if (!Config::Combo::UseQ->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) != kSpellState::SpellState_Ready)
 						return;
 					float range = ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->SpellData->Resource->Range;
 					auto target = GetTarget(range);
@@ -87,7 +130,7 @@ namespace HACKUZAN
 
 				void ExecuteW()
 				{
-					if (!Config::Combo::UseW->Value && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) == kSpellState::SpellState_Ready)
+					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_W) != kSpellState::SpellState_Ready)
 						return;
 					float range = ObjectManager::Player->Spellbook.GetSpell(SpellSlot_W)->SpellData->Resource->Range;
 					auto target = GetTarget(range);
@@ -97,7 +140,7 @@ namespace HACKUZAN
 
 				void ExecuteE()
 				{
-					if (!Config::Combo::UseW->Value && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) == kSpellState::SpellState_Ready)
+					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) != kSpellState::SpellState_Ready)
 						return;
 
 					auto target1 = GetTarget(ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->SpellData->Resource->Range);

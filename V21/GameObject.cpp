@@ -635,7 +635,7 @@ namespace HACKUZAN
 
 	bool GameObject::IsNotWall()
 	{
-		return NotWall();
+		return Functions::IsNotWall(this);
 	}
 
 	bool GameObject::IsTurret()
@@ -1186,10 +1186,6 @@ namespace HACKUZAN
 
 	bool GameObject::Hero() {
 		return Functions::IsHero(this);
-	}
-
-	bool GameObject::NotWall() {
-		return Functions::IsNotWall(this);
 	}
 
 	bool GameObject::Missile() {

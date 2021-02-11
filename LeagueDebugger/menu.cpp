@@ -2,6 +2,7 @@
 
 #include "ExampleAppLog.h"
 #include "LeagueHooks.h"
+#include "UltimateHooks.h"
 
 #define oLocalPlayer 0x2F4F764 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
 
@@ -10,6 +11,7 @@ ExampleAppLog AppLog;
 
 std::vector<watchListEntry> readWatchlist;
 std::vector<watchListEntry> writeWatchlist;
+std::vector<watchListEntry> executeWatchlist;
 
 LeagueHooksVEH _LeagueHooksVEH;
 
@@ -45,8 +47,9 @@ namespace DX11
 
 		static char newInputName[128] = "";
 		static char newInputAddress[128] = "";
+		static char newInputSize[128] = "";
 
-		const char* items[] = { "Read", "Write" };
+		const char* items[] = { "Read", "Write" , "Execute" };
 		static int item_current_3 = 0; // If the selection isn't within 0..count, Combo won't display a preview
 
 		static char newInputAddressVirtualQuery[128] = "";
@@ -88,6 +91,7 @@ namespace DX11
 					ImGui::Separator();
 					ImGui::InputText("Name", newInputName, IM_ARRAYSIZE(newInputName));
 					ImGui::InputText("Address", newInputAddress, IM_ARRAYSIZE(newInputAddress));
+					ImGui::InputText("Func Size (Execute)", newInputSize, IM_ARRAYSIZE(newInputSize));
 					ImGui::Combo("Watch Type", &item_current_3, items, IM_ARRAYSIZE(items));
 					if (ImGui::Button("Add Entry")) {
 						watchListEntry wl;
@@ -95,11 +99,15 @@ namespace DX11
 						wl.isStarted = false;
 						wl.name = string(newInputName);
 						wl.address = std::strtoul(newInputAddress, NULL, 16);
+						wl.funcSize = std::strtoul(newInputSize, NULL, 16);
 						wl.watchData = wd;
 						if (item_current_3 == 0) {
 							readWatchlist.push_back(wl);
 						}else if (item_current_3 == 1) {
 							writeWatchlist.push_back(wl);
+						}
+						else if (item_current_3 == 2) {
+							executeWatchlist.push_back(wl);
 						}
 					}
 					ImGui::EndTabItem();
@@ -208,6 +216,59 @@ namespace DX11
 						ImGui::EndTabBar();
 					}
 					writeWatchlist = __writeWatchlist;
+					ImGui::EndTabItem();
+				}
+				if (ImGui::BeginTabItem("Execute"))
+				{
+					std::vector<watchListEntry> _executeWatchlist = executeWatchlist;
+					std::vector<watchListEntry> __executeWatchlist;
+					if (ImGui::BeginTabBar("ExecuteTabs", tab_bar_flags))
+					{
+						int i = 0;
+						for (watchListEntry wl : _executeWatchlist) {
+							i++;
+							if (ImGui::BeginTabItem((to_string(i) + "_e_" + wl.name).c_str()))
+							{
+								ImGui::Text(("Address: " + hexify<DWORD>(wl.address)).c_str());
+								if (wl.isStarted) {
+									if (ImGui::Button("Stop")) {
+										UltimateHooks::removeHook(wl.address);
+										wl.isStarted = !wl.isStarted;
+									}
+								}
+								else {
+									if (ImGui::Button("Start")) {
+										UltimateHooks::addHook(wl.address, wl.funcSize);
+										wl.isStarted = !wl.isStarted;
+									}
+								}
+								for (WatchData wd : wl.watchData) {
+									Separator();
+									ImGui::Text(("Hit Count: " + to_string(wd.hitCount)).c_str());
+									ImGui::Text(("Exception Address: " + hexify<DWORD>(wd.exceptionAddress)).c_str());
+									ImGui::Text(("Instruction: " + wd.disassemblerInstruction).c_str());
+									Separator();
+									Columns(2, 0, true); // 2-ways, with border
+									ImGui::Text(("Eax: " + hexify<DWORD>(wd.cr.Eax)).c_str());
+									ImGui::Text(("Ebp: " + hexify<DWORD>(wd.cr.Ebp)).c_str());
+									ImGui::Text(("Ebx: " + hexify<DWORD>(wd.cr.Ebx)).c_str());
+									ImGui::Text(("Ecx: " + hexify<DWORD>(wd.cr.Ecx)).c_str());
+									ImGui::Text(("Edi: " + hexify<DWORD>(wd.cr.Edi)).c_str());
+									NextColumn();
+									ImGui::Text(("Edx: " + hexify<DWORD>(wd.cr.Edx)).c_str());
+									ImGui::Text(("Eip: " + hexify<DWORD>(wd.cr.Eip)).c_str());
+									ImGui::Text(("Esi: " + hexify<DWORD>(wd.cr.Esi)).c_str());
+									ImGui::Text(("Esp: " + hexify<DWORD>(wd.cr.Esp)).c_str());
+									Columns(1);
+									Spacing();
+								}
+								ImGui::EndTabItem();
+							}
+							__executeWatchlist.push_back(wl);
+						}
+						ImGui::EndTabBar();
+					}
+					executeWatchlist = __executeWatchlist;
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("VirtualQuery"))

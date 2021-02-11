@@ -510,6 +510,7 @@ LeagueDecryptData auto_decrypt(const wchar_t* szModule) {
 
 extern std::vector<watchListEntry> readWatchlist;
 extern std::vector<watchListEntry> writeWatchlist;
+extern std::vector<watchListEntry> executeWatchlist;
 
 LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 {
@@ -781,6 +782,79 @@ LONG WINAPI LeagueHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 					_writeWatchlist.push_back(wl);
 				}
 				writeWatchlist = _writeWatchlist;
+			}
+			//////////////////////////////////////////////////////////////////
+			// EXECUTE
+			//////////////////////////////////////////////////////////////////
+			if ((pExceptionInfo->ExceptionRecord->ExceptionInformation[1] == hs.og_fun) && (pExceptionInfo->ContextRecord->XIP == (DWORD)hs.og_fun) && (pExceptionInfo->ExceptionRecord->ExceptionInformation[0] == 8))
+			{
+				//DataLog(pExceptionInfo);
+				std::vector<watchListEntry> __executeWatchlist = executeWatchlist;
+				std::vector<watchListEntry> _executeWatchlist;
+				for (watchListEntry wl : __executeWatchlist) {
+					if ((wl.address == hs.og_fun) && (wl.isStarted)) {
+
+						std::vector<WatchData> _watchData;
+
+						bool isFound;
+						//////////////////////////////////////////////////////////////////
+						// check if watchData exsists, if yes, then just add hitCount
+						//////////////////////////////////////////////////////////////////
+						for (WatchData wd : wl.watchData) {
+
+							if (wd.exceptionAddress == (DWORD)pExceptionInfo->ExceptionRecord->ExceptionAddress) {
+								wd.hitCount++;
+								isFound = true;
+							}
+							_watchData.push_back(wd);
+						}
+						//////////////////////////////////////////////////////////////////
+						// check if watchData exsists, if no, then add new watchData
+						//////////////////////////////////////////////////////////////////
+						if (!isFound) {
+							WatchData wd;
+							wd.exceptionAddress = (DWORD)pExceptionInfo->ExceptionRecord->ExceptionAddress;
+							wd.cr.Eax = pExceptionInfo->ContextRecord->Eax;
+							wd.cr.Ebp = pExceptionInfo->ContextRecord->Ebp;
+							wd.cr.Ebx = pExceptionInfo->ContextRecord->Ebx;
+							wd.cr.Ecx = pExceptionInfo->ContextRecord->Ecx;
+							wd.cr.Edi = pExceptionInfo->ContextRecord->Edi;
+							wd.cr.Edx = pExceptionInfo->ContextRecord->Edx;
+							wd.cr.Eip = pExceptionInfo->ContextRecord->Eip;
+							wd.cr.Esi = pExceptionInfo->ContextRecord->Esi;
+							wd.cr.Esp = pExceptionInfo->ContextRecord->Esp;
+							////////////////////////////////////////////////////////////////////////////////////////////
+							// disassemble address to get disassemblerInstruction and disassemblerInstructionLenght
+							////////////////////////////////////////////////////////////////////////////////////////////
+
+							ZydisDecoder decoder;
+							ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
+
+							ZydisFormatter formatter;
+							ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+
+							ZyanUSize offset = 0;
+							const ZyanUSize length = 0xFFF;
+							ZydisDecodedInstruction instruction;
+
+							if (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, (PVOID)(wd.exceptionAddress), length - offset, &instruction))) {
+
+								char buffer[256];
+								ZydisFormatterFormatInstruction(&formatter, &instruction, buffer, sizeof(buffer), wd.exceptionAddress);
+
+								std::string mnemonic(buffer);
+								wd.disassemblerInstruction = mnemonic;
+								wd.disassemblerInstructionLenght = instruction.length;
+							}
+							wd.hitCount = 1;
+							_watchData.push_back(wd);
+						}
+
+						wl.watchData = _watchData;
+					}
+					_executeWatchlist.push_back(wl);
+				}
+				executeWatchlist = _executeWatchlist;
 			}
 		}
 

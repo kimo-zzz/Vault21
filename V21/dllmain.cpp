@@ -282,7 +282,7 @@ namespace LeagueHook {
 			DWORD NewUpdateChargableSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
 			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
 			UltimateHooks::FixFuncRellocation(UpdateChargableSpellAddr, EndUpdateChargableSpellAddr, (DWORD)LeagueFunctions::NewUpdateChargableSpell, sizeUpdateChargableSpell);
-			LeagueFunctions::HookStartAndEndFunction(NewUpdateChargableSpell, sizeUpdateChargableSpell, 5, (DWORD)LeagueFunctions::NewUpdateChargableSpellStartHook, (DWORD)LeagueFunctions::NewUpdateChargableSpellEndHook, LeagueFunctions::UpdateChargableSpellStartHookGateway, LeagueFunctions::UpdateChargableSpellEndHookGateway);
+			LeagueFunctions::HookStartAndEndFunction(NewUpdateChargableSpell, sizeUpdateChargableSpell, 4, (DWORD)LeagueFunctions::NewUpdateChargableSpellStartHook, (DWORD)LeagueFunctions::NewUpdateChargableSpellEndHook, LeagueFunctions::UpdateChargableSpellStartHookGateway, LeagueFunctions::UpdateChargableSpellEndHookGateway);
 			LeagueFunctions::IsDonePatchingUpdateChargableSpell = true;
 			GameClient::PrintChat("UpdateChargableSpell is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////

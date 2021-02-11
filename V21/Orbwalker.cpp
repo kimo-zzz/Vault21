@@ -188,6 +188,7 @@ namespace HACKUZAN {
 				break;
 			case Character::Sivir:
 				AttackResetSlot = SpellSlot_W;
+				break;
 			case Character::Talon:
 				AttackResetSlot = SpellSlot_Q;
 				break;
@@ -524,6 +525,8 @@ namespace HACKUZAN {
 
 		void Orbwalker::OnNewPath(NewPath* args) {
 
+			auto _LastTarget = LastTarget;
+
 			if (args != nullptr) {
 
 				PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
@@ -531,9 +534,8 @@ namespace HACKUZAN {
 				if (args->dashSpeed != 0) {
 					PredAllDashData[args->sender->NetworkId] = args;
 				}
-
 				if (args->sender == ObjectManager::Player) {
-					if (Orbwalker::IsRengar && Orbwalker::LastTarget && args->dashSpeed == 1450.0f) {
+					if (Orbwalker::IsRengar && _LastTarget && args->dashSpeed == 1450.0f) {
 						Orbwalker::LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
 					}
 				}
@@ -717,11 +719,11 @@ namespace HACKUZAN {
 		}
 
 		Vector3 Orbwalker::GetOrbwalkPosition() {
+			auto _LastTarget = LastTarget;
 			if (ForcedPosition.IsValid()) {
 				return ForcedPosition;
 			}
-			else if (ObjectManager::Player->IsMelee() && Config::Melee::StickToTarget->Value && !(ActiveMode & OrbwalkerMode_Flee) && LastTarget) {
-				auto _LastTarget = LastTarget;
+			else if (ObjectManager::Player->IsMelee() && Config::Melee::StickToTarget->Value && !(ActiveMode & OrbwalkerMode_Flee) && _LastTarget) {
 				auto pathController = _LastTarget->GetPathController();
 				if ((_LastTarget->IsMonster() || _LastTarget->Hero()) && pathController->HasNavigationPath && ObjectManager::Player->Position.IsInRange(pathController->ServerPosition, ObjectManager::Player->GetAutoAttackRange(_LastTarget) + 150.0f)) {
 					return pathController->GetNavigationPath()->EndPosition;

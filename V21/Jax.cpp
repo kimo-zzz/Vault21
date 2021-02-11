@@ -88,7 +88,7 @@ namespace HACKUZAN
 				return TargetSelector::GetTarget(minions, DamageType_Physical);
 			}
 
-			namespace LaneClear
+			namespace Farming
 			{
 				void ExecuteQ()
 				{
@@ -140,6 +140,8 @@ namespace HACKUZAN
 
 				void ExecuteE()
 				{
+					BYTE n = 0;
+
 					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) != kSpellState::SpellState_Ready)
 						return;
 
@@ -175,7 +177,7 @@ namespace HACKUZAN
 
 			Config::Misc::FleeJump = misc->AddCheckBox("Jax Flee Jump", "Flee Jump", false);
 			Config::Misc::FleeJump->AddTooltip("Allows the usage of Ward Jumps during Orbwalker Flee mode.");
-			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'n', false, false);
+			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'N', false, false);
 
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);

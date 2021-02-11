@@ -231,15 +231,15 @@ namespace HACKUZAN
 			GameClient::PrintChat(name, IM_COL32(255, 255, 255, 255));
 		}
 
-		void Jax::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
+		void Jax::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)
 		{
 		}
 
-		void Jax::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame, bool forceStop, bool destroyMissile, unsigned int missileNetworkID)
+		void Jax::OnStopCast(GameObject* caster, StopCast* args)
 		{
 		}
 
-		void Jax::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash)
+		void Jax::OnNewPath(NewPath* path)
 		{
 
 		}

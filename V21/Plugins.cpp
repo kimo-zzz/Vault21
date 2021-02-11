@@ -49,8 +49,8 @@ namespace HACKUZAN {
 
 	void Plugins::Dispose() {
 
-		//Activator::Dispose();
-		//Evade::Dispose();
+		Activator::Dispose();
+		Evade::Dispose();
 
 		switch (ObjectManager::Player->BaseCharacterData->SkinHash) {
 		case Character::Vayne:

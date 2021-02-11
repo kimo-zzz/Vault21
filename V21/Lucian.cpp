@@ -3,9 +3,12 @@
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
-#include "HealthPrediction.h"
+#include "RenderLayer.h"
+
 namespace HACKUZAN {
 	namespace Plugins {
+
+
 
 		using namespace HACKUZAN::SDK;
 		using namespace HACKUZAN::SDK::Orbwalker;
@@ -13,34 +16,24 @@ namespace HACKUZAN {
 		namespace LucianConfig {
 
 			namespace LucianCombo {
-				CheckBox* UseQ;
-				Slider* QmaNa;
-				CheckBox* UseW;
-				Slider* WmaNa;
-				CheckBox* UseE;
-				Slider* EmaNa;
-				CheckBox* UseR;
-				Slider* enemiesInRange;
+				List* ComboMode;
 			}
 
 			namespace LucianFarm {
-				CheckBox* UseQLasthit;
+				CheckBox* UseQ;
+				CheckBox* UseE;
 
-				Slider* QmaNa;
-				Slider* EmaNa;
-				Slider* WMana;
 			}
 
 			namespace LucianMisc {
 				CheckBox* AutoE;
-				CheckBox* KillSteal;
 			}
 
 			namespace LucianDrawings {
 				CheckBox* DrawQ;
 				CheckBox* DrawW;
+				CheckBox* DrawE;
 			}
-
 
 		}
 
@@ -49,37 +42,29 @@ namespace HACKUZAN {
 			auto menu = Menu::CreateMenu("Lucian", "Lucian");
 
 			auto combo = menu->AddMenu("Combo", "Combo Settings");
-			LucianConfig::LucianCombo::UseQ = combo->AddCheckBox("Use Q", "UseQ", true);
-			LucianConfig::LucianCombo::UseW = combo->AddCheckBox("Use W", "UseW", true);
-			LucianConfig::LucianCombo::UseE = combo->AddCheckBox("Use E", "UseE", true);
-			//LucianConfig::LucianCombo::UseR = combo->AddCheckBox("Use R", "Use SpellSlot R", true);
-
-			auto combo_mana = combo->AddMenu("Mana Settings Combo", "Mana Settings");
-			LucianConfig::LucianCombo::QmaNa = combo_mana->AddSlider("QMana", "Minimum Q mana", 30, 0, 100, 5);
-			LucianConfig::LucianCombo::WmaNa = combo_mana->AddSlider("Wmana", "Minimum W mana", 50, 0, 100, 5);
-			LucianConfig::LucianCombo::EmaNa = combo_mana->AddSlider("EMana", "Minimum E mana", 20, 0, 100, 5);
+			LucianConfig::LucianCombo::ComboMode = combo->AddList("ComboMode", "ComboMode", std::vector<string>{"E->W->Q", "Q->E->W"}, 0);
 
 			auto farm = menu->AddMenu("farm", "Farm Settings");
-			farm->AddCheckBox("Farm Use Spells", "Use Spells", true);
+			LucianConfig::LucianFarm::UseQ = farm->AddCheckBox("UseQ Lasthit", "Lasthit Q", true);
+			LucianConfig::LucianFarm::UseE = farm->AddCheckBox("Use E Lasthit", "Use E", true);
 
-			auto farm_mana = farm->AddMenu("Farm Mana", "Mana Settings");
-			LucianConfig::LucianFarm::QmaNa = farm_mana->AddSlider("QMana", "Minimum Q mana", 30, 0, 100, 5);
-			LucianConfig::LucianFarm::WMana = farm_mana->AddSlider("Wmana", "Minimum W mana", 50, 0, 100, 5);
-			LucianConfig::LucianFarm::EmaNa = farm_mana->AddSlider("EMana", "Minimum E mana", 20, 0, 100, 5);
-
-			auto misc = menu->AddMenu("Misc", "Misc");
-			misc->AddCheckBox("Killsteal", "Killsteal", true);
-
-			auto drawings = menu->AddMenu("Drawings", "Drawings");
-			LucianConfig::LucianDrawings::DrawQ = drawings->AddCheckBox("Draw Q", "Draw Q", true);
-			LucianConfig::LucianDrawings::DrawW = drawings->AddCheckBox("Draw W", "Draw W", true);
+			auto drawings = menu->AddMenu("Drawings", "Drawings Menu");
+			LucianConfig::LucianDrawings::DrawQ = drawings->AddCheckBox("DrawQ", "DrawQ", true);
+			LucianConfig::LucianDrawings::DrawW = drawings->AddCheckBox("DrawW", "DrawW", true);
+			LucianConfig::LucianDrawings::DrawE = drawings->AddCheckBox("DrawE", "DrawE", true);
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
 			EventManager::AddEventHandler(LeagueEvents::OnCreateObject, OnCreateObject);
 			EventManager::AddEventHandler(LeagueEvents::OnDeleteObject, OnDeleteObject);
 			EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			EventManager::AddEventHandler(LeagueEvents::OnPlayAnimation, OnPlayAnimation);
+			EventManager::AddEventHandler(LeagueEvents::OnFinishCast, OnFinishCast);
+			EventManager::AddEventHandler(LeagueEvents::OnStopCast, OnStopCast);
+			EventManager::AddEventHandler(LeagueEvents::OnNewPath, OnNewPath);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnDraw);
+
+
 			GameClient::PrintChat("Lucian Script Loaded~!", IM_COL32(255, 69, 255, 255));
 		}
 
@@ -90,8 +75,108 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnCreateObject, OnCreateObject);
 			EventManager::RemoveEventHandler(LeagueEvents::OnDeleteObject, OnDeleteObject);
 			EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			EventManager::RemoveEventHandler(LeagueEvents::OnPlayAnimation, OnPlayAnimation);
+			EventManager::RemoveEventHandler(LeagueEvents::OnFinishCast, OnFinishCast);
+			EventManager::RemoveEventHandler(LeagueEvents::OnStopCast, OnStopCast);
+			EventManager::RemoveEventHandler(LeagueEvents::OnNewPath, OnNewPath);
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
+
+#pragma region Logics
+		void Lucian::Combo()
+		{
+			auto Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 500.f, DamageType_Physical, ObjectManager::Player->ServerPosition(), true);
+			auto Etarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 425.f + ObjectManager::Player->GetAutoAttackRange(), DamageType_Physical);
+
+
+			switch (LucianConfig::LucianCombo::ComboMode->Value)
+			{
+			case 0: //E->W->Q
+				if (Etarget && !HasDoubleshotPassive())
+				{
+					auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
+					if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) >= ObjectManager::Player->GetAutoAttackRange() - 20)
+					{
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
+					}
+				}
+
+				if (Qtarget)
+				{
+					if (!HasDoubleshotPassive())
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->ServerPosition(), Qtarget->ServerPosition(), Qtarget->NetworkId);
+
+					if (!HasDoubleshotPassive())
+						ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Qtarget->Position);
+				}
+				break;
+
+			case 1: //Q->E->W
+				if (Qtarget)
+				{
+					if (!HasDoubleshotPassive())
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->ServerPosition(), Qtarget->ServerPosition(), Qtarget->NetworkId);
+				}
+
+				if (Etarget && !HasDoubleshotPassive())
+				{
+					auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
+					if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) >= ObjectManager::Player->GetAutoAttackRange())
+					{
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
+					}
+				}
+
+				if (Qtarget && !HasDoubleshotPassive())
+					ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Qtarget->Position);
+				break;
+			}
+
+		}
+
+		void Lucian::Farm()
+		{
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical, ObjectManager::Player->ServerPosition(), true);
+
+			if (target == nullptr)
+				return;
+
+			if (!HasDoubleshotPassive())
+				ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)target, ObjectManager::Player->ServerPosition(), target->ServerPosition(), target->NetworkId);
+
+			if (!HasDoubleshotPassive())
+			{
+				auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
+				if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(target, posAfterE) >= ObjectManager::Player->GetAutoAttackRange())
+				{
+					ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
+				}
+			}
+			if (!HasDoubleshotPassive())
+				ObjectManager::Player->CastSpellPos(SpellSlot_W, (DWORD)ObjectManager::Player, target->ServerPosition());
+		}
+
+		void Lucian::Lasthit()
+		{
+
+			if (!ObjectManager::Player->CanAttack())
+			{
+				if (Orbwalker::LastHitMinion != nullptr)
+				{
+					if (LucianConfig::LucianFarm::UseQ->Value && ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_Q) == SpellState_Ready && ObjectManager::Player->Resource >= ObjectManager::Player->MaxResource / 2)
+						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Orbwalker::LastHitMinion, ObjectManager::Player->ServerPosition(), Orbwalker::LastHitMinion->ServerPosition(), Orbwalker::LastHitMinion->NetworkId);
+					else if (LucianConfig::LucianFarm::UseE->Value && ObjectManager::Player->Resource >= ObjectManager::Player->MaxResource / 4)
+						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, ObjectManager::Player->ServerPosition());
+				}
+
+			}
+		}
+
+		void Lucian::Jungle()
+		{
+		}
+
+#pragma endregion Logics
 
 		bool Lucian::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
 			if (unit == ObjectManager::Player)
@@ -104,8 +189,46 @@ namespace HACKUZAN {
 			return  true;
 		}
 
+
+		void Lucian::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		{
+			if (!castInfo)
+				return;
+
+			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
+		}
+
+		void Lucian::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
+		{
+			if (ptr == nullptr)
+				return;
+		}
+
+		void Lucian::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
+		{
+			if (castInfo == nullptr || object == nullptr)
+				return;
+		}
+
+		void Lucian::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
+			bool forceStop, bool destroyMissile, unsigned missileNetworkID)
+		{
+			if (spellCaster_Client == nullptr)
+				return;
+		}
+
+		void Lucian::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
+			unsigned dash)
+		{
+			if (obj == nullptr)
+				return;
+		}
+
 		void Lucian::OnCreateObject(GameObject* unit)
 		{
+			if (unit == nullptr)
+				return;
+
 
 		}
 
@@ -117,131 +240,26 @@ namespace HACKUZAN {
 
 		}
 
-		void Lucian::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
-		{
-			if (castInfo == nullptr || spellData == nullptr)
-				return;
-
-			if (castInfo->IsBasicAttack)
-				return;
-			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
-			if (caster == nullptr || !caster->IsHero() || !caster->IsEnemy())
-				return;
-
-			/*
-			auto hero = caster;
-			if (hero != nullptr && hero->IsEnemy()) {
-				for (GapCloser* gapcloser : GapClosersDB->GapCloserSpells) {
-					if (gapcloser->ChampionName.c_str() == hero->BaseCharacterData->SkinName) {
-						auto endpos = gapcloser->Type == GapCloserType::targeted ? castInfo->StartPosition : castInfo->EndPosition;
-						auto targetPos = ObjectManager::Player->Position.Extended(endpos, 425.f);
-
-						//add check if targetPos would be under enemy turret
-
-						switch (gapcloser->Type)
-						{
-						case GapCloserType::targeted:
-							if (castInfo->TargetId == ObjectManager::Player->Id)
-								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, targetPos);
-							break;
-
-						case GapCloserType::skillshot:
-							if (Distance(castInfo->EndPosition, ObjectManager::Player->Position) <= ObjectManager::Player->GetAutoAttackRange())
-								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, targetPos);
-							break;
-						}
-					}
-				}
-			}
-			*/
-
-		}
-
-		void Lucian::OnGapCloserSpell(SpellInfo* castInfo)
-		{
-			
-		}
-
 		void Lucian::OnDraw()
 		{
-			if (LucianConfig::LucianDrawings::DrawQ->Value)
-				Renderer::AddCircle(ObjectManager::Player->Position, 500.f, 1, IM_COL32(255, 0, 255, 155));
+			if (LucianConfig::LucianDrawings::DrawQ->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 500.f,1, IM_COL32(51, 0, 102, 255));
 
-			if (LucianConfig::LucianDrawings::DrawW->Value)
-				Renderer::AddCircle(ObjectManager::Player->Position, 900.f, 1, IM_COL32(255, 255, 0, 155));
+			if (LucianConfig::LucianDrawings::DrawE->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 420.f,1, IM_COL32(153, 51, 255, 255));
+
+			if (LucianConfig::LucianDrawings::DrawW->Value == true)
+				Renderer::AddCircle(ObjectManager::Player->Position, 900.f,1, IM_COL32(0, 0, 153, 255));
+
+			std::string currentMode = ("Style: " + LucianConfig::LucianCombo::ComboMode->Items[LucianConfig::LucianCombo::ComboMode->Value]);
+			Vector2 Position;
+			RenderLayer::WorldToScreen(ObjectManager::Player->Position, Position);
+
+			auto size = ImGui::CalcTextSize(currentMode.c_str());
+			Position.Y = Position.Y + 50;
+			Position.X = Position.X - (size.x / 2);
+			Renderer::AddText(currentMode.c_str(), 15, Position, IM_COL32(255, 0, 255, 255));
 		}
-
-		void Lucian::OnGameUpdate()
-		{
-
-			if (!Orbwalker::OrbwalkerEvading) {
-
-				auto Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 500.f, DamageType_Physical);
-				auto Wtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 900.f, DamageType_Physical);
-				auto Etarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 425.f + ObjectManager::Player->GetAutoAttackRange(), DamageType_Physical);
-
-				if (LucianConfig::LucianMisc::KillSteal)
-				{
-					if (Qtarget != nullptr && Qtarget->Health <= Damage::CalculatePhysicalDamage(ObjectManager::Player, Qtarget, 95 + ((60 * ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->Level) / ObjectManager::Player->TotalBonusAttackDamage())))
-						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->Position, Qtarget->Position, Qtarget->NetworkId);
-				}
-
-				if (ActiveMode & OrbwalkerMode_Combo || ActiveMode & OrbwalkerMode_LaneClear || ActiveMode & OrbwalkerMode_JungleClear) {
-
-
-					float minimum_q_mana_ = LucianConfig::LucianCombo::QmaNa->Value / 100 * ObjectManager::Player->Resource;
-					float minimum_w_mana_ = LucianConfig::LucianCombo::WmaNa->Value / 100 * ObjectManager::Player->Resource;
-					float minimum_e_mana_ = LucianConfig::LucianCombo::EmaNa->Value / 100 * ObjectManager::Player->Resource;
-
-					if (ActiveMode & OrbwalkerMode_LaneClear || ActiveMode & OrbwalkerMode_JungleClear)
-					{
-						minimum_q_mana_ = LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource;
-						minimum_w_mana_ = LucianConfig::LucianFarm::WMana->Value / 100 * ObjectManager::Player->Resource;
-						minimum_e_mana_ = LucianConfig::LucianFarm::EmaNa->Value / 100 * ObjectManager::Player->Resource;
-						Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical);
-						Wtarget = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 900.f, DamageType_Physical);
-					}
-
-
-					if (Orbwalker::CanCastAfterAttack()) {
-						if (Qtarget != nullptr && minimum_q_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
-							ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)Qtarget, ObjectManager::Player->Position, Qtarget->Position, Qtarget->NetworkId);
-
-						if (Etarget != nullptr && minimum_w_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
-							ObjectManager::Player->CastPredictSpell(SpellSlot_W, ObjectManager::Player->Position, Etarget->Position);
-
-						if (Etarget != nullptr && Etarget->IsValidTarget())
-						{
-							auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
-
-							if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) >= ObjectManager::Player->GetAutoAttackRange())
-								return;
-							if (minimum_e_mana_ <= ObjectManager::Player->MaxResource && !ObjectManager::Player->FindBuffName("LucianPassiveBuff"))
-								ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
-						}
-
-
-						if (ActiveMode & OrbwalkerMode_LastHit) {
-							GameObject* lasthitTarget_ = TargetSelector::GetTarget(TargetType::TSTARGET_MINION, 500.f, DamageType_Physical, ObjectManager::Player->Position, true);
-							if (lasthitTarget_ != nullptr && LucianConfig::LucianFarm::QmaNa->Value / 100 * ObjectManager::Player->Resource <= ObjectManager::Player->MaxResource)
-							{
-								if (Orbwalker::CanCastAfterAttack() && !ObjectManager::Player->CanAttack()) {
-
-									ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)lasthitTarget_, ObjectManager::Player->Position, lasthitTarget_->Position, lasthitTarget_->NetworkId);
-								}
-							}
-						}
-
-
-					}
-				}
-
-			}
-
-		}
-
-
-
 
 		GameObject* Lucian::GetTarget(float radius)
 		{
@@ -258,26 +276,37 @@ namespace HACKUZAN {
 			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
-		GameObject* Lucian::GetLasthitTarget()
+		void Lucian::OnGameUpdate()
 		{
-			std::vector<GameObject*> minions;
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
-			for (size_t i = 0; i < minion_list->size; i++)
+			if (Orbwalker::OrbwalkerEvading || !Orbwalker::CanCastAfterAttack())
+				return;
+
+			switch (ActiveMode)
 			{
-				auto minion = minion_list->entities[i];
-
-				if (minion && minion->IsMinion() && minion->IsValidTarget(500)) {
-					auto dmg = Damage::CalculatePhysicalDamage(ObjectManager::Player, minion, 95 + ((60 * ObjectManager::Player->Spellbook.GetSpell(SpellSlot_Q)->Level) / ObjectManager::Player->TotalBonusAttackDamage()));
-					if (dmg >= minion->TotalHealth())
-						return minion;
-				}
+			case OrbwalkerMode_Combo:
+				Combo();
+				break;
+			case OrbwalkerMode_LaneClear:
+				Farm();
+				break;
+			case OrbwalkerMode_JungleClear:
+				Farm();
+				break;
+			case OrbwalkerMode_LastHit:
+				Lasthit();
+				break;
+			case OrbwalkerMode_Flee:
+				ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition);
+				break;
+			case OrbwalkerMode_Harass:
+				break;
 			}
-			return nullptr;
 		}
 
-		GameObject* Lucian::GetWaveclerTarget()
+		bool Lucian::HasDoubleshotPassive()
 		{
-			return nullptr;
+			return ObjectManager::Player->FindBuffName("LucianPassiveBuff");
 		}
+
 	}
 }

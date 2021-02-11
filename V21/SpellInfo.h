@@ -43,6 +43,7 @@ namespace HACKUZAN
 				DEFINE_MEMBER_N(unsigned short TargetId, Offsets::SpellInfo::TargetId)
 				DEFINE_MEMBER_N(float CastDelay, Offsets::SpellInfo::CastDelay)
 				DEFINE_MEMBER_N(float Delay, Offsets::SpellInfo::Delay)
+				DEFINE_MEMBER_N(float Cooldown, Offsets::SpellInfo::Cooldown)
 				DEFINE_MEMBER_N(bool IsWindingUp, Offsets::SpellInfo::IsWindingUp)
 				DEFINE_MEMBER_N(DWORD IsBasicAttack, Offsets::SpellInfo::IsBasicAttack)
 				DEFINE_MEMBER_N(bool IsSpecialAttack, Offsets::SpellInfo::IsSpecialAttack)

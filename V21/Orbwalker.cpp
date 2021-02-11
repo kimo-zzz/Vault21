@@ -981,7 +981,7 @@ namespace HACKUZAN {
 				auto target = GetTarget();
 				if (target && target->IsValidTarget() && CanAttack(target))
 				{
-					//DisableNextAttack = false;
+					DisableNextAttack = false;
 					//FireBeforeAttack(target);
 
 					if (!DisableNextAttack)

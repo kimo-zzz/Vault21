@@ -64,6 +64,8 @@ namespace HACKUZAN {
 						Orbwalker::OrbwalkerEvading = true;
 						return false;
 					}
+					Orbwalker::DisableNextAttack = false;
+					Orbwalker::OrbwalkerEvading = false;
 				}
 
 				return  true;

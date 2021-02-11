@@ -399,6 +399,9 @@ namespace HACKUZAN {
 		}
 
 		bool Orbwalker::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position, GameObject* target) {
+			if (unit == nullptr)
+				return false;
+
 			if (unit == ObjectManager::Player) {
 				switch (order) {
 				case GameObjectOrder::MoveTo:
@@ -421,6 +424,9 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnSpellCast(kSpellSlot slot) {
+			if (!slot)
+				return;
+
 			if (slot == AttackResetSlot && !IsDashAttackReset) {
 				if (IsAshe) {
 					LastAATick -= ObjectManager::Player->GetAttackDelay() * 0.4f;
@@ -446,13 +452,15 @@ namespace HACKUZAN {
 
 		void Orbwalker::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
+			if (castInfo == nullptr || spellData == nullptr)
+				return;
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
-
+			/*
 			if (caster != nullptr && caster->IsEnemy() && Contains(spellData->SpellName, "YasuoWMovingWall", false))
 			{
 				HACKUZAN::PredLastYasuoWallCastPos = caster->Position;
 			}
-
+			*/
 			if (caster == ObjectManager::Player) {
 
 				LastOrder = GameObjectOrder::None;
@@ -533,6 +541,9 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {
+			if (unit == nullptr)
+				return;
+
 			if (IsAzir && unit->Minion() && unit->BaseCharacterData->SkinHash == Character::AzirSoldier) {
 				AzirSoldiers.push_back(unit);
 			}
@@ -579,10 +590,9 @@ namespace HACKUZAN {
 
 					auto minion = minion_list->entities[i];
 
-					if (minion && minion->Team != GameObjectTeam_Neutral - ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
+					if (!minion || minion->Team == GameObjectTeam_Neutral || minion->Team == ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
 						continue;
 					}
-
 
 					auto attackCastDelay = GetAttackCastDelay(minion);
 					auto attackMissileSpeed = GetAttackMissileSpeed();
@@ -592,16 +602,16 @@ namespace HACKUZAN {
 					auto LastHitMinion_lastHitHealth = FLT_MAX;
 					auto AlmostLastHitMinion_laneClearHealth = FLT_MAX;
 					auto LaneClearMinion_laneClearHealth = 0;
-
+					
 					auto t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2
 						+ 1000 * (int)std::max(0.0f, ObjectManager::Player->Position.Distance(minion->Position) - ObjectManager::Player->GetBoundingRadius())
 						/ (int)attackMissileSpeed;
-
+					
 					lastHitHealth = HealthPrediction::GetHealthPrediction(minion, t, Config::Farming::ExtraFarmDelay->Value);
 					laneClearHealth = HealthPrediction::LaneClearHealthPrediction(minion, ObjectManager::Player->GetAttackDelay() * 1000 * 2.0f, Config::Farming::ExtraFarmDelay->Value);
 					auto health = laneClearHealth; // lastHitHealth if turret is targetting
 					auto attackDamage = Damage::CalculateAutoAttackDamage(ObjectManager::Player, minion);
-
+					
 					if (lastHitHealth > 0 && lastHitHealth < attackDamage) {
 						if (!LastHitMinion || (minion->MaxHealth == LastHitMinion->MaxHealth ? lastHitHealth < LastHitMinion_lastHitHealth : minion->MaxHealth > LastHitMinion->MaxHealth)) {
 							LastHitMinion = minion;

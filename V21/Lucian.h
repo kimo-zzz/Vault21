@@ -14,21 +14,29 @@
 namespace HACKUZAN {
 	namespace Plugins {
 
-		namespace Lucian {
+		namespace Lucian { //change champ name
 
 			void Initialize();
 			void Dispose();
+
 			void OnGameUpdate();
 			void OnDraw();
-			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			void OnGapCloserSpell(SpellInfo* castInfo);
-			int CountEnemiesInRange(float range);
+			void OnPlayAnimation(GameObject* ptr, char* name, float animationTime);
+			void OnFinishCast(SpellCastInfo* castInfo, GameObject* object);
+			void OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
+				bool forceStop, bool destroyMissile, unsigned int missileNetworkID);
+			void OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash);
+			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
+			bool HasDoubleshotPassive();
 			GameObject* GetTarget(float radius);
-			GameObject* GetLasthitTarget();
-			GameObject* GetWaveclerTarget();
+
+			void Combo();
+			void Farm();
+			void Lasthit();
+			void Jungle();
 		}
 	}
 }

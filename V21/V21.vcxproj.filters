@@ -204,12 +204,6 @@
     <Filter Include="Plugins\Champion Plugins\Lucian">
       <UniqueIdentifier>{7145e5e9-4832-4515-b55c-7832a030ee6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Champion Plugins\Lucian\Header Files">
-      <UniqueIdentifier>{a3be6a14-38b6-4f43-9f28-8502ca429a9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Champion Plugins\Lucian\Source Files">
-      <UniqueIdentifier>{d5a94fc5-5c6c-4563-8f62-8426877c5842}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins\Champion Plugins\TEMPLATE">
       <UniqueIdentifier>{3b3a4b21-e049-4192-8346-16d841598be5}</UniqueIdentifier>
     </Filter>
@@ -596,9 +590,6 @@
     <ClInclude Include="Draven.h">
       <Filter>Plugins\Champion Plugins\Draven\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lucian.h">
-      <Filter>Plugins\Champion Plugins\Lucian\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PluginTemplate.h">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
     </ClInclude>
@@ -631,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="Xerath.h">
       <Filter>Plugins\Champion Plugins\Xerath</Filter>
+    </ClInclude>
+    <ClInclude Include="Lucian.h">
+      <Filter>Plugins\Champion Plugins\Lucian</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -880,9 +874,6 @@
     <ClCompile Include="Draven.cpp">
       <Filter>Plugins\Champion Plugins\Draven\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Lucian.cpp">
-      <Filter>Plugins\Champion Plugins\Lucian\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PluginTemplate.cpp">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
     </ClCompile>
@@ -909,6 +900,9 @@
     </ClCompile>
     <ClCompile Include="Xerath.cpp">
       <Filter>Plugins\Champion Plugins\Xerath</Filter>
+    </ClCompile>
+    <ClCompile Include="Lucian.cpp">
+      <Filter>Plugins\Champion Plugins\Lucian</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

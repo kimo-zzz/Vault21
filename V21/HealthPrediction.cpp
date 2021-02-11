@@ -69,6 +69,9 @@ namespace HACKUZAN {
 
 		void HealthPrediction::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
+			if (castInfo == nullptr || spellData == nullptr)
+				return;
+
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 			auto target = ObjectManager::Instance->ObjectsArray[castInfo->TargetId];
 			if (caster && caster != ObjectManager::Player && caster->IsAlly() && target && target->Minion() && castInfo->IsAutoAttack() && ObjectManager::Player->Position.IsInRange(caster->Position, 2000.0f)) {

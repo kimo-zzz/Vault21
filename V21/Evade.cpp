@@ -55,8 +55,6 @@ namespace HACKUZAN {
 							return false;
 						}
 					}
-					Orbwalker::DisableNextAttack = false;
-					Orbwalker::OrbwalkerEvading = false;
 				}
 				if (unit == ObjectManager::Player && order == GameObjectOrder::MoveTo && ShouldBlock(DetectedSkillShots, ObjectManager::Player, HudManager::Instance->CursorTargetLogic->CursorPosition, Config::EvadeSkillMenu::EvadeWithWalkingDanger->Value))
 				{
@@ -66,8 +64,6 @@ namespace HACKUZAN {
 						Orbwalker::OrbwalkerEvading = true;
 						return false;
 					}
-					Orbwalker::DisableNextAttack = false;
-					Orbwalker::OrbwalkerEvading = false;
 				}
 
 				return  true;

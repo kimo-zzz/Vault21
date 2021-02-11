@@ -27,7 +27,7 @@ namespace HACKUZAN {
 			Draven::Initialize();
 			break;
 		case Character::Lucian:
-			Lucian::Initialize();
+		//	Lucian::Initialize();
 			break;
 		case Character::MissFortune:
 			MissFortune::Initialize();
@@ -49,8 +49,8 @@ namespace HACKUZAN {
 
 	void Plugins::Dispose() {
 
-		Activator::Dispose();
-		Evade::Dispose();
+		//Activator::Dispose();
+		//Evade::Dispose();
 
 		switch (ObjectManager::Player->BaseCharacterData->SkinHash) {
 		case Character::Vayne:

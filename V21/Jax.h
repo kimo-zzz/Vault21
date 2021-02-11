@@ -18,6 +18,14 @@ namespace HACKUZAN {
 			{
 				void executeSpell(kSpellSlot slot, Vector3 pos = Vector3(-1, -1, -1), GameObject* target = nullptr);
 				GameObject* GetTarget(float range);
+				GameObject* GetMinionTarget(float range);
+
+				namespace Farming
+				{
+					void ExecuteQ();
+					void ExecuteW();
+					void ExecuteE();
+				}
 
 				namespace Combo
 				{

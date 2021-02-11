@@ -594,6 +594,7 @@ namespace HACKUZAN {
 						continue;
 					}
 
+
 					auto attackCastDelay = GetAttackCastDelay(minion);
 					auto attackMissileSpeed = GetAttackMissileSpeed();
 					auto lastHitHealth = minion->Health;
@@ -720,8 +721,9 @@ namespace HACKUZAN {
 				return ForcedPosition;
 			}
 			else if (ObjectManager::Player->IsMelee() && Config::Melee::StickToTarget->Value && !(ActiveMode & OrbwalkerMode_Flee) && LastTarget) {
-				auto pathController = LastTarget->GetPathController();
-				if ((LastTarget->IsMonster() || LastTarget->Hero()) && pathController->HasNavigationPath && ObjectManager::Player->Position.IsInRange(pathController->ServerPosition, ObjectManager::Player->GetAutoAttackRange(LastTarget) + 150.0f)) {
+				auto _LastTarget = LastTarget;
+				auto pathController = _LastTarget->GetPathController();
+				if ((_LastTarget->IsMonster() || _LastTarget->Hero()) && pathController->HasNavigationPath && ObjectManager::Player->Position.IsInRange(pathController->ServerPosition, ObjectManager::Player->GetAutoAttackRange(_LastTarget) + 150.0f)) {
 					return pathController->GetNavigationPath()->EndPosition;
 				}
 			}

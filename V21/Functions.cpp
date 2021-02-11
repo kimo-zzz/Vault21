@@ -73,7 +73,7 @@ namespace HACKUZAN {
 		IsMinion = (fnIsMinion)DEFINE_RVA(Offsets::ManagerTemplate::oIsMinion);
 		IsTurret = (fnIsTurret)DEFINE_RVA(Offsets::ManagerTemplate::oIsTurret);
 		IsHero = (fnIsHero)DEFINE_RVA(Offsets::ManagerTemplate::oIsHero);
-		IsNotWall = (fnIsNotWall)DEFINE_RVA(Offsets::ManagerTemplate::oIsHero);
+		IsNotWall = (fnIsNotWall)DEFINE_RVA(Offsets::Functions::IsNotWall);
 		IsMissile = (fnIsMissile)DEFINE_RVA(Offsets::ManagerTemplate::oIsMissile);
 		IsNexus = (fnIsNexus)DEFINE_RVA(Offsets::ManagerTemplate::oIsNexus);
 		IsInhibitor = (fnIsInhibitor)DEFINE_RVA(Offsets::ManagerTemplate::oIsInhib);

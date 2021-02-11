@@ -135,6 +135,9 @@
     <ClCompile Include="include\Zydis\src\FormatterATT.c">
       <Filter>Zydis</Filter>
     </ClCompile>
+    <ClCompile Include="UltimateHooks.cpp">
+      <Filter>LeagueHooks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -219,6 +222,9 @@
       <Filter>LeagueHooks</Filter>
     </ClInclude>
     <ClInclude Include="syscalls.hpp">
+      <Filter>LeagueHooks</Filter>
+    </ClInclude>
+    <ClInclude Include="UltimateHooks.h">
       <Filter>LeagueHooks</Filter>
     </ClInclude>
   </ItemGroup>

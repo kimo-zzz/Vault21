@@ -46,6 +46,7 @@ extern DWORD WINAPI InitThread(LPVOID module);
 __declspec(safebuffers)DWORD WINAPI InitThread(LPVOID module)
 {
 	RestoreZwQueryInformationProcess();
+	RestoreRtlAddVectoredExceptionHandler();
 
 	Sleep(20000);
 	int count = 0;

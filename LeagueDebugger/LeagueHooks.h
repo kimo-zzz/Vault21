@@ -42,6 +42,7 @@ struct watchListEntry {
 	string name;
 	DWORD address;
 	bool isStarted;
+	DWORD funcSize; //need only on "execute"
 	std::vector<WatchData> watchData;
 };
 

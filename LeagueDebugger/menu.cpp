@@ -2,6 +2,7 @@
 
 #include "ExampleAppLog.h"
 #include "LeagueHooks.h"
+#include "UltimateHooks.h"
 
 #define oLocalPlayer 0x2F4F764 //			A1 ?? ?? ?? ?? 85 C0 74 07 05 ?? ?? ?? ?? EB 02 33 C0 56 // dword_[offset]
 
@@ -46,6 +47,7 @@ namespace DX11
 
 		static char newInputName[128] = "";
 		static char newInputAddress[128] = "";
+		static char newInputSize[128] = "";
 
 		const char* items[] = { "Read", "Write" , "Execute" };
 		static int item_current_3 = 0; // If the selection isn't within 0..count, Combo won't display a preview
@@ -89,6 +91,7 @@ namespace DX11
 					ImGui::Separator();
 					ImGui::InputText("Name", newInputName, IM_ARRAYSIZE(newInputName));
 					ImGui::InputText("Address", newInputAddress, IM_ARRAYSIZE(newInputAddress));
+					ImGui::InputText("Func Size (Execute)", newInputSize, IM_ARRAYSIZE(newInputSize));
 					ImGui::Combo("Watch Type", &item_current_3, items, IM_ARRAYSIZE(items));
 					if (ImGui::Button("Add Entry")) {
 						watchListEntry wl;
@@ -96,6 +99,7 @@ namespace DX11
 						wl.isStarted = false;
 						wl.name = string(newInputName);
 						wl.address = std::strtoul(newInputAddress, NULL, 16);
+						wl.funcSize = std::strtoul(newInputSize, NULL, 16);
 						wl.watchData = wd;
 						if (item_current_3 == 0) {
 							readWatchlist.push_back(wl);
@@ -228,13 +232,13 @@ namespace DX11
 								ImGui::Text(("Address: " + hexify<DWORD>(wl.address)).c_str());
 								if (wl.isStarted) {
 									if (ImGui::Button("Stop")) {
-										_LeagueHooksVEH.removeHook(wl.address);
+										UltimateHooks::removeHook(wl.address);
 										wl.isStarted = !wl.isStarted;
 									}
 								}
 								else {
 									if (ImGui::Button("Start")) {
-										_LeagueHooksVEH.addHook(wl.address);
+										UltimateHooks::addHook(wl.address, wl.funcSize);
 										wl.isStarted = !wl.isStarted;
 									}
 								}

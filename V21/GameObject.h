@@ -257,6 +257,7 @@ namespace HACKUZAN
 		void OverrideIssueOrder(GameObjectOrder order, Vector3* position);
 		void EvadeIssueOrder(GameObjectOrder order, Vector3* position);
 		void EvadeIssueOrderHoldPos(GameObjectOrder order, Vector3* position);
+		void UpdateChargeableSpell(kSpellSlot slot, Vector3* pPosition, bool ReleaseCast);
 
 		//Extensions
 		bool IsMe();

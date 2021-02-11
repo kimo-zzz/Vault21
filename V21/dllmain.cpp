@@ -236,7 +236,7 @@ namespace LeagueHook {
 			LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
 
 			////////////////////////////////////////
-			// PATCHING THE ISSUE ORDER RETCHECKS
+			// PATCHING THE ISSUEORDER
 			////////////////////////////////////////
 			DWORD IssueOrderAddr = DEFINE_RVA(Offsets::Functions::IssueOrder);
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
@@ -250,11 +250,11 @@ namespace LeagueHook {
 			LeagueFunctions::IsDonePatchingIssueOrder = true;
 			GameClient::PrintChat("IssueOrder is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////
-			// END PATCHING THE ISSUE ORDER RETCHECKS
+			// END PATCHING THE ISSUEORDER
 			//////////////////////////////////////////
 
 			//////////////////////////////////////////
-			// PATCHING THE CAST SPELL RETCHECKS
+			// PATCHING THE CASTSPELL
 			//////////////////////////////////////////
 			DWORD CastSpellAddr = DEFINE_RVA(Offsets::Functions::CastSpell);
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
@@ -268,7 +268,25 @@ namespace LeagueHook {
 			LeagueFunctions::IsDonePatchingCastSpell = true;
 			GameClient::PrintChat("CastSpell is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////
-			// END PATCHING THE CAST SPELL RETCHECKS
+			// END PATCHING THE CASTSPELL
+			//////////////////////////////////////////
+
+			//////////////////////////////////////////
+			// PATCHING THE UpdateChargableSpell
+			//////////////////////////////////////////
+			DWORD UpdateChargableSpellAddr = DEFINE_RVA(Offsets::Functions::UpdateChargableSpell);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)UpdateChargableSpellAddr);
+
+			size_t sizeUpdateChargableSpell = 0x250;
+			DWORD EndUpdateChargableSpellAddr = UpdateChargableSpellAddr + 0x250;
+			DWORD NewUpdateChargableSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
+			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
+			UltimateHooks::FixFuncRellocation(UpdateChargableSpellAddr, EndUpdateChargableSpellAddr, (DWORD)LeagueFunctions::NewUpdateChargableSpell, sizeUpdateChargableSpell);
+			LeagueFunctions::HookStartAndEndFunction(NewUpdateChargableSpell, sizeUpdateChargableSpell, 5, (DWORD)LeagueFunctions::NewUpdateChargableSpellStartHook, (DWORD)LeagueFunctions::NewUpdateChargableSpellEndHook, LeagueFunctions::UpdateChargableSpellStartHookGateway, LeagueFunctions::UpdateChargableSpellEndHookGateway);
+			LeagueFunctions::IsDonePatchingUpdateChargableSpell = true;
+			GameClient::PrintChat("UpdateChargableSpell is now patched", IM_COL32(255, 69, 0, 255));
+			//////////////////////////////////////////
+			// END PATCHING THE UpdateChargableSpell
 			//////////////////////////////////////////
 
 			//////////////////////////////////////////

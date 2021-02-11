@@ -12,9 +12,11 @@ using namespace HACKUZAN;
 
 PVOID LeagueFunctions::NewIssueOrder = nullptr;
 PVOID LeagueFunctions::NewCastSpell = nullptr;
+PVOID LeagueFunctions::NewUpdateChargableSpell = nullptr;
 
 bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
+bool LeagueFunctions::IsDonePatchingUpdateChargableSpell = false;
 
 DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::IssueOrderTrueReturn));
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
@@ -23,6 +25,10 @@ DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueCastSpellReturn));
 DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
 DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
+
+DWORD* LeagueFunctions::TrueUpdateChargableSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueUpdateChargableSpellReturn));
+DWORD LeagueFunctions::UpdateChargableSpellStartHookGateway = 0;
+DWORD LeagueFunctions::UpdateChargableSpellEndHookGateway = 0;
 
 std::vector<AddressesToCopy> LeagueFunctions::addressToCopyList = {};
 
@@ -572,17 +578,88 @@ void testValueIssueOrderCheckGateway(DWORD val, DWORD val2) {
 	//AppLog.AddLog(("val=" + hexify<DWORD>((DWORD)val) + " *val=" + hexify<DWORD>((DWORD)val2) + "\n").c_str());
 }
 
-/*void* __fastcall LeagueFunctions::IssueOrderCheckGateway(int a1, int a2, int a3, DWORD* a4, char a5, int a6, int a7, int a8, int a9, DWORD* a10) {
-	DWORD oldVal = *a10;
-	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
-	*a10 = TrueIssueOrderReturnAddress;
-	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
-	void* ret = Functions.IssueOrderCheck(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-	*a10 = oldVal;
-	//testValueIssueOrderCheckGateway((DWORD)a10, *a10);
-	return ret;
-}*/
+std::vector<DWORD*> backup_returnAddrStackNewUpdateChargableSpell;
+DWORD* backup_returnAddrNewUpdateChargableSpell;
+DWORD backup_eax_NewUpdateChargableSpellStartHook;
+void __declspec(naked) LeagueFunctions::NewUpdateChargableSpellStartHook()
+{
+	__asm {
+		mov backup_eax_NewUpdateChargableSpellStartHook, eax
+		mov eax, [esp]
+		mov backup_returnAddrNewUpdateChargableSpell, eax
 
+		/*
+		mov eax, [esp]
+		mov _ret, eax
+		mov eax, [esp + 0x4]
+		mov param2, eax
+		mov eax, [esp + 0x8]
+		mov param3, eax
+		mov eax, [esp + 0xC]
+		mov param4, eax
+		mov eax, [esp + 0x10]
+		mov param5, eax
+		mov eax, [esp + 0x14]
+		mov param6, eax
+		mov eax, [esp + 0x18]
+		mov param7, eax
+		*/
+
+		mov eax, TrueUpdateChargableSpellReturnAddress
+		mov[esp], eax
+		mov eax, backup_eax_NewUpdateChargableSpellStartHook
+	}
+
+	/*
+	__asm pushad
+	testValueUpdateChargableSpellParams(_ret, param2, param3, param4, param5, param6, param7);
+	__asm popad
+	*/
+
+	__asm pushad
+	backup_returnAddrStackNewUpdateChargableSpell.push_back(backup_returnAddrNewUpdateChargableSpell);
+	__asm popad
+
+	__asm {
+		push UpdateChargableSpellStartHookGateway
+		retn
+	}
+}
+
+DWORD* backup_TrueUpdateChargableSpellReturnAddress;
+DWORD backup_eax_NewUpdateChargableSpellEndHook;
+DWORD* backup_returnAddrFromStackNewUpdateChargableSpell;
+void __declspec(naked) LeagueFunctions::NewUpdateChargableSpellEndHook()
+{
+	__asm {
+		pop     ebp
+		pop     ebx
+		add esp, 0x20
+	}
+
+	__asm pushad
+	backup_returnAddrFromStackNewUpdateChargableSpell = backup_returnAddrStackNewUpdateChargableSpell[backup_returnAddrStackNewUpdateChargableSpell.size() - 1];
+	__asm popad
+
+	__asm pushad
+	backup_returnAddrStackNewUpdateChargableSpell.pop_back();
+	__asm popad
+
+	__asm {
+		mov backup_eax_NewUpdateChargableSpellEndHook, eax
+		mov eax, [esp]
+		mov backup_TrueUpdateChargableSpellReturnAddress, eax
+		mov eax, backup_returnAddrFromStackNewUpdateChargableSpell
+		mov[esp], eax
+		mov eax, backup_eax_NewUpdateChargableSpellEndHook
+	}
+
+	__asm pushad
+	//testValueUpdateChargableSpell(backup_returnAddrFromStackNewUpdateChargableSpell, backup_TrueUpdateChargableSpellReturnAddress);
+	__asm popad
+
+	__asm ret 0x10
+}
 void LeagueFunctions::ReplaceCall(DWORD origAddress, DWORD newAddress, DWORD fnAddress, size_t size) {
 	// Initialize decoder context
 	ZydisDecoder decoder;

@@ -138,6 +138,38 @@ namespace HACKUZAN
 		}
 	}
 
+	void GameObject::UpdateChargeableSpell(/*SpellBook* pSpellBook, Spell* pSpellslot, */kSpellSlot slot, Vector3* pPosition, bool ReleaseCast)
+	{
+		if ((!(DWORD)LeagueFunctions::NewUpdateChargableSpell) || (!LeagueFunctions::IsDonePatchingUpdateChargableSpell))
+			return;
+
+		SpellbookClient* spellbook = &this->Spellbook;
+		auto pSpellInfo = this->Spellbook.GetSpell(slot);
+
+		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
+		DWORD UpdateChargableSpellAddr = (DWORD)LeagueFunctions::NewUpdateChargableSpell; //UpdateChargableSpell
+
+		//if (EventManager::TriggerProcess(LeagueEvents::OnUpdateChargableSpell, this, spellbook, pSpellInfo, slot, pPosition, ReleaseCast)) {
+
+			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
+				return; //This isn't the instruction we're looking for
+
+			__asm
+			{
+				push retnHere //address of our function,  
+				mov ecx, this //If the function is a __thiscall don't forget to set ECX
+				push ReleaseCast
+				push pPosition
+				push slot
+				push pSpellInfo
+				push spellbook
+				push SpoofAddress
+				jmp UpdateChargableSpellAddr
+				retnHere :
+			}
+		//}
+
+	}
 
 	void GameObject::CastSpellPos(kSpellSlot slot, DWORD Caster, Vector3 TargetPos)
 	{

@@ -539,6 +539,10 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnDeleteObject(GameObject* unit) {
+
+			if (unit == nullptr)
+				return;
+
 			if (IsAzir) {
 				for (auto it = AzirSoldiers.begin(); it != AzirSoldiers.end(); it++) {
 					if (unit == *it) {
@@ -556,6 +560,7 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::OnGameUpdate() {
+
 
 			Delay->OnGameUpdate();
 

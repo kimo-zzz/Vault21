@@ -16,8 +16,7 @@ namespace HACKUZAN
 
 	BOOL NavGrid::IsGrass(float x, float y)
 	{
-		auto cell = this->GetCell(x, y);
-		return cell != nullptr && (GrassFlag & cell->m_Flags) == GrassFlag;
+		return false;
 	}
 
 	//BOOL NavGrid::IsWall(float x, float y)
@@ -28,8 +27,7 @@ namespace HACKUZAN
 
 	BOOL NavGrid::IsWall(Vector3* position)
 	{
-		auto cell = this->GetCell(position);
-		return cell != nullptr && (WallFlag & cell->m_Flags) == WallFlag;
+		return false;
 	}
 
 	NavGridCell* NavGrid::GetCell(float x, float y)
@@ -65,9 +63,6 @@ namespace HACKUZAN
 
 	bool NavGrid::IsWall(Vector3 worldPosition)
 	{
-		typedef bool(__cdecl* _fnIsNotWall)(Vector3*, unsigned __int16);
-		static _fnIsNotWall IsNotWall = (_fnIsNotWall)(baseAddr + (DWORD)Offsets::Functions::IsNotWall);
-
-		return !IsNotWall(&worldPosition, 1);
+		return false;
 	}
 }

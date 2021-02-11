@@ -90,9 +90,10 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
+
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (thisPtr != nullptr) {
+		if (thisPtr != nullptr && thisPtr->IsNotWall()) {
 			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
 		}
 
@@ -108,7 +109,7 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (object != nullptr) {
+		if (object != nullptr && object->IsNotWall()) {
 			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
 		}
 
@@ -125,6 +126,7 @@ namespace LeagueHook {
 			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
 
 		return Functions::OnPlayAnimation(ptr, ret, name, unk1, unk2, animationTime, unk4);
+
 	}
 
 	int __fastcall hk_OnProcessSpell(void* spellBook, void* edx, SpellInfo* CastInfo) {
@@ -183,15 +185,14 @@ namespace LeagueHook {
 				forceStop, destroyMissile, missileNetworkID);
 
 		auto caster = ObjectManager::Instance->ObjectsArray[spellCaster_Client->SourceId];
-		//GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
+		//	GameClient::PrintChat(("forceStop " + to_string(forceStop)).c_str(), IM_COL32(255, 69, 0, 255));
 
-		auto sInfo = new StopCast();
-		sInfo->stopAnimation = stopAnimation;
-		sInfo->forceStop = forceStop;
-		sInfo->executeCastFrame = executeCastFrame;
-		sInfo->destroyMissile = destroyMissile;
-		sInfo->missileNetworkID = missileNetworkID;
-		delete sInfo;
+		StopCast sInfo;
+		sInfo.stopAnimation = stopAnimation;
+		sInfo.forceStop = forceStop;
+		sInfo.executeCastFrame = executeCastFrame;
+		sInfo.destroyMissile = destroyMissile;
+		sInfo.missileNetworkID = missileNetworkID;
 		//MessageBoxA(0, ("spellCaster_Client " + hexify<DWORD>((DWORD)spellCaster_Client)).c_str(), "", 0);
 		//GameClient::PrintChat(caster->BaseCharacterData->SkinName, IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnStopCast, caster, sInfo);
@@ -206,16 +207,15 @@ namespace LeagueHook {
 	{
 		if (obj == nullptr)
 			return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
-		auto path = new NewPath();
-		path->sender = obj;
-		path->start = *start;
-		path->end = *end;
-		path->tail = *tail;
-		path->dash = dash;
-		path->dashSpeed = *dashSpeed;
-		delete path;
+		NewPath path;
+		path.sender = obj;
+		path.start = *start;
+		path.end = *end;
+		path.tail = *tail;
+		path.dash = dash;
+		path.dashSpeed = *dashSpeed;
 
-		//GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
+		//	GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
 		EventManager::Trigger(LeagueEvents::OnNewPath, path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
@@ -236,7 +236,7 @@ namespace LeagueHook {
 			LeagueDecryptData ldd = LeagueDecrypt::decrypt(nullptr);
 
 			////////////////////////////////////////
-			// PATCHING THE ISSUE ORDER RETCHECKS
+			// PATCHING THE ISSUEORDER
 			////////////////////////////////////////
 			DWORD IssueOrderAddr = DEFINE_RVA(Offsets::Functions::IssueOrder);
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)IssueOrderAddr);
@@ -250,11 +250,11 @@ namespace LeagueHook {
 			LeagueFunctions::IsDonePatchingIssueOrder = true;
 			GameClient::PrintChat("IssueOrder is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////
-			// END PATCHING THE ISSUE ORDER RETCHECKS
+			// END PATCHING THE ISSUEORDER
 			//////////////////////////////////////////
 
 			//////////////////////////////////////////
-			// PATCHING THE CAST SPELL RETCHECKS
+			// PATCHING THE CASTSPELL
 			//////////////////////////////////////////
 			DWORD CastSpellAddr = DEFINE_RVA(Offsets::Functions::CastSpell);
 			LeagueDecrypt::IsMemoryDecrypted((PVOID)CastSpellAddr);
@@ -268,7 +268,25 @@ namespace LeagueHook {
 			LeagueFunctions::IsDonePatchingCastSpell = true;
 			GameClient::PrintChat("CastSpell is now patched", IM_COL32(255, 69, 0, 255));
 			//////////////////////////////////////////
-			// END PATCHING THE CAST SPELL RETCHECKS
+			// END PATCHING THE CASTSPELL
+			//////////////////////////////////////////
+
+			//////////////////////////////////////////
+			// PATCHING THE UpdateChargableSpell
+			//////////////////////////////////////////
+			DWORD UpdateChargableSpellAddr = DEFINE_RVA(Offsets::Functions::UpdateChargableSpell);
+			LeagueDecrypt::IsMemoryDecrypted((PVOID)UpdateChargableSpellAddr);
+
+			size_t sizeUpdateChargableSpell = 0x250;
+			DWORD EndUpdateChargableSpellAddr = UpdateChargableSpellAddr + 0x250;
+			DWORD NewUpdateChargableSpell = LeagueFunctions::VirtualAllocateFunction(LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
+			LeagueFunctions::CopyFunction((DWORD)LeagueFunctions::NewUpdateChargableSpell, UpdateChargableSpellAddr, sizeUpdateChargableSpell);
+			UltimateHooks::FixFuncRellocation(UpdateChargableSpellAddr, EndUpdateChargableSpellAddr, (DWORD)LeagueFunctions::NewUpdateChargableSpell, sizeUpdateChargableSpell);
+			LeagueFunctions::HookStartAndEndFunction(NewUpdateChargableSpell, sizeUpdateChargableSpell, 4, (DWORD)LeagueFunctions::NewUpdateChargableSpellStartHook, (DWORD)LeagueFunctions::NewUpdateChargableSpellEndHook, LeagueFunctions::UpdateChargableSpellStartHookGateway, LeagueFunctions::UpdateChargableSpellEndHookGateway);
+			LeagueFunctions::IsDonePatchingUpdateChargableSpell = true;
+			GameClient::PrintChat("UpdateChargableSpell is now patched", IM_COL32(255, 69, 0, 255));
+			//////////////////////////////////////////
+			// END PATCHING THE UpdateChargableSpell
 			//////////////////////////////////////////
 
 			//////////////////////////////////////////

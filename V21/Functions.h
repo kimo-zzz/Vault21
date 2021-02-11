@@ -36,6 +36,7 @@ namespace HACKUZAN {
 		int unk7);
 
 	typedef bool(__cdecl* fnIsHero)(GameObject* pObj);
+	typedef bool(__cdecl* fnIsNotWall)(GameObject* pObj);
 	typedef bool(__cdecl* fnIsMissile)(GameObject* pObj);
 	typedef bool(__cdecl* fnIsMinion)(GameObject* pObj);
 	typedef bool(__cdecl* fnIsTurret)(GameObject* pObj);
@@ -76,6 +77,7 @@ namespace HACKUZAN {
 		extern fnIsTurret IsTurret;
 		extern fnIsMinion IsMinion;
 		extern fnIsHero IsHero;
+		extern fnIsNotWall IsNotWall;
 		extern fnIsMissile IsMissile;
 		extern fnIsTroyEnt IsTroyEnt;
 		extern fnIsNexus IsNexus;

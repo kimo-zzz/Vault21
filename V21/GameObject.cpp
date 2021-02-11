@@ -138,6 +138,37 @@ namespace HACKUZAN
 		}
 	}
 
+	void GameObject::UpdateChargeableSpell(kSpellSlot slot, Vector3* pPosition, bool ReleaseCast)
+	{
+		if ((!(DWORD)LeagueFunctions::NewUpdateChargableSpell) || (!LeagueFunctions::IsDonePatchingUpdateChargableSpell))
+			return;
+
+		SpellbookClient* spellbook = &this->Spellbook;
+		auto pSpellInfo = this->Spellbook.GetSpell(slot);
+
+		DWORD SpoofAddress = (DWORD)GetModuleHandle(NULL) + (DWORD)Offsets::Functions::RetAddress;
+		DWORD UpdateChargableSpellAddr = (DWORD)LeagueFunctions::NewUpdateChargableSpell; //UpdateChargableSpell
+
+		//if (EventManager::TriggerProcess(LeagueEvents::OnUpdateChargableSpell, spellbook, pSpellInfo, slot, pPosition, ReleaseCast)) {
+
+			if (((*(DWORD*)SpoofAddress) & 0xFF) != 0xC3)
+				return; //This isn't the instruction we're looking for
+
+			__asm
+			{
+				push retnHere //address of our function,  
+				mov ecx, spellbook //If the function is a __thiscall don't forget to set ECX
+				push ReleaseCast
+				push pPosition
+				push slot
+				push pSpellInfo
+				push SpoofAddress
+				jmp UpdateChargableSpellAddr
+				retnHere :
+			}
+		//}
+
+	}
 
 	void GameObject::CastSpellPos(kSpellSlot slot, DWORD Caster, Vector3 TargetPos)
 	{
@@ -600,6 +631,11 @@ namespace HACKUZAN
 	{
 		//return this->Flags() & GameObjectFlags_AIHeroClient;
 		return Hero();
+	}
+
+	bool GameObject::IsNotWall()
+	{
+		return NotWall();
 	}
 
 	bool GameObject::IsTurret()
@@ -1150,6 +1186,10 @@ namespace HACKUZAN
 
 	bool GameObject::Hero() {
 		return Functions::IsHero(this);
+	}
+
+	bool GameObject::NotWall() {
+		return Functions::IsNotWall(this);
 	}
 
 	bool GameObject::Missile() {

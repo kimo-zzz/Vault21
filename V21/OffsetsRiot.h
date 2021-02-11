@@ -119,6 +119,9 @@ namespace HACKUZAN {
 			IsNotWall = 0x899380,									// 11.3
 			IsWall = 0x8e4710,										// ??
 
+			UpdateChargableSpell = 0x4D88A0,
+			TrueUpdateChargableSpellReturn = 0x56D471,
+
 			RetAddress = 0x6E502
 		};
 

@@ -113,129 +113,129 @@ namespace HACKUZAN
 		union
 		{
 			DEFINE_MEMBER_0(DWORD* VTable)
-			DEFINE_MEMBER_N(unsigned short Id, Offsets::GameObject::Id)
-			DEFINE_MEMBER_N(kGameObjectTeam Team, Offsets::GameObject::Team)
-			DEFINE_MEMBER_N(std::string Name, Offsets::GameObject::Name)
-			DEFINE_MEMBER_N(unsigned int NetworkId, Offsets::GameObject::NetworkId)
-			DEFINE_MEMBER_N(Vector3 Position, Offsets::GameObject::Position)
-			DEFINE_MEMBER_N(bool IsVisible, Offsets::GameObject::IsVisible)
-			DEFINE_MEMBER_N(unsigned short SourceID, Offsets::GameObject::SourceID)
-			DEFINE_MEMBER_N(float Resource, Offsets::GameObject::Resource)
-			DEFINE_MEMBER_N(float MaxResource, Offsets::GameObject::MaxResource)
-			DEFINE_MEMBER_N(GameObjectResourceType ResourceType, Offsets::GameObject::ResourceType)
-			DEFINE_MEMBER_N(float SecondaryResource, Offsets::GameObject::SecondaryResource)
-			DEFINE_MEMBER_N(float MaxSecondaryResource, Offsets::GameObject::MaxSecondaryResource)
-			DEFINE_MEMBER_N(kGameObjectStatusFlags StatusFlags, Offsets::GameObject::StatusFlags)
-			DEFINE_MEMBER_N(bool IsUntargetableToEnemies, Offsets::GameObject::IsUntargetableToEnemies)
-			DEFINE_MEMBER_N(bool IsUntargetableToAllies, Offsets::GameObject::IsUntargetableToAllies)
-			DEFINE_MEMBER_N(bool IsTargetable, Offsets::GameObject::IsTargetable)
-			DEFINE_MEMBER_N(float Health, Offsets::GameObject::Health)
-			DEFINE_MEMBER_N(float MaxHealth, Offsets::GameObject::MaxHealth)
-			DEFINE_MEMBER_N(float AllShield, Offsets::GameObject::AllShield)
-			DEFINE_MEMBER_N(float PhysicalShield, Offsets::GameObject::PhysicalShield)
-			DEFINE_MEMBER_N(float MagicalShield, Offsets::GameObject::MagicalShield)
-			DEFINE_MEMBER_N(kGameObjectActionState ActionState, Offsets::GameObject::ActionState)
-			DEFINE_CHARACTER_INTERMEDIATE(PassiveCooldownEndTime)
-			DEFINE_CHARACTER_INTERMEDIATE(PassiveCooldownTotalTime)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentDamageToBarracksMinionMod)	
-			DEFINE_CHARACTER_INTERMEDIATE(FlatDamageReductionFromBarracksMinionMod)
-			DEFINE_CHARACTER_INTERMEDIATE(FlatAttackDamageMod)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentAttackDamageMod)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentBonusAttackDamageMod)
-			DEFINE_CHARACTER_INTERMEDIATE(FlatAbilityPowerMod)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentAbilityPowerMod)
-			DEFINE_CHARACTER_INTERMEDIATE(FlatMagicReduction)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentMagicReduction)
-			DEFINE_CHARACTER_INTERMEDIATE(AttackSpeedMod)
-			DEFINE_CHARACTER_INTERMEDIATE(BaseAttackDamage)
-			DEFINE_CHARACTER_INTERMEDIATE(FlatBaseAttackDamageMod)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentBaseAttackDamageMod)
-			DEFINE_CHARACTER_INTERMEDIATE(BaseAbilityPower)
-			DEFINE_CHARACTER_INTERMEDIATE(Armor)
-			DEFINE_CHARACTER_INTERMEDIATE(BonusArmor)
-			DEFINE_CHARACTER_INTERMEDIATE(MagicResist)
-			DEFINE_CHARACTER_INTERMEDIATE(BonusMagicResist)
-			DEFINE_CHARACTER_INTERMEDIATE(MoveSpeed)
-			DEFINE_CHARACTER_INTERMEDIATE(AttackRange)
-			DEFINE_CHARACTER_INTERMEDIATE(PhysicalLethality)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentArmorPenetration)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentBonusArmorPenetration)
-			DEFINE_CHARACTER_INTERMEDIATE(FlatMagicPenetration)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentMagicPenetration)
-			DEFINE_CHARACTER_INTERMEDIATE(PercentBonusMagicPenetration)
-			DEFINE_MEMBER_N(GameObjectCombatType CombatType, Offsets::GameObject::CombatType)
-			DEFINE_MEMBER_N(std::vector<BuffManager> Buffs, Offsets::GameObject::Buffs)
-			DEFINE_MEMBER_N(CharacterDataStack CharacterDataStack, Offsets::GameObject::CharacterDataStack)
-			DEFINE_MEMBER_N(std::string SkinName, Offsets::GameObject::SkinName)
+				DEFINE_MEMBER_N(unsigned short Id, Offsets::GameObject::Id)
+				DEFINE_MEMBER_N(kGameObjectTeam Team, Offsets::GameObject::Team)
+				DEFINE_MEMBER_N(std::string Name, Offsets::GameObject::Name)
+				DEFINE_MEMBER_N(unsigned int NetworkId, Offsets::GameObject::NetworkId)
+				DEFINE_MEMBER_N(Vector3 Position, Offsets::GameObject::Position)
+				DEFINE_MEMBER_N(bool IsVisible, Offsets::GameObject::IsVisible)
+				DEFINE_MEMBER_N(unsigned short SourceID, Offsets::GameObject::SourceID)
+				DEFINE_MEMBER_N(float Resource, Offsets::GameObject::Resource)
+				DEFINE_MEMBER_N(float MaxResource, Offsets::GameObject::MaxResource)
+				DEFINE_MEMBER_N(GameObjectResourceType ResourceType, Offsets::GameObject::ResourceType)
+				DEFINE_MEMBER_N(float SecondaryResource, Offsets::GameObject::SecondaryResource)
+				DEFINE_MEMBER_N(float MaxSecondaryResource, Offsets::GameObject::MaxSecondaryResource)
+				DEFINE_MEMBER_N(kGameObjectStatusFlags StatusFlags, Offsets::GameObject::StatusFlags)
+				DEFINE_MEMBER_N(bool IsUntargetableToEnemies, Offsets::GameObject::IsUntargetableToEnemies)
+				DEFINE_MEMBER_N(bool IsUntargetableToAllies, Offsets::GameObject::IsUntargetableToAllies)
+				DEFINE_MEMBER_N(bool IsTargetable, Offsets::GameObject::IsTargetable)
+				DEFINE_MEMBER_N(float Health, Offsets::GameObject::Health)
+				DEFINE_MEMBER_N(float MaxHealth, Offsets::GameObject::MaxHealth)
+				DEFINE_MEMBER_N(float AllShield, Offsets::GameObject::AllShield)
+				DEFINE_MEMBER_N(float PhysicalShield, Offsets::GameObject::PhysicalShield)
+				DEFINE_MEMBER_N(float MagicalShield, Offsets::GameObject::MagicalShield)
+				DEFINE_MEMBER_N(kGameObjectActionState ActionState, Offsets::GameObject::ActionState)
+				DEFINE_CHARACTER_INTERMEDIATE(PassiveCooldownEndTime)
+				DEFINE_CHARACTER_INTERMEDIATE(PassiveCooldownTotalTime)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentDamageToBarracksMinionMod)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatDamageReductionFromBarracksMinionMod)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatAttackDamageMod)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentAttackDamageMod)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentBonusAttackDamageMod)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatAbilityPowerMod)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentAbilityPowerMod)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatMagicReduction)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentMagicReduction)
+				DEFINE_CHARACTER_INTERMEDIATE(AttackSpeedMod)
+				DEFINE_CHARACTER_INTERMEDIATE(BaseAttackDamage)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatBaseAttackDamageMod)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentBaseAttackDamageMod)
+				DEFINE_CHARACTER_INTERMEDIATE(BaseAbilityPower)
+				DEFINE_CHARACTER_INTERMEDIATE(Armor)
+				DEFINE_CHARACTER_INTERMEDIATE(BonusArmor)
+				DEFINE_CHARACTER_INTERMEDIATE(MagicResist)
+				DEFINE_CHARACTER_INTERMEDIATE(BonusMagicResist)
+				DEFINE_CHARACTER_INTERMEDIATE(MoveSpeed)
+				DEFINE_CHARACTER_INTERMEDIATE(AttackRange)
+				DEFINE_CHARACTER_INTERMEDIATE(PhysicalLethality)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentArmorPenetration)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentBonusArmorPenetration)
+				DEFINE_CHARACTER_INTERMEDIATE(FlatMagicPenetration)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentMagicPenetration)
+				DEFINE_CHARACTER_INTERMEDIATE(PercentBonusMagicPenetration)
+				DEFINE_MEMBER_N(GameObjectCombatType CombatType, Offsets::GameObject::CombatType)
+				DEFINE_MEMBER_N(std::vector<BuffManager> Buffs, Offsets::GameObject::Buffs)
+				DEFINE_MEMBER_N(CharacterDataStack CharacterDataStack, Offsets::GameObject::CharacterDataStack)
+				DEFINE_MEMBER_N(std::string SkinName, Offsets::GameObject::SkinName)
 
 
-			DEFINE_MEMBER_N(SpellbookClient Spellbook, Offsets::GameObject::Spellbook)
+				DEFINE_MEMBER_N(SpellbookClient Spellbook, Offsets::GameObject::Spellbook)
 
-			//MISSILE CLIENT
-			DEFINE_MEMBER_N(SpellData* MissileSpellInfo, Offsets::MissileClient::MissileSpellCastInfo)
-			DEFINE_MEMBER_N(unsigned short MissileSourceId, Offsets::MissileClient::SourceId)
-			DEFINE_MEMBER_N(unsigned int MissileNetworkId, Offsets::MissileClient::NetworkId)
-			DEFINE_MEMBER_N(unsigned short MissileTargetId, Offsets::MissileClient::TargetId)
-			DEFINE_MEMBER_N(Vector3 MissileStartPosition, Offsets::MissileClient::StartPos)
-			DEFINE_MEMBER_N(Vector3 MissileEndPosition, Offsets::MissileClient::EndPos)
-			DEFINE_MEMBER_N(float MissileCastDelay, Offsets::MissileClient::CastDelay)
-			DEFINE_MEMBER_N(float MissileDelay, Offsets::MissileClient::Delay)
-			DEFINE_MEMBER_N(bool MissileIsBasicAttack, Offsets::MissileClient::IsBasicAttack)
-			DEFINE_MEMBER_N(kSpellSlot MissileSlot, Offsets::MissileClient::Slot)
-			DEFINE_MEMBER_N(float MissileStartTime, Offsets::MissileClient::StartTime)
+				//MISSILE CLIENT
+				DEFINE_MEMBER_N(SpellData* MissileSpellInfo, Offsets::MissileClient::MissileSpellCastInfo)
+				DEFINE_MEMBER_N(unsigned short MissileSourceId, Offsets::MissileClient::SourceId)
+				DEFINE_MEMBER_N(unsigned int MissileNetworkId, Offsets::MissileClient::NetworkId)
+				DEFINE_MEMBER_N(unsigned short MissileTargetId, Offsets::MissileClient::TargetId)
+				DEFINE_MEMBER_N(Vector3 MissileStartPosition, Offsets::MissileClient::StartPos)
+				DEFINE_MEMBER_N(Vector3 MissileEndPosition, Offsets::MissileClient::EndPos)
+				DEFINE_MEMBER_N(float MissileCastDelay, Offsets::MissileClient::CastDelay)
+				DEFINE_MEMBER_N(float MissileDelay, Offsets::MissileClient::Delay)
+				DEFINE_MEMBER_N(bool MissileIsBasicAttack, Offsets::MissileClient::IsBasicAttack)
+				DEFINE_MEMBER_N(kSpellSlot MissileSlot, Offsets::MissileClient::Slot)
+				DEFINE_MEMBER_N(float MissileStartTime, Offsets::MissileClient::StartTime)
 
-			DEFINE_MEMBER_N(HACKUZAN::CharacterData* CharacterData, Offsets::GameObject::CharacterData)
-			DEFINE_MEMBER_N(HACKUZAN::CharacterData* BaseCharacterData, Offsets::GameObject::BaseCharacterData)
-			DEFINE_MEMBER_N(SpellCastInfo* AttackData, Offsets::GameObject::AttackData)
-			DEFINE_EXPERIENCE(unsigned int, Level)
-			DEFINE_MEMBER_N(HeroInventoryCommon HeroInventory, Offsets::GameObject::HeroInventory)
+				DEFINE_MEMBER_N(HACKUZAN::CharacterData* CharacterData, Offsets::GameObject::CharacterData)
+				DEFINE_MEMBER_N(HACKUZAN::CharacterData* BaseCharacterData, Offsets::GameObject::BaseCharacterData)
+				DEFINE_MEMBER_N(SpellCastInfo* AttackData, Offsets::GameObject::AttackData)
+				DEFINE_EXPERIENCE(unsigned int, Level)
+				DEFINE_MEMBER_N(HeroInventoryCommon HeroInventory, Offsets::GameObject::HeroInventory)
 		};
-			DEFINE_MEMBER_ENCRYPTED(ClassData*, GetClassData, Offsets::GameObject::ClassData)
+		DEFINE_MEMBER_ENCRYPTED(ClassData*, GetClassData, Offsets::GameObject::ClassData)
 			DEFINE_MEMBER_ENCRYPTED(kGameObjectFlags, Flags, Offsets::GameObject::Flags)
 			DEFINE_MEMBER_ENCRYPTED_BOOLEAN(IsDead, Offsets::GameObject::IsDead)
 
 			//ManagerTemplate
 			template<typename T>
-			struct SEntityList
-			{
-				char pad_0000[0x4]; //0x0000
-				T** entities;
-				size_t size;
-				size_t max_size;
-			};
+		struct SEntityList
+		{
+			char pad_0000[0x4]; //0x0000
+			T** entities;
+			size_t size;
+			size_t max_size;
+		};
 
 
-			static SEntityList<GameObject>* GetHeroes()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Heroes);
-			}
-			static SEntityList<GameObject>* GetMinions()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Minions);
-			}
-			static SEntityList<GameObject>* GetTurrets()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Turrets);
-			}
-			static SEntityList<GameObject>* GetInhibitor()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Inhibitor);
-			}
-			static SEntityList<GameObject>* GetAIBases()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::AIBases);
-			}
-			static SEntityList<GameObject>* GetMissiles()
-			{
-				return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Missiles);
-			}
+		static SEntityList<GameObject>* GetHeroes()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Heroes);
+		}
+		static SEntityList<GameObject>* GetMinions()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Minions);
+		}
+		static SEntityList<GameObject>* GetTurrets()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Turrets);
+		}
+		static SEntityList<GameObject>* GetInhibitor()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Inhibitor);
+		}
+		static SEntityList<GameObject>* GetAIBases()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::AIBases);
+		}
+		static SEntityList<GameObject>* GetMissiles()
+		{
+			return *reinterpret_cast<SEntityList<GameObject>**>(baseAddr + (DWORD)Offsets::ManagerTemplate::Missiles);
+		}
 
 
 		//VTable functions
 		float GetBoundingRadius();
 		PathControllerCommon* GetPathController();
 		Navigation* GameObject::AIManager();
-		
+
 		//Functions
 		float GetAttackCastDelay();
 		float GetAttackDelay();
@@ -257,6 +257,7 @@ namespace HACKUZAN
 		void OverrideIssueOrder(GameObjectOrder order, Vector3* position);
 		void EvadeIssueOrder(GameObjectOrder order, Vector3* position);
 		void EvadeIssueOrderHoldPos(GameObjectOrder order, Vector3* position);
+		void UpdateChargeableSpell(kSpellSlot slot, Vector3* pPosition, bool ReleaseCast);
 
 		//Extensions
 		bool IsMe();
@@ -281,6 +282,7 @@ namespace HACKUZAN
 		bool IsBaseAI();
 		bool IsMinion();
 		bool IsHero();
+		bool IsNotWall();
 		bool IsTurret();
 		bool IsMissile();
 		bool IsInvulnerable();
@@ -350,6 +352,7 @@ namespace HACKUZAN
 		bool Minion();
 		bool Alive();
 		bool Hero();
+		bool NotWall();
 		bool Missile();
 		bool Nexus();
 

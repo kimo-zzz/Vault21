@@ -138,7 +138,7 @@ namespace HACKUZAN
 		}
 	}
 
-	void GameObject::UpdateChargeableSpell(/*SpellBook* pSpellBook, Spell* pSpellslot, */kSpellSlot slot, Vector3* pPosition, bool ReleaseCast)
+	void GameObject::UpdateChargeableSpell(kSpellSlot slot, Vector3* pPosition, bool ReleaseCast)
 	{
 		if ((!(DWORD)LeagueFunctions::NewUpdateChargableSpell) || (!LeagueFunctions::IsDonePatchingUpdateChargableSpell))
 			return;

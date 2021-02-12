@@ -4,7 +4,7 @@
 #include "SpellDataScript.h"
 #include "SpellDataResource.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class SpellData
 	{

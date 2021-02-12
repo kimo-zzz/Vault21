@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		float QRange = 0;
 
@@ -40,7 +40,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Xerath::Initialize()
+		void V21::Plugins::Xerath::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Xerath", "Xerath");
 
@@ -163,7 +163,7 @@ namespace HACKUZAN {
 		GameObject* Xerath::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

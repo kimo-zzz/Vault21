@@ -6,7 +6,7 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Renderer {
 		extern ImDrawList* DrawList;
 		extern ImFont* DefaultFont;

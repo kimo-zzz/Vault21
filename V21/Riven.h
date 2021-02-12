@@ -9,7 +9,7 @@
 #include "Functions.h"
 #include "Menu.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace Plugins
 	{

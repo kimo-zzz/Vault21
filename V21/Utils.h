@@ -3,7 +3,7 @@
 #include "Vector3.h"
 #include "NavGrid.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	Vector3 Get3DPoint(Vector2 const& Position)
 	{

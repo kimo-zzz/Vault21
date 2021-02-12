@@ -12,7 +12,7 @@
 #include "Riven.h"
 #include "Jax.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	void Plugins::Initialize() {
 
 		//SkinChanger::Initialize();

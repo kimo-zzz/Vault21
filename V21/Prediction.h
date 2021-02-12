@@ -6,7 +6,7 @@
 #include "ManagerTemplate.h"
 
 
-namespace HACKUZAN {
+namespace V21 {
 
 	class PredOutPut
 	{
@@ -63,7 +63,7 @@ namespace HACKUZAN {
 			SArray<GameObject*> Minions;
 			SArray<GameObject*> AllUnits;
 
-			auto aibase_list = HACKUZAN::GameObject::GetAIBases();
+			auto aibase_list = V21::GameObject::GetAIBases();
 			for (size_t i = 0; i < aibase_list->size; i++)
 			{
 				auto unit = aibase_list->entities[i];
@@ -105,7 +105,7 @@ namespace HACKUZAN {
 		{
 			GameObject* Wall;
 			SArray<GameObject*> AllUnits;
-			auto aibase_list = HACKUZAN::GameObject::GetAIBases();
+			auto aibase_list = V21::GameObject::GetAIBases();
 			for (size_t i = 0; i < aibase_list->size; i++)
 			{
 				auto unit = aibase_list->entities[i];

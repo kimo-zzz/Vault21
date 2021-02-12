@@ -3,7 +3,7 @@
 #include "EvadeMath.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	namespace Plugins {
 

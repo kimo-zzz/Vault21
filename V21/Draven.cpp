@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 		DelayAction* Delay = nullptr;
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		SArray<GameObject*> DravenAxesObject;
 		SArray<GameObject*> DravenAxesMissileOne; 
@@ -55,7 +55,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Draven::Initialize()
+		void V21::Plugins::Draven::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Draven", "Draven");
 

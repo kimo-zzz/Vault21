@@ -20,8 +20,8 @@
 #include "Orbwalker.h"
 
 CConsole Console;
-using namespace HACKUZAN;
-using namespace HACKUZAN::SDK;
+using namespace V21;
+using namespace V21::SDK;
 
 bool Ready = true;
 

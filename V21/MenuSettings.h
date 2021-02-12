@@ -2,7 +2,7 @@
 
 #include "Menu.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		namespace MenuSettings {
 			extern int BackgroundOpacity;

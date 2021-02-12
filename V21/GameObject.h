@@ -18,7 +18,7 @@
 #include "MissileClient.h"
 #include "Template.h"
 
-namespace HACKUZAN
+namespace V21
 {
 
 	enum kGameObjectTeam
@@ -184,8 +184,8 @@ namespace HACKUZAN
 				DEFINE_MEMBER_N(kSpellSlot MissileSlot, Offsets::MissileClient::Slot)
 				DEFINE_MEMBER_N(float MissileStartTime, Offsets::MissileClient::StartTime)
 
-				DEFINE_MEMBER_N(HACKUZAN::CharacterData* CharacterData, Offsets::GameObject::CharacterData)
-				DEFINE_MEMBER_N(HACKUZAN::CharacterData* BaseCharacterData, Offsets::GameObject::BaseCharacterData)
+				DEFINE_MEMBER_N(V21::CharacterData* CharacterData, Offsets::GameObject::CharacterData)
+				DEFINE_MEMBER_N(V21::CharacterData* BaseCharacterData, Offsets::GameObject::BaseCharacterData)
 				DEFINE_MEMBER_N(SpellCastInfo* AttackData, Offsets::GameObject::AttackData)
 				DEFINE_EXPERIENCE(unsigned int, Level)
 				DEFINE_MEMBER_N(HeroInventoryCommon HeroInventory, Offsets::GameObject::HeroInventory)

@@ -3,7 +3,7 @@
 #include "NavGridCellFlags.h"
 
 
-namespace HACKUZAN {
+namespace V21 {
 
 	class NavGridCell
 	{

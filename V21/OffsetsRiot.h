@@ -2,7 +2,7 @@
 
 //9.8
 
-namespace HACKUZAN {
+namespace V21 {
 
 	namespace Offsets {
 

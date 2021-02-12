@@ -4,7 +4,7 @@
 #include "Vector2.h"
 #include "HudCursorTargetLogic.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class HudManager
 	{

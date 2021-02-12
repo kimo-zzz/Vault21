@@ -4,7 +4,7 @@
 #include "CharacterDataStack.h"
 #include "GameObject.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	typedef float(__thiscall* fnGetGameTime)(DWORD* frameClock);
 	typedef const char* (__cdecl* fnTranslateString)(const char* str);
 	typedef unsigned int(__thiscall* fnGetPing)(NetClient* netClient);

@@ -210,7 +210,7 @@ LONG WINAPI UltimateHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 	*/
 	if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
 	{
-		//if((DWORD)HACKUZAN::Globals::HiddenModule >= pExceptionInfo->ContextRecord->XIP)
+		//if((DWORD)V21::Globals::HiddenModule >= pExceptionInfo->ContextRecord->XIP)
 		//	return EXCEPTION_CONTINUE_SEARCH;
 
 		for (HookEntries hs : hookEntries)
@@ -551,7 +551,7 @@ void UltimateHooks::FixRellocation(DWORD OldFnAddress, DWORD OldFnAddressEnd, DW
 		//AppLog.AddLog("\n");
 
 		std::string mnemonic(buffer);
-		//HACKUZAN::GameClient::PrintChat(buffer, IM_COL32(255, 69, 0, 255));
+		//V21::GameClient::PrintChat(buffer, IM_COL32(255, 69, 0, 255));
 		if (mnemonic.find("call 0x") != std::string::npos) {
 			//AppLog.AddLog("%08" PRIX32 " ", (runtime_address));
 			//AppLog.AddLog(buffer);

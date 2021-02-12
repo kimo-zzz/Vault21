@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ObjectManager.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	ObjectManager* ObjectManager::Instance;
 	GameObject* ObjectManager::Player;

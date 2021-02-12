@@ -10,7 +10,7 @@
 #include "MenuSettings.h"
 #include "Damage.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		std::vector<GameObject*> TargetSelector::Enemies;
 		std::unordered_map<Character, unsigned int> TargetSelector::Priorities =
@@ -174,7 +174,7 @@ namespace HACKUZAN {
 		}
 
 		void TargetSelector::Initialize() {
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; ++i)
 			{
 				auto hero = hero_list->entities[i];
@@ -294,7 +294,7 @@ namespace HACKUZAN {
 			case TargetType::TSTARGET_HEROES: {
 				std::vector<GameObject*> validTargets;
 
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; ++i)
 				{
 					auto hero = hero_list->entities[i];
@@ -308,7 +308,7 @@ namespace HACKUZAN {
 			case TargetType::TSTARGET_MINION: {
 				std::vector<GameObject*> validTargets;
 
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; ++i)
 				{
 					auto minion = minion_list->entities[i];

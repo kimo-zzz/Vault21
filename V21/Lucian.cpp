@@ -5,13 +5,13 @@
 #include "Geometry.h"
 #include "RenderLayer.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace LucianConfig {
 
@@ -37,7 +37,7 @@ namespace HACKUZAN {
 
 		}
 
-		void HACKUZAN::Plugins::Lucian::Initialize()
+		void V21::Plugins::Lucian::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Lucian", "Lucian");
 
@@ -251,7 +251,7 @@ namespace HACKUZAN {
 		GameObject* Lucian::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

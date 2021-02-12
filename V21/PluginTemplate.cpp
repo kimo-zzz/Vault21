@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace ChampionConfig {
 
@@ -36,7 +36,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::ChampionName::Initialize()
+		void V21::Plugins::ChampionName::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Template", "Template");
 
@@ -132,7 +132,7 @@ namespace HACKUZAN {
 		GameObject* ChampionName::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

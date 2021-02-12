@@ -3,7 +3,7 @@
 #include "Offsets.h"
 #include "ItemData.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class ItemInfo
 	{

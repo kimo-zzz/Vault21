@@ -15,7 +15,7 @@
 #include "Geometry.h"
 #include "Utils.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 
 	namespace SDK {
@@ -460,7 +460,7 @@ namespace HACKUZAN {
 			/*
 			if (caster != nullptr && caster->IsEnemy() && Contains(spellData->SpellName, "YasuoWMovingWall", false))
 			{
-				HACKUZAN::PredLastYasuoWallCastPos = caster->Position;
+				V21::PredLastYasuoWallCastPos = caster->Position;
 			}
 			*/
 			if (caster == ObjectManager::Player) {
@@ -612,7 +612,7 @@ namespace HACKUZAN {
 			}
 
 			if (Config::Drawings::EnemyAttackRange->Value) {
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -686,7 +686,7 @@ namespace HACKUZAN {
 			bool isLaneClearMinion = true;
 			const int missileSpeed = GetAttackMissileSpeed();
 
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -719,7 +719,7 @@ namespace HACKUZAN {
 					}
 				}
 
-				auto turret_list = HACKUZAN::GameObject::GetTurrets();
+				auto turret_list = V21::GameObject::GetTurrets();
 				for (size_t i = 0; i < turret_list->size; i++)
 				{
 					auto turret = turret_list->entities[i];
@@ -877,7 +877,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Hero: {
 				if (IsAzir) {
 					std::vector<GameObject*> soldierTargets;
-					auto hero_list = HACKUZAN::GameObject::GetHeroes();
+					auto hero_list = V21::GameObject::GetHeroes();
 					for (size_t i = 0; i < hero_list->size; i++)
 					{
 						auto hero = hero_list->entities[i];
@@ -901,7 +901,7 @@ namespace HACKUZAN {
 				}
 
 				std::vector<GameObject*> heroes;
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -916,7 +916,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Monster: {
 				GameObject* monster = nullptr;
 				float highestMaxHealth = 0.0f;
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
 					auto minion = minion_list->entities[i];
@@ -932,7 +932,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Minion: {
 				auto supportMode = false;
 				if (Config::Configuration::SupportMode->Value) {
-					auto hero_list = HACKUZAN::GameObject::GetHeroes();
+					auto hero_list = V21::GameObject::GetHeroes();
 					for (size_t i = 0; i < hero_list->size; i++)
 					{
 						auto hero = hero_list->entities[i];
@@ -960,7 +960,7 @@ namespace HACKUZAN {
 				break;
 			}
 			case OrbwalkerTargetType::Structure: {
-				auto aibase_list = HACKUZAN::GameObject::GetAIBases();
+				auto aibase_list = V21::GameObject::GetAIBases();
 				for (size_t i = 0; i < aibase_list->size; i++)
 				{
 					auto unit = aibase_list->entities[i];
@@ -982,7 +982,7 @@ namespace HACKUZAN {
 
 		/*bool Orbwalker::ShouldWait() {
 
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -1000,7 +1000,7 @@ namespace HACKUZAN {
 
 		bool Orbwalker::ShouldWaitUnderTurret(GameObject* noneKillableMinion)
 		{
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];

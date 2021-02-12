@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		class IncomingAttack {
 		public:

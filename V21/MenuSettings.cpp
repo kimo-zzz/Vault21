@@ -2,7 +2,7 @@
 #include "MenuSettings.h"
 #include "Menu.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		int MenuSettings::BackgroundOpacity = 160;
 		bool MenuSettings::DrawMenu = false;

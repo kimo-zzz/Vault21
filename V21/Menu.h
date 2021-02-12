@@ -7,7 +7,7 @@
 #include "List.h"
 #include "Slider.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		class Menu : public MenuComponent {
 		private:

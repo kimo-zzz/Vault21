@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "SpellData.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum class SpellToggleState
 	{
@@ -28,7 +28,7 @@ namespace HACKUZAN
 			DEFINE_MEMBER_N(float fEffect9, Offsets::SpellDataInst::fEffect9)
 			DEFINE_MEMBER_N(float fEffect10, Offsets::SpellDataInst::fEffect10)
 			DEFINE_MEMBER_N(float fEffect11, Offsets::SpellDataInst::fEffect11)
-			DEFINE_MEMBER_N(HACKUZAN::SpellData* SpellData, Offsets::SpellDataInst::SpellData)
+			DEFINE_MEMBER_N(V21::SpellData* SpellData, Offsets::SpellDataInst::SpellData)
 		};
 
 		struct SpellTargetingClient

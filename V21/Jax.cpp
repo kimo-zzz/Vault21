@@ -5,12 +5,12 @@
 #include "Geometry.h"
 #include "Jax.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace Plugins 
 	{
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace Config
 		{
@@ -61,7 +61,7 @@ namespace HACKUZAN
 			GameObject* GetTarget(float radius)
 			{
 				std::vector<GameObject*> heroes;
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -76,7 +76,7 @@ namespace HACKUZAN
 			GameObject* GetMinionTarget(float radius)
 			{
 				std::vector<GameObject*> minions;
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
 					auto hero = minion_list->entities[i];

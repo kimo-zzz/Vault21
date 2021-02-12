@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN
+namespace V21
 {
 
 	std::vector<StopCast*>Args;

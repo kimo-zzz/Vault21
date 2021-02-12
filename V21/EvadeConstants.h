@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include "EnumMacro.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	enum SpellType
 	{
 		kLine,

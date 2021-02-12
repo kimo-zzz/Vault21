@@ -2,7 +2,7 @@
 #include "Draw.h"
 
 
-namespace HACKUZAN {
+namespace V21 {
 	CDraw Draw;
 
 	void CDraw::Reset()

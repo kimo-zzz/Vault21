@@ -4,7 +4,7 @@
 #include <tchar.h>
 
 
-namespace HACKUZAN {
+namespace V21 {
 
 	/*
 	DWORD_PTR PIDManager::GetModuleBase(DWORD dwPid, LPCTSTR szModName)

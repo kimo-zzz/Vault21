@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "TeleportEventArgs.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		namespace Events {
 

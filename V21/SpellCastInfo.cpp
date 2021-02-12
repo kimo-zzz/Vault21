@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SpellCastInfo.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	bool SpellCastInfo::IsAutoAttack()
 	{

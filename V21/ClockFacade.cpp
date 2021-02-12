@@ -2,7 +2,7 @@
 #include "ClockFacade.h"
 #include "Functions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	//ClockFacade* ClockFacade::Instance;
 

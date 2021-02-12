@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		enum kOrbwalkerMode {
 			OrbwalkerMode_None = 0,

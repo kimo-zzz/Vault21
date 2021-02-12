@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	class PIDManager
 	{
 	public:

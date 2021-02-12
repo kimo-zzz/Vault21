@@ -4,9 +4,9 @@
 #include "SpellDB.h"
 #include "EvaderDB.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
-	using namespace HACKUZAN::SDK;
+	using namespace V21::SDK;
 	namespace Config {
 
 		namespace EvadeMenu {
@@ -104,7 +104,7 @@ namespace HACKUZAN {
 			auto EvadeSkillShotMenu = EvadeMenu->AddMenu("SkillShot setting", "SkillShot setting");
 			for (auto skillshot_data : SpellDb::spells)
 			{
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];

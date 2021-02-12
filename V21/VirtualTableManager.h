@@ -2,7 +2,7 @@
 
 #include "Globals.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	class VirtualTableManager {
 	private:
 		HMODULE m_hModule;

@@ -7,7 +7,7 @@
 #include <map>
 #define PI 3.14159265f
 
-namespace HACKUZAN {
+namespace V21 {
 
 	//lay khoang cach ne may ban
 	inline Vector2 ToVec2(Vector3 vec)

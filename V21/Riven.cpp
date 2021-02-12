@@ -5,7 +5,7 @@
 #include "Geometry.h"
 #include "RenderLayer.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 		/// <summary>
@@ -16,9 +16,9 @@ namespace HACKUZAN {
 		/// R2: RivenIzunaBlade
 		/// </summary>
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
-		using namespace HACKUZAN::SDK::TargetSelector;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
+		using namespace V21::SDK::TargetSelector;
 
 		namespace Riven
 		{

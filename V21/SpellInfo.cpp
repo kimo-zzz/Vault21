@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SpellInfo.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	bool SpellInfo::IsAutoAttack()
 	{

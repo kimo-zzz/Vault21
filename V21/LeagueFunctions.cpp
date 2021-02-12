@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "include/Zydis/Zydis.h"
-using namespace HACKUZAN;
+using namespace V21;
 
 //extern ExampleAppLog AppLog;
 
@@ -18,15 +18,15 @@ bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 bool LeagueFunctions::IsDonePatchingUpdateChargableSpell = false;
 
-DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::IssueOrderTrueReturn));
+DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::IssueOrderTrueReturn));
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
-DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueCastSpellReturn));
+DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::TrueCastSpellReturn));
 DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
 DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
 
-DWORD* LeagueFunctions::TrueUpdateChargableSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueUpdateChargableSpellReturn));
+DWORD* LeagueFunctions::TrueUpdateChargableSpellReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::TrueUpdateChargableSpellReturn));
 DWORD LeagueFunctions::UpdateChargableSpellStartHookGateway = 0;
 DWORD LeagueFunctions::UpdateChargableSpellEndHookGateway = 0;
 

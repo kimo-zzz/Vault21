@@ -5,7 +5,7 @@
 #include "EventManager.h"
 #include "Menu.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	HRESULT Direct3D10SwapChain(HMODULE d3d10_dll, HWND hWnd, ComPtr<IDXGISwapChain>& swap_chain, ComPtr<ID3D10Device>& device);
 	HRESULT Direct3D11SwapChain(HMODULE d3d11_dll, HWND hWnd, ComPtr<IDXGISwapChain>& swap_chain, ComPtr<ID3D11DeviceContext>& context);
 #if (WINVER >= 0x0A00 )   
@@ -330,7 +330,7 @@ namespace HACKUZAN {
 			HudManager::CursorPos2D.X = (short)lParam;
 			HudManager::CursorPos2D.Y = (short)(lParam >> 16);
 		}
-		HACKUZAN::SDK::Menu::OnWndProc(uMsg, wParam);
+		V21::SDK::Menu::OnWndProc(uMsg, wParam);
 		EventManager::Trigger(LeagueEvents::OnWndProc, uMsg, wParam);
 
 		return CallWindowProc(OriginalWndProcHandler, hWnd, uMsg, wParam, lParam);

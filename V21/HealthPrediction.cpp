@@ -7,7 +7,7 @@
 #include "NetClient.h"
 #include "Renderer.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		std::vector<IncomingAttack> HealthPrediction::IncomingAttacks;
 

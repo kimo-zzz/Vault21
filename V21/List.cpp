@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include "HudManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		List::List(const char* name, const char* displayName, std::vector<std::string> items, unsigned int defaultIndex, std::function<void(List*, unsigned int)> callback) {
 			strncpy(this->Name, name, sizeof(this->Name));

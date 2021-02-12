@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Globals {
 		extern HWND MainWindow;
 		extern HMODULE MainModule;

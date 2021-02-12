@@ -3,7 +3,7 @@
 #include "Offsets.h"
 #include "ItemInfo.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class InventorySlot
 	{

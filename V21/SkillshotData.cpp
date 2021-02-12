@@ -1,6 +1,6 @@
 #include "SkillshotData.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	SkillshotData::SkillshotData()
 	{

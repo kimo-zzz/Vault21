@@ -2,7 +2,7 @@
 #include "Damage.h"
 #include "ObjectManager.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace SDK
 	{

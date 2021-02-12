@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		float eBaseDmg[] = { 0.f, 20.f,30.f,40.f,50.f,60.f };
 
@@ -54,7 +54,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Twitch::Initialize()
+		void V21::Plugins::Twitch::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Twitch", "Twitch");
 
@@ -141,7 +141,7 @@ namespace HACKUZAN {
 		int Twitch::CountEnemiesInRange(float range)
 		{
 			auto count = 0;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];
@@ -238,7 +238,7 @@ namespace HACKUZAN {
 		GameObject* Twitch::GetTarget(int radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];
@@ -253,7 +253,7 @@ namespace HACKUZAN {
 		GameObject* Twitch::GetLasthitTarget(int radius)
 		{
 			std::vector<GameObject*> minions;
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -285,7 +285,7 @@ namespace HACKUZAN {
 		{
 
 
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

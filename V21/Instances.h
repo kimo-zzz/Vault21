@@ -1,6 +1,6 @@
 #pragma once
 
-namespace HACKUZAN {
+namespace V21 {
 
 	namespace Instances {
 		void Initialize();

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Damage.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		enum class TargetSelectorMode {
 			Auto,

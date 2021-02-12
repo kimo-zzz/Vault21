@@ -4,9 +4,9 @@
 #include "Functions.h"
 #include "Menu.h"
 
-using namespace HACKUZAN::SDK;
+using namespace V21::SDK;
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 		
 

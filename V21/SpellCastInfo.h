@@ -4,7 +4,7 @@
 #include "SpellData.h"
 #include "Vector3.h"
 
-namespace HACKUZAN
+namespace V21
 {
 
 	class SpellCastInfo
@@ -12,8 +12,8 @@ namespace HACKUZAN
 	public:
 		union
 		{
-			DEFINE_MEMBER_0(HACKUZAN::SpellData* BasicAttackSpellData)
-			DEFINE_MEMBER_N(HACKUZAN::SpellData* SpellData, Offsets::SpellCastInfo::SpellInfo)
+			DEFINE_MEMBER_0(V21::SpellData* BasicAttackSpellData)
+			DEFINE_MEMBER_N(V21::SpellData* SpellData, Offsets::SpellCastInfo::SpellInfo)
 			DEFINE_MEMBER_N(unsigned int Level, Offsets::SpellCastInfo::Level)
 			DEFINE_MEMBER_N(Vector3 StartPosition, Offsets::SpellCastInfo::StartPosition)
 			DEFINE_MEMBER_N(Vector3 EndPosition, Offsets::SpellCastInfo::EndPosition)

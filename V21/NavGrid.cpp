@@ -3,7 +3,7 @@
 #include "ObjectManager.h"
 #include "Functions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	NavGrid* NavGrid::Instance;
 

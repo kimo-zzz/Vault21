@@ -2,7 +2,7 @@
 #include "NetClient.h"
 #include "Functions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	NetClient* NetClient::Instance;
 

@@ -11,7 +11,7 @@
 
 #define PI 3.14159265f
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 		namespace Activator {
 			void Initialize();

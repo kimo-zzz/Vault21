@@ -75,6 +75,9 @@ namespace HACKUZAN {
 			void OnGameUpdate();
 			void OnDraw();
 
+			void LasthitLogic();
+			void LaneclearLogic();
+			
 			void ResetAutoAttack();
 			Vector3 GetOrbwalkPosition();
 			GameObject* GetTarget();

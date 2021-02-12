@@ -12,6 +12,7 @@
 #include "TargetSelector.h"
 #include "HealthPrediction.h"
 #include "Evade.h"
+#include "Geometry.h"
 #include "Utils.h"
 
 namespace HACKUZAN {
@@ -524,6 +525,7 @@ namespace HACKUZAN {
 
 		void Orbwalker::OnNewPath(NewPath* args) {
 
+
 			if (args != nullptr) {
 
 				PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
@@ -572,7 +574,6 @@ namespace HACKUZAN {
 
 		void Orbwalker::OnGameUpdate() {
 
-
 			Delay->OnGameUpdate();
 
 			if (LastTarget && !LastTarget->IsValidTarget()) {
@@ -583,86 +584,16 @@ namespace HACKUZAN {
 			AlmostLastHitMinion = nullptr;
 			LaneClearMinion = nullptr;
 
-			if (ActiveMode != OrbwalkerMode_None || Config::Drawings::LasthittableMinions->Value) {
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
-				for (size_t i = 0; i < minion_list->size; i++)
-				{
-
-					auto minion = minion_list->entities[i];
-
-					if (!minion || minion->Team == GameObjectTeam_Neutral || minion->Team == ObjectManager::Player->Team || !ObjectManager::Player->IsInAutoAttackRange(minion) || !minion->IsValidTarget()) {
-						continue;
-					}
-
-
-					auto attackCastDelay = GetAttackCastDelay(minion);
-					auto attackMissileSpeed = GetAttackMissileSpeed();
-					auto lastHitHealth = minion->Health;
-					auto laneClearHealth = lastHitHealth;
-
-					auto LastHitMinion_lastHitHealth = FLT_MAX;
-					auto AlmostLastHitMinion_laneClearHealth = FLT_MAX;
-					auto LaneClearMinion_laneClearHealth = 0;
-					
-					auto t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2
-						+ 1000 * (int)std::max(0.0f, ObjectManager::Player->Position.Distance(minion->Position) - ObjectManager::Player->GetBoundingRadius())
-						/ (int)attackMissileSpeed;
-					
-					lastHitHealth = HealthPrediction::GetHealthPrediction(minion, t, Config::Farming::ExtraFarmDelay->Value);
-					laneClearHealth = HealthPrediction::LaneClearHealthPrediction(minion, ObjectManager::Player->GetAttackDelay() * 1000 * 2.0f, Config::Farming::ExtraFarmDelay->Value);
-					auto health = laneClearHealth; // lastHitHealth if turret is targetting
-					auto attackDamage = Damage::CalculateAutoAttackDamage(ObjectManager::Player, minion);
-					
-					if (lastHitHealth > 0 && lastHitHealth < attackDamage) {
-						if (!LastHitMinion || (minion->MaxHealth == LastHitMinion->MaxHealth ? lastHitHealth < LastHitMinion_lastHitHealth : minion->MaxHealth > LastHitMinion->MaxHealth)) {
-							LastHitMinion = minion;
-							LastHitMinion_lastHitHealth = lastHitHealth;
-						}
-					}
-					else if (health <= (minion->IsSiegeMinion() ? 2.0f : 1.5f) * attackDamage && health < minion->Health) {
-						if (!AlmostLastHitMinion || (minion->MaxHealth == AlmostLastHitMinion->MaxHealth ? laneClearHealth < AlmostLastHitMinion_laneClearHealth : minion->MaxHealth > AlmostLastHitMinion->MaxHealth)) {
-							AlmostLastHitMinion = minion;
-							AlmostLastHitMinion_laneClearHealth = laneClearHealth;
-						}
-					}
-					else if (ActiveMode & OrbwalkerMode_LaneClear) {
-						bool isLaneClearMinion = true;
-						auto turret_list = HACKUZAN::GameObject::GetTurrets();
-						for (size_t i = 0; i < turret_list->size; i++)
-						{
-							auto turret = turret_list->entities[i];
-							if (turret->IsAlly() && turret->IsValidTarget() && turret->Position.Distance(minion->Position) <= 900) {
-								if (laneClearHealth == minion->Health) {
-									auto turretDamage = Damage::CalculateAutoAttackDamage(turret, minion);
-									for (auto minionHealth = minion->Health; minionHealth > 0.0f && turretDamage > 0.0f; minionHealth -= turretDamage) {
-										if (minionHealth <= attackDamage) {
-											isLaneClearMinion = false;
-											break;
-										}
-									}
-									if (!LaneClearMinion || (Config::Farming::PushPriority->Value ? laneClearHealth < LaneClearMinion_laneClearHealth : laneClearHealth > LaneClearMinion_laneClearHealth)) {
-										LaneClearMinion = minion;
-										LaneClearMinion_laneClearHealth = laneClearHealth;
-									}
-								}
-								isLaneClearMinion = false;
-								break;
-							}
-						}
-
-						if (!isLaneClearMinion) {
-							continue;
-						}
-
-						if (laneClearHealth >= 2.0f * attackDamage || laneClearHealth == minion->Health) {
-							if (!LaneClearMinion || (Config::Farming::PushPriority->Value ? laneClearHealth < LaneClearMinion_laneClearHealth : laneClearHealth > LaneClearMinion_laneClearHealth)) {
-								LaneClearMinion = minion;
-								LaneClearMinion_laneClearHealth = laneClearHealth;
-							}
-						}
-					}
-				}
+			switch (ActiveMode)
+			{
+			case OrbwalkerMode_LastHit:
+				LasthitLogic();
+				break;
+			case OrbwalkerMode_LaneClear:
+				LaneclearLogic();
+				break;
 			}
+
 
 			if (ActiveMode != OrbwalkerMode_None) {
 				OrbwalkTo(GetOrbwalkPosition());
@@ -710,6 +641,125 @@ namespace HACKUZAN {
 					}
 				}
 			}
+		}
+
+		void Orbwalker::LasthitLogic()
+		{
+			const int missileSpeed = GetAttackMissileSpeed();
+			auto minionList_ = GameObject::GetMinions();
+			std::vector<GameObject*> list;
+			for (size_t i = 0; i < minionList_->size; i++)
+			{
+
+				GameObject* minion = minionList_->entities[i];
+
+				if (!minion || !minion->IsValidTarget(ObjectManager::Player->GetAutoAttackRange(minion), true, ObjectManager::Player->ServerPosition()))
+					continue;
+
+				auto t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2 + 1000 * (int)std::max(0.0f, Distance(ObjectManager::Player, minion) - ObjectManager::Player->GetBoundingRadius()) / missileSpeed;
+
+				auto predHealth = HealthPrediction::GetHealthPrediction(minion, t, Config::Farming::ExtraFarmDelay->Value);
+
+				if (minion->Team != GameObjectTeam_Neutral)
+				{
+					auto basicAtkDmg = Damage::CalculateAutoAttackDamage(ObjectManager::Player, minion);
+					auto damage = Damage::CalculatePhysicalDamage(ObjectManager::Player, minion, basicAtkDmg);
+
+					if (predHealth <= 0)
+					{
+						continue;
+					}
+
+					if (predHealth <= damage)
+						LastHitMinion = minion;
+				}
+			}
+		}
+
+		void Orbwalker::LaneclearLogic()
+		{
+			LastHitMinion = nullptr;
+			AlmostLastHitMinion = nullptr;
+			LaneClearMinion = nullptr;
+
+			bool isLaneClearMinion = true;
+			const int missileSpeed = GetAttackMissileSpeed();
+
+			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			for (size_t i = 0; i < minion_list->size; i++)
+			{
+				auto minion = minion_list->entities[i];
+				if (!minion || !minion->IsValidTarget(ObjectManager::Player->GetAutoAttackRange(minion), true, ObjectManager::Player->ServerPosition()))
+					continue;
+
+				float t = (int)(ObjectManager::Player->GetAttackCastDelay() * 1000) - 100 + NetClient::Instance->GetPing() / 2 + 1000 * (int)std::max(0.0f, Distance(ObjectManager::Player, minion) - ObjectManager::Player->GetBoundingRadius()) / missileSpeed;
+
+				float lastHitHealth = HealthPrediction::GetHealthPrediction(minion, t, Config::Farming::ExtraFarmDelay->Value);
+				float laneClearHealth = HealthPrediction::LaneClearHealthPrediction(minion, ObjectManager::Player->GetAttackDelay() * 1000 * 2.0f, Config::Farming::ExtraFarmDelay->Value);
+
+				auto LastHitMinion_lastHitHealth = FLT_MAX;
+				auto AlmostLastHitMinion_laneClearHealth = FLT_MAX;
+				auto LaneClearMinion_laneClearHealth = 0;
+
+				auto attackDamage = Damage::CalculateAutoAttackDamage(ObjectManager::Player, minion);
+
+
+
+				if (lastHitHealth > 0 && lastHitHealth < attackDamage) {
+					if (!LastHitMinion || (minion->MaxHealth == LastHitMinion->MaxHealth ? lastHitHealth < LastHitMinion_lastHitHealth : minion->MaxHealth > LastHitMinion->MaxHealth)) {
+						LastHitMinion = minion;
+						LastHitMinion_lastHitHealth = lastHitHealth;
+					}
+				}
+				else if (laneClearHealth <= (minion->IsSiegeMinion() ? 2.0f : 1.5f) * attackDamage && laneClearHealth < minion->Health) {
+					if (!AlmostLastHitMinion || (minion->MaxHealth == AlmostLastHitMinion->MaxHealth ? laneClearHealth < AlmostLastHitMinion_laneClearHealth : minion->MaxHealth > AlmostLastHitMinion->MaxHealth)) {
+						AlmostLastHitMinion = minion;
+						AlmostLastHitMinion_laneClearHealth = laneClearHealth;
+					}
+				}
+
+				auto turret_list = HACKUZAN::GameObject::GetTurrets();
+				for (size_t i = 0; i < turret_list->size; i++)
+				{
+					auto turret = turret_list->entities[i];
+
+					if (!turret || !turret->IsValidTarget(ObjectManager::Player->GetAutoAttackRange(turret), false, ObjectManager::Player->ServerPosition()))
+						continue;
+
+					if (turret->IsAlly() && turret->Position.Distance(minion->Position) <= 900) {
+						if (laneClearHealth == minion->Health) {
+							auto turretDamage = Damage::CalculateAutoAttackDamage(turret, minion);
+							if (minion->Health - turretDamage > 0.0f)
+							{
+								for (auto minionHealth = minion->Health; minionHealth > 0.0f && turretDamage > 0.0f; minionHealth -= turretDamage) {
+									if (minionHealth <= attackDamage) {
+										break;
+									}
+								}
+								if (!LaneClearMinion || (Config::Farming::PushPriority->Value ? laneClearHealth < LaneClearMinion_laneClearHealth : laneClearHealth > LaneClearMinion_laneClearHealth) && !ShouldWaitUnderTurret(ObjectManager::Player)) {
+									LaneClearMinion = minion;
+									LaneClearMinion_laneClearHealth = laneClearHealth;
+								}
+							}
+
+						}
+						isLaneClearMinion = false;
+						break;
+					}
+				}
+				if (!isLaneClearMinion) {
+					continue;
+				}
+
+				if (laneClearHealth >= 2.0f * attackDamage || laneClearHealth == minion->Health) {
+					if (!LaneClearMinion || (Config::Farming::PushPriority->Value ? laneClearHealth < LaneClearMinion_laneClearHealth : laneClearHealth > LaneClearMinion_laneClearHealth)) {
+						LaneClearMinion = minion;
+						LaneClearMinion_laneClearHealth = laneClearHealth;
+					}
+				}
+
+			}
+
 		}
 
 		void Orbwalker::ResetAutoAttack() {

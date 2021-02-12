@@ -76,7 +76,7 @@ namespace HACKUZAN {
 			auto target = ObjectManager::Instance->ObjectsArray[castInfo->TargetId];
 			if (caster && caster != ObjectManager::Player && caster->IsAlly() && target && target->Minion() && castInfo->IsAutoAttack() && ObjectManager::Player->Position.IsInRange(caster->Position, 2000.0f)) {
 				for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end();) {
-					if (caster->Id == it->Source->Id) {
+					if (caster->NetworkId == it->Source->NetworkId) {
 						IncomingAttacks.erase(it);
 						//it->Processed = false;
 					}
@@ -92,7 +92,7 @@ namespace HACKUZAN {
 		void HealthPrediction::OnStopCast(GameObject* unit, StopCast* args) {
 			if (unit != nullptr && args->stopAnimation) {
 				for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end();) {
-					if (it->Source->Id == unit->Id) {
+					if (it->Source->NetworkId == unit->NetworkId) {
 						IncomingAttacks.erase(it);
 					}
 					else
@@ -107,10 +107,15 @@ namespace HACKUZAN {
 		{
 			auto predictedDamage = 0.0f;
 
+			if (unit == nullptr)
+				return 0.0f;
+
 			for (auto attack : IncomingAttacks)
 			{
+				if (attack.Target == nullptr)
+					continue;
 				auto attackDamage = 0.0f;
-				if (!attack.Processed && unit != nullptr && unit->NetworkId == attack.Target->NetworkId) {
+				if (!attack.Processed && unit->NetworkId == attack.Target->NetworkId) {
 
 					auto landTime = attack.StartTime + attack.Delay
 						+ 1000 * std::max(0.f, unit->Position.Distance(attack.Source->Position) - attack.Source->GetBoundingRadius())
@@ -135,6 +140,8 @@ namespace HACKUZAN {
 
 			for (auto attack : IncomingAttacks)
 			{
+				if (attack.Target == nullptr)
+					continue;
 				auto n = 0;
 				if (ClockFacade::GameTickCount() - 100 <= attack.StartTime + attack.AnimationTime
 					&& unit != nullptr && unit->Id == attack.Target->Id)

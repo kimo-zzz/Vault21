@@ -68,7 +68,7 @@ namespace HACKUZAN {
 				}
 
 				void OnGameUpdate() {
-					/*auto time = ClockFacade::GetGameTime();
+					auto time = ClockFacade::GetGameTime();
 
 					if (time - LastTick > 1.0f / MenuSettings::TicksPerSecond) {
 						EventManager::Trigger(LeagueEvents::OnGameTick);
@@ -85,7 +85,7 @@ namespace HACKUZAN {
 								}
 							}
 						}
-					}*/
+					}
 
 					if (MenuSettings::DeveloperMode) {
 

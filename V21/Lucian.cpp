@@ -85,7 +85,7 @@ namespace HACKUZAN {
 #pragma region Logics
 		void Lucian::Combo()
 		{
-			auto Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 500.f, DamageType_Physical, ObjectManager::Player->ServerPosition(), true);
+			auto Qtarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 500.f, DamageType_Physical, ObjectManager::Player->Position, true);
 			auto Etarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 425.f + ObjectManager::Player->GetAutoAttackRange(), DamageType_Physical);
 
 
@@ -95,7 +95,7 @@ namespace HACKUZAN {
 				if (Etarget && !HasDoubleshotPassive())
 				{
 					auto posAfterE = ObjectManager::Player->Position.Extended(HudManager::Instance->CursorTargetLogic->CursorPosition, 425.f);
-					if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) >= ObjectManager::Player->GetAutoAttackRange() - 20)
+					if (ObjectManager::Player->CountEnemiesInRange(1000.f) > 3 || Distance(Etarget, posAfterE) <= ObjectManager::Player->GetAutoAttackRange() - 20)
 					{
 						ObjectManager::Player->CastSpellPos(SpellSlot_E, (DWORD)ObjectManager::Player, posAfterE);
 					}
@@ -192,64 +192,51 @@ namespace HACKUZAN {
 
 		void Lucian::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
-			if (!castInfo)
-				return;
 
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void Lucian::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
+		void Lucian::OnPlayAnimation(GameObject* ptr)
 		{
-			if (ptr == nullptr)
-				return;
+
 		}
 
 		void Lucian::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
-			if (castInfo == nullptr || object == nullptr)
-				return;
+
 		}
 
-		void Lucian::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
-			bool forceStop, bool destroyMissile, unsigned missileNetworkID)
+		void Lucian::OnStopCast(GameObject* unit, StopCast* args)
 		{
-			if (spellCaster_Client == nullptr)
-				return;
+
 		}
 
-		void Lucian::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
-			unsigned dash)
+		void Lucian::OnNewPath(NewPath* args)
 		{
-			if (obj == nullptr)
-				return;
+
 		}
 
 		void Lucian::OnCreateObject(GameObject* unit)
 		{
-			if (unit == nullptr)
-				return;
 
 
 		}
 
 		void Lucian::OnDeleteObject(GameObject* unit)
 		{
-			if (unit == nullptr)
-				return;
-
-
+		
 		}
 
 		void Lucian::OnDraw()
 		{
 			if (LucianConfig::LucianDrawings::DrawQ->Value == true)
-				Renderer::AddCircle(ObjectManager::Player->Position, 500.f,1, IM_COL32(51, 0, 102, 255));
+				Renderer::AddCircle(ObjectManager::Player->Position, 500.f, 1, IM_COL32(51, 0, 102, 255));
 
 			if (LucianConfig::LucianDrawings::DrawE->Value == true)
-				Renderer::AddCircle(ObjectManager::Player->Position, 420.f,1, IM_COL32(153, 51, 255, 255));
+				Renderer::AddCircle(ObjectManager::Player->Position, 420.f, 1, IM_COL32(153, 51, 255, 255));
 
 			if (LucianConfig::LucianDrawings::DrawW->Value == true)
-				Renderer::AddCircle(ObjectManager::Player->Position, 900.f,1, IM_COL32(0, 0, 153, 255));
+				Renderer::AddCircle(ObjectManager::Player->Position, 900.f, 1, IM_COL32(0, 0, 153, 255));
 
 			std::string currentMode = ("Style: " + LucianConfig::LucianCombo::ComboMode->Items[LucianConfig::LucianCombo::ComboMode->Value]);
 			Vector2 Position;

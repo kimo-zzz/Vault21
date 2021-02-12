@@ -24,11 +24,10 @@ namespace HACKUZAN {
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			void OnPlayAnimation(GameObject* ptr, char* name, float animationTime);
+			void OnPlayAnimation(GameObject* ptr);
 			void OnFinishCast(SpellCastInfo* castInfo, GameObject* object);
-			void OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
-				bool forceStop, bool destroyMissile, unsigned int missileNetworkID);
-			void OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash);
+			void OnStopCast(GameObject* unit, StopCast* args);
+			void OnNewPath(NewPath* args);
 			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			bool HasDoubleshotPassive();
 			GameObject* GetTarget(float radius);

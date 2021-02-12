@@ -1030,7 +1030,7 @@ namespace HACKUZAN {
 			try
 			{
 				auto target = GetTarget();
-				if (target && target->IsValidTarget() && CanAttack(target) || ResetNextAA)
+				if (target && target->IsValidTarget() && CanAttack(target))
 				{
 					DisableNextAttack = false;
 					//FireBeforeAttack(target);
@@ -1209,6 +1209,9 @@ namespace HACKUZAN {
 				}
 			}
 
+			if (ResetNextAA)
+				return true;
+			
 			return ClockFacade::GameTickCount() + NetClient::Instance->GetPing() / 2 + 25 >= LastAATick + GetAttackDelay() * 1000;
 		}
 

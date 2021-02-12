@@ -32,6 +32,7 @@ namespace HACKUZAN {
 			extern GameObjectOrder LastOrder;
 			extern int LastAttackCommandT;
 			extern int LastMoveCommandT;
+			extern bool ResetNextAA;
 			extern bool _missileLaunched;
 			extern bool DisableNextAttack;
 			extern bool DisableNextMove;
@@ -75,6 +76,9 @@ namespace HACKUZAN {
 			void OnGameUpdate();
 			void OnDraw();
 
+			void LasthitLogic();
+			void LaneclearLogic();
+			
 			void ResetAutoAttack();
 			Vector3 GetOrbwalkPosition();
 			GameObject* GetTarget();

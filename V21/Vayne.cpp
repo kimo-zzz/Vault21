@@ -178,6 +178,12 @@ namespace HACKUZAN {
 			}
 		}
 
+		void Vayne::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
+		{
+			if (ObjectManager::Player->FindBuffName("vaynetumblebonus"))
+				Orbwalker::ResetAutoAttack();
+		}
+
 		bool HACKUZAN::Plugins::Vayne::IsCondemnable(GameObject* target)
 		{
 			if (target == nullptr)

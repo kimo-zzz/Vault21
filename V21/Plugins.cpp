@@ -27,7 +27,7 @@ namespace HACKUZAN {
 			Draven::Initialize();
 			break;
 		case Character::Lucian:
-		//	Lucian::Initialize();
+			Lucian::Initialize();
 			break;
 		case Character::MissFortune:
 			MissFortune::Initialize();

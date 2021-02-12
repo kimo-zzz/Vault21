@@ -226,9 +226,8 @@ namespace HACKUZAN
 		{
 		}
 
-		void Jax::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
+		void Jax::OnPlayAnimation(GameObject* ptr)
 		{
-			GameClient::PrintChat(name, IM_COL32(255, 255, 255, 255));
 		}
 
 		void Jax::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)

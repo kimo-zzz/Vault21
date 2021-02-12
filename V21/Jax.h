@@ -43,7 +43,7 @@ namespace HACKUZAN {
 			void OnCreateObject(GameObject* unit);
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
-			void OnPlayAnimation(GameObject* ptr, char* name, float animationTime);
+			void OnPlayAnimation(GameObject* ptr);
 			void OnFinishCast(GameObject* object, SpellCastInfo* castInfo);
 			void OnStopCast(GameObject* caster, StopCast* args);
 			void OnNewPath(NewPath* path);

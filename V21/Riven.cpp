@@ -46,6 +46,8 @@ namespace HACKUZAN {
 
 					List* InteruptMode;
 					List* ComboStyle;
+					CheckBox* ExperimentalQ;
+					Slider* QCancelExtraDelay;
 				}
 
 				namespace Draws
@@ -90,6 +92,8 @@ namespace HACKUZAN {
 				bool _CastE = false;
 				float _tickCastE = 0;
 
+				bool _QCancel = false;
+				float _tickQCancel = 0;
 			}
 
 			#pragma endregion
@@ -119,7 +123,10 @@ namespace HACKUZAN {
 			Config::Combo::UseFlash = combo->AddCheckBox("Riven Combo Use Flash", "Use Flash", false);
 			Config::Combo::UseFlash = combo->AddCheckBox("Riven Combo Killsteal", "Use R2 to Killsteal", false);
 			combo->AddInfo("comboSpacer3", " ");
+
 			Config::Combo::ComboStyle = combo->AddList("Riven Combo Mode", "Combo Style", std::vector<std::string>{ "BoxBox", "Shy", "Adrien", "BRNA", "Vyper" }, 0u, nullptr);
+			Config::Combo::QCancelExtraDelay = combo->AddSlider("Riven Combo Q Cancel Extra", "Q Cancel Extra Delay", 15, 0, 75, 1);
+			Config::Combo::ExperimentalQ = combo->AddCheckBox("Riven Misc Experimental Q", "Experimental Q Cancel", false);
 
 			Config::Farming::UseQ = farm->AddCheckBox("Riven Farm Q", "Use Q", true);
 			Config::Farming::UseW = farm->AddCheckBox("Riven Farm W", "Use W", false);
@@ -128,13 +135,13 @@ namespace HACKUZAN {
 			Config::Misc::AutoE = misc->AddCheckBox("Riven Misc Auto E", "Auto E", true);
 			Config::Misc::Debug = misc->AddCheckBox("Riven Misc Debug", "Debug Mode", false);
 
+
 			Config::Draws::DrawQ = draw->AddCheckBox("Riven Draws Draw Q", "Draw Q Range", true);
 			Config::Draws::DrawW = draw->AddCheckBox("Riven Draws Draw W", "Draw W Range", true);
 			Config::Draws::DrawE = draw->AddCheckBox("Riven Draws Draw E", "Draw E Range", true);
 			Config::Draws::DrawR2 = draw->AddCheckBox("Riven Draws Draw R2", "Draw R2 Range", true);
 			Config::Draws::DrawFlash = draw->AddCheckBox("Riven Draws Draw Flash", "Draw Flash Range", true);
 			Config::Draws::DrawCombo = draw->AddCheckBox("Riven Draws Draw Combo Style", "Draw Combo Style", true);
-
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -176,6 +183,15 @@ namespace HACKUZAN {
 						Logics::_tickCastQ = -1;
 						ObjectManager::Player->CastTargetSpell(SpellSlot_Q, (DWORD)ObjectManager::Player, (DWORD)_target, ObjectManager::Player->Position, _target->Position, _target->NetworkId);
 					}
+				}
+
+				if (Logics::_QCancel && (Logics::_tickQCancel - ClockFacade::GameTickCount()) <= 0)
+				{
+					if (Config::Misc::Debug->Value == true)
+						GameClient::PrintChat("[Riven Debug] Attack Reset detected.", IM_COL32(255, 69, 255, 255));
+					Logics::_QCancel = false;
+					Logics::_tickQCancel = -1;
+					Orbwalker::ResetAutoAttack();
 				}
 
 				switch (Orbwalker::ActiveMode)
@@ -244,7 +260,7 @@ namespace HACKUZAN {
 						std::string text = "CanAttack: " + std::to_string(canattack);
 						auto pos = Position;
 						pos.Y = pos.Y + 25;
-						Renderer::AddText(text.c_str(), 15, pos, IM_COL32(255, 0, 255, 255));
+						Renderer::AddText(text.c_str(), 15, pos, IM_COL32(255, 175, 100, 255));
 					}
 				}
 			}
@@ -293,7 +309,7 @@ namespace HACKUZAN {
 						{
 							if (Config::Misc::Debug->Value == true)
 								GameClient::PrintChat("[Riven Debug] Orbwalker Auto Attack detected.", IM_COL32(255, 69, 255, 255));
-							Logics::_tickCastQ = ClockFacade::GameTickCount() + NetClient::Instance->GetPing();
+							Logics::_tickCastQ = (ClockFacade::GameTickCount() + NetClient::Instance->GetPing() + Config::Combo::QCancelExtraDelay->Value);
 							Logics::_CastQ = true;
 						}
 					}
@@ -330,11 +346,12 @@ namespace HACKUZAN {
 				{
 				case OrbwalkerMode_Combo:
 				{
-					if (strcmp(spellData->SpellName, "RivenTriCleave") == 0)
+					if (strcmp(spellData->SpellName, "RivenTriCleave") == 0 && Config::Combo::ExperimentalQ->Value)
 					{
 						if (Config::Misc::Debug->Value == true)
-							GameClient::PrintChat("[Riven Debug] Detected Q Spell and resetting Auto Timer.", IM_COL32(255, 69, 255, 255));
-						Orbwalker::ResetAutoAttack();
+							GameClient::PrintChat("[Riven Debug] Queueing Experimental Q Cancel.", IM_COL32(255, 69, 255, 255));
+						Logics::_tickQCancel = (ClockFacade::GameTickCount() + NetClient::Instance->GetPing()) + (spellData->CastDelay  / 2);
+						Logics::_QCancel = true;
 					}
 				}
 				break;

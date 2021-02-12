@@ -32,6 +32,7 @@ namespace HACKUZAN {
 			extern GameObjectOrder LastOrder;
 			extern int LastAttackCommandT;
 			extern int LastMoveCommandT;
+			extern bool ResetNextAA;
 			extern bool _missileLaunched;
 			extern bool DisableNextAttack;
 			extern bool DisableNextMove;

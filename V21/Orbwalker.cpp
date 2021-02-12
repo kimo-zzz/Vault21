@@ -28,6 +28,7 @@ namespace HACKUZAN {
 		GameObjectOrder Orbwalker::LastOrder = GameObjectOrder::None;
 		int Orbwalker::LastAttackCommandT;
 		int Orbwalker::LastMoveCommandT;
+		bool Orbwalker::ResetNextAA = false;
 		bool Orbwalker::_missileLaunched = false;
 		bool Orbwalker::DisableNextAttack = false;
 		bool Orbwalker::DisableNextMove = false;
@@ -339,7 +340,7 @@ namespace HACKUZAN {
 			"netherblade", "gangplankqwrapper", "powerfist",
 			"renektonpreexecute", "rengarq", "shyvanadoubleattack",
 			"sivirw", "takedown", "talonnoxiandiplomacy",
-			"trundletrollsmash", "vaynetumble", "vie", "volibearq",
+			"trundletrollsmash", "vie", "volibearq",
 			"xenzhaocombotarget", "yorickspectral", "reksaiq",
 			"itemtitanichydracleave", "masochism", "illaoiw",
 			"elisespiderw", "fiorae", "meditate", "sejuaninorthernwinds",
@@ -466,7 +467,6 @@ namespace HACKUZAN {
 
 				LastOrder = GameObjectOrder::None;
 				LastMovePosition = Vector3(0, 0, 0);
-
 				if (IsAutoAttackReset(spellData->SpellName) && spellData->CastDelay == 0) {
 					ResetAutoAttack();
 				}
@@ -580,10 +580,11 @@ namespace HACKUZAN {
 				LastTarget = nullptr;
 			}
 
+
 			LastHitMinion = nullptr;
 			AlmostLastHitMinion = nullptr;
 			LaneClearMinion = nullptr;
-
+			/*
 			switch (ActiveMode)
 			{
 			case OrbwalkerMode_LastHit:
@@ -593,7 +594,7 @@ namespace HACKUZAN {
 				LaneclearLogic();
 				break;
 			}
-
+			*/
 
 			if (ActiveMode != OrbwalkerMode_None) {
 				OrbwalkTo(GetOrbwalkPosition());
@@ -763,7 +764,7 @@ namespace HACKUZAN {
 		}
 
 		void Orbwalker::ResetAutoAttack() {
-			LastAATick = 0;
+			ResetNextAA = true;
 		}
 
 		Vector3 Orbwalker::GetOrbwalkPosition() {
@@ -1029,7 +1030,7 @@ namespace HACKUZAN {
 			try
 			{
 				auto target = GetTarget();
-				if (target && target->IsValidTarget() && CanAttack(target))
+				if (target && target->IsValidTarget() && CanAttack(target) || ResetNextAA)
 				{
 					DisableNextAttack = false;
 					//FireBeforeAttack(target);
@@ -1046,7 +1047,7 @@ namespace HACKUZAN {
 						ObjectManager::Player->IssueOrder(GameObjectOrder::AttackUnit, target);
 						LastAttackCommandT = ClockFacade::GameTickCount();
 						LastTarget = target;
-
+						ResetNextAA = false;
 						return;
 					}
 				}

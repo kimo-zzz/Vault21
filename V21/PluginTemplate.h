@@ -25,9 +25,9 @@ namespace HACKUZAN {
 			void OnDeleteObject(GameObject* unit);
 			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 			void OnPlayAnimation(GameObject* ptr);
-			void OnFinishCast(GameObject* object, SpellCastInfo* castInfo);
-			void OnStopCast(GameObject* caster, StopCast* args);
-			void OnNewPath(NewPath* path);
+			void OnFinishCast(SpellCastInfo* castInfo, GameObject* object);
+			void OnStopCast(GameObject* unit, StopCast* args);
+			void OnNewPath(NewPath* args);
 			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			GameObject* GetTarget(float radius);
 		}

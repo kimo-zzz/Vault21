@@ -90,40 +90,37 @@ namespace HACKUZAN {
 
 		void ChampionName::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
-			if (!castInfo)
-				return;
 
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
 		void ChampionName::OnPlayAnimation(GameObject* ptr)
 		{
+
 		}
 
-		void ChampionName::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)
+		void ChampionName::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
+
 		}
 
-		void ChampionName::OnStopCast(GameObject* caster, StopCast* args)
+		void ChampionName::OnStopCast(GameObject* unit, StopCast* args)
 		{
+
 		}
 
-		void ChampionName::OnNewPath(NewPath* path)
+		void ChampionName::OnNewPath(NewPath* args)
 		{
 
 		}
 
 		void ChampionName::OnCreateObject(GameObject* unit)
 		{
-			if (unit == nullptr)
-				return;
+
 		}
 
 		void ChampionName::OnDeleteObject(GameObject* unit)
 		{
-			if (unit == nullptr)
-				return;
-
 
 		}
 

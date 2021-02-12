@@ -90,14 +90,15 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
-
+		if (!thisPtr)
+			return Functions::OnCreateObject(thisPtr, netId);
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (thisPtr != nullptr && thisPtr->IsNotWall()) {
-			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
-		}
 
-		if (thisPtr != nullptr && thisPtr->Missile()) {
+		EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
+
+
+		if (thisPtr->Missile()) {
 			//MessageBoxA(0, ("Missile Adress " + hexify<DWORD>((DWORD)thisPtr)).c_str(), "", 0);
 			EventManager::Trigger(LeagueEvents::OnCreateMissile, thisPtr, netId);
 		}
@@ -109,11 +110,14 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (object != nullptr && object->IsNotWall()) {
-			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
-		}
+		if (!object)
+			return Functions::OnDeleteObject(thisPtr, object);
 
-		if (object != nullptr && object->Missile()) {
+
+		EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
+
+
+		if (object->Missile()) {
 			EventManager::Trigger(LeagueEvents::OnDeleteMissile, object);
 		}
 
@@ -133,7 +137,7 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnProcessSpell running~!", IM_COL32(255, 69, 0, 255));
 
-		if (CastInfo == nullptr)
+		if (CastInfo == nullptr || spellBook == nullptr)
 			return Functions::OnProcessSpellW(spellBook, CastInfo);
 
 		auto caster = ObjectManager::Instance->ObjectsArray[CastInfo->SourceId];
@@ -167,9 +171,10 @@ namespace LeagueHook {
 	int __fastcall hk_OnFinishCast(SpellCastInfo* castInfo, void* edx, GameObject* object) {
 
 		//GameClient::PrintChat("hk_OnFinishCast running~!", IM_COL32(255, 69, 0, 255));
+		if (!object || !castInfo)
+			return Functions::OnFinishCast(castInfo, object);
 
-		if (object != nullptr && castInfo != nullptr)
-			EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
+		EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
 
 		return Functions::OnFinishCast(castInfo, object);
 	}

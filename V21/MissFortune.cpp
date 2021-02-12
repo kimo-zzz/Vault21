@@ -30,14 +30,9 @@ namespace HACKUZAN {
 				Slider* EmaNa;
 			}
 
-			namespace ChampionMisc {
-				CheckBox* AutoE;
-				CheckBox* AutoCatch;
-				CheckBox* switchCatch;
-				CheckBox* UseQforW;
-				CheckBox* CatchUnderTurret;
-				CheckBox* DrawAxe;
-				Slider* DravenAxePickRange;
+			namespace MissFortuneMisc {
+				
+				List* HitChance;
 			}
 		}
 
@@ -57,7 +52,7 @@ namespace HACKUZAN {
 			MissFortuneConfig::MissFortuneFarm::EmaNa = farm->AddSlider("EMana", "Minimum E mana", 30, 0, 100, 5);
 
 			auto misc = menu->AddMenu("misc", "Misc");
-
+			MissFortuneConfig::MissFortuneMisc::HitChance = misc->AddList("HitChance", "HitChance ", { "Collision","OutOfRange","Impossible","Low","Medium","High","VeryHigh","Dashing","Immobile" }, 3);
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
@@ -140,7 +135,7 @@ namespace HACKUZAN {
 
 						CastPrediction(SpellSlot_E, ObjectManager::Player->Position, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->MissileSpeed
 							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->Range, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->Radius
-							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->CastDelay, target, kCollidesWithNothing, HitChance::Low);
+							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->CastDelay, target, kCollidesWithNothing, (HitChance)MissFortuneConfig::MissFortuneMisc::HitChance->Value);
 					}
 				}
 			}
@@ -161,7 +156,7 @@ namespace HACKUZAN {
 
 						CastPrediction(SpellSlot_E, ObjectManager::Player->Position, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->MissileSpeed
 							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->Range, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->Radius
-							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->CastDelay, target, kCollidesWithNothing, HitChance::Low);
+							, ObjectManager::Player->Spellbook.GetSpell(SpellSlot_E)->SpellData->Resource->CastDelay, target, kCollidesWithNothing, (HitChance)MissFortuneConfig::MissFortuneMisc::HitChance->Value);
 					}
 				}
 			}

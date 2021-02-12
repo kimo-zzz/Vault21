@@ -246,7 +246,7 @@ namespace HACKUZAN {
 			TargetId = 0xB8,
 			CastDelay = 0x4B8,
 			Delay = 0x4C8,
-			Cooldown = 0x4D4,
+			Cooldown = 0x4CC,
 			IsWindingUp = 0x4D4,
 			IsBasicAttack = 0x4D8,
 			IsSpecialAttack = IsBasicAttack + 0x4,

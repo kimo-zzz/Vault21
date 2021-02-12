@@ -88,7 +88,7 @@ namespace HACKUZAN
 				return TargetSelector::GetTarget(minions, DamageType_Physical);
 			}
 
-			namespace LaneClear
+			namespace Farming
 			{
 				void ExecuteQ()
 				{
@@ -140,6 +140,8 @@ namespace HACKUZAN
 
 				void ExecuteE()
 				{
+					BYTE n = 0;
+
 					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) != kSpellState::SpellState_Ready)
 						return;
 
@@ -175,7 +177,7 @@ namespace HACKUZAN
 
 			Config::Misc::FleeJump = misc->AddCheckBox("Jax Flee Jump", "Flee Jump", false);
 			Config::Misc::FleeJump->AddTooltip("Allows the usage of Ward Jumps during Orbwalker Flee mode.");
-			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'n', false, false);
+			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'N', false, false);
 
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
@@ -224,20 +226,19 @@ namespace HACKUZAN
 		{
 		}
 
-		void Jax::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
-		{
-			GameClient::PrintChat(name, IM_COL32(255, 255, 255, 255));
-		}
-
-		void Jax::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
+		void Jax::OnPlayAnimation(GameObject* ptr)
 		{
 		}
 
-		void Jax::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame, bool forceStop, bool destroyMissile, unsigned int missileNetworkID)
+		void Jax::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)
 		{
 		}
 
-		void Jax::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash)
+		void Jax::OnStopCast(GameObject* caster, StopCast* args)
+		{
+		}
+
+		void Jax::OnNewPath(NewPath* path)
 		{
 
 		}

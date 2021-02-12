@@ -350,7 +350,7 @@ namespace HACKUZAN {
 					{
 						if (Config::Misc::Debug->Value == true)
 							GameClient::PrintChat("[Riven Debug] Queueing Experimental Q Cancel.", IM_COL32(255, 69, 255, 255));
-						Logics::_tickQCancel = (ClockFacade::GameTickCount() + NetClient::Instance->GetPing()) + (spellData->CastDelay  / 2);
+						Logics::_tickQCancel = ClockFacade::GameTickCount() + (NetClient::Instance->GetPing() + (spellData->CastDelay  / 2));
 						Logics::_QCancel = true;
 					}
 				}

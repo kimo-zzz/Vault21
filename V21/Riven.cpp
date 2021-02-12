@@ -232,10 +232,21 @@ namespace HACKUZAN {
 				auto Combo = sCombo.c_str();
 				Vector2 Position;
 				RenderLayer::WorldToScreen(ObjectManager::Player->Position, Position);
-				auto size = ImGui::CalcTextSize(Combo);
 				Position.Y = Position.Y + 50;
-				Position.X = Position.X - (size.x / 2);
 				Renderer::AddText(Combo, 15, Position, IM_COL32(255, 0, 255, 255));
+				
+				if (Config::Misc::Debug->Value == true)
+				{
+					auto target = Orbwalker::GetTarget();
+					if (target)
+					{
+						auto canattack = Orbwalker::CanAttack(target);
+						std::string text = "CanAttack: " + std::to_string(canattack);
+						auto pos = Position;
+						pos.Y = pos.Y + 25;
+						Renderer::AddText(text.c_str(), 15, pos, IM_COL32(255, 0, 255, 255));
+					}
+				}
 			}
 		}
 

@@ -186,7 +186,7 @@ LONG WINAPI CrashHandler::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 	if ((pExceptionInfo->ExceptionRecord->ExceptionCode != EXCEPTION_BREAKPOINT) &&
 		(pExceptionInfo->ExceptionRecord->ExceptionCode != 0xc0000420)
 		) {
-		DataLog(pExceptionInfo);
+		//DataLog(pExceptionInfo);
         DumpStackTrace(pExceptionInfo);
 	}
 	return EXCEPTION_CONTINUE_SEARCH;

@@ -226,26 +226,26 @@ namespace V21
 		{
 		}
 
-		void Jax::OnPlayAnimation(GameObject* ptr)
+		void Jax::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 		}
 
-		void Jax::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)
+		void Jax::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
 		}
 
-		void Jax::OnStopCast(GameObject* caster, StopCast* args)
+		void Jax::OnStopCast(GameObject* caster, StopCast args)
 		{
 		}
 
-		void Jax::OnNewPath(NewPath* path)
+		void Jax::OnNewPath(NewPath* args)
 		{
 
 		}
 
-		bool Jax::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)
+		void Jax::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target)
 		{
-			return true;
+			return;
 		}
 
 	}

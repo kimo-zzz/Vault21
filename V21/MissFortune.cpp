@@ -74,15 +74,15 @@ namespace V21 {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool MissFortune::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void MissFortune::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return;
 		}
 
 		void MissFortune::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)

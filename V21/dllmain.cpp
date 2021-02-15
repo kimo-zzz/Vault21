@@ -101,12 +101,12 @@ namespace LeagueHook {
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
 
 
-		EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr, netId);
+		EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr);
 
 
 		if (thisPtr->Missile()) {
 			//MessageBoxA(0, ("Missile Adress " + hexify<DWORD>((DWORD)thisPtr)).c_str(), "", 0);
-			EventManager::Trigger(LeagueEvents::OnCreateMissile, thisPtr, netId);
+			EventManager::Trigger(LeagueEvents::OnCreateMissile, thisPtr);
 		}
 
 		return Functions::OnCreateObject(thisPtr, netId);
@@ -133,7 +133,7 @@ namespace LeagueHook {
 	int _fastcall hk_OnPlayAnimation(GameObject* ptr, void* edx, bool* ret, char* name, int unk1, unsigned int unk2, float animationTime, int unk4) {
 
 		if (ptr != nullptr)
-			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr);
+			EventManager::Trigger(LeagueEvents::OnPlayAnimation, ptr, name, animationTime);
 
 		return Functions::OnPlayAnimation(ptr, ret, name, unk1, unk2, animationTime, unk4);
 
@@ -180,7 +180,7 @@ namespace LeagueHook {
 		if (!object || !castInfo)
 			return Functions::OnFinishCast(castInfo, object);
 
-		EventManager::Trigger(LeagueEvents::OnFinishCast, object, castInfo);
+		EventManager::Trigger(LeagueEvents::OnFinishCast, castInfo, object);
 
 		return Functions::OnFinishCast(castInfo, object);
 	}
@@ -227,7 +227,7 @@ namespace LeagueHook {
 		path.dashSpeed = *dashSpeed;
 
 		//	GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
-		EventManager::Trigger(LeagueEvents::OnNewPath, path);
+		EventManager::Trigger(LeagueEvents::OnNewPath, &path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 	}

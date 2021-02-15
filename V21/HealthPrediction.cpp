@@ -89,8 +89,8 @@ namespace V21 {
 			}
 		}
 
-		void HealthPrediction::OnStopCast(GameObject* unit, StopCast* args) {
-			if (unit != nullptr && args->stopAnimation) {
+		void HealthPrediction::OnStopCast(GameObject* unit, StopCast args) {
+			if (unit != nullptr && args.stopAnimation) {
 				for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end();) {
 					if (it->Source->NetworkId == unit->NetworkId) {
 						IncomingAttacks.erase(it);

@@ -266,9 +266,9 @@ namespace V21 {
 			}
 		}
 
-		bool Riven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)
+		void Riven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target)
 		{
-			return true;
+			return;
 		}
 
 		void Riven::OnCreateObject(GameObject* unit)
@@ -284,8 +284,9 @@ namespace V21 {
 
 		}
 
-		void Riven::OnFinishCast(GameObject* object, SpellCastInfo* castInfo)
+		void Riven::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
+			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			#pragma region Debugging
@@ -327,9 +328,10 @@ namespace V21 {
 			#pragma endregion
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 		}
 
-		void Riven::OnStopCast(GameObject* caster, StopCast* args)
+		void Riven::OnStopCast(GameObject* caster, StopCast args)
 		{
 		}
 

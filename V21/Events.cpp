@@ -43,7 +43,7 @@ namespace V21 {
 						SpellCast::Initialize();
 
 						Menu::Initialize();
-						HealthPrediction::Initialize();
+						//HealthPrediction::Initialize();
 						TargetSelector::Initialize();
 						Orbwalker::Initialize();
 						Plugins::Initialize();

@@ -178,15 +178,15 @@ namespace V21 {
 
 #pragma endregion Logics
 
-		bool Lucian::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void Lucian::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return ;
 		}
 
 
@@ -196,7 +196,7 @@ namespace V21 {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void Lucian::OnPlayAnimation(GameObject* ptr)
+		void Lucian::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 
 		}
@@ -206,7 +206,7 @@ namespace V21 {
 
 		}
 
-		void Lucian::OnStopCast(GameObject* unit, StopCast* args)
+		void Lucian::OnStopCast(GameObject* unit, StopCast args)
 		{
 
 		}

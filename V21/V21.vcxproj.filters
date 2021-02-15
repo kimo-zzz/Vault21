@@ -57,38 +57,14 @@
     <Filter Include="SDK\Menu\Source Files">
       <UniqueIdentifier>{c17d868b-1f69-4cff-bd8e-ae340128850f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SDK\TargetSelector\Header Files">
-      <UniqueIdentifier>{a8bc561c-a6ac-48f0-98a2-90d27458b35b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\TargetSelector\Source Files">
-      <UniqueIdentifier>{83445b11-e8c8-46f7-b532-40f8d81c8c73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SDK\Menu\Header Files\Components">
       <UniqueIdentifier>{dec5cb5f-13de-4f6e-a51d-f0044be58705}</UniqueIdentifier>
     </Filter>
     <Filter Include="SDK\Menu\Source Files\Components">
       <UniqueIdentifier>{e3e5bc00-6b62-4b43-b2bd-016e71728eb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SDK\Orbwalker\Source Files">
-      <UniqueIdentifier>{62dc680e-45fe-4e3d-ab50-4be199843e5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\Orbwalker\Header Files">
-      <UniqueIdentifier>{3aa6238c-e4d4-41ee-b3c4-b9d81e1272fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\Damage\Header Files">
-      <UniqueIdentifier>{b879d4ff-f206-4335-9ddd-0158cfa47c60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\Damage\Source Files">
-      <UniqueIdentifier>{35077b59-63f7-4dda-99b4-18de42cba5c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SDK\HealthPrediction">
       <UniqueIdentifier>{a5085560-98c0-43e5-8fdb-34f252de01fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\HealthPrediction\Header Files">
-      <UniqueIdentifier>{6b295107-414c-441a-8880-76d267cfcf9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\HealthPrediction\SourceFiles">
-      <UniqueIdentifier>{e6520136-b5ce-4d13-80c9-4d558b3ed6b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Plugins">
       <UniqueIdentifier>{e6c520dd-cddf-4ee2-8025-6c4c9f46973e}</UniqueIdentifier>
@@ -195,12 +171,6 @@
     <Filter Include="Plugins\Champion Plugins\Draven">
       <UniqueIdentifier>{f06d949b-801d-4968-963d-7ff0003f7d26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Champion Plugins\Draven\Header Files">
-      <UniqueIdentifier>{379b5a0e-2bbb-4a37-9433-435fb563039e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Champion Plugins\Draven\Source Files">
-      <UniqueIdentifier>{62e8d64e-a127-4cd2-8feb-3dafb93fa049}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins\Champion Plugins\Lucian">
       <UniqueIdentifier>{7145e5e9-4832-4515-b55c-7832a030ee6e}</UniqueIdentifier>
     </Filter>
@@ -212,12 +182,6 @@
     </Filter>
     <Filter Include="Plugins\Champion Plugins\Twitch">
       <UniqueIdentifier>{f2952d22-9c76-431e-8d6e-99cdc89c0cb3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Champion Plugins\Twitch\Header Files">
-      <UniqueIdentifier>{d7ab7807-b80b-4b07-ac1f-d91905d78d78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Champion Plugins\Twitch\Source Files">
-      <UniqueIdentifier>{7c88bca3-685f-4e4b-9093-cf8fa17c639e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Plugins\Champion Plugins\Brand">
       <UniqueIdentifier>{03b6d1fb-011b-469f-ad73-b7e64da6e854}</UniqueIdentifier>
@@ -389,9 +353,6 @@
     <ClInclude Include="Rect.h">
       <Filter>Geometry\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TargetSelector.h">
-      <Filter>SDK\TargetSelector\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MenuComponent.h">
       <Filter>SDK\Menu\Header Files</Filter>
     </ClInclude>
@@ -416,9 +377,6 @@
     <ClInclude Include="Info.h">
       <Filter>SDK\Menu\Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Orbwalker.h">
-      <Filter>SDK\Orbwalker\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ManagerTemplate.h">
       <Filter>League of Legends\ManagerTemplate</Filter>
     </ClInclude>
@@ -433,12 +391,6 @@
     </ClInclude>
     <ClInclude Include="ClassData.h">
       <Filter>League of Legends\Header Files\ObjectManager\GameObject\ClassData</Filter>
-    </ClInclude>
-    <ClInclude Include="Damage.h">
-      <Filter>SDK\Damage\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthPrediction.h">
-      <Filter>SDK\HealthPrediction\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CharacterDataStack.h">
       <Filter>League of Legends\ObjectManager\GameObject\CharacterDataStack</Filter>
@@ -587,14 +539,8 @@
     <ClInclude Include="LeagueFunctions.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Draven.h">
-      <Filter>Plugins\Champion Plugins\Draven\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PluginTemplate.h">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
-    </ClInclude>
-    <ClInclude Include="Twitch.h">
-      <Filter>Plugins\Champion Plugins\Twitch\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Brand.h">
       <Filter>Plugins\Champion Plugins\Brand</Filter>
@@ -628,6 +574,24 @@
     </ClInclude>
     <ClInclude Include="CrashHandler.h">
       <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Draven.h">
+      <Filter>Plugins\Champion Plugins\Draven</Filter>
+    </ClInclude>
+    <ClInclude Include="Twitch.h">
+      <Filter>Plugins\Champion Plugins\Twitch</Filter>
+    </ClInclude>
+    <ClInclude Include="Orbwalker.h">
+      <Filter>SDK\Orbwalker</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetSelector.h">
+      <Filter>SDK\TargetSelector</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthPrediction.h">
+      <Filter>SDK\HealthPrediction</Filter>
+    </ClInclude>
+    <ClInclude Include="Damage.h">
+      <Filter>SDK\Damage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -676,9 +640,6 @@
     <ClCompile Include="Rect.cpp">
       <Filter>Geometry\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TargetSelector.cpp">
-      <Filter>SDK\TargetSelector\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>SDK\Menu\Source Files\Components</Filter>
     </ClCompile>
@@ -703,20 +664,11 @@
     <ClCompile Include="Info.cpp">
       <Filter>SDK\Menu\Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Orbwalker.cpp">
-      <Filter>SDK\Orbwalker\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MenuSettings.cpp">
       <Filter>SDK\Menu\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VirtualTableManager.cpp">
       <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthPrediction.cpp">
-      <Filter>SDK\HealthPrediction\SourceFiles</Filter>
-    </ClCompile>
-    <ClCompile Include="Damage.cpp">
-      <Filter>SDK\Damage\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SkinChanger.cpp">
       <Filter>Plugins\SkinChanger\Source Files</Filter>
@@ -874,14 +826,8 @@
     <ClCompile Include="ManagerTemplate.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Draven.cpp">
-      <Filter>Plugins\Champion Plugins\Draven\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PluginTemplate.cpp">
       <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
-    </ClCompile>
-    <ClCompile Include="Twitch.cpp">
-      <Filter>Plugins\Champion Plugins\Twitch\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Brand.cpp">
       <Filter>Plugins\Champion Plugins\Brand</Filter>
@@ -909,6 +855,24 @@
     </ClCompile>
     <ClCompile Include="CrashHandler.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Draven.cpp">
+      <Filter>Plugins\Champion Plugins\Draven</Filter>
+    </ClCompile>
+    <ClCompile Include="Twitch.cpp">
+      <Filter>Plugins\Champion Plugins\Twitch</Filter>
+    </ClCompile>
+    <ClCompile Include="Orbwalker.cpp">
+      <Filter>SDK\Orbwalker</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetSelector.cpp">
+      <Filter>SDK\TargetSelector</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthPrediction.cpp">
+      <Filter>SDK\HealthPrediction</Filter>
+    </ClCompile>
+    <ClCompile Include="Damage.cpp">
+      <Filter>SDK\Damage</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

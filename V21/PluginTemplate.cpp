@@ -77,15 +77,15 @@ namespace V21 {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool ChampionName::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void ChampionName::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return;
 		}
 
 		void ChampionName::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
@@ -94,7 +94,7 @@ namespace V21 {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void ChampionName::OnPlayAnimation(GameObject* ptr)
+		void ChampionName::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 
 		}
@@ -104,7 +104,7 @@ namespace V21 {
 
 		}
 
-		void ChampionName::OnStopCast(GameObject* unit, StopCast* args)
+		void ChampionName::OnStopCast(GameObject* unit, StopCast args)
 		{
 
 		}

@@ -29,7 +29,7 @@ namespace V21 {
 			void OnDeleteMissile(GameObject* unit);
 			void OnDoCast(SpellInfo* castInfo, SpellDataResource* spellData);
 			void OnProcessSpell(SpellInfo* unit, SpellDataResource* castInfo);
-			void OnStopCast(GameObject* unit, StopCast* args);
+			void OnStopCast(GameObject* unit, StopCast args);
 
 			float GetHealthPrediction(GameObject* unit, int time, int delay);
 			float LaneClearHealthPrediction(GameObject* unit, int time, int delay);

@@ -81,15 +81,15 @@ namespace V21 {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool Xerath::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void Xerath::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return ;
 		}
 
 		void Xerath::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
@@ -127,17 +127,15 @@ namespace V21 {
 				return;
 		}
 
-		void Xerath::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
-			bool forceStop, bool destroyMissile, unsigned missileNetworkID)
+		void Xerath::OnStopCast(GameObject* caster, StopCast args)
 		{
-			if (spellCaster_Client == nullptr)
+			if (caster == nullptr)
 				return;
 		}
 
-		void Xerath::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
-			unsigned dash)
+		void Xerath::OnNewPath(NewPath* args)
 		{
-			if (obj == nullptr)
+			if (args->sender == nullptr)
 				return;
 		}
 

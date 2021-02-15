@@ -26,7 +26,6 @@ namespace V21 {
 		OnGapCloserSpell,
 		OnInterruptibleSpell,
 		OnNewPath,
-
 		Size
 	};
 

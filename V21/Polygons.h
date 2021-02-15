@@ -11,7 +11,7 @@
 #define M_PI static_cast<float>(3.141592)
 
 
-namespace HACKUZAN {
+namespace V21 {
 
 	// utils
 	static void DrawLine(Vector2 const Start, Vector2 const End, DWORD Color)

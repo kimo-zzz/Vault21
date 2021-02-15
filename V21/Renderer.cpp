@@ -7,7 +7,7 @@
 #include "imgui_impl_dx9.h"
 #include "imgui_internal.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	ImDrawList* Renderer::DrawList;
 	ImFont* Renderer::DefaultFont;
 

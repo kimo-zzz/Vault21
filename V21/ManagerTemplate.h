@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "ClockFacade.h"
 
-namespace HACKUZAN
+namespace V21
 {
 
 	struct StopCast

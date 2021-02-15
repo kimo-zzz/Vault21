@@ -13,7 +13,7 @@
 #include "Jax.h"
 #include "Xerath.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	void Plugins::Initialize() {
 
 		//SkinChanger::Initialize();

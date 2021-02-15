@@ -4,11 +4,11 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace Config {
 

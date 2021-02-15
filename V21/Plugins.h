@@ -1,6 +1,6 @@
 #pragma once
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 		void Initialize();
 		void Dispose();

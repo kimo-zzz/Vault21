@@ -3,16 +3,16 @@
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
-#include "Prediction.h"
-namespace HACKUZAN {
+
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
-		float CastTime = 0.0f;
+		float QRange = 0;
 
 		namespace XerathConfig {
 
@@ -40,7 +40,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Xerath::Initialize()
+		void V21::Plugins::Xerath::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Xerath", "Xerath");
 
@@ -81,19 +81,25 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool Xerath::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void Xerath::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return ;
 		}
 
 		void Xerath::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
 		{
+			if (!castInfo)
+				return;
+
+			if (castInfo->IsAutoAttack() || !castInfo->IsChanneling())
+				return;
+
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 
 			if (!caster->IsHero())
@@ -101,6 +107,11 @@ namespace HACKUZAN {
 
 			if (caster->Id != ObjectManager::Player->Id)
 				return;
+			float castTime = spellData->CastTime;
+
+			QRange = 750.f + (ClockFacade::GetGameTime() - castTime) * 500;
+			if (QRange >= 1400.f)
+				QRange = 1400.f;
 
 		}
 
@@ -116,17 +127,15 @@ namespace HACKUZAN {
 				return;
 		}
 
-		void Xerath::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame,
-			bool forceStop, bool destroyMissile, unsigned missileNetworkID)
+		void Xerath::OnStopCast(GameObject* caster, StopCast args)
 		{
-			if (spellCaster_Client == nullptr)
+			if (caster == nullptr)
 				return;
 		}
 
-		void Xerath::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed,
-			unsigned dash)
+		void Xerath::OnNewPath(NewPath* args)
 		{
-			if (obj == nullptr)
+			if (args->sender == nullptr)
 				return;
 		}
 
@@ -152,7 +161,7 @@ namespace HACKUZAN {
 		GameObject* Xerath::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];
@@ -164,21 +173,12 @@ namespace HACKUZAN {
 			return TargetSelector::GetTarget(heroes, DamageType_Physical);
 		}
 
-		bool Xerath::IsEnemyInQRange()
-		{
-			auto heroList_ = GameObject::GetHeroes();
-			for (size_t i = 0; i < heroList_->size; i++)
-			{
-				auto hero = heroList_->entities[i];
-
-				if (hero && hero->IsValidTarget(1400.f, true, ObjectManager::Player->ServerPosition()));
-				return true;
-			}
-			return false;
-		}
-
 		void Xerath::Logics::ComboLogic()
 		{
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, QRange, DamageType_Magical);
+
+			if (!target)
+				return;
 
 
 		}
@@ -196,41 +196,7 @@ namespace HACKUZAN {
 			if (Orbwalker::OrbwalkerEvading || !Orbwalker::CanCastAfterAttack())
 				return;
 
-
-			if (ObjectManager::Player->FindBuffName("XerathArcanopulseChargeUp"))
-			{
-				CastTime = ObjectManager::Player->FindBuffName("XerathArcanopulseChargeUp")->StartTime;
-			}
-			else
-				CastTime = 0.0f;
-
-			float qRange_ = 0.0f;
-
-			if (CastTime > 0.0f)
-			{
-				qRange_ = 750.f + (ClockFacade::GetGameTime() - CastTime) * 500;
-				if (qRange_ >= 1400.f)
-					qRange_ = 1400.f;
-
-
-				if (!IsEnemyInQRange())
-					return;
-
-				ObjectManager::Player->CastSpell(SpellSlot_Q, (DWORD)ObjectManager::Player);
-
-				auto chargingTarget = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, qRange_, kDamageType::DamageType_Physical);
-
-				if (chargingTarget != nullptr && Distance(chargingTarget, ObjectManager::Player) <= qRange_)
-				{
-					GameClient::PrintChat("IN RANGE", 255);
-					auto prediction = PredGetPrediction(ObjectManager::Player->ServerPosition(), FLT_MAX, qRange_, 0.5f, chargingTarget, SpellCollisionFlags::kYasuoWall, 290.f);
-
-					ObjectManager::Player->UpdateChargeableSpell(SpellSlot_Q, &prediction.CastPosition, true);
-				}
-				else if (chargingTarget == nullptr && qRange_ == 1400.f)
-					ObjectManager::Player->UpdateChargeableSpell(SpellSlot_Q, &HudManager::Instance->CursorTargetLogic->CursorPosition, true);
-
-			}
+			auto target = TargetSelector::GetTarget(TargetType::TSTARGET_HEROES, 1000.0f, kDamageType::DamageType_Physical);
 
 			switch (ActiveMode)
 			{

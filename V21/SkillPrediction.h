@@ -3,7 +3,7 @@
 #include "List.h"
 #include "ObjectManager.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace SkillPrediction
 	{

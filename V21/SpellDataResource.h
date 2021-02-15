@@ -2,7 +2,7 @@
 
 #include "Offsets.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum class SpellTargettingType : BYTE
 	{

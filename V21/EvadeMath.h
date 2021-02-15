@@ -3,7 +3,7 @@
 #include "Config.h"
 #include "HudManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	inline int GetDangerousLevel(Vector2 Position, SArray<DetectedSKillShot> Detected, DetectedSKillShot& SkillShot)
 	{

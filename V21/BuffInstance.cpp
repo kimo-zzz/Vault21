@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BuffInstance.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	bool BuffInstance::IsActive()
 	{

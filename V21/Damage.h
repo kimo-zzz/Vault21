@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace SDK
 	{

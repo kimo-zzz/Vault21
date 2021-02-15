@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector2.h"
 #include "NavGrid.h"
-namespace HACKUZAN {
+namespace V21 {
 
 	class Vector2;
 

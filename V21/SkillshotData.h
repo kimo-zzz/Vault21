@@ -9,7 +9,7 @@
 #define ADD_VAR(TYPE, NAME) TYPE NAME = { }; SET_VAR(TYPE, NAME)
 
 
-namespace HACKUZAN {
+namespace V21 {
 
 	class SkillshotData
 	{

@@ -2,7 +2,7 @@
 #include "Functions.h"
 #include "Offsets.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	fnGetGameTime Functions::GetGameTime;
 	fnTranslateString Functions::TranslateString;

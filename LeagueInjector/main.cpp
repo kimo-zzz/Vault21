@@ -282,7 +282,7 @@ void cls() {
 	std::cout <<
 		" -------------------------------\n"
 		"  Thread Hijacking Injector \n"
-		"  A project by Dencelle, Jiingz, pakeke80, Earl, Hackuzan \n"
+		"  A project by Dencelle, Jiingz, pakeke80, Earl, HACKUZAN \n"
 		" -------------------------------\n";
 }
 

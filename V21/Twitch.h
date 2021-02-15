@@ -11,19 +11,49 @@
 
 #define PI 3.14159265f
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 		namespace Twitch { //change champ name
 
 			void Initialize();
 			void Dispose();
-			void OnGameUpdate();
-			void OnDraw();
-			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
+			
+			void OnGameUpdate(); //OnPresent
+			void OnDraw(); //OnPresent
+
+			void OnCreateMissile(GameObject* unit);
+
+			void OnDeleteMissile(GameObject* unit);
+
 			void OnCreateObject(GameObject* unit);
+
 			void OnDeleteObject(GameObject* unit);
-			//void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target);
+
+			void OnCastSpell(SpellbookClient* spellbook, SpellDataInst* pSpellInfo, kSpellSlot slot, Vector3* _end_position, Vector3* _start_position, DWORD netId);
+
+			void OnSpellCast(kSpellSlot slot);
+
+			void OnDoCast(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnDoCastDelayed(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnPlayAnimation(GameObject* ptr, char* name, float animationTime);
+
+			void OnFinishCast(SpellCastInfo* castInfo, GameObject* object);
+
+			void OnStopCast(GameObject* unit, StopCast args);
+
+			void OnGapCloserSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnInterruptibleSpell(SpellInfo* castInfo, SpellDataResource* spellData);
+
+			void OnNewPath(NewPath* args);
+
 			int CountEnemiesInRange(float range);
 			float GetPoisonDmg(GameObject* target);
 			bool IsKillable();

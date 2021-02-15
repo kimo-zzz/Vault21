@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "DeviceHandler.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	DeviceHandler* DeviceHandler::Instance;
 }

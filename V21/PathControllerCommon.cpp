@@ -2,7 +2,7 @@
 #include "PathControllerCommon.h"
 #include "Functions.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	NavigationPath* PathControllerCommon::GetNavigationPath() {
 		return (NavigationPath*)((DWORD)this + (DWORD)Offsets::PathControllerCommon::NavigationPath);
 	}

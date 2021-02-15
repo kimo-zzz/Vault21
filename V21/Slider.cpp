@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include "HudManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		Slider::Slider(const char* name, const char* displayName, int defaultValue, int minimumValue, int maximumValue, int step, std::function<void(Slider*, int)> callback) {
 			strncpy(this->Name, name, sizeof(this->Name));

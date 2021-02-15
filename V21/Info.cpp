@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include "HudManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		Info::Info(const char* name, const char* displayName) {
 			strncpy(this->Name, name, sizeof(this->Name));

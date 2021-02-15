@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace HACKUZAN {
+namespace V21 {
 
 #pragma region template
 	template <class T>

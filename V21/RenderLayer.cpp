@@ -2,7 +2,7 @@
 #include "RenderLayer.h"
 #include "Functions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	RenderLayer* RenderLayer::Instance;
 

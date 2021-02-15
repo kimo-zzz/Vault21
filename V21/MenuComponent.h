@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "Rect.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		class Menu;
 

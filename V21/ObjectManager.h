@@ -3,7 +3,7 @@
 #include "Offsets.h"
 #include "GameObject.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class ObjectManager
 	{

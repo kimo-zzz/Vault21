@@ -4,7 +4,7 @@
 #include "BuffScript.h"
 #include "BuffScriptInstance.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum class BuffType
 	{

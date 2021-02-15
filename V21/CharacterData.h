@@ -3,7 +3,7 @@
 #include "Offsets.h"
 #include "CharacterProperties.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum class Character : unsigned int
 	{

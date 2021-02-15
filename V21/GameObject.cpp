@@ -11,7 +11,7 @@
 #include "ClockFacade.h"
 #include "LeagueFunctions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	int LastCastSpellTick = 0;
 
@@ -25,7 +25,7 @@ namespace HACKUZAN
 
 	bool GameObject::IsUnderEnemyTurret(float range)
 	{
-		auto turret_list = HACKUZAN::GameObject::GetTurrets();
+		auto turret_list = V21::GameObject::GetTurrets();
 		for (size_t i = 0; i < turret_list->size; i++)
 		{
 			auto turret = turret_list->entities[i];
@@ -83,7 +83,7 @@ namespace HACKUZAN
 	int GameObject::CountEnemiesInRange(float range)
 	{
 		auto count = 0;
-		auto hero_list = HACKUZAN::GameObject::GetHeroes();
+		auto hero_list = V21::GameObject::GetHeroes();
 		for (size_t i = 0; i < hero_list->size; i++)
 		{
 			auto hero = hero_list->entities[i];

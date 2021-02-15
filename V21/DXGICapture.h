@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	enum DXGI_TYPE
 	{

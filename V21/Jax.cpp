@@ -5,12 +5,12 @@
 #include "Geometry.h"
 #include "Jax.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	namespace Plugins 
 	{
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace Config
 		{
@@ -61,7 +61,7 @@ namespace HACKUZAN
 			GameObject* GetTarget(float radius)
 			{
 				std::vector<GameObject*> heroes;
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -76,7 +76,7 @@ namespace HACKUZAN
 			GameObject* GetMinionTarget(float radius)
 			{
 				std::vector<GameObject*> minions;
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
 					auto hero = minion_list->entities[i];
@@ -88,7 +88,7 @@ namespace HACKUZAN
 				return TargetSelector::GetTarget(minions, DamageType_Physical);
 			}
 
-			namespace LaneClear
+			namespace Farming
 			{
 				void ExecuteQ()
 				{
@@ -140,6 +140,8 @@ namespace HACKUZAN
 
 				void ExecuteE()
 				{
+					BYTE n = 0;
+
 					if (!Config::Combo::UseW->Value || ObjectManager::Player->Spellbook.GetSpellState(SpellSlot_E) != kSpellState::SpellState_Ready)
 						return;
 
@@ -175,7 +177,7 @@ namespace HACKUZAN
 
 			Config::Misc::FleeJump = misc->AddCheckBox("Jax Flee Jump", "Flee Jump", false);
 			Config::Misc::FleeJump->AddTooltip("Allows the usage of Ward Jumps during Orbwalker Flee mode.");
-			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'n', false, false);
+			Config::Misc::WardJump = misc->AddKeyBind("Jax Ward Jump Key", "Ward Jump", 'N', false, false);
 
 
 			EventManager::AddEventHandler(LeagueEvents::OnIssueOrder, OnIssueOrder);
@@ -226,25 +228,24 @@ namespace HACKUZAN
 
 		void Jax::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
-			GameClient::PrintChat(name, IM_COL32(255, 255, 255, 255));
 		}
 
 		void Jax::OnFinishCast(SpellCastInfo* castInfo, GameObject* object)
 		{
 		}
 
-		void Jax::OnStopCast(SpellCastInfo* spellCaster_Client, bool stopAnimation, bool* executeCastFrame, bool forceStop, bool destroyMissile, unsigned int missileNetworkID)
+		void Jax::OnStopCast(GameObject* caster, StopCast args)
 		{
 		}
 
-		void Jax::OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash)
+		void Jax::OnNewPath(NewPath* args)
 		{
 
 		}
 
-		bool Jax::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position)
+		void Jax::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target)
 		{
-			return true;
+			return;
 		}
 
 	}

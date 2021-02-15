@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GameClient.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	GameClient* GameClient::Instance;
 
 

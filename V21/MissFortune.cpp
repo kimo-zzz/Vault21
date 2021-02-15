@@ -5,11 +5,11 @@
 #include "Geometry.h"
 #include "Prediction.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace MissFortuneConfig {
 
@@ -36,7 +36,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::MissFortune::Initialize()
+		void V21::Plugins::MissFortune::Initialize()
 		{
 			auto menu = Menu::CreateMenu("MissFortune", "MissFortune");
 
@@ -74,15 +74,15 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool MissFortune::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void MissFortune::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return;
 		}
 
 		void MissFortune::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)

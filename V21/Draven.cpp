@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 		DelayAction* Delay = nullptr;
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		SArray<GameObject*> DravenAxesObject;
 		SArray<GameObject*> DravenAxesMissileOne; 
@@ -55,7 +55,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Draven::Initialize()
+		void V21::Plugins::Draven::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Draven", "Draven");
 
@@ -89,7 +89,7 @@ namespace HACKUZAN {
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
 			EventManager::AddEventHandler(LeagueEvents::OnCreateObject, OnCreateObject);
 			EventManager::AddEventHandler(LeagueEvents::OnDeleteObject, OnDeleteObject);
-			EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			//EventManager::AddEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
 			EventManager::AddEventHandler(LeagueEvents::OnPresent, OnDraw);
 
 			GameClient::PrintChat("Draven Script Loaded~!", IM_COL32(255, 69, 255, 255));
@@ -101,19 +101,19 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnGameUpdate);
 			EventManager::RemoveEventHandler(LeagueEvents::OnCreateObject, OnCreateObject);
 			EventManager::RemoveEventHandler(LeagueEvents::OnDeleteObject, OnDeleteObject);
-			EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
+			//EventManager::RemoveEventHandler(LeagueEvents::OnProcessSpell, OnProcessSpell);
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool Draven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void Draven::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return;
 		}
 
 		void Draven::OnCreateObject(GameObject* unit)

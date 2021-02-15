@@ -6,7 +6,7 @@
 
 
 
-namespace HACKUZAN
+namespace V21
 {
 
 	GameObject* me = ObjectManager::Player;

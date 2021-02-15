@@ -1,6 +1,6 @@
 #include "SpellDb.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SpellDb
 	{
 		std::vector<SkillshotData*> spells;

@@ -5,13 +5,13 @@
 #include "Geometry.h"
 #include "RenderLayer.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace LucianConfig {
 
@@ -37,7 +37,7 @@ namespace HACKUZAN {
 
 		}
 
-		void HACKUZAN::Plugins::Lucian::Initialize()
+		void V21::Plugins::Lucian::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Lucian", "Lucian");
 
@@ -178,15 +178,15 @@ namespace HACKUZAN {
 
 #pragma endregion Logics
 
-		bool Lucian::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void Lucian::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return ;
 		}
 
 
@@ -196,7 +196,7 @@ namespace HACKUZAN {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void Lucian::OnPlayAnimation(GameObject* ptr)
+		void Lucian::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 
 		}
@@ -206,7 +206,7 @@ namespace HACKUZAN {
 
 		}
 
-		void Lucian::OnStopCast(GameObject* unit, StopCast* args)
+		void Lucian::OnStopCast(GameObject* unit, StopCast args)
 		{
 
 		}
@@ -251,7 +251,7 @@ namespace HACKUZAN {
 		GameObject* Lucian::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

@@ -2,7 +2,7 @@
 #include "SpellbookClient.h"
 
 
-namespace HACKUZAN
+namespace V21
 {
 
 	SpellDataInst* SpellbookClient::GetSpell(kSpellSlot slot)

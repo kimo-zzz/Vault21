@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "Offsets.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	HWND Globals::MainWindow;
 	HMODULE Globals::MainModule;
 	DWORD Globals::HiddenModule;

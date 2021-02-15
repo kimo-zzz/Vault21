@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BuffScript.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	const char* BuffScript::GetDisplayName()
 	{

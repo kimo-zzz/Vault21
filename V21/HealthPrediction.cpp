@@ -7,7 +7,7 @@
 #include "NetClient.h"
 #include "Renderer.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		std::vector<IncomingAttack> HealthPrediction::IncomingAttacks;
 
@@ -89,8 +89,8 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HealthPrediction::OnStopCast(GameObject* unit, StopCast* args) {
-			if (unit != nullptr && args->stopAnimation) {
+		void HealthPrediction::OnStopCast(GameObject* unit, StopCast args) {
+			if (unit != nullptr && args.stopAnimation) {
 				for (auto it = IncomingAttacks.begin(); it != IncomingAttacks.end();) {
 					if (it->Source->NetworkId == unit->NetworkId) {
 						IncomingAttacks.erase(it);

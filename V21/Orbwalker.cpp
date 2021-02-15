@@ -15,7 +15,7 @@
 #include "Geometry.h"
 #include "Utils.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 
 	namespace SDK {
@@ -400,15 +400,15 @@ namespace HACKUZAN {
 			return false;
 		}
 
-		bool Orbwalker::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position, GameObject* target) {
+		void Orbwalker::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == nullptr)
-				return false;
+				return;
 
 			if (unit == ObjectManager::Player) {
 				switch (order) {
 				case GameObjectOrder::MoveTo:
 					LastOrder = GameObjectOrder::MoveTo;
-					LastMovePosition = position;
+					LastMovePosition = Vector3(position->X, position->Y, position->Z);;
 					LastTarget = nullptr;
 					break;
 				case GameObjectOrder::AttackUnit:
@@ -422,7 +422,7 @@ namespace HACKUZAN {
 				}
 			}
 
-			return true;
+			return;
 		}
 
 		void Orbwalker::OnSpellCast(kSpellSlot slot) {
@@ -460,7 +460,7 @@ namespace HACKUZAN {
 			/*
 			if (caster != nullptr && caster->IsEnemy() && Contains(spellData->SpellName, "YasuoWMovingWall", false))
 			{
-				HACKUZAN::PredLastYasuoWallCastPos = caster->Position;
+				V21::PredLastYasuoWallCastPos = caster->Position;
 			}
 			*/
 			if (caster == ObjectManager::Player) {
@@ -515,10 +515,10 @@ namespace HACKUZAN {
 			}
 		}
 
-		void Orbwalker::OnStopCast(GameObject* unit, StopCast* args) {
-			if (unit == nullptr || args == nullptr)
+		void Orbwalker::OnStopCast(GameObject* unit, StopCast args) {
+			if (unit == nullptr)
 				return;
-			if (unit == ObjectManager::Player && args->destroyMissile && args->stopAnimation) {
+			if (unit == ObjectManager::Player && args.destroyMissile && args.stopAnimation) {
 				ResetAutoAttack();
 			}
 		}
@@ -612,7 +612,7 @@ namespace HACKUZAN {
 			}
 
 			if (Config::Drawings::EnemyAttackRange->Value) {
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -686,7 +686,7 @@ namespace HACKUZAN {
 			bool isLaneClearMinion = true;
 			const int missileSpeed = GetAttackMissileSpeed();
 
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -719,7 +719,7 @@ namespace HACKUZAN {
 					}
 				}
 
-				auto turret_list = HACKUZAN::GameObject::GetTurrets();
+				auto turret_list = V21::GameObject::GetTurrets();
 				for (size_t i = 0; i < turret_list->size; i++)
 				{
 					auto turret = turret_list->entities[i];
@@ -877,7 +877,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Hero: {
 				if (IsAzir) {
 					std::vector<GameObject*> soldierTargets;
-					auto hero_list = HACKUZAN::GameObject::GetHeroes();
+					auto hero_list = V21::GameObject::GetHeroes();
 					for (size_t i = 0; i < hero_list->size; i++)
 					{
 						auto hero = hero_list->entities[i];
@@ -901,7 +901,7 @@ namespace HACKUZAN {
 				}
 
 				std::vector<GameObject*> heroes;
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -916,7 +916,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Monster: {
 				GameObject* monster = nullptr;
 				float highestMaxHealth = 0.0f;
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
 					auto minion = minion_list->entities[i];
@@ -932,7 +932,7 @@ namespace HACKUZAN {
 			case OrbwalkerTargetType::Minion: {
 				auto supportMode = false;
 				if (Config::Configuration::SupportMode->Value) {
-					auto hero_list = HACKUZAN::GameObject::GetHeroes();
+					auto hero_list = V21::GameObject::GetHeroes();
 					for (size_t i = 0; i < hero_list->size; i++)
 					{
 						auto hero = hero_list->entities[i];
@@ -960,7 +960,7 @@ namespace HACKUZAN {
 				break;
 			}
 			case OrbwalkerTargetType::Structure: {
-				auto aibase_list = HACKUZAN::GameObject::GetAIBases();
+				auto aibase_list = V21::GameObject::GetAIBases();
 				for (size_t i = 0; i < aibase_list->size; i++)
 				{
 					auto unit = aibase_list->entities[i];
@@ -982,7 +982,7 @@ namespace HACKUZAN {
 
 		/*bool Orbwalker::ShouldWait() {
 
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -1000,7 +1000,7 @@ namespace HACKUZAN {
 
 		bool Orbwalker::ShouldWaitUnderTurret(GameObject* noneKillableMinion)
 		{
-			auto minion_list = HACKUZAN::GameObject::GetMinions();
+			auto minion_list = V21::GameObject::GetMinions();
 			for (size_t i = 0; i < minion_list->size; i++)
 			{
 				auto minion = minion_list->entities[i];
@@ -1027,50 +1027,47 @@ namespace HACKUZAN {
 				return;
 			}
 
-			try
+			auto target = GetTarget();
+			if (target && target->IsValidTarget() && CanAttack(target))
 			{
-				auto target = GetTarget();
-				if (target && target->IsValidTarget() && CanAttack(target))
-				{
-					DisableNextAttack = false;
-					//FireBeforeAttack(target);
+				DisableNextAttack = false;
+				//FireBeforeAttack(target);
 
-					if (!DisableNextAttack)
-					{
-						std::string _championName = ObjectManager::Player->BaseCharacterData->SkinName;
-						for (auto champs : NoCancelChamps) {
-							if (!GameClient::StringEquals(champs.c_str(), _championName.c_str(), TRUE)) {
-								_missileLaunched = false;
-							}
+				if (!DisableNextAttack)
+				{
+					std::string _championName = ObjectManager::Player->BaseCharacterData->SkinName;
+					for (auto champs : NoCancelChamps) {
+						if (!GameClient::StringEquals(champs.c_str(), _championName.c_str(), TRUE)) {
+							_missileLaunched = false;
 						}
-
-						ObjectManager::Player->IssueOrder(GameObjectOrder::AttackUnit, target);
-						LastAttackCommandT = ClockFacade::GameTickCount();
-						LastTarget = target;
-						ResetNextAA = false;
-						return;
 					}
-				}
 
-				if (CanMove())
-				{
-					DisableNextMove = false;
-					OrbwalkerEvading = false;
-					if (!DisableNextMove) {
-						MoveTo(position);
-					}
+					ObjectManager::Player->IssueOrder(GameObjectOrder::AttackUnit, target);
+					LastAttackCommandT = ClockFacade::GameTickCount();
+					LastTarget = target;
+					ResetNextAA = false;
+					return;
 				}
 			}
-			catch (...)
+
+			if (CanMove())
 			{
-				// Console.WriteLine(e.ToString());
+				DisableNextMove = false;
+				OrbwalkerEvading = false;
+				if (!DisableNextMove) {
+					MoveTo(position);
+				}
 			}
 		}
 
 		void Orbwalker::MoveTo(Vector3 position) {
-			if (ObjectManager::Player->IsImmovable() || !ObjectManager::Player->Alive() || Orbwalker::OrbwalkerEvading)
+			if (ObjectManager::Player->IsImmovable() || !ObjectManager::Player->Alive() || Orbwalker::OrbwalkerEvading) {
+				//MessageBoxA(0, "ObjectManager::Player->IsImmovable() || !ObjectManager::Player->Alive() || Orbwalker::OrbwalkerEvading", "", 0);
 				return;
+			}
+				
 			if (ClockFacade::GameTickCount() - LastMoveCommandT < Config::Configuration::MovementDelay->Value + std::min(60, NetClient::Instance->GetPing())) {
+				//MessageBoxA(0, "ClockFacade::GameTickCount() - LastMoveCommandT < Config::Configuration::MovementDelay->Value + std::min(60, NetClient::Instance->GetPing())", "", 0);
 				return;
 			}
 
@@ -1089,9 +1086,11 @@ namespace HACKUZAN {
 			if (order == LastOrder) {
 				switch (LastOrder) {
 				case GameObjectOrder::Stop:
+					//MessageBoxA(0, "Stop", "", 0);
 					return;
 				case GameObjectOrder::MoveTo:
 					if (movePosition == LastMovePosition && ObjectManager::Player->GetPathController()->HasNavigationPath) {
+						//MessageBoxA(0, "movePosition == LastMovePosition && ObjectManager::Player->GetPathController()->HasNavigationPath", "", 0);
 						return;
 					}
 					break;

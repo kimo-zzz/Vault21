@@ -7,9 +7,9 @@
 #include "MenuSettings.h"
 #include "Draw.h"
 
-using namespace HACKUZAN::SDK;
+using namespace V21::SDK;
 
-namespace HACKUZAN {
+namespace V21 {
 	HWND hWnd;
 	const auto MenuKey = VK_INSERT;
 

@@ -2,7 +2,7 @@
 
 #include "Offsets.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	class FloatingInfoBar {
 	public:
 		union {

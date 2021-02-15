@@ -2,7 +2,7 @@
 
 #include "MenuComponent.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		class Info : public MenuComponent {
 		public:

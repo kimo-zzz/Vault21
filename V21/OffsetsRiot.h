@@ -2,7 +2,7 @@
 
 //9.8
 
-namespace HACKUZAN {
+namespace V21 {
 
 	namespace Offsets {
 
@@ -101,7 +101,7 @@ namespace HACKUZAN {
 			IssueOrderTrueReturn = 0x15C864,
 			
 			CastSpell = 0x4D5960,
-			TrueCastSpellReturn = 0x58A994,
+			TrueCastSpellReturn = 0x4EBAAC,
 
 			OnProcessSpellW = 0x4d7970,								// 11.3  
 			OnFinishCast = 0x4CD9C0,								// 11.3

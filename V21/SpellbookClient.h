@@ -6,7 +6,7 @@
 #include "EvadeConstants.h"
 #include "SpellInfo.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum kSpellState : int
 	{

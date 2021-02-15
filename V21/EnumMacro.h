@@ -5,7 +5,7 @@
 #include <algorithm>
 
 
-namespace HACKUZAN {
+namespace V21 {
 	// Search and remove whitespace from both ends of the string
 	static std::string TrimEnumString(const std::string& s)
 	{

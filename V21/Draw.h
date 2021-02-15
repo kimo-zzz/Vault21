@@ -12,7 +12,7 @@
 #include "Offsets.h"
 
 
-namespace HACKUZAN {
+namespace V21 {
 	class GameObject;
 
 	enum circle_type { full, half, quarter };

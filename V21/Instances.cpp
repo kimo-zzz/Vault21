@@ -8,7 +8,7 @@
 #include "NavGrid.h"
 #include "ObjectManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	void Instances::Initialize() {
 
 		//ClockFacade::Instance = *(ClockFacade**)DEFINE_RVA(Offsets::ClockFacade::Instance);

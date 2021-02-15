@@ -3,7 +3,7 @@
 #include "Offsets.h"
 #include "stdafx.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	class CharacterDataStack {
 	public:
 		union {

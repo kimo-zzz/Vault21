@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	enum class LeagueEvents {
 		OnWndProc,
 		OnPresent,
@@ -26,7 +26,6 @@ namespace HACKUZAN {
 		OnGapCloserSpell,
 		OnInterruptibleSpell,
 		OnNewPath,
-
 		Size
 	};
 

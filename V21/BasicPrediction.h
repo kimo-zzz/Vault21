@@ -10,17 +10,17 @@ enum ESpellCastType
 	MissileLine = 3
 };
 
-namespace HACKUZAN
+namespace V21
 {
 	struct PredictionInput
 	{
-		HACKUZAN::Vector3 from = HACKUZAN::ObjectManager::Player->Position;
+		V21::Vector3 from = V21::ObjectManager::Player->Position;
 		float delay = 0;
 		float radius = 1.f;
 		float range = FLT_MAX;
 		float speed = FLT_MAX;
 		ESpellCastType castType;
-		HACKUZAN::GameObject* target;
+		V21::GameObject* target;
 	};
 
 	class PredictionOutput
@@ -28,12 +28,12 @@ namespace HACKUZAN
 	public:
 		PredictionOutput(PredictionInput input) {
 			this->input = input;
-			this->castPosition = HACKUZAN::ObjectManager::Player->Position;
+			this->castPosition = V21::ObjectManager::Player->Position;
 		}
 
 		PredictionInput input;
-		HACKUZAN::Vector3 castPosition;
-		HACKUZAN::Vector3 predictedPosition;
+		V21::Vector3 castPosition;
+		V21::Vector3 predictedPosition;
 	};
 
 	class Prediction

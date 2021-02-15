@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "VirtualTableManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	WORD VirtualTableManager::CalculateMethodCount() {
 		IMAGE_DOS_HEADER* pDosHeader = (IMAGE_DOS_HEADER*)this->m_hModule;
 		IMAGE_NT_HEADERS* pNtHeaders = (IMAGE_NT_HEADERS*)((DWORD)pDosHeader + pDosHeader->e_lfanew);

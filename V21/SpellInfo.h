@@ -4,7 +4,7 @@
 #include "SpellData.h"
 #include "Vector3.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	enum kSpellSlot
 	{
@@ -33,7 +33,7 @@ namespace HACKUZAN
 	public:
 		union
 		{
-				DEFINE_MEMBER_0(HACKUZAN::SpellData* BasicAttackSpellData)
+				DEFINE_MEMBER_0(V21::SpellData* BasicAttackSpellData)
 				DEFINE_MEMBER_N(unsigned int Level, Offsets::SpellInfo::Level)
 				DEFINE_MEMBER_N(Vector3 StartPosition, Offsets::SpellInfo::StartPosition)
 				DEFINE_MEMBER_N(Vector3 EndPosition, Offsets::SpellInfo::EndPosition)

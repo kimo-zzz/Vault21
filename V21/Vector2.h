@@ -1,6 +1,6 @@
 #pragma once
 
-namespace HACKUZAN {
+namespace V21 {
 	class Vector3;
 
 	__forceinline float ToDegree(float Args)

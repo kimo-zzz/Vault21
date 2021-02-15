@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "include/Zydis/Zydis.h"
-using namespace HACKUZAN;
+#include "UltimateHooks.h"
+
+using namespace V21;
 
 //extern ExampleAppLog AppLog;
 
@@ -18,15 +20,15 @@ bool LeagueFunctions::IsDonePatchingIssueOrder = false;
 bool LeagueFunctions::IsDonePatchingCastSpell = false;
 bool LeagueFunctions::IsDonePatchingUpdateChargableSpell = false;
 
-DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::IssueOrderTrueReturn));
+DWORD* LeagueFunctions::TrueIssueOrderReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::IssueOrderTrueReturn));
 DWORD LeagueFunctions::IssueOrderStartHookGateway = 0;
 DWORD LeagueFunctions::IssueOrderEndHookGateway = 0;
 
-DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueCastSpellReturn));
+DWORD* LeagueFunctions::TrueCastSpellReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::TrueCastSpellReturn));
 DWORD LeagueFunctions::CastSpellStartHookGateway = 0;
 DWORD LeagueFunctions::CastSpellEndHookGateway = 0;
 
-DWORD* LeagueFunctions::TrueUpdateChargableSpellReturnAddress = (DWORD*)(DEFINE_RVA(HACKUZAN::Offsets::Functions::TrueUpdateChargableSpellReturn));
+DWORD* LeagueFunctions::TrueUpdateChargableSpellReturnAddress = (DWORD*)(DEFINE_RVA(V21::Offsets::Functions::TrueUpdateChargableSpellReturn));
 DWORD LeagueFunctions::UpdateChargableSpellStartHookGateway = 0;
 DWORD LeagueFunctions::UpdateChargableSpellEndHookGateway = 0;
 
@@ -98,8 +100,29 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 }
 
 DWORD LeagueFunctions::VirtualAllocateFunction(PVOID& NewFunction, DWORD OrigAddress, size_t size) {
-	NewFunction = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
-		PAGE_EXECUTE_READWRITE);
+
+	auto mbi = MEMORY_BASIC_INFORMATION{ 0 };
+	if (!VirtualQuery((PVOID)OrigAddress, &mbi, sizeof(mbi))) {
+		return 0;
+	}
+
+	bool isFound = false;
+	HookEntries _hs;
+	for (HookEntries hs : UltimateHooks::hookEntries) {
+		if (hs.addressToHookMbiStart == (DWORD)mbi.BaseAddress) {
+			_hs = hs;
+			isFound = true;
+		}
+	}
+	if (isFound) {
+		NewFunction = (PVOID)((_hs.allocatedAddressStart + 0x1000) + (OrigAddress - (DWORD)mbi.BaseAddress));
+		//V21::GameClient::PrintChat(("Found existing virtual address: "+hexify<DWORD>(DWORD(NewFunction))).c_str(), IM_COL32(220, 69, 0, 255));
+	}
+	else {
+		NewFunction = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
+			PAGE_EXECUTE_READWRITE);
+	}
+	
 	return (DWORD)NewFunction;
 }
 

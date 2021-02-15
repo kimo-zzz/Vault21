@@ -4,13 +4,13 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 
 
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		namespace ChampionConfig {
 
@@ -36,7 +36,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::ChampionName::Initialize()
+		void V21::Plugins::ChampionName::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Template", "Template");
 
@@ -77,15 +77,15 @@ namespace HACKUZAN {
 			EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 		}
 
-		bool ChampionName::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+		void ChampionName::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 			if (unit == ObjectManager::Player)
 			{
 				if (Orbwalker::DisableNextMove && order == GameObjectOrder::MoveTo) {
 
-					return false;
+					return;
 				}
 			}
-			return  true;
+			return;
 		}
 
 		void ChampionName::OnProcessSpell(SpellInfo* castInfo, SpellDataResource* spellData)
@@ -94,7 +94,7 @@ namespace HACKUZAN {
 			auto caster = ObjectManager::Instance->ObjectsArray[castInfo->SourceId];
 		}
 
-		void ChampionName::OnPlayAnimation(GameObject* ptr)
+		void ChampionName::OnPlayAnimation(GameObject* ptr, char* name, float animationTime)
 		{
 
 		}
@@ -104,7 +104,7 @@ namespace HACKUZAN {
 
 		}
 
-		void ChampionName::OnStopCast(GameObject* unit, StopCast* args)
+		void ChampionName::OnStopCast(GameObject* unit, StopCast args)
 		{
 
 		}
@@ -132,7 +132,7 @@ namespace HACKUZAN {
 		GameObject* ChampionName::GetTarget(float radius)
 		{
 			std::vector<GameObject*> heroes;
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++)
 			{
 				auto hero = hero_list->entities[i];

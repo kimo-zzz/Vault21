@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	Vector3 Vector3::Zero = Vector3();
 
 	Vector3::Vector3() {

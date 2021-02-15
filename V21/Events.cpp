@@ -18,7 +18,7 @@
 #include "Draw.h"
 #include "NavGrid.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	CConsole Console;
 
@@ -43,7 +43,7 @@ namespace HACKUZAN {
 						SpellCast::Initialize();
 
 						Menu::Initialize();
-						HealthPrediction::Initialize();
+						//HealthPrediction::Initialize();
 						TargetSelector::Initialize();
 						Orbwalker::Initialize();
 						Plugins::Initialize();
@@ -96,7 +96,7 @@ namespace HACKUZAN {
 						//Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 40), 0xFFFFA500, "NavigationMesh Position: X:%f Y:%f", navMeshCell.X, navMeshCell.Y);
 						//Renderer::AddText(10, HudManager::CursorPos2D + Vector2(40, 60), 0xFFFFDEAD, "Collision flags: %d", NavGrid::Instance->GetCell(&cursorPos)->m_Flags);
 
-						auto aibase_list = HACKUZAN::GameObject::GetAIBases();
+						auto aibase_list = V21::GameObject::GetAIBases();
 						for (size_t i = 0; i < aibase_list->size; i++)
 						{
 							auto gameObject = aibase_list->entities[i];

@@ -3,7 +3,7 @@
 #include "EvadeMath.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	namespace Plugins {
 
@@ -43,7 +43,7 @@ namespace HACKUZAN {
 				EventManager::RemoveEventHandler(LeagueEvents::OnPresent, OnDraw);
 			}
 
-			bool Evade::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position) {
+			void Evade::OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3* position, GameObject* target) {
 				if (unit == ObjectManager::Player && Config::EvadeSkillMenu::EvadeWithWalking->Value)
 				{
 					if (EvadeWalkingPoint != Vector2(0, 0))
@@ -52,7 +52,7 @@ namespace HACKUZAN {
 							//GameClient::PrintChat("movement blocked! #1", IM_COL32(255, 69, 255, 0));
 							Orbwalker::DisableNextAttack = true;
 							Orbwalker::OrbwalkerEvading = true;
-							return false;
+							return;
 						}
 					}
 				}
@@ -62,13 +62,13 @@ namespace HACKUZAN {
 						//GameClient::PrintChat("movement blocked! #2", IM_COL32(255, 69, 255, 0));
 						Orbwalker::DisableNextAttack = true;
 						Orbwalker::OrbwalkerEvading = true;
-						return false;
+						return;
 					}
 					Orbwalker::DisableNextAttack = false;
 					Orbwalker::OrbwalkerEvading = false;
 				}
 
-				return  true;
+				return ;
 			}
 
 			void Evade::OnCreateObject(GameObject* unit)

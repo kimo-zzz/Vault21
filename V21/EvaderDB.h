@@ -4,7 +4,7 @@
 #include "EvadeConstants.h"
 #include "ObjectManager.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	enum EvaderType
 	{

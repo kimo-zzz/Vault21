@@ -5,7 +5,7 @@
 #include "NetClient.h"
 #include "NavGrid.h"
 
-namespace HACKUZAN {
+namespace V21 {
 
 	inline Vector3 PredGetUnitPosition(GameObject* target, float delay)
 	{
@@ -46,7 +46,7 @@ namespace HACKUZAN {
 			std::vector<GameObject*> Minions;
 			if (ColiFlag & kHeroes)
 			{
-				auto hero_list = HACKUZAN::GameObject::GetHeroes();
+				auto hero_list = V21::GameObject::GetHeroes();
 				for (size_t i = 0; i < hero_list->size; i++)
 				{
 					auto hero = hero_list->entities[i];
@@ -59,7 +59,7 @@ namespace HACKUZAN {
 			}
 			if (ColiFlag & kMinions)
 			{
-				auto minion_list = HACKUZAN::GameObject::GetMinions();
+				auto minion_list = V21::GameObject::GetMinions();
 				for (size_t i = 0; i < minion_list->size; i++)
 				{
 					auto minion = minion_list->entities[i];

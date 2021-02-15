@@ -2,7 +2,7 @@
 
 #include "SpellCastInfo.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	class SpellInstanceClient
 	{

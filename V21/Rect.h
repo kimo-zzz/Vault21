@@ -2,7 +2,7 @@
 
 #include "Vector2.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	class Vector3;
 	class Vector2;
 

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ManagerTemplate.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		class IncomingAttack {
 		public:
@@ -29,7 +29,7 @@ namespace HACKUZAN {
 			void OnDeleteMissile(GameObject* unit);
 			void OnDoCast(SpellInfo* castInfo, SpellDataResource* spellData);
 			void OnProcessSpell(SpellInfo* unit, SpellDataResource* castInfo);
-			void OnStopCast(GameObject* unit, StopCast* args);
+			void OnStopCast(GameObject* unit, StopCast args);
 
 			float GetHealthPrediction(GameObject* unit, int time, int delay);
 			float LaneClearHealthPrediction(GameObject* unit, int time, int delay);

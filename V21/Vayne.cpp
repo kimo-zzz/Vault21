@@ -4,12 +4,12 @@
 #include "Draw.h"
 #include "Geometry.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace Plugins {
 		bool Vayne::LastAttackCastSpell = false;
 
-		using namespace HACKUZAN::SDK;
-		using namespace HACKUZAN::SDK::Orbwalker;
+		using namespace V21::SDK;
+		using namespace V21::SDK::Orbwalker;
 
 		class VayneantiGapCloser
 		{
@@ -38,7 +38,7 @@ namespace HACKUZAN {
 			}
 		}
 
-		void HACKUZAN::Plugins::Vayne::Initialize()
+		void V21::Plugins::Vayne::Initialize()
 		{
 			auto menu = Menu::CreateMenu("Vayne", "Vayne");
 
@@ -54,7 +54,7 @@ namespace HACKUZAN {
 			VayneConfig::VayneMisc::PushDistance = misc->AddSlider("PushDistance", "Push Distance", 475, 0, 1000, 10);
 			//Config::Misc::HitChance = misc->AddSlider("HitChance", "Condemn HitChance", 50, 0, 100, 5);
 			/*auto AntiGapCloser = misc->AddMenu("antiGapCloser", "Anti-GapCloser");
-			auto hero_list = HACKUZAN::GameObject::GetHeroes();
+			auto hero_list = V21::GameObject::GetHeroes();
 			for (size_t i = 0; i < hero_list->size; i++) {
 				auto hero = hero_list->entities[i];
 				if (hero && hero->IsEnemy()) {
@@ -184,7 +184,7 @@ namespace HACKUZAN {
 				Orbwalker::ResetAutoAttack();
 		}
 
-		bool HACKUZAN::Plugins::Vayne::IsCondemnable(GameObject* target)
+		bool V21::Plugins::Vayne::IsCondemnable(GameObject* target)
 		{
 			if (target == nullptr)
 				return false;

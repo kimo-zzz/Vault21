@@ -2,7 +2,7 @@
 #include "HashFunctions.h"
 #include "Functions.h"
 
-namespace HACKUZAN
+namespace V21
 {
 	unsigned int HashFunctions::HashStringCaseInsensitiveFNV1a(const char* str, unsigned int seed)
 	{

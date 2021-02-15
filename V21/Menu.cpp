@@ -7,7 +7,7 @@
 #include "List.h"
 #include "Slider.h"
 
-namespace HACKUZAN {
+namespace V21 {
 	namespace SDK {
 		Vector2 Menu::BasePosition = Vector2(30.0f, 30.0f);
 		Vector2 Menu::DragPosition = Vector2();
@@ -50,14 +50,14 @@ namespace HACKUZAN {
 			std::ifstream file("MenuComponent.save");
 			if (file.is_open()) {
 				file >> MenuSave;
-				auto& savedBasePositionX = MenuSave["HACKUZAN"]["MenuSettings"]["BasePosition"]["X"];
-				auto& savedBasePositionY = MenuSave["HACKUZAN"]["MenuSettings"]["BasePosition"]["Y"];
+				auto& savedBasePositionX = MenuSave["V21"]["MenuSettings"]["BasePosition"]["X"];
+				auto& savedBasePositionY = MenuSave["V21"]["MenuSettings"]["BasePosition"]["Y"];
 				if (!savedBasePositionX.is_null() && !savedBasePositionY.is_null()) {
 					BasePosition = Vector2(savedBasePositionX, savedBasePositionY);
 				}
 			}
 
-			auto menu = Menu::CreateMenu("HACKUZAN", "HACKUZAN");
+			auto menu = Menu::CreateMenu("V21", "V21");
 
 			auto menuSettings = menu->AddMenu("MenuSettings", "Menu Settings");
 			MenuSettings::BackgroundOpacity = menuSettings->AddSlider("BackgroundOpacity", "Background Opacity", 160, 55, 255, 1, [](Slider*, int value) {
@@ -91,8 +91,8 @@ namespace HACKUZAN {
 			}
 			RootMenus.clear();
 
-			MenuSave["HACKUZAN"]["MenuSettings"]["BasePosition"]["X"] = BasePosition.X;
-			MenuSave["HACKUZAN"]["MenuSettings"]["BasePosition"]["Y"] = BasePosition.Y;
+			MenuSave["V21"]["MenuSettings"]["BasePosition"]["X"] = BasePosition.X;
+			MenuSave["V21"]["MenuSettings"]["BasePosition"]["Y"] = BasePosition.Y;
 
 			std::ofstream file("MenuComponent.save");
 			if (file.is_open()) {

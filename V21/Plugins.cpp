@@ -11,6 +11,7 @@
 #include "Brand.h"
 #include "Riven.h"
 #include "Jax.h"
+#include "Xerath.h"
 
 namespace HACKUZAN {
 	void Plugins::Initialize() {
@@ -44,6 +45,9 @@ namespace HACKUZAN {
 		case Character::Jax:
 			Jax::Initialize();
 			break;
+		case Character::Xerath:
+			Xerath::Initialize();
+			break;
 		}
 	}
 
@@ -76,6 +80,9 @@ namespace HACKUZAN {
 			break;
 		case Character::Jax:
 			Jax::Dispose();
+			break;
+		case Character::Xerath:
+			Xerath::Dispose();
 			break;
 		}
 	}

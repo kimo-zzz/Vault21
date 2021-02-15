@@ -32,6 +32,8 @@ namespace HACKUZAN {
 			void OnNewPath(GameObject* obj, Vector3* start, Vector3* end, Vector3* tail, float* dashSpeed, unsigned dash);
 			bool OnIssueOrder(GameObject* unit, GameObjectOrder order, Vector3 position);
 			GameObject* GetTarget(float radius);
+
+			bool IsEnemyInQRange();
 #pragma endregion callbacks
 
 #pragma region Logics

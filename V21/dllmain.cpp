@@ -36,6 +36,10 @@ HMODULE g_hModule;
 
 void OnExit() noexcept;
 
+#if _DEBUG
+string dllPath;
+#endif
+
 PVOID NewOnProcessSpell, NewOnCreateObject, NewOnDeleteObject, NewOnFinishCast, NewOnStopCast, NewOnNewPath, NewCreatePath;
 
 std::vector<string> gapcloser_targeted =
@@ -234,9 +238,9 @@ namespace LeagueHook {
 
 			//PIDManager _PIDManager;
 			//Process::GetAllModules(_PIDManager.GetAowProcId());
-
+#if _DEBUG
 			CrashHandler::init();
-
+#endif
 			LeagueDecrypt::_RtlDispatchExceptionAddress = find_RtlDispatchExceptionAddress();
 
 			while (!LeagueDecrypt::_RtlDispatchExceptionAddress) {
@@ -409,6 +413,12 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 	DisableThreadLibraryCalls(hModule);
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
+#if _DEBUG
+		char path[2048];
+		GetModuleFileNameA(hModule, path, 2048);
+		string s1(path);
+		dllPath = s1.substr(0, s1.find_last_of("\\/"));
+#endif
 
 		std::atexit(OnExit);
 		initThreadHandle = _beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InitThread, hModule, 0, nullptr);

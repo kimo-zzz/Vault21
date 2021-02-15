@@ -98,6 +98,7 @@ public:
 // record as a local copy. Note that you must do the stack dump at the
 // earliest opportunity, to avoid the interesting stack-frames being gone
 // by the time you do the dump.
+extern string dllPath;
 DWORD DumpStackTrace(EXCEPTION_POINTERS* ep)
 {
     HANDLE process = GetCurrentProcess();
@@ -112,7 +113,7 @@ DWORD DumpStackTrace(EXCEPTION_POINTERS* ep)
     // Load the symbols:
     // WARNING: You'll need to replace <pdb-search-path> with either NULL
     // or some folder where your clients will be able to find the .pdb file.
-    if (!SymInitialize(process, NULL, false))
+    if (!SymInitialize(process, dllPath.c_str(), false))
         throw(std::logic_error("Unable to initialize symbol handler"));
     DWORD symOptions = SymGetOptions();
     symOptions |= 0x00000010 | 0x00000002;

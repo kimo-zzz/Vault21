@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "include/Zydis/Zydis.h"
+#include "UltimateHooks.h"
+
 using namespace V21;
 
 //extern ExampleAppLog AppLog;
@@ -98,8 +100,29 @@ DWORD LeagueFunctions::CalcFunctionSize(DWORD OrigAddress, size_t& size, ReturnS
 }
 
 DWORD LeagueFunctions::VirtualAllocateFunction(PVOID& NewFunction, DWORD OrigAddress, size_t size) {
-	NewFunction = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
-		PAGE_EXECUTE_READWRITE);
+
+	auto mbi = MEMORY_BASIC_INFORMATION{ 0 };
+	if (!VirtualQuery((PVOID)OrigAddress, &mbi, sizeof(mbi))) {
+		return 0;
+	}
+
+	bool isFound = false;
+	HookEntries _hs;
+	for (HookEntries hs : UltimateHooks::hookEntries) {
+		if (hs.addressToHookMbiStart == (DWORD)mbi.BaseAddress) {
+			_hs = hs;
+			isFound = true;
+		}
+	}
+	if (isFound) {
+		NewFunction = (PVOID)((_hs.allocatedAddressStart + 0x1000) + (OrigAddress - (DWORD)mbi.BaseAddress));
+		//V21::GameClient::PrintChat(("Found existing virtual address: "+hexify<DWORD>(DWORD(NewFunction))).c_str(), IM_COL32(220, 69, 0, 255));
+	}
+	else {
+		NewFunction = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
+			PAGE_EXECUTE_READWRITE);
+	}
+	
 	return (DWORD)NewFunction;
 }
 

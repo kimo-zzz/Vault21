@@ -215,14 +215,18 @@ LONG WINAPI UltimateHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 
 		for (HookEntries hs : hookEntries)
 		{
-			//MessageBoxA(0, "EXCEPTION_ACCESS_VIOLATION", "EXCEPTION_ACCESS_VIOLATION", 0);
-			if ((hs.addressToHook == pExceptionInfo->ContextRecord->XIP) &&
-				(pExceptionInfo->ExceptionRecord->ExceptionInformation[0] == 8)) {
-				//MessageBoxA(0, "pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.hookAddress);", "EXCEPTION_ACCESS_VIOLATION", 0);
-				pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.hookAddress);
-				//MessageBoxA(0, exceptionCode.c_str(), "exceptionCode", 0);
-				return EXCEPTION_CONTINUE_EXECUTION;
+			for (HookDetails hd : hs.hookDetails)
+			{
+				if ((hd.addressToHook == pExceptionInfo->ContextRecord->XIP) &&
+					(pExceptionInfo->ExceptionRecord->ExceptionInformation[0] == 8)) {
+					//MessageBoxA(0, "pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.hookAddress);", "EXCEPTION_ACCESS_VIOLATION", 0);
+					pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hd.hookAddress);
+					//MessageBoxA(0, exceptionCode.c_str(), "exceptionCode", 0);
+					return EXCEPTION_CONTINUE_EXECUTION;
+				}
 			}
+			//MessageBoxA(0, "EXCEPTION_ACCESS_VIOLATION", "EXCEPTION_ACCESS_VIOLATION", 0);
+			
 			/*else if ((hs.addressToHookMbiStart - 0x10 <= pExceptionInfo->ContextRecord->XIP) &&
 				(hs.addressToHookMbiStart >= pExceptionInfo->ContextRecord->XIP) &&
 				(pExceptionInfo->ExceptionRecord->ExceptionInformation[0] == 8)
@@ -239,7 +243,7 @@ LONG WINAPI UltimateHooks::LeoHandler(EXCEPTION_POINTERS* pExceptionInfo)
 				pExceptionInfo->ContextRecord->XIP = static_cast<DWORD>(hs.allocatedAddressEnd + offset);
 				isFound = true;
 			}*/
-			else if ((hs.addressToHookMbiStart - 0x1000 <= pExceptionInfo->ContextRecord->XIP) &&
+			if ((hs.addressToHookMbiStart - 0x1000 <= pExceptionInfo->ContextRecord->XIP) &&
 				(hs.addressToHookMbiEnd + 0x1000 >= pExceptionInfo->ContextRecord->XIP) &&
 				(pExceptionInfo->ExceptionRecord->ExceptionInformation[0] == 8)
 				) {
@@ -267,22 +271,24 @@ bool UltimateHooks::deinit()
 
 			for (HookEntries hs : hookEntries)
 			{
-
-				auto addr = (PVOID)hs.addressToHook;
-				auto size = static_cast<SIZE_T>(static_cast<int>(1));
-
-				if (NT_SUCCESS(
-					makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14,
-						0x00)(GetCurrentProcess(), &addr, &size, hs.addressToHookOldProtect, &old)))
+				for (HookDetails hd : hs.hookDetails)
 				{
-					//MessageBoxA(0, "VirtualProtect success", "", 0);
-					//MessageBoxA(0, ("addr:" + hexify<DWORD>((DWORD)addr)).c_str(), "", 0);
-					//MessageBoxA(0, ("size:" + hexify<int>((int)size)).c_str(), "", 0);
-					//MessageBoxA(0, ("oldProtection:" + hexify<DWORD>((DWORD)old)).c_str(), "", 0);
-				}
-				else
-				{
-					//MessageBoxA(0, "VirtualProtect failed", "", 0);
+					auto addr = (PVOID)hd.addressToHook;
+					auto size = static_cast<SIZE_T>(static_cast<int>(1));
+
+					if (NT_SUCCESS(
+						makesyscall<NTSTATUS>(0x50, 0x00, 0x00, 0x00, "RtlInterlockedCompareExchange64", 0x170, 0xC2, 0x14,
+							0x00)(GetCurrentProcess(), &addr, &size, hs.addressToHookOldProtect, &old)))
+					{
+						//MessageBoxA(0, "VirtualProtect success", "", 0);
+						//MessageBoxA(0, ("addr:" + hexify<DWORD>((DWORD)addr)).c_str(), "", 0);
+						//MessageBoxA(0, ("size:" + hexify<int>((int)size)).c_str(), "", 0);
+						//MessageBoxA(0, ("oldProtection:" + hexify<DWORD>((DWORD)old)).c_str(), "", 0);
+					}
+					else
+					{
+						//MessageBoxA(0, "VirtualProtect failed", "", 0);
+					}
 				}
 			}
 			hookEntries.clear();
@@ -309,9 +315,36 @@ bool UltimateHooks::Hook(DWORD original_fun, DWORD hooked_fun, size_t offset)
 	}
 
 	HookEntries hs;
-	hs.addressToHook = original_fun;
-	hs.hookAddress = hooked_fun;
+	HookDetails hd;
+
+	hd.addressToHook = original_fun;
+	hd.hookAddress = hooked_fun;
 	hs.addressToHookOldProtect = mbi.Protect;
+
+	std::vector<HookEntries> _hookEntries;
+	bool isFound = false;
+	for (HookEntries hs: hookEntries) {
+		if (hs.addressToHookMbiStart == (DWORD)mbi.BaseAddress) {
+			bool isExisting = false;
+			for (HookDetails hd : hs.hookDetails) {
+				if (original_fun == hd.addressToHook) {
+					isExisting = true;
+				}
+			}
+			if (!isExisting) {
+				isFound = true;
+				hs.hookDetails.push_back(hd);
+			}
+		}
+			
+		_hookEntries.push_back(hs);
+	}
+	if (isFound) {
+		hookEntries = _hookEntries;
+		//V21::GameClient::PrintChat("Duplicated Region found.", IM_COL32(220, 69, 0, 255));
+		return true;
+	}
+
 	hs.addressToHookMbiStart = ((DWORD)mbi.BaseAddress);
 	hs.addressToHookMbiEnd = ((DWORD)mbi.BaseAddress) + 0x1000;
 	hs.addressToHookMbiSize = 0x1000;
@@ -325,6 +358,7 @@ bool UltimateHooks::Hook(DWORD original_fun, DWORD hooked_fun, size_t offset)
 	hs.allocatedAddressEnd = NewRegion + 0x1000;
 	hs.allocatedAddressSize = 0x1000;
 	hs.addressToHookoffsetFromStart = original_fun - ((DWORD)mbi.BaseAddress);
+	hs.hookDetails.push_back(hd);
 
 	for (HookEntries he : hookEntries) {
 		if ((he.addressToHookMbiStart == hs.addressToHookMbiStart) && 
@@ -380,11 +414,15 @@ bool UltimateHooks::UnHook(DWORD original_fun)
 	std::vector<HookEntries> hookListCopy = hookEntries;
 	for (HookEntries hs : hookListCopy)
 	{
-		if (hs.addressToHook == original_fun)
+		for (HookDetails hd : hs.hookDetails)
 		{
-			isOrigFun_found = true;
-			_hs = hs;
+			if (hd.addressToHook == original_fun)
+			{
+				isOrigFun_found = true;
+				_hs = hs;
+			}
 		}
+		
 	}
 	if (!isOrigFun_found)
 		return false;
@@ -447,8 +485,12 @@ bool UltimateHooks::removeHook(DWORD address)
 		std::vector<HookEntries> _hookList = {};
 		for (HookEntries hs : hookListCopy)
 		{
-			if (hs.addressToHook != address)
-				_hookList.push_back(hs);
+			for (HookDetails hd : hs.hookDetails)
+			{
+				if (hd.addressToHook != address)
+					_hookList.push_back(hs);
+			}
+			
 		}
 		hookEntries = _hookList;
 		return true;

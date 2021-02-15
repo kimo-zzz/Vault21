@@ -247,7 +247,31 @@ inline DWORD FindHiddenModule()
 	return result;
 }
 
+inline bool checkIfLogExistCreateIfNot() {
+	if (FILE* file = fopen("log.txt", "r")) {
+		fclose(file);
+		return true;
+	}
+	else {
+		ofstream MyFile("log.txt");
+		MyFile.close();
+	}
+	return true;
+}
+
+inline void writeDataToFile2(string name) {
+	checkIfLogExistCreateIfNot();
+	FILE* logfile;
+	// _CRT_SECURE_NO_DEPRECATE;
+	if ((logfile = fopen("log.txt", "a+")) != NULL)
+	{
+		fprintf(logfile, (name + "\n").c_str());
+		fclose(logfile);
+	}
+}
+
 inline void writeDataToFile(string name, DWORD address) {
+	checkIfLogExistCreateIfNot();
 	FILE* logfile;
 	// _CRT_SECURE_NO_DEPRECATE;
 	if ((logfile = fopen("log.txt", "a+")) != NULL)
@@ -372,4 +396,149 @@ inline string removeZero(string str, char toRemove)
 	str.erase(0, i);
 
 	return str;
+}
+
+inline void DataLog(EXCEPTION_POINTERS* pExceptionInfo)
+{
+	static int j = 0;
+	//AppLog.AddLog(("Entry: " + to_string(j) + "\n").c_str());
+	string ExceptionCode = "";
+	if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
+	{
+		ExceptionCode = "EXCEPTION_ACCESS_VIOLATION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ARRAY_BOUNDS_EXCEEDED)
+	{
+		ExceptionCode = "EXCEPTION_ARRAY_BOUNDS_EXCEEDED";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT)
+	{
+		ExceptionCode = "EXCEPTION_BREAKPOINT";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_DATATYPE_MISALIGNMENT)
+	{
+		ExceptionCode = "EXCEPTION_DATATYPE_MISALIGNMENT";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_DENORMAL_OPERAND)
+	{
+		ExceptionCode = "EXCEPTION_FLT_DENORMAL_OPERAND";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_DIVIDE_BY_ZERO)
+	{
+		ExceptionCode = "EXCEPTION_FLT_DIVIDE_BY_ZERO";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_INEXACT_RESULT)
+	{
+		ExceptionCode = "EXCEPTION_FLT_INEXACT_RESULT";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_INVALID_OPERATION)
+	{
+		ExceptionCode = "EXCEPTION_FLT_INVALID_OPERATION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_OVERFLOW)
+	{
+		ExceptionCode = "EXCEPTION_FLT_OVERFLOW";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_STACK_CHECK)
+	{
+		ExceptionCode = "EXCEPTION_FLT_STACK_CHECK";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_FLT_UNDERFLOW)
+	{
+		ExceptionCode = "EXCEPTION_FLT_UNDERFLOW";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ILLEGAL_INSTRUCTION)
+	{
+		ExceptionCode = "EXCEPTION_ILLEGAL_INSTRUCTION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_IN_PAGE_ERROR)
+	{
+		ExceptionCode = "EXCEPTION_IN_PAGE_ERROR";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_INT_DIVIDE_BY_ZERO)
+	{
+		ExceptionCode = "EXCEPTION_INT_DIVIDE_BY_ZERO";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_INT_OVERFLOW)
+	{
+		ExceptionCode = "EXCEPTION_INT_OVERFLOW";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_INVALID_DISPOSITION)
+	{
+		ExceptionCode = "EXCEPTION_INVALID_DISPOSITION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_NONCONTINUABLE_EXCEPTION)
+	{
+		ExceptionCode = "EXCEPTION_NONCONTINUABLE_EXCEPTION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_PRIV_INSTRUCTION)
+	{
+		ExceptionCode = "EXCEPTION_PRIV_INSTRUCTION";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_SINGLE_STEP)
+	{
+		ExceptionCode = "EXCEPTION_SINGLE_STEP";
+	}
+	else if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW)
+	{
+		ExceptionCode = "EXCEPTION_STACK_OVERFLOW";
+	}
+
+	writeDataToFile2("--------------------------------------------------------------------");
+	writeDataToFile2("ENTRY#"+to_string(j));
+	writeDataToFile2(ExceptionCode);
+	writeDataToFile("ContextRecord->ContextFlags", pExceptionInfo->ContextRecord->ContextFlags);
+	writeDataToFile("ContextRecord->EFlags", pExceptionInfo->ContextRecord->EFlags);
+	writeDataToFile("ContextRecord->Dr0", pExceptionInfo->ContextRecord->Dr0);
+	writeDataToFile("ContextRecord->Dr1", pExceptionInfo->ContextRecord->Dr1);
+	writeDataToFile("ContextRecord->Dr2", pExceptionInfo->ContextRecord->Dr2);
+	writeDataToFile("ContextRecord->Dr3", pExceptionInfo->ContextRecord->Dr3);
+	writeDataToFile("ContextRecord->Dr6", pExceptionInfo->ContextRecord->Dr6);
+	writeDataToFile("ContextRecord->Dr7", pExceptionInfo->ContextRecord->Dr7);
+	writeDataToFile("ContextRecord->Eax", pExceptionInfo->ContextRecord->Eax);
+	writeDataToFile("ContextRecord->Ebp", pExceptionInfo->ContextRecord->Ebp);
+	writeDataToFile("ContextRecord->Ebx", pExceptionInfo->ContextRecord->Ebx);
+	writeDataToFile("ContextRecord->Ecx", pExceptionInfo->ContextRecord->Ecx);
+	writeDataToFile("ContextRecord->Edi", pExceptionInfo->ContextRecord->Edi);
+	writeDataToFile("ContextRecord->Edx", pExceptionInfo->ContextRecord->Edx);
+	writeDataToFile("ContextRecord->Eip", pExceptionInfo->ContextRecord->Eip);
+	writeDataToFile("ContextRecord->Esi", pExceptionInfo->ContextRecord->Esi);
+	writeDataToFile("ContextRecord->Esp", pExceptionInfo->ContextRecord->Esp);
+	writeDataToFile("ContextRecord->SegCs", pExceptionInfo->ContextRecord->SegCs);
+	writeDataToFile("ContextRecord->SegDs", pExceptionInfo->ContextRecord->SegDs);
+	writeDataToFile("ContextRecord->SegEs", pExceptionInfo->ContextRecord->SegEs);
+	writeDataToFile("ContextRecord->SegFs", pExceptionInfo->ContextRecord->SegFs);
+	writeDataToFile("ContextRecord->SegGs", pExceptionInfo->ContextRecord->SegGs);
+	writeDataToFile("ContextRecord->SegSs", pExceptionInfo->ContextRecord->SegSs);
+	int i = 0;
+	for (BYTE b : pExceptionInfo->ContextRecord->ExtendedRegisters)
+	{
+		writeDataToFile("ContextRecord->ExtendedRegisters[" + to_string(i) + "]", static_cast<DWORD>(b));
+		i++;
+	}
+	writeDataToFile("ContextRecord->FloatSave.ControlWord", pExceptionInfo->ContextRecord->FloatSave.ControlWord);
+	writeDataToFile("ContextRecord->FloatSave.DataOffset", pExceptionInfo->ContextRecord->FloatSave.DataOffset);
+	writeDataToFile("ContextRecord->FloatSave.DataSelector", pExceptionInfo->ContextRecord->FloatSave.DataSelector);
+	writeDataToFile("ContextRecord->FloatSave.ErrorOffset", pExceptionInfo->ContextRecord->FloatSave.ErrorOffset);
+	writeDataToFile("ContextRecord->FloatSave.ErrorSelector", pExceptionInfo->ContextRecord->FloatSave.ErrorSelector);
+	writeDataToFile("ContextRecord->FloatSave.Spare0", pExceptionInfo->ContextRecord->FloatSave.Spare0);
+	writeDataToFile("ContextRecord->FloatSave.StatusWord", pExceptionInfo->ContextRecord->FloatSave.StatusWord);
+	writeDataToFile("ContextRecord->FloatSave.TagWord", pExceptionInfo->ContextRecord->FloatSave.TagWord);
+	i = 0;
+	for (BYTE b : pExceptionInfo->ContextRecord->FloatSave.RegisterArea)
+	{
+		writeDataToFile("ContextRecord->FloatSave.RegisterArea[" + to_string(i) + "]", static_cast<DWORD>(b));
+		i++;
+	}
+	writeDataToFile("ExceptionRecord->ExceptionAddress", (DWORD)pExceptionInfo->ExceptionRecord->ExceptionAddress);
+	writeDataToFile("ExceptionRecord->ExceptionCode", pExceptionInfo->ExceptionRecord->ExceptionCode);
+	writeDataToFile("ExceptionRecord->ExceptionFlags", pExceptionInfo->ExceptionRecord->ExceptionFlags);
+	writeDataToFile("ExceptionRecord->NumberParameters", pExceptionInfo->ExceptionRecord->NumberParameters);
+	i = 0;
+	for (ULONG_PTR u : pExceptionInfo->ExceptionRecord->ExceptionInformation)
+	{
+		writeDataToFile("ExceptionRecord->ExceptionInformation[" + to_string(i) + "]", static_cast<DWORD>(u));
+		i++;
+	}
+	j++;
 }

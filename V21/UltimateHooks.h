@@ -1,7 +1,11 @@
-struct HookEntries
-{
+struct HookDetails {
 	DWORD hookAddress;
 	DWORD addressToHook;
+};
+
+struct HookEntries
+{
+	std::vector<HookDetails> hookDetails;
 	DWORD addressToHookOldProtect;
 	DWORD addressToHookMbiStart;
 	DWORD addressToHookMbiEnd;

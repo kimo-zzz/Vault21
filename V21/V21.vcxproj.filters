@@ -626,6 +626,9 @@
     <ClInclude Include="Lucian.h">
       <Filter>Plugins\Champion Plugins\Lucian</Filter>
     </ClInclude>
+    <ClInclude Include="CrashHandler.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -903,6 +906,9 @@
     </ClCompile>
     <ClCompile Include="Lucian.cpp">
       <Filter>Plugins\Champion Plugins\Lucian</Filter>
+    </ClCompile>
+    <ClCompile Include="CrashHandler.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

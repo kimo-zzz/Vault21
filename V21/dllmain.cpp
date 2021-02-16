@@ -36,9 +36,7 @@ HMODULE g_hModule;
 
 void OnExit() noexcept;
 
-#if _DEBUG
 string dllPath;
-#endif
 
 PVOID NewOnProcessSpell, NewOnCreateObject, NewOnDeleteObject, NewOnFinishCast, NewOnStopCast, NewOnNewPath, NewCreatePath;
 
@@ -256,30 +254,6 @@ namespace LeagueHook {
 			//////////////////////////////////////////
 			GameClient::PrintChat("Client worker trying to hook...", IM_COL32(220, 69, 0, 255));
 			///////////////////////////////////////////////////////////
-			DWORD NewOnprocessSpellAddr = UltimateHooks::VirtualAllocateRegion(NewOnProcessSpell, DEFINE_RVA(Offsets::Functions::OnProcessSpellW), 0x60);
-			UltimateHooks::CopyRegion((DWORD)NewOnProcessSpell, DEFINE_RVA(Offsets::Functions::OnProcessSpellW), 0x60);
-			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DEFINE_RVA(Offsets::Functions::OnProcessSpellW) + 0x60), (DWORD)NewOnProcessSpell, 0x60);
-			Functions::OnProcessSpellW = (fnOnProcessSpellW)(NewOnprocessSpellAddr);
-			bool isOnProcessSpellHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 3);
-			while (!isOnProcessSpellHooked) {
-				GameClient::PrintChat("OnProcessSpell Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
-				isOnProcessSpellHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 3);
-				Sleep(1000);
-			}
-			GameClient::PrintChat("OnProcessSpell Hook success!.", IM_COL32(255, 69, 0, 255));
-			///////////////////////////////////////////////////////////
-			DWORD NewOnCreateObjectAddr = UltimateHooks::VirtualAllocateRegion(NewOnCreateObject, DEFINE_RVA(Offsets::Functions::OnCreateObject), 0xB0);
-			UltimateHooks::CopyRegion((DWORD)NewOnCreateObject, DEFINE_RVA(Offsets::Functions::OnCreateObject), 0xB0);
-			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DEFINE_RVA(Offsets::Functions::OnCreateObject) + 0xB0), (DWORD)NewOnCreateObject, 0xB0);
-			Functions::OnCreateObject = (fnCreateObject)(NewOnCreateObjectAddr);
-			bool isOnCreateObjectHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
-			while (!isOnCreateObjectHooked) {
-				GameClient::PrintChat("OnCreateObject Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
-				isOnCreateObjectHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
-				Sleep(1000);
-			}
-			GameClient::PrintChat("OnCreateObject Hook success!.", IM_COL32(255, 69, 0, 255));
-			///////////////////////////////////////////////////////////
 			DWORD NewOnDeleteObjectAddr = UltimateHooks::VirtualAllocateRegion(NewOnDeleteObject, DEFINE_RVA(Offsets::Functions::OnDeleteObject), 0x160);
 			UltimateHooks::CopyRegion((DWORD)NewOnDeleteObject, DEFINE_RVA(Offsets::Functions::OnDeleteObject), 0x160);
 			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnDeleteObject), (DEFINE_RVA(Offsets::Functions::OnDeleteObject) + 0x160), (DWORD)NewOnDeleteObject, 0x160);
@@ -291,6 +265,30 @@ namespace LeagueHook {
 				Sleep(1000);
 			}
 			GameClient::PrintChat("OnDeleteObject Hook success!.", IM_COL32(255, 69, 0, 255));
+			///////////////////////////////////////////////////////////
+			DWORD NewOnNewPathAddr = UltimateHooks::VirtualAllocateRegion(NewOnNewPath, DEFINE_RVA(Offsets::Functions::OnNewPath), 0x300);
+			UltimateHooks::CopyRegion((DWORD)NewOnNewPath, DEFINE_RVA(Offsets::Functions::OnNewPath), 0x300);
+			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnNewPath), (DEFINE_RVA(Offsets::Functions::OnNewPath) + 0x300), (DWORD)NewOnNewPath, 0x300);
+			Functions::OnNewPath = (fnOnNewPath)(NewOnNewPathAddr);
+			bool isOnNewPathHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnNewPath), (DWORD)hk_OnNewPath, 10);
+			while (!isOnNewPathHooked) {
+				GameClient::PrintChat("OnNewPath Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnNewPathHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnNewPath), (DWORD)hk_OnNewPath, 10);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnNewPath Hook success!.", IM_COL32(255, 69, 0, 255));
+			///////////////////////////////////////////////////////////
+			DWORD NewOnprocessSpellAddr = UltimateHooks::VirtualAllocateRegion(NewOnProcessSpell, DEFINE_RVA(Offsets::Functions::OnProcessSpellW), 0x60);
+			UltimateHooks::CopyRegion((DWORD)NewOnProcessSpell, DEFINE_RVA(Offsets::Functions::OnProcessSpellW), 0x60);
+			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DEFINE_RVA(Offsets::Functions::OnProcessSpellW) + 0x60), (DWORD)NewOnProcessSpell, 0x60);
+			Functions::OnProcessSpellW = (fnOnProcessSpellW)(NewOnprocessSpellAddr);
+			bool isOnProcessSpellHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 3);
+			while (!isOnProcessSpellHooked) {
+				GameClient::PrintChat("OnProcessSpell Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnProcessSpellHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnProcessSpellW), (DWORD)hk_OnProcessSpell, 3);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnProcessSpell Hook success!.", IM_COL32(255, 69, 0, 255));
 			///////////////////////////////////////////////////////////
 			DWORD NewOnFinishCastAddr = UltimateHooks::VirtualAllocateRegion(NewOnFinishCast, DEFINE_RVA(Offsets::Functions::OnFinishCast), 0x391060);
 			UltimateHooks::CopyRegion((DWORD)NewOnFinishCast, DEFINE_RVA(Offsets::Functions::OnFinishCast), 0x391060);
@@ -304,6 +302,18 @@ namespace LeagueHook {
 			}
 			GameClient::PrintChat("OnFinishCast Hook success!.", IM_COL32(255, 69, 0, 255));
 			///////////////////////////////////////////////////////////
+			DWORD NewOnCreateObjectAddr = UltimateHooks::VirtualAllocateRegion(NewOnCreateObject, DEFINE_RVA(Offsets::Functions::OnCreateObject), 0xB0);
+			UltimateHooks::CopyRegion((DWORD)NewOnCreateObject, DEFINE_RVA(Offsets::Functions::OnCreateObject), 0xB0);
+			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DEFINE_RVA(Offsets::Functions::OnCreateObject) + 0xB0), (DWORD)NewOnCreateObject, 0xB0);
+			Functions::OnCreateObject = (fnCreateObject)(NewOnCreateObjectAddr);
+			bool isOnCreateObjectHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
+			while (!isOnCreateObjectHooked) {
+				GameClient::PrintChat("OnCreateObject Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
+				isOnCreateObjectHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnCreateObject), (DWORD)hk_OnCreateObject, 2);
+				Sleep(1000);
+			}
+			GameClient::PrintChat("OnCreateObject Hook success!.", IM_COL32(255, 69, 0, 255));
+			///////////////////////////////////////////////////////////
 			DWORD NewOnStopCastAddr = UltimateHooks::VirtualAllocateRegion(NewOnStopCast, DEFINE_RVA(Offsets::Functions::OnStopCast), 0x1A0);
 			UltimateHooks::CopyRegion((DWORD)NewOnStopCast, DEFINE_RVA(Offsets::Functions::OnStopCast), 0x1A0);
 			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnStopCast), (DEFINE_RVA(Offsets::Functions::OnStopCast) + 0x1A0), (DWORD)NewOnStopCast, 0x1A0);
@@ -315,18 +325,6 @@ namespace LeagueHook {
 				Sleep(1000);
 			}
 			GameClient::PrintChat("OnStopCast Hook success!.", IM_COL32(255, 69, 0, 255));
-			///////////////////////////////////////////////////////////
-			DWORD NewOnNewPathAddr = UltimateHooks::VirtualAllocateRegion(NewOnNewPath, DEFINE_RVA(Offsets::Functions::OnNewPath), 0x300);
-			UltimateHooks::CopyRegion((DWORD)NewOnNewPath, DEFINE_RVA(Offsets::Functions::OnNewPath), 0x300);
-			UltimateHooks::FixFuncRellocation(DEFINE_RVA(Offsets::Functions::OnNewPath), (DEFINE_RVA(Offsets::Functions::OnNewPath) + 0x300), (DWORD)NewOnNewPath, 0x300);
-			Functions::OnNewPath = (fnOnNewPath)(NewOnNewPathAddr);
-			bool isOnNewPathHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnNewPath), (DWORD)hk_OnNewPath, 10);
-			while (!isOnNewPathHooked) {
-				GameClient::PrintChat("OnNewPath Hook Failed! Retrying...", IM_COL32(255, 69, 0, 255));
-				isOnNewPathHooked = UltimateHooks::addHook(DEFINE_RVA(Offsets::Functions::OnNewPath), (DWORD)hk_OnNewPath, 10);
-				Sleep(1000);
-			}
-			GameClient::PrintChat("OnNewPath Hook success!.", IM_COL32(255, 69, 0, 255));
 			///////////////////////////////////////////////////////////
 			/*
 			DWORD NewCreatePathAddr = UltimateHooks::VirtualAllocateRegion(NewCreatePath, DEFINE_RVA(Offsets::Functions::CreatePath), 0x0);

@@ -51,5 +51,5 @@ public:
         return Value;
     }
 };
-#define XorS(X, String) CXorString<ConstructIndexList<sizeof(String)-1>::Result> X(String)
+#define XorS(String) CXorString<ConstructIndexList<sizeof(String)-1>::Result> XORKEY(String)
 #define XorString( String ) ( CXorString<ConstructIndexList<sizeof( String ) - 1>::Result>( String ).decrypt() )

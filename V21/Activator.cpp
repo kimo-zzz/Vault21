@@ -3,7 +3,7 @@
 #include "NavGrid.h"
 #include "Draw.h"
 #include "Geometry.h"
-
+#include "XorString.h"
 namespace V21 {
 	namespace Plugins {
 
@@ -30,6 +30,7 @@ namespace V21 {
 
 		void Activator::Initialize()
 		{
+			XorS("adawdaw");
 			auto menu = Menu::CreateMenu("Activator", "Activator");
 
 			Config::Auto::EnableActivator = menu->AddCheckBox("EnableActivator", "Enable Activator", true);

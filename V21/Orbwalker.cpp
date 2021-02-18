@@ -523,23 +523,23 @@ namespace V21 {
 			}
 		}
 
-		void Orbwalker::OnNewPath(NewPath* args) {
+		void Orbwalker::OnNewPath(NewPath args) {
 
 
-			if (args != nullptr) {
+			//if (args) {
 
-				PredAllNewPathTicks[args->sender->NetworkId] = ClockFacade::GameTickCount();
+				PredAllNewPathTicks[args.sender->NetworkId] = ClockFacade::GameTickCount();
 
-				if (args->dashSpeed != 0) {
-					PredAllDashData[args->sender->NetworkId] = args;
+				if (args.dashSpeed != 0) {
+					PredAllDashData[args.sender->NetworkId] = args;
 				}
 
-				if (args->sender == ObjectManager::Player) {
-					if (Orbwalker::IsRengar && Orbwalker::LastTarget && args->dashSpeed == 1450.0f) {
+				if (args.sender == ObjectManager::Player) {
+					if (Orbwalker::IsRengar && Orbwalker::LastTarget && args.dashSpeed == 1450.0f) {
 						Orbwalker::LastAATick = ClockFacade::GameTickCount() - ObjectManager::Player->GetAttackCastDelay() - NetClient::Instance->GetPing() * 0.001f;
 					}
 				}
-			}
+			//}
 		}
 
 		void Orbwalker::OnCreateObject(GameObject* unit) {

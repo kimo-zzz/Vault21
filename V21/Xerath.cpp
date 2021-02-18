@@ -133,9 +133,9 @@ namespace V21 {
 				return;
 		}
 
-		void Xerath::OnNewPath(NewPath* args)
+		void Xerath::OnNewPath(NewPath args)
 		{
-			if (args->sender == nullptr)
+			if (args.sender == nullptr)
 				return;
 		}
 

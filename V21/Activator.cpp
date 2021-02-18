@@ -30,7 +30,6 @@ namespace V21 {
 
 		void Activator::Initialize()
 		{
-			XorS("adawdaw");
 			auto menu = Menu::CreateMenu("Activator", "Activator");
 
 			Config::Auto::EnableActivator = menu->AddCheckBox("EnableActivator", "Enable Activator", true);

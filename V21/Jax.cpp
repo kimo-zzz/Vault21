@@ -238,7 +238,7 @@ namespace V21
 		{
 		}
 
-		void Jax::OnNewPath(NewPath* args)
+		void Jax::OnNewPath(NewPath args)
 		{
 
 		}

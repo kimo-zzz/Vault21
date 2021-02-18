@@ -51,7 +51,7 @@ namespace V21 {
 
 			void OnInterruptibleSpell(SpellInfo* castInfo, SpellDataResource* spellData);
 
-			void OnNewPath(NewPath* args);
+			void OnNewPath(NewPath args);
 
 			void BrandCombo();
 			void BrandHarass();

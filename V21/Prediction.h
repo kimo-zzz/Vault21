@@ -31,12 +31,12 @@ namespace V21 {
 		std::vector<Vector3> waypoint = target->GetWaypointList();
 		if (waypoint.size() == 1)
 			return waypoint.front();
-		if (target->IsDashing() && PredAllDashData[target->NetworkId] != nullptr)
+		if (target->IsDashing() && PredAllDashData[target->NetworkId].sender != nullptr)
 		{
 			auto data = PredAllDashData[target->NetworkId];
-			float dashdistance = delay * data->dashSpeed;
-			return dashdistance >= Distance(target, data->end) ? data->end
-				: Extend(target->Position, data->end, dashdistance);
+			float dashdistance = delay * data.dashSpeed;
+			return dashdistance >= Distance(target, data.end) ? data.end
+				: Extend(target->Position, data.end, dashdistance);
 		}
 		float distance = target->MoveSpeed * delay;
 		for (int i = 1; i < waypoint.size(); i = i + 1)
@@ -146,7 +146,7 @@ namespace V21 {
 				output.HitsChance = HitChance::High;
 			}
 
-			float speed = target->IsDashing() && PredAllDashData[target->NetworkId] != nullptr ? PredAllDashData[target->NetworkId]->dashSpeed : target->MoveSpeed;
+			float speed = target->IsDashing() && PredAllDashData[target->NetworkId].sender != nullptr ? PredAllDashData[target->NetworkId].dashSpeed : target->MoveSpeed;
 			float realspelldelay = spelldelay; /*> spell->Radius() / 2.f / speed ? spell->GetDelay() - spell->Radius() / 2.f / speed : 0.f;*/
 			float time = 0.f;
 			for (int i = 1; i < waypoint.size(); i = i + 1)

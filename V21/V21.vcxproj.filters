@@ -45,12 +45,6 @@
     <Filter Include="SDK\TargetSelector">
       <UniqueIdentifier>{505321e6-b372-4c5f-b21f-ade95dbf8788}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SDK\Events\Header Files">
-      <UniqueIdentifier>{368987f8-7878-4513-a9a0-a2e7efbe70f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDK\Events\Source Files">
-      <UniqueIdentifier>{be17a26c-9e94-4c94-9c01-c5ed2ff83ef8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SDK\Menu\Header Files">
       <UniqueIdentifier>{3fbad66c-d12a-41db-990d-249462901196}</UniqueIdentifier>
     </Filter>
@@ -174,9 +168,6 @@
     <Filter Include="Plugins\Champion Plugins\Lucian">
       <UniqueIdentifier>{7145e5e9-4832-4515-b55c-7832a030ee6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Champion Plugins\TEMPLATE">
-      <UniqueIdentifier>{3b3a4b21-e049-4192-8346-16d841598be5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SDK\SkillPrediction">
       <UniqueIdentifier>{5c580b66-42a8-4577-83c0-e4ec9add2380}</UniqueIdentifier>
     </Filter>
@@ -197,6 +188,9 @@
     </Filter>
     <Filter Include="Plugins\Champion Plugins\Xerath">
       <UniqueIdentifier>{c666c512-f249-4982-9654-c56b703901e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TEMPLATE">
+      <UniqueIdentifier>{3b3a4b21-e049-4192-8346-16d841598be5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -343,12 +337,6 @@
     </ClInclude>
     <ClInclude Include="Instances.h">
       <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Events.h">
-      <Filter>SDK\Events\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TeleportEventArgs.h">
-      <Filter>SDK\Events\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rect.h">
       <Filter>Geometry\Header Files</Filter>
@@ -540,7 +528,7 @@
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PluginTemplate.h">
-      <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
+      <Filter>TEMPLATE</Filter>
     </ClInclude>
     <ClInclude Include="Brand.h">
       <Filter>Plugins\Champion Plugins\Brand</Filter>
@@ -593,6 +581,12 @@
     <ClInclude Include="Damage.h">
       <Filter>SDK\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>SDK\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportEventArgs.h">
+      <Filter>SDK\Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -633,9 +627,6 @@
     </ClCompile>
     <ClCompile Include="Instances.cpp">
       <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Events.cpp">
-      <Filter>SDK\Events\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rect.cpp">
       <Filter>Geometry\Source Files</Filter>
@@ -827,7 +818,7 @@
       <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PluginTemplate.cpp">
-      <Filter>Plugins\Champion Plugins\TEMPLATE</Filter>
+      <Filter>TEMPLATE</Filter>
     </ClCompile>
     <ClCompile Include="Brand.cpp">
       <Filter>Plugins\Champion Plugins\Brand</Filter>
@@ -873,6 +864,9 @@
     </ClCompile>
     <ClCompile Include="Damage.cpp">
       <Filter>SDK\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>SDK\Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

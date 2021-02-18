@@ -211,7 +211,7 @@ namespace V21 {
 
 		}
 
-		void Lucian::OnNewPath(NewPath* args)
+		void Lucian::OnNewPath(NewPath args)
 		{
 
 		}

@@ -29,7 +29,7 @@ namespace V21
 	};
 
 	extern Vector3 PredLastYasuoWallCastPos;
-	extern std::map<int, NewPath*> PredAllDashData;
+	extern std::map<int, NewPath> PredAllDashData;
 	extern std::map <int, int> PredAllNewPathTicks;
 
 #pragma  region  Delayaction

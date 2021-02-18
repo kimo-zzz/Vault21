@@ -94,17 +94,16 @@ namespace LeagueHook {
 
 	int __fastcall hk_OnCreateObject(GameObject* thisPtr, void* edx, unsigned int netId) {
 
-		if (!thisPtr)
+		if (thisPtr == nullptr)
 			return Functions::OnCreateObject(thisPtr, netId);
 		//GameClient::PrintChat("hk_OnCreateObject hooked!", IM_COL32(255, 69, 0, 255));
-
-
-		EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr);
-
 
 		if (thisPtr->Missile()) {
 			//MessageBoxA(0, ("Missile Adress " + hexify<DWORD>((DWORD)thisPtr)).c_str(), "", 0);
 			EventManager::Trigger(LeagueEvents::OnCreateMissile, thisPtr);
+		}
+		else {
+			EventManager::Trigger(LeagueEvents::OnCreateObject, thisPtr);
 		}
 
 		return Functions::OnCreateObject(thisPtr, netId);
@@ -114,15 +113,14 @@ namespace LeagueHook {
 
 		//GameClient::PrintChat("hk_OnDeleteObject hooked!", IM_COL32(255, 69, 0, 255));
 
-		if (!object)
+		if (object == nullptr || thisPtr==nullptr)
 			return Functions::OnDeleteObject(thisPtr, object);
-
-
-		EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
-
 
 		if (object->Missile()) {
 			EventManager::Trigger(LeagueEvents::OnDeleteMissile, object);
+		}
+		else {
+			EventManager::Trigger(LeagueEvents::OnDeleteObject, object);
 		}
 
 		return Functions::OnDeleteObject(thisPtr, object);
@@ -216,6 +214,7 @@ namespace LeagueHook {
 	{
 		if (obj == nullptr)
 			return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
+		
 		NewPath path;
 		path.sender = obj;
 		path.start = *start;
@@ -225,7 +224,7 @@ namespace LeagueHook {
 		path.dashSpeed = *dashSpeed;
 
 		//	GameClient::PrintChat("hk_OnNewPath hooked!", IM_COL32(255, 69, 0, 255));
-		EventManager::Trigger(LeagueEvents::OnNewPath, &path);
+		EventManager::Trigger(LeagueEvents::OnNewPath, path);
 
 		return Functions::OnNewPath(obj, start, end, tail, unk1, dashSpeed, dash, unk3, unk4, unk5, unk6, unk7);
 	}
@@ -400,6 +399,8 @@ namespace LeagueHook {
 			////////////////////////////////////////////////////////////
 			GameClient::PrintChat("Hooks Initialized~! : All credits goes to Vault21 Team <3", IM_COL32(255, 69, 0, 255));
 			Ready = false;
+
+			ObjectManager::Player->CastSpell(kSpellSlot::SpellSlot_Recall, (DWORD)ObjectManager::Player);
 		}
 	}
 }

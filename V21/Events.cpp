@@ -17,6 +17,7 @@
 #include "ObjectManager.h"
 #include "Draw.h"
 #include "NavGrid.h"
+#include "PluginTemplate.h"
 
 namespace V21 {
 
@@ -43,10 +44,11 @@ namespace V21 {
 						SpellCast::Initialize();
 
 						Menu::Initialize();
+						V21::Plugins::ChampionName::Initialize();
 						//HealthPrediction::Initialize();
-						TargetSelector::Initialize();
-						Orbwalker::Initialize();
-						Plugins::Initialize();
+						//TargetSelector::Initialize();
+						//Orbwalker::Initialize();
+						//Plugins::Initialize();
 
 						Globals::InGame = true;
 						EventManager::Trigger(LeagueEvents::OnGameStart);
